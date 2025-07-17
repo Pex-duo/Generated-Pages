@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Repository File List</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    h1 { color: #333; }
+    ul { list-style-type: none; padding: 0; }
+    li { padding: 6px 0; }
+    a { text-decoration: none; color: #0074d9; }
+    a:hover { text-decoration: underline; }
+    .folder { font-weight: bold; color: #111; }
+  </style>
+</head>
+<body>
+  <h1>Files in Repository</h1>
+  <ul id="file-list">
+    <!-- File list will be populated here -->
+  </ul>
+  <script>
+    // This script uses the GitHub API to list files in the repo root
+    // You can adjust owner/repo below
+    const owner = "Pex-duo"; // Change to your GitHub username
+    const repo = "REPO_NAME_HERE"; // Change to your repository name
+
+    async function fetchRepoFiles() {
+      // The GitHub API endpoint for contents of the repository root
+      const url = `https://api.github.com/repos/${owner}/${repo}/contents/`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        document.getElementById('file-list').innerHTML = `<li>Error loading files.</li>`;
+        return;
+      }
+      const files = await response.json();
+
+      const list = document.getElementById('file-list');
+      list.innerHTML = ""; // Clear old list
+
+      files.forEach(file => {
+        const li = document.createElement('li');
+        if (file.type === "dir") {
+          li.innerHTML = `<span class="folder">${file.name}/</span>`;
+        } else {
+          li.innerHTML = `<a href="${file.html_url}" target="_blank">${file.name}</a>`;
+        }
+        list.appendChild(li);
+      });
+    }
+
+    fetchRepoFiles();
+  </script>
+</body>
+</html>
