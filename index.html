@@ -11,6 +11,7 @@
     a { text-decoration: none; color: #0074d9; }
     a:hover { text-decoration: underline; }
     .folder { font-weight: bold; color: #222; }
+    .html-icon::before { content: "🌐 "; }
   </style>
 </head>
 <body>
@@ -19,6 +20,7 @@
   <script>
     const owner = "Pex-duo";
     const repo = "Generated-Pages";
+    const githubPagesUrl = `https://${owner}.github.io/${repo}/`;
 
     async function fetchRepoFiles() {
       const url = `https://api.github.com/repos/${owner}/${repo}/contents/`;
@@ -35,6 +37,9 @@
         const li = document.createElement('li');
         if (file.type === "dir") {
           li.innerHTML = `<span class="folder">${file.name}/</span>`;
+        } else if (file.name.endsWith(".html")) {
+          // Link to GitHub Pages
+          li.innerHTML = `<a class="html-icon" href="${githubPagesUrl}${file.name}" target="_blank">${file.name}</a>`;
         } else {
           li.innerHTML = `<a href="${file.html_url}" target="_blank">${file.name}</a>`;
         }
