@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Guide: Advanced Model Merging (Consolidated v2.2)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Indigo & Amber Slate -->
+    <!-- Application Structure Plan: This guide consolidates two distinct merging strategies into a single interface. A top-level selection allows the user to toggle between the "SDXL Donor" (DARE-TIES) workflow and the "PONY Family" (Block Merge) workflow. This version overhauls the SDXL Donor chart interaction, replacing generic filters with three distinct, explained alternative recipes for a more meaningful user experience. -->
+    <!-- Visualization & Content Choices:
+        - Report Info: Parent Model Roles -> Goal: Inform -> Viz/Presentation: HTML/CSS Info Cards with hyperlinks -> Interaction: Hover effects -> Justification: Provides direct source links and clear role assignment for each strategy.
+        - Report Info: Merging Doctrines -> Goal: Organize/Explain -> Viz/Presentation: Separate HTML/CSS Flow Diagrams for each strategy -> Justification: Clearly illustrates the two distinct merging philosophies.
+        - Report Info: High-Precision Block Merge Weights -> Goal: Compare/Explore -> Viz/Presentation: Two separate, interactive Chart.js instances -> Interaction: The SDXL chart now allows selection between three distinct, explained recipes. The PONY chart retains its stage-selection mechanic.
+        - Report Info: DARE-TIES Settings -> Goal: Inform/Compare -> Viz/Presentation: Redesigned cards with visual progress bars -> Justification: Improves visual consistency and readability of the settings.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+            color: #334155; /* slate-700 */
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 450px;
+            }
+        }
+        .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .version-btn, .goal-btn, .recipe-btn-sdxl, .recipe-btn-pony {
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="bg-slate-100/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-lg text-slate-900">Chimera Merge Guide</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <section class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">Advanced Model Merging</h1>
+            <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">A consolidated guide to two distinct merging philosophies. Select a version below to explore its unique strategy and recipe.</p>
+        </section>
+
+        <!-- Version Selection -->
+        <div class="flex justify-center gap-4 mb-12 p-4 bg-slate-200 rounded-lg">
+            <button id="select-sdxl" class="version-btn bg-indigo-600 border-2 border-indigo-600 text-white px-6 py-3 rounded-md text-base font-medium">"SDXL Donor" Version</button>
+            <button id="select-pony" class="version-btn bg-white border-2 border-slate-300 text-slate-700 px-6 py-3 rounded-md text-base font-medium hover:bg-slate-100">"PONY Family" Version</button>
+        </div>
+
+        <!-- SDXL Donor Version Content -->
+        <div id="sdxl-content">
+            <section class="mb-24 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-900 mb-2">Blueprint: SDXL Donor Strategy</h2>
+                <p class="text-slate-600 mb-10 max-w-4xl">This strategy uses a stable anime host and surgically injects skills from architecturally different `SDXL 1.0` donors using the DARE-TIES algorithm.</p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-lg border border-slate-200 flex flex-col"><a href="https://civitai.com/models/1353314?modelVersionId=1984137" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-900">Animij [Illustrious] V5.0</h3></a><p class="text-sm font-medium text-indigo-600 mb-2">Primary Host Model</p><p class="text-sm text-slate-600 flex-grow">Provides the foundational scaffold: superior anatomy, composition, and a vibrant retro anime style.</p></div>
+                    <div class="bg-white p-6 rounded-lg border border-slate-200 flex flex-col"><a href="https://civitai.com/models/1721372?modelVersionId=1948027" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-900">Graycolor SemiRealIllustMix</h3></a><p class="text-sm font-medium text-indigo-600 mb-2">Secondary Host Model</p><p class="text-sm text-slate-600 flex-grow">Acts as a bridge, blending the pure anime look with a semi-realistic feel to make the host more receptive to donors.</p></div>
+                    <div class="bg-white p-6 rounded-lg border border-slate-200 flex flex-col"><a href="https://civitai.com/models/163139?modelVersionId=481390" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-900">Boomer Art Model v2.0</h3></a><p class="text-sm font-medium text-amber-600 mb-2">Primary Style Donor</p><p class="text-sm text-slate-600 flex-grow">Injects the painterly, heroic fantasy essence of Frazetta and Vallejo, providing the desired textural finish.</p></div>
+                    <div class="bg-white p-6 rounded-lg border border-red-300 ring-2 ring-red-200 flex flex-col"><a href="https://civitai.com/models/1655833/d34dch4nn3lsdxl?modelVersionId=1874216" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-900">D34D.CH4NN3L.SDXL</h3></a><p class="text-sm font-medium text-red-600 mb-2">Thematic Donor</p><p class="text-sm text-slate-600 flex-grow">A powerful and versatile donor for injecting dark, gritty, horror, and sci-fi thematic content.</p></div>
+                </div>
+            </section>
+            <section class="mb-24 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-900 mb-2">Recipe & Implementation: SDXL Donor</h2>
+                <div class="bg-white p-6 md:p-8 rounded-lg border border-slate-200 mb-12">
+                    <h3 class="text-xl font-bold text-slate-900 mb-4">Stage 1: Host Creation (Block-Weighted Merge)</h3>
+                    <p class="text-sm text-slate-600 mb-6">Select one of the three alternative recipes below. Each offers a different strategic trade-off between structural coherence and stylistic flexibility.</p>
+                    <div class="flex justify-center flex-wrap gap-4 mb-6">
+                        <button id="recipe-sdxl-balanced" class="recipe-btn-sdxl bg-indigo-600 border-2 border-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium">Recipe A: Balanced (Default)</button>
+                        <button id="recipe-sdxl-host_dominant" class="recipe-btn-sdxl bg-white border-2 border-slate-300 text-slate-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-slate-200 hover:border-slate-400">Recipe B: Host-Dominant</button>
+                        <button id="recipe-sdxl-donor_receptive" class="recipe-btn-sdxl bg-white border-2 border-slate-300 text-slate-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-slate-200 hover:border-slate-400">Recipe C: Donor-Receptive</button>
+                    </div>
+                    <div id="sdxl-recipe-explanation" class="mb-6 p-4 bg-blue-50 border border-blue-200 text-blue-800 rounded-md text-sm"></div>
+                    <div class="chart-container"><canvas id="sdxlChart"></canvas></div>
+                    <div id="sdxl-justification" class="mt-6 p-4 bg-slate-100 rounded-md text-sm text-slate-700 min-h-[60px]">Hover over a block in the chart to see the justification for its weighting.</div>
+                </div>
+                <div class="bg-white p-6 md:p-8 rounded-lg border border-slate-200 mb-12">
+                    <h3 class="text-xl font-bold text-slate-900 mb-4">Stage 2: Skill Injection (DARE-TIES)</h3>
+                    <p class="text-sm text-slate-600 mb-6">The two `SDXL 1.0` donors are injected sequentially into the host created in Stage 1. Note the use of different base models (`kohaku-xl-beta5` for the host, `sd_xl_base_1.0` for the donors) to correctly calculate the task vectors.</p>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="p-6 border border-slate-200 rounded-lg">
+                            <h4 class="font-bold text-lg text-slate-800 mb-4">Step 2a: Inject Painterly Style</h4>
+                            <p class="text-xs text-slate-500 mb-4">Donor: `Boomer Art Model`</p>
+                            <div class="space-y-3 text-sm">
+                                <div><label class="font-medium">DARE Density: 0.45</label><div class="w-full bg-slate-200 rounded-full h-2.5 mt-1"><div class="bg-amber-500 h-2.5 rounded-full" style="width: 45%"></div></div></div>
+                                <div><label class="font-medium">TIES Trim (Keeps Top): 20%</label><div class="w-full bg-slate-200 rounded-full h-2.5 mt-1"><div class="bg-amber-500 h-2.5 rounded-full" style="width: 20%"></div></div></div>
+                                <div><label class="font-medium">Host Protection Mask: 75%</label><div class="w-full bg-slate-200 rounded-full h-2.5 mt-1"><div class="bg-indigo-500 h-2.5 rounded-full" style="width: 75%"></div></div></div>
+                            </div>
+                        </div>
+                        <div class="p-6 border border-slate-200 rounded-lg">
+                            <h4 class="font-bold text-lg text-slate-800 mb-4">Step 2b: Inject Thematic Content</h4>
+                            <p class="text-xs text-slate-500 mb-4">Donor: `D34D.CH4NN3L.SDXL`</p>
+                             <div class="space-y-3 text-sm">
+                                <div><label class="font-medium">DARE Density: 0.25</label><div class="w-full bg-slate-200 rounded-full h-2.5 mt-1"><div class="bg-red-500 h-2.5 rounded-full" style="width: 25%"></div></div></div>
+                                <div><label class="font-medium">TIES Trim (Keeps Top): 25%</label><div class="w-full bg-slate-200 rounded-full h-2.5 mt-1"><div class="bg-red-500 h-2.5 rounded-full" style="width: 25%"></div></div></div>
+                                <div><label class="font-medium">Host Protection Mask: 85%</label><div class="w-full bg-slate-200 rounded-full h-2.5 mt-1"><div class="bg-indigo-500 h-2.5 rounded-full" style="width: 85%"></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="bg-white p-8 rounded-lg border border-slate-200">
+                    <h3 class="text-xl font-bold text-slate-900 mb-4">Assembly: SDXL Donor Version</h3>
+                     <p class="text-sm text-slate-600 mb-6">The CLIP and VAE strategy for this version must account for the different architectural families.</p>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-bold text-lg text-slate-800 mb-4">Forging a Bilingual CLIP</h4>
+                            <p class="text-sm text-slate-600 mb-4">To prevent "lexicon clash" between the hosts' Danbooru tags and the donors' natural language, we create a "bilingual" CLIP via a sequential, three-step merge.</p>
+                            <div class="flex flex-col space-y-2 text-center text-xs font-semibold">
+                                <div class="p-2 border border-indigo-200 rounded-lg"><p class="font-medium mb-1">1. HOST CLIP</p><div class="flex justify-around items-center"><div class="p-2 bg-indigo-100 rounded-md text-indigo-800">Animij</div><div class="text-slate-400">+</div><div class="p-2 bg-indigo-100 rounded-md text-indigo-800">Graycolor</div></div><div class="self-center mt-1">↓ <span class="font-normal">(50/50)</span></div></div>
+                                <div class="p-2 border border-amber-200 rounded-lg"><p class="font-medium mb-1">2. DONOR CLIP</p><div class="flex justify-around items-center"><div class="p-2 bg-amber-100 rounded-md text-amber-800">Boomer Art</div><div class="text-slate-400">+</div><div class="p-2 bg-amber-100 rounded-md text-amber-800">D34D.CH4NN3L</div></div><div class="self-center mt-1">↓ <span class="font-normal">(50/50)</span></div></div>
+                                <div class="p-2 border border-slate-300 rounded-lg"><p class="font-medium mb-1">3. FINAL BLEND</p><div class="flex justify-around items-center"><div class="p-2 bg-indigo-200 rounded-md text-indigo-900">Host Merge</div><div class="text-slate-400 font-thin text-xl">+</div><div class="p-2 bg-amber-200 rounded-md text-amber-900">Donor Merge</div></div><div class="self-center mt-1">↓ <span class="font-normal">(65% Host / 35% Donor)</span></div><div class="p-3 bg-slate-800 rounded-lg text-white mx-auto mt-2">Final Bilingual CLIP</div></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-slate-800 mb-4">VAE Selection for Fidelity</h4>
+                            <p class="text-sm text-slate-600 mb-6">Merging VAEs from different families is high-risk. To ensure maximum color fidelity and prevent artifacts, we do not merge.</p>
+                            <div class="bg-indigo-100 border-2 border-dashed border-indigo-300 p-4 rounded-lg text-center">
+                                <p class="font-semibold text-indigo-800">Primary Recommendation</p>
+                                <p class="text-indigo-700">Use the VAE baked into `Animij [Illustrious] V5.0`.</p>
+                                <p class="text-xs mt-2 text-indigo-600">This ensures the final image is decoded by a VAE perfectly matched to the host's core architecture.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- PONY Family Version Content -->
+        <div id="pony-content" class="hidden">
+             <section class="mb-24 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-900 mb-2">Blueprint: PONY Family Strategy</h2>
+                <p class="text-slate-600 mb-10 max-w-4xl">This strategy leverages a set of four models from the same `Pony` architectural family, enabling a more stable, multi-stage block merging strategy for superior coherence.</p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-lg border border-slate-200 flex flex-col"><a href="https://civitai.com/models/1277670?modelVersionId=1772645" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-900">JANKU V4.0</h3></a><p class="text-sm font-medium text-indigo-600 mb-2">Primary Host / Structural Base</p><p class="text-sm text-slate-600 flex-grow">A versatile and gritty `RouWei` model that will provide the core structure and a receptive foundation for dark themes.</p></div>
+                    <div class="bg-white p-6 rounded-lg border border-slate-200 flex flex-col"><a href="https://civitai.com/models/137781?modelVersionId=1502081" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-900">NEW ERA V7.1</h3></a><p class="text-sm font-medium text-indigo-600 mb-2">Primary Thematic Base</p><p class="text-sm text-slate-600 flex-grow">A powerful `RouWei` model that will be merged with JANKU to create a "Dark Anime" base with strong thematic content.</p></div>
+                    <div class="bg-white p-6 rounded-lg border border-slate-200 flex flex-col"><a href="https://civitai.com/models/1721372?modelVersionId=1948027" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-900">Graycolor SemiRealIllustMix</h3></a><p class="text-sm font-medium text-amber-600 mb-2">Painterly Style Foundation</p><p class="text-sm text-slate-600 flex-grow">An `Illustrious` model that provides a semi-realistic, painterly base for the final textural finish.</p></div>
+                    <div class="bg-white p-6 rounded-lg border border-slate-200 flex flex-col"><a href="https://civitai.com/models/1552304?modelVersionId=1782085" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-900">SinGlo V2.0</h3></a><p class="text-sm font-medium text-amber-600 mb-2">Textural Detail Donor</p><p class="text-sm text-slate-600 flex-grow">An `Illustrious` model with a unique, sharp, and detailed style that will be blended with Graycolor to add textural complexity.</p></div>
+                </div>
+            </section>
+             <section class="mb-24 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-900 mb-2">Recipe & Implementation: PONY Family</h2>
+                <div class="bg-white p-6 md:p-8 rounded-lg border border-slate-200 mb-12">
+                    <h3 class="text-xl font-bold text-slate-900 mb-4">Multi-Stage Block Merge Recipes</h3>
+                    <p class="text-sm text-slate-600 mb-6">Select a merge stage to view its specific recipe. The chart will update to show the block weights for the selected stage. Hover over any block for a detailed justification.</p>
+                    <div class="flex justify-center flex-wrap gap-4 mb-6">
+                        <button id="recipe-pony-stage1" class="recipe-btn-pony bg-indigo-600 border-2 border-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium">Stage 1: "Dark Anime" Base</button>
+                        <button id="recipe-pony-stage2" class="recipe-btn-pony bg-white border-2 border-slate-300 text-slate-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-slate-200 hover:border-slate-400">Stage 2: "Painterly Bridge"</button>
+                        <button id="recipe-pony-stage3" class="recipe-btn-pony bg-white border-2 border-slate-300 text-slate-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-slate-200 hover:border-slate-400">Stage 3: Final Fusion</button>
+                    </div>
+                    <div class="chart-container"><canvas id="ponyChart"></canvas></div>
+                    <div id="pony-justification" class="mt-6 p-4 bg-slate-100 rounded-md text-sm text-slate-700 min-h-[60px]">Select a recipe and hover over a block in the chart to see the justification for its weighting.</div>
+                </div>
+                 <div class="bg-white p-8 rounded-lg border border-slate-200">
+                    <h3 class="text-xl font-bold text-slate-900 mb-4">Assembly: PONY Family Version</h3>
+                     <p class="text-sm text-slate-600 mb-6">Even within the Pony family, the `RouWei` and `Illustrious` branches have different vocabularies. A sequential CLIP merge is still recommended for maximum control.</p>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-bold text-lg text-slate-800 mb-4">Forging a Coherent CLIP</h4>
+                            <p class="text-sm text-slate-600 mb-4">This sequential merge ensures the final CLIP understands prompts related to both the `RouWei` base and the `Illustrious` style layer.</p>
+                            <div class="flex flex-col space-y-2 text-center text-xs font-semibold">
+                                <div class="p-2 border border-indigo-200 rounded-lg"><p class="font-medium mb-1">1. `RouWei` CLIP</p><div class="flex justify-around items-center"><div class="p-2 bg-indigo-100 rounded-md text-indigo-800">JANKU</div><div class="text-slate-400">+</div><div class="p-2 bg-indigo-100 rounded-md text-indigo-800">NEW ERA</div></div><div class="self-center mt-1">↓ <span class="font-normal">(50/50)</span></div></div>
+                                <div class="p-2 border border-amber-200 rounded-lg"><p class="font-medium mb-1">2. `Illustrious` CLIP</p><div class="flex justify-around items-center"><div class="p-2 bg-amber-100 rounded-md text-amber-800">Graycolor</div><div class="text-slate-400">+</div><div class="p-2 bg-amber-100 rounded-md text-amber-800">SinGlo</div></div><div class="self-center mt-1">↓ <span class="font-normal">(50/50)</span></div></div>
+                                <div class="p-2 border border-slate-300 rounded-lg"><p class="font-medium mb-1">3. FINAL BLEND</p><div class="flex justify-around items-center"><div class="p-2 bg-indigo-200 rounded-md text-indigo-900">`RouWei` Merge</div><div class="text-slate-400 font-thin text-xl">+</div><div class="p-2 bg-amber-200 rounded-md text-amber-900">`Illustrious` Merge</div></div><div class="self-center mt-1">↓ <span class="font-normal">(70% RouWei / 30% Illustrious)</span></div><div class="p-3 bg-slate-800 rounded-lg text-white mx-auto mt-2">Final Coherent CLIP</div></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-slate-800 mb-4">VAE Selection for Fidelity</h4>
+                            <p class="text-sm text-slate-600 mb-6">While all models are from the Pony family, using the VAE from the final Primary Host is the safest choice for color accuracy.</p>
+                            <div class="bg-indigo-100 border-2 border-dashed border-indigo-300 p-4 rounded-lg text-center">
+                                <p class="font-semibold text-indigo-800">Primary Recommendation</p>
+                                <p class="text-indigo-700">Use the VAE baked into `JANKU V4.0`.</p>
+                                <p class="text-xs mt-2 text-indigo-600">This ensures the final image is decoded by a VAE perfectly matched to the final merge's structural base.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Shared Sections -->
+        <section id="analysis" class="mb-24 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-slate-900 mb-2">Comparative Analysis & Recommendation</h2>
+            <p class="text-slate-600 mb-10 max-w-4xl">Choosing a merge strategy involves a trade-off between stability and stylistic reach. This section summarizes the key differences to help you decide which version best suits your specific needs.</p>
+            <div class="overflow-x-auto bg-white p-6 rounded-lg border border-slate-200">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-100 text-slate-800">
+                        <tr>
+                            <th class="p-3 font-semibold">Factor</th>
+                            <th class="p-3 font-semibold">"SDXL Donor" Version</th>
+                            <th class="p-3 font-semibold">"PONY Family" Version</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                        <tr>
+                            <td class="p-3 font-medium">Core Philosophy</td>
+                            <td class="p-3">Surgical Skill Injection (DARE-TIES)</td>
+                            <td class="p-3">Architectural Harmony (Block Merge)</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium">Stability & Coherence</td>
+                            <td class="p-3">Good, but higher risk of subtle artifacts due to cross-architecture merging. Requires careful masking.</td>
+                            <td class="p-3">Excellent. Merging compatible models is fundamentally more stable and produces more predictable, coherent results.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium">Stylistic Reach</td>
+                            <td class="p-3">Wider. Can incorporate styles from completely different model families (e.g., SDXL 1.0 realism).</td>
+                            <td class="p-3">More focused. Excels at blending styles within the Pony ecosystem, leading to a more refined but less diverse aesthetic.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium">Estimated Prompt Coverage</td>
+                            <td class="p-3">Excels at hybrid prompts mixing Danbooru tags (`90s anime style`) and natural language (`style of Frank Frazetta`).</td>
+                            <td class="p-3">Primarily excels at Danbooru tags and concepts native to the Pony family. May have weaker natural language understanding.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium">Best For...</td>
+                            <td class="p-3">Achieving a very specific, unique blend of disparate aesthetics that cannot be found in a single architectural family.</td>
+                            <td class="p-3">Creating a highly polished, stable, and coherent model with a refined aesthetic, maximizing quality and predictability.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+             <div class="mt-8 p-6 bg-indigo-50 border border-indigo-200 rounded-lg">
+                <h3 class="font-bold text-lg text-indigo-900 mb-2">Final Recommendation</h3>
+                <p class="text-indigo-800">For the stated goal of creating **coherent game assets** with **clear lines suitable for vectorization**, the **"PONY Family" version is the superior choice.**</p>
+                <p class="mt-2 text-sm text-indigo-700">The architectural harmony of the PONY family merge provides a much higher degree of stability and predictability. This is critical when generating a large set of assets that must feel stylistically consistent. While the "SDXL Donor" version offers a wider stylistic reach, the "PONY Family" version offers greater quality control and coherence, which is more valuable for a production-oriented goal.</p>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-slate-200 mt-24">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-sm text-slate-500">
+            <p>Consolidated Interactive Guide to Advanced Model Merging</p>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Data Objects ---
+    const sdxlData = {
+        labels: ['IN00', 'IN01', 'IN02', 'IN03', 'IN04', 'IN05', 'IN06', 'IN07', 'IN08', 'IN09', 'IN10', 'IN11', 'M00', 'OUT00', 'OUT01', 'OUT02', 'OUT03', 'OUT04', 'OUT05', 'OUT06', 'OUT07', 'OUT08', 'OUT09', 'OUT10', 'OUT11'],
+        recipes: {
+            balanced: {
+                explanation: "<strong>Recipe A: Balanced (Default)</strong><br>This is the recommended recipe, meticulously calculated to balance Animij's structural integrity with Graycolor's stylistic contributions. It heavily favors Animij in the early blocks for composition, smoothly blends towards Graycolor in the middle for conceptual style, and then shifts back to Animij in the final blocks for clean linework.",
+                weights: [0.90, 0.88, 0.85, 0.82, 0.75, 0.70, 0.65, 0.60, 0.55, 0.50, 0.48, 0.45, 0.40, 0.42, 0.45, 0.48, 0.50, 0.53, 0.58, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90],
+                justifications: ['IN00 @ 0.90 Animij: Establishes overwhelming dominance for the host\'s core compositional understanding and clean lineart style from the very first block.','IN01 @ 0.88 Animij: Continues strong host dominance to lock in anatomical structure and posing, critical for coherent character art.','IN02 @ 0.85 Animij: The host still leads, ensuring the primary subject\'s form is defined by its superior anime style before other influences are introduced.','IN03 @ 0.82 Animij: A slight increase in Graycolor\'s influence (0.18) begins to subtly soften the purely anime aesthetic in preparation for the style blend.','IN04 @ 0.75 Animij: A significant step towards Graycolor (0.25), introducing its semi-realistic properties and painterly concepts into the established anime structure.','IN05 @ 0.70 Animij: Graycolor\'s influence grows to 0.30, allowing it to affect how mid-level features like faces and clothing are interpreted.','IN06 @ 0.65 Animij: The blend continues towards an equilibrium, giving Graycolor (0.35) more say in style and texture before the conceptual core.','IN07 @ 0.60 Animij: Nearing the middle block, the models approach an even balance (0.40 Graycolor) to prepare for the main style fusion.','IN08 @ 0.55 Animij: The host maintains a slight edge just before the bottleneck, ensuring its structural integrity is the final word of the input stage.','IN09 @ 0.50/0.50: An exact 50/50 split to create a perfectly balanced and stable transition into the UNET\'s semantic core.','IN10 @ 0.48 Animij: Graycolor takes a slight lead (0.52) for the first time, beginning to define the abstract concept with its semi-realistic style.','IN11 @ 0.45 Animij: Further strengthens Graycolor\'s conceptual dominance (0.55) right before the middle block, ensuring its style is deeply embedded.','M00 @ 0.40 Animij: Graycolor is given its strongest weight (0.60) at the UNET bottleneck. This ensures its semi-realistic, painterly style is embedded in the deepest semantic layer.','OUT00 @ 0.42 Animij: Graycolor remains dominant (0.58) as the model begins to reconstruct the image, propagating its style outwards from the core.','OUT01 @ 0.45 Animij: The balance begins to shift back towards the host, re-introducing Animij\'s structural logic into the reconstruction.','OUT02 @ 0.48 Animij: Graycolor still holds a slight majority (0.52), ensuring its painterly style continues to influence the early detail layers.','OUT03 @ 0.50/0.50: A second perfect 50/50 split, creating a fused block that draws equally from both models\' approaches to detail and texture.','OUT04 @ 0.53 Animij: The host retakes the lead, beginning to apply its clean, stylized interpretation to the reconstructed features.','OUT05 @ 0.58 Animij: The emphasis on the host grows, focusing on its superior ability to generate clean lines and cel-style shading.','OUT06 @ 0.65 Animij: A stronger weight for the host ensures that fine details like eyes, hair strands, and accessories adhere to the target anime aesthetic.','OUT07 @ 0.70 Animij: The host continues to dominate, refining textures to match its retro style while retaining some of Graycolor\'s painterly grit.','OUT08 @ 0.75 Animij: A significant weight for the host to perform a final pass on the overall structure and composition, ensuring coherence.','OUT09 @ 0.80 Animij: Heavily favors the host for rendering the final, high-frequency details with maximum clarity and sharpness.','OUT10 @ 0.85 Animij: Overwhelmingly favors the host to ensure the final linework is crisp and clean, which is critical for the goal of vectorization.','OUT11 @ 0.90 Animij: A final, decisive weight for the host to ensure the output is clean, vibrant, and consistent with its core style, removing any latent noise.']
+            },
+            host_dominant: {
+                explanation: "<strong>Recipe B: Host-Dominant</strong><br>This recipe gives more weight to Animij across all blocks. The result will be a model with exceptionally strong anatomy and compositional coherence, closely adhering to the retro anime style. However, it will be less receptive to the painterly style of the donors, which may appear more subtle.",
+                weights: [0.95, 0.92, 0.90, 0.88, 0.85, 0.80, 0.75, 0.70, 0.65, 0.60, 0.55, 0.50, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.88, 0.90, 0.92, 0.95],
+                justifications: ['(Host-Dominant) IN00 @ 0.95 Animij: Maximum structural integrity from the start.','(Host-Dominant) IN01 @ 0.92 Animij: Maintain overwhelming control over anatomy.','(Host-Dominant) IN02 @ 0.90 Animij: Ensure subject form is purely Animij.','(Host-Dominant) IN03 @ 0.88 Animij: Minimal influence from Graycolor.','(Host-Dominant) IN04 @ 0.85 Animij: Prioritize structure over style blending.','(Host-Dominant) IN05 @ 0.80 Animij: Keep the core style very close to Animij.','(Host-Dominant) IN06 @ 0.75 Animij: A 3:1 ratio favoring structure.','(Host-Dominant) IN07 @ 0.70 Animij: Strong host control leading into the middle.','(Host-Dominant) IN08 @ 0.65 Animij: Ensure Animij has the last word before the core.','(Host-Dominant) IN09 @ 0.60 Animij: A host-favored blend for stability.','(Host-Dominant) IN10 @ 0.55 Animij: A slight host bias even during concept formation.','(Host-Dominant) IN11 @ 0.50/0.50: An even split right before the core.','(Host-Dominant) M00 @ 0.45 Animij: Even at the core, maintain a strong host presence.','(Host-Dominant) OUT00 @ 0.50/0.50: Start reconstruction with an even split.','(Host-Dominant) OUT01 @ 0.55 Animij: Immediately begin re-asserting host control.','(Host-Dominant) OUT02 @ 0.60 Animij: Strengthen host control over early details.','(Host-Dominant) OUT03 @ 0.65 Animij: Prioritize host logic for detail refinement.','(Host-Dominant) OUT04 @ 0.70 Animij: Strong host control over feature reconstruction.','(Host-Dominant) OUT05 @ 0.75 Animij: A 3:1 ratio favoring host linework.','(Host-Dominant) OUT06 @ 0.80 Animij: Overwhelmingly favor host for fine details.','(Host-Dominant) OUT07 @ 0.85 Animij: Ensure textures are primarily from the host.','(Host-Dominant) OUT08 @ 0.88 Animij: Final structural polish is almost entirely host-driven.','(Host-Dominant) OUT09 @ 0.90 Animij: Maximum clarity from the host.','(Host-Dominant) OUT10 @ 0.92 Animij: Ensure linework is exceptionally clean.','(Host-Dominant) OUT11 @ 0.95 Animij: Final output is almost pure Animij style.']
+            },
+            donor_receptive: {
+                explanation: "<strong>Recipe C: Donor-Receptive</strong><br>This recipe gives more weight to Graycolor. This creates a host model that is more stylistically flexible and will be more receptive to the painterly and thematic donors. The trade-off is a potential reduction in compositional stability and a less distinct '90s anime' feel.",
+                weights: [0.85, 0.82, 0.80, 0.78, 0.70, 0.65, 0.60, 0.55, 0.50, 0.45, 0.42, 0.40, 0.35, 0.38, 0.40, 0.42, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85],
+                justifications: ['(Donor-Receptive) IN00 @ 0.85 Animij: A softer start, immediately allowing more style influence.','(Donor-Receptive) IN01 @ 0.82 Animij: Weaken host control early to encourage blending.','(Donor-Receptive) IN02 @ 0.80 Animij: A 4:1 ratio, giving Graycolor a strong early voice.','(Donor-Receptive) IN03 @ 0.78 Animij: Continue to prioritize style blending over pure structure.','(Donor-Receptive) IN04 @ 0.70 Animij: A strong push towards Graycolor\'s style.','(Donor-Receptive) IN05 @ 0.65 Animij: Allow Graycolor significant influence on features.','(Donor-Receptive) IN06 @ 0.60 Animij: A 60/40 split favoring structure, but with strong style.','(Donor-Receptive) IN07 @ 0.55 Animij: Approach the middle with a near-even split.','(Donor-Receptive) IN08 @ 0.50/0.50: An even split to maximize fusion potential.','(Donor-Receptive) IN09 @ 0.45 Animij: Let Graycolor lead the transition to the core.','(Donor-Receptive) IN10 @ 0.42 Animij: Strengthen Graycolor\'s conceptual influence.','(Donor-Receptive) IN11 @ 0.40 Animij: A strong 60% Graycolor weight before the bottleneck.','(Donor-Receptive) M00 @ 0.35 Animij: Give Graycolor a decisive 65% weight at the core.','(Donor-Receptive) OUT00 @ 0.38 Animij: Begin reconstruction with a strong Graycolor influence.','(Donor-Receptive) OUT01 @ 0.40 Animij: Maintain a 60% Graycolor weight in early reconstruction.','(Donor-Receptive) OUT02 @ 0.42 Animij: Continue to prioritize the painterly style.','(Donor-Receptive) OUT03 @ 0.45 Animij: A donor-favored split for detail refinement.','(Donor-Receptive) OUT04 @ 0.50/0.50: An even split for the final feature pass.','(Donor-Receptive) OUT05 @ 0.55 Animij: Begin shifting back to Animij for linework.','(Donor-Receptive) OUT06 @ 0.60 Animij: A 60/40 split favoring host for fine details.','(Donor-Receptive) OUT07 @ 0.65 Animij: Strengthen host control over final textures.','(Donor-Receptive) OUT08 @ 0.70 Animij: A 70/30 split for the final structural polish.','(Donor-Receptive) OUT09 @ 0.75 Animij: A strong host presence for clarity.','(Donor-Receptive) OUT10 @ 0.80 Animij: Ensure final linework is mostly from the host.','(Donor-Receptive) OUT11 @ 0.85 Animij: A strong host weight for a clean finish.']
+            }
+        }
+    };
+
+    const ponyData = {
+        labels: ['IN00', 'IN01', 'IN02', 'IN03', 'IN04', 'IN05', 'IN06', 'IN07', 'IN08', 'IN09', 'IN10', 'IN11', 'M00', 'OUT00', 'OUT01', 'OUT02', 'OUT03', 'OUT04', 'OUT05', 'OUT06', 'OUT07', 'OUT08', 'OUT09', 'OUT10', 'OUT11'],
+        recipes: {
+            stage1: { model1: 'JANKU', model2: 'NEW ERA', color1: '#6366F1', color2: '#4338CA', weights: [0.80, 0.80, 0.75, 0.75, 0.70, 0.65, 0.60, 0.55, 0.50, 0.50, 0.50, 0.50, 0.45, 0.50, 0.50, 0.55, 0.60, 0.65, 0.70, 0.70, 0.75, 0.75, 0.80, 0.80, 0.85], justifications: ['Stage 1 (JANKU/NEW ERA) - IN00 @ 0.80 JANKU: Heavily favor JANKU to establish its versatile structure as the foundation.','Stage 1 - IN01 @ 0.80 JANKU: Continue JANKU dominance for anatomical coherence.','Stage 1 - IN02 @ 0.75 JANKU: Begin blending in NEW ERA\'s thematic style.','Stage 1 - IN03 @ 0.75 JANKU: Further integrate NEW ERA\'s darker aesthetic.','Stage 1 - IN04 @ 0.70 JANKU: Increase NEW ERA\'s influence on mid-level features.','Stage 1 - IN05 @ 0.65 JANKU: Move towards a more balanced style blend.','Stage 1 - IN06 @ 0.60 JANKU: Allow NEW ERA to have a strong say in style.','Stage 1 - IN07 @ 0.55 JANKU: Approach equilibrium before the conceptual core.','Stage 1 - IN08 @ 0.50/0.50: A balanced split for a stable transition.','Stage 1 - IN09 @ 0.50/0.50: A balanced split for a stable transition.','Stage 1 - IN10 @ 0.50/0.50: A balanced split for a stable transition.','Stage 1 - IN11 @ 0.50/0.50: A balanced split for a stable transition.','Stage 1 - M00 @ 0.45 JANKU: Give NEW ERA the edge (0.55) at the core to ensure its dark themes are deeply embedded.','Stage 1 - OUT00 @ 0.50/0.50: A balanced reconstruction start.','Stage 1 - OUT01 @ 0.50/0.50: A balanced reconstruction start.','Stage 1 - OUT02 @ 0.55 JANKU: Begin shifting back to JANKU for structural refinement.','Stage 1 - OUT03 @ 0.60 JANKU: Increase JANKU\'s role in defining details.','Stage 1 - OUT04 @ 0.65 JANKU: Further prioritize JANKU\'s clean interpretation.','Stage 1 - OUT05 @ 0.70 JANKU: Emphasize JANKU for linework and shading.','Stage 1 - OUT06 @ 0.70 JANKU: Emphasize JANKU for linework and shading.','Stage 1 - OUT07 @ 0.75 JANKU: Prioritize JANKU for fine details.','Stage 1 - OUT08 @ 0.75 JANKU: Prioritize JANKU for fine details.','Stage 1 - OUT09 @ 0.80 JANKU: Heavily favor JANKU for final sharpness.','Stage 1 - OUT10 @ 0.80 JANKU: Heavily favor JANKU for final sharpness.','Stage 1 - OUT11 @ 0.85 JANKU: A decisive weight for JANKU for a clean, coherent output.']},
+            stage2: { model1: 'Graycolor', model2: 'SinGlo', color1: '#F59E0B', color2: '#B45309', weights: [0.85, 0.85, 0.80, 0.80, 0.75, 0.70, 0.70, 0.65, 0.65, 0.60, 0.60, 0.60, 0.55, 0.60, 0.60, 0.65, 0.65, 0.70, 0.70, 0.75, 0.75, 0.80, 0.80, 0.85, 0.85], justifications: ['Stage 2 (Graycolor/SinGlo) - IN00 @ 0.85 Graycolor: Establish Graycolor\'s semi-realism as the base.','Stage 2 - IN01 @ 0.85 Graycolor: Maintain Graycolor dominance for a consistent painterly foundation.','Stage 2 - IN02 @ 0.80 Graycolor: Start to introduce SinGlo\'s unique textural properties.','Stage 2 - IN03 @ 0.80 Graycolor: Continue blending in SinGlo\'s style.','Stage 2 - IN04 @ 0.75 Graycolor: Increase SinGlo\'s influence on the style.','Stage 2 - IN05 @ 0.70 Graycolor: Give SinGlo a stronger voice in mid-level details.','Stage 2 - IN06 @ 0.70 Graycolor: Give SinGlo a stronger voice in mid-level details.','Stage 2 - IN07 @ 0.65 Graycolor: Move towards a more even blend of textures.','Stage 2 - IN08 @ 0.65 Graycolor: Move towards a more even blend of textures.','Stage 2 - IN09 @ 0.60 Graycolor: Allow SinGlo to significantly influence the pre-middle blocks.','Stage 2 - IN10 @ 0.60 Graycolor: Allow SinGlo to significantly influence the pre-middle blocks.','Stage 1 - IN11 @ 0.60 Graycolor: Allow SinGlo to significantly influence the pre-middle blocks.','Stage 2 - M00 @ 0.55 Graycolor: A near-even split at the core to fuse the two textural styles.','Stage 2 - OUT00 @ 0.60 Graycolor: Start reconstruction with a slight favor to Graycolor\'s coherence.','Stage 2 - OUT01 @ 0.60 Graycolor: Start reconstruction with a slight favor to Graycolor\'s coherence.','Stage 2 - OUT02 @ 0.65 Graycolor: Continue favoring Graycolor for a stable detail base.','Stage 2 - OUT03 @ 0.65 Graycolor: Continue favoring Graycolor for a stable detail base.','Stage 2 - OUT04 @ 0.70 Graycolor: Emphasize Graycolor\'s painterly feel.','Stage 2 - OUT05 @ 0.70 Graycolor: Emphasize Graycolor\'s painterly feel.','Stage 2 - OUT06 @ 0.75 Graycolor: Strongly favor Graycolor for refined textures.','Stage 2 - OUT07 @ 0.75 Graycolor: Strongly favor Graycolor for refined textures.','Stage 2 - OUT08 @ 0.80 Graycolor: Let Graycolor dominate the final detail passes.','Stage 2 - OUT09 @ 0.80 Graycolor: Let Graycolor dominate the final detail passes.','Stage 2 - OUT10 @ 0.85 Graycolor: Overwhelmingly favor Graycolor for a clean, painterly finish.','Stage 2 - OUT11 @ 0.85 Graycolor: Overwhelmingly favor Graycolor for a clean, painterly finish.']},
+            stage3: { model1: '"Dark Anime"', model2: '"Painterly Bridge"', color1: '#1E40AF', color2: '#78350F', weights: [0.90, 0.90, 0.88, 0.85, 0.82, 0.80, 0.78, 0.75, 0.72, 0.70, 0.68, 0.65, 0.60, 0.62, 0.65, 0.68, 0.70, 0.72, 0.75, 0.78, 0.80, 0.82, 0.85, 0.88, 0.90], justifications: ['Stage 3 (Final Fusion) - IN00 @ 0.90 Dark Anime: Overwhelmingly favor the Dark Anime base for structure.','Stage 3 - IN01 @ 0.90 Dark Anime: Maintain structural dominance.','Stage 3 - IN02 @ 0.88 Dark Anime: Gently start introducing the painterly texture.','Stage 3 - IN03 @ 0.85 Dark Anime: Increase the painterly influence slightly.','Stage 3 - IN04 @ 0.82 Dark Anime: Blend more painterly style into the mid-blocks.','Stage 3 - IN05 @ 0.80 Dark Anime: Give the painterly merge a 20% say in style.','Stage 3 - IN06 @ 0.78 Dark Anime: Continue the gradual blend.','Stage 3 - IN07 @ 0.75 Dark Anime: A 75/25 split before the core.','Stage 3 - IN08 @ 0.72 Dark Anime: Further increase painterly influence.','Stage 3 - IN09 @ 0.70 Dark Anime: A 70/30 split.','Stage 3 - IN10 @ 0.68 Dark Anime: Nearing the core, give more weight to the painterly style.','Stage 3 - IN11 @ 0.65 Dark Anime: A strong painterly influence before the bottleneck.','Stage 3 - M00 @ 0.60 Dark Anime: A 60/40 split at the core, favoring the Dark Anime base for thematic coherence but allowing a strong painterly concept.','Stage 3 - OUT00 @ 0.62 Dark Anime: Start reconstruction with a similar 60/40 split.','Stage 3 - OUT01 @ 0.65 Dark Anime: Begin shifting back to the Dark Anime base.','Stage 3 - OUT02 @ 0.68 Dark Anime: Reinforce the core anime style.','Stage 3 - OUT03 @ 0.70 Dark Anime: A 70/30 split to blend details.','Stage 3 - OUT04 @ 0.72 Dark Anime: Prioritize the Dark Anime base\'s detail interpretation.','Stage 3 - OUT05 @ 0.75 Dark Anime: A strong 75/25 split favoring the Dark Anime base for linework.','Stage 3 - OUT06 @ 0.78 Dark Anime: Increase dominance of the base for clean textures.','Stage 3 - OUT07 @ 0.80 Dark Anime: A strong 80/20 split for final details.','Stage 3 - OUT08 @ 0.82 Dark Anime: Further prioritize the base for coherence.','Stage 3 - OUT09 @ 0.85 Dark Anime: Heavily favor the Dark Anime base for sharp, clean lines.','Stage 3 - OUT10 @ 0.88 Dark Anime: Ensure the final output is overwhelmingly defined by the base style.','Stage 3 - OUT11 @ 0.90 Dark Anime: A final decisive weight for the Dark Anime base for a clean, vector-ready finish.']}
+        }
+    };
+
+    // --- Chart Instances ---
+    let sdxlChartInstance = null;
+    let ponyChartInstance = null;
+
+    // --- DOM Elements ---
+    const selectSdxlBtn = document.getElementById('select-sdxl');
+    const selectPonyBtn = document.getElementById('select-pony');
+    const sdxlContent = document.getElementById('sdxl-content');
+    const ponyContent = document.getElementById('pony-content');
+
+    // --- SDXL Chart Logic ---
+    function initializeSdxlChart() {
+        const ctx = document.getElementById('sdxlChart').getContext('2d');
+        const justificationEl = document.getElementById('sdxl-justification');
+        const recipeButtons = document.querySelectorAll('#sdxl-content .recipe-btn-sdxl');
+        const explanationEl = document.getElementById('sdxl-recipe-explanation');
+
+        sdxlChartInstance = new Chart(ctx, {
+            type: 'bar',
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    tooltip: { mode: 'index', intersect: false, callbacks: { label: (c) => `${c.dataset.label}: ${(c.parsed.y * 100).toFixed(2)}%` }},
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    x: { stacked: true, grid: { display: false } },
+                    y: { stacked: true, beginAtZero: true, max: 1.0, grid: { color: '#e2e8f0' }, ticks: { callback: (v) => (v * 100) + '%' } }
+                },
+                onHover: (e, el) => {
+                    const activeRecipeKey = document.querySelector('#sdxl-content .recipe-btn-sdxl.bg-indigo-600').id.replace('recipe-sdxl-', '');
+                    justificationEl.textContent = el.length ? sdxlData.recipes[activeRecipeKey].justifications[el[0].index] : 'Hover over a block for its justification.';
+                }
+            }
+        });
+
+        function updateSdxlChart(recipeKey) {
+            const recipe = sdxlData.recipes[recipeKey];
+            if (!recipe) return;
+            explanationEl.innerHTML = recipe.explanation;
+            sdxlChartInstance.data = {
+                labels: sdxlData.labels,
+                datasets: [
+                    { label: 'Animij', data: recipe.weights, backgroundColor: '#6366F1', barPercentage: 0.9, categoryPercentage: 0.8 },
+                    { label: 'Graycolor', data: recipe.weights.map(w => 1 - w), backgroundColor: '#F59E0B', barPercentage: 0.9, categoryPercentage: 0.8 }
+                ]
+            };
+            sdxlChartInstance.update();
+        }
+
+        recipeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const recipeKey = button.id.replace('recipe-sdxl-', '');
+                recipeButtons.forEach(btn => {
+                    btn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600');
+                    btn.classList.add('bg-white', 'text-slate-700', 'border-slate-300');
+                });
+                button.classList.add('bg-indigo-600', 'text-white', 'border-indigo-600');
+                button.classList.remove('bg-white', 'text-slate-700', 'border-slate-300');
+                updateSdxlChart(recipeKey);
+            });
+        });
+        updateSdxlChart('balanced');
+    }
+
+    // --- PONY Chart Logic ---
+    function initializePonyChart() {
+        const ctx = document.getElementById('ponyChart').getContext('2d');
+        const justificationEl = document.getElementById('pony-justification');
+        const recipeButtons = document.querySelectorAll('#pony-content .recipe-btn-pony');
+        
+        ponyChartInstance = new Chart(ctx, {
+            type: 'bar',
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    tooltip: { mode: 'index', intersect: false, callbacks: { label: (c) => `${c.dataset.label}: ${(c.parsed.y * 100).toFixed(0)}%` }},
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    x: { stacked: true, grid: { display: false } },
+                    y: { stacked: true, beginAtZero: true, max: 1.0, grid: { color: '#e2e8f0' }, ticks: { callback: (v) => (v * 100) + '%' } }
+                },
+                onHover: (e, el) => {
+                    const activeRecipeKey = document.querySelector('#pony-content .recipe-btn-pony.bg-indigo-600').id.replace('recipe-pony-', '');
+                    justificationEl.textContent = el.length ? ponyData.recipes[activeRecipeKey].justifications[el[0].index] : 'Select a recipe and hover over a block for justification.';
+                }
+            }
+        });
+
+        function updatePonyChart(recipeKey) {
+            const recipe = ponyData.recipes[recipeKey];
+            if (!recipe) return;
+            ponyChartInstance.data = {
+                labels: ponyData.labels,
+                datasets: [
+                    { label: recipe.model1, data: recipe.weights, backgroundColor: recipe.color1, barPercentage: 0.9, categoryPercentage: 0.8 },
+                    { label: recipe.model2, data: recipe.weights.map(w => 1 - w), backgroundColor: recipe.color2, barPercentage: 0.9, categoryPercentage: 0.8 }
+                ]
+            };
+            ponyChartInstance.update();
+        }
+
+        recipeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const recipeKey = button.id.replace('recipe-pony-', '');
+                recipeButtons.forEach(btn => {
+                    btn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600');
+                    btn.classList.add('bg-white', 'text-slate-700', 'border-slate-300');
+                });
+                button.classList.add('bg-indigo-600', 'text-white', 'border-indigo-600');
+                button.classList.remove('bg-white', 'text-slate-700', 'border-slate-300');
+                updatePonyChart(recipeKey);
+            });
+        });
+        
+        updatePonyChart('stage1'); // Initial render
+    }
+
+    // --- Main Control Logic ---
+    function switchVersion(version) {
+        if (version === 'sdxl') {
+            sdxlContent.style.display = 'block';
+            ponyContent.style.display = 'none';
+            selectSdxlBtn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-600');
+            selectSdxlBtn.classList.remove('bg-white', 'text-slate-700', 'border-slate-300');
+            selectPonyBtn.classList.add('bg-white', 'text-slate-700', 'border-slate-300');
+            selectPonyBtn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600');
+            if (!sdxlChartInstance) initializeSdxlChart();
+        } else {
+            sdxlContent.style.display = 'none';
+            ponyContent.style.display = 'block';
+            selectPonyBtn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-600');
+            selectPonyBtn.classList.remove('bg-white', 'text-slate-700', 'border-slate-300');
+            selectSdxlBtn.classList.add('bg-white', 'text-slate-700', 'border-slate-300');
+            selectSdxlBtn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600');
+            if (!ponyChartInstance) initializePonyChart();
+        }
+    }
+
+    selectSdxlBtn.addEventListener('click', () => switchVersion('sdxl'));
+    selectPonyBtn.addEventListener('click', () => switchVersion('pony'));
+
+    // Initial state
+    switchVersion('sdxl');
+});
+</script>
+
+</body>
+</html>
