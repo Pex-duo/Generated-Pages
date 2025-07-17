@@ -157,11 +157,11 @@
     // Supported document types
     const docTypes = [
       { ext: ".html", icon: "icon-html", viewer: "iframe" },
-      { ext: ".pdf", icon: "icon-pdf", viewer: "iframe" },
-      { ext: ".doc", icon: "icon-doc", viewer: "iframe" },
-      { ext: ".docx", icon: "icon-doc", viewer: "iframe" },
-      { ext: ".xls", icon: "icon-xls", viewer: "iframe" },
-      { ext: ".xlsx", icon: "icon-xls", viewer: "iframe" }
+      { ext: ".pdf", icon: "icon-pdf", viewer: "iframe-google" },
+      { ext: ".doc", icon: "icon-doc", viewer: "iframe-google" },
+      { ext: ".docx", icon: "icon-doc", viewer: "iframe-google" },
+      { ext: ".xls", icon: "icon-xls", viewer: "iframe-google" },
+      { ext: ".xlsx", icon: "icon-xls", viewer: "iframe-google" }
     ];
 
     // If file is Google Sheets/Docs link (as .url file), treat specially
@@ -169,7 +169,6 @@
       return filename.endsWith(".gsheet") || filename.endsWith(".gdoc");
     }
 
-    // Recursively fetch folder contents
     async function fetchFiles(path = "") {
       const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
       const response = await fetch(url);
@@ -178,7 +177,6 @@
       return Array.isArray(files) ? files : [];
     }
 
-    // Render file/folder list
     async function renderFileList(path = "") {
       const list = document.getElementById('file-list');
       if (path === "") list.innerHTML = "";
@@ -201,7 +199,6 @@
         }
       });
 
-      // Folder click event
       document.querySelectorAll('.folder').forEach(folder => {
         folder.onclick = function() {
           list.innerHTML = "";
@@ -219,7 +216,6 @@
         };
       });
 
-      // File click event
       document.querySelectorAll('#file-list a[data-path]').forEach(link => {
         link.onclick = function() {
           openFileInViewer(this.getAttribute('data-path'));
@@ -237,17 +233,23 @@
       if (path.endsWith(".html")) {
         iframeViewer.src = githubPagesUrl + path.replace(/\\/g, '/').replace(/^\/+/, '');
         iframeViewer.style.display = 'block';
-      } else if (path.endsWith(".pdf") || path.endsWith(".doc") || path.endsWith(".docx") || path.endsWith(".xls") || path.endsWith(".xlsx")) {
-        // Use raw file for these types
+      } else if (
+        path.endsWith(".pdf") ||
+        path.endsWith(".doc") ||
+        path.endsWith(".docx") ||
+        path.endsWith(".xls") ||
+        path.endsWith(".xlsx")
+      ) {
+        // Use Google Docs Viewer so it is displayed, not downloaded
         const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${path}`;
-        iframeViewer.src = rawUrl;
+        const googleViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(rawUrl)}&embedded=true`;
+        iframeViewer.src = googleViewerUrl;
         iframeViewer.style.display = 'block';
       } else if (isGoogleDoc(path)) {
         // If you store .url files with Google Doc links, fetch and parse it
         fetch(`https://raw.githubusercontent.com/${owner}/${repo}/main/${path}`)
           .then(resp => resp.text())
           .then(link => {
-            // Try to extract url from file
             const match = link.match(/https?:\/\/[^\s]+/);
             if (match) {
               iframeViewer.src = match[0];
