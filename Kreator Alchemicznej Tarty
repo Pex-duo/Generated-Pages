@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kreator Alchemicznej Tarty</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Warm Earth Tones -->
+    <!-- Application Structure Plan: A multi-step "Tart Configurator" flow was designed to transform the static report into an interactive, task-oriented experience. This structure guides the user through logical choices (Base -> Cream -> Finishings), making the complex, modular information digestible and actionable. Instead of passive reading, the user actively builds their desired recipe. The final step consolidates all choices into a single, personalized output, directly fulfilling the user's primary goal. This is far more usable and engaging than a linear document representation. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Base & Cream comparison tables. -> Goal: Compare & Select. -> Viz/Method: Interactive selection cards + Radar Chart (Chart.js/Canvas). -> Interaction: Clicking a card selects the option; the chart provides an immediate visual comparison of key attributes (flavor, texture, effort). -> Justification: A radar chart is superior to a text table for comparing multiple qualitative dimensions simultaneously, enhancing decision-making.
+        - Report Info: Full recipe ingredients and instructions for all components. -> Goal: Inform & Instruct. -> Viz/Method: Dynamically generated HTML text blocks. -> Interaction: "Generate Recipe" button compiles a custom recipe. -> Justification: This provides a tailored, actionable output based on user choices, which is the core purpose of the application.
+        - Report Info: Technical tips (blind baking, crunchy layer, storage). -> Goal: Inform & Enhance. -> Viz/Method: Presented as optional add-ons and contextual tips within the flow. -> Interaction: A toggle for the "crunchy layer" and a dedicated final section for tips. -> Justification: Integrates advanced techniques as clear, optional choices and advice rather than burying them in dense text.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .step-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .selected-card {
+            border-width: 2px;
+            border-color: #A45C40; 
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(164, 92, 64, 0.3), 0 4px 6px -2px rgba(164, 92, 64, 0.2);
+        }
+        .btn-primary {
+            background-color: #A45C40;
+            color: #F6F4F1;
+        }
+        .btn-primary:hover {
+            background-color: #8C4D36;
+        }
+        .btn-secondary {
+            background-color: #E4D5C7;
+            color: #584136;
+        }
+        .btn-secondary:hover {
+            background-color: #D3C4B6;
+        }
+    </style>
+</head>
+<body class="bg-[#F6F4F1] text-[#584136]">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#673828]">Kreator Alchemicznej Tarty</h1>
+            <p class="mt-2 text-lg text-[#8C4D36]">Skomponuj swój unikalny, zdrowy deser.</p>
+        </header>
+
+        <main>
+            <div id="step-1" class="text-center">
+                <div class="bg-[#E4D5C7] p-8 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-bold mb-4 text-[#673828]">Witaj w kulinarnym laboratorium!</h2>
+                    <p class="mb-6">Ta aplikacja pozwoli Ci stworzyć deser idealnie dopasowany do Twoich upodobań. Zamiast jednego przepisu, otrzymujesz zestaw modułów — fundamentów, kremów i dodatków — które możesz dowolnie łączyć. Będziemy balansować smaki, grać teksturami i korzystać z naturalnej słodyczy składników. Jesteś gotów na stworzenie własnego dzieła?</p>
+                    <button onclick="navigateTo(2)" class="btn-primary font-bold py-3 px-8 rounded-lg shadow-md transition-transform transform hover:scale-105">Rozpocznij tworzenie</button>
+                </div>
+            </div>
+
+            <div id="step-2" class="hidden">
+                <h2 class="text-3xl font-bold text-center mb-2 text-[#673828]">Krok 1: Wybierz Fundament</h2>
+                <p class="text-center text-lg mb-8">Baza to dusza Twojej tarty. Wybierz spód, który najlepiej oddaje pożądany charakter deseru.</p>
+                <div id="base-selection" class="grid md:grid-cols-3 gap-6 mb-8"></div>
+                <div class="bg-white/50 p-4 rounded-lg shadow-inner">
+                    <h3 class="text-xl font-bold text-center mb-4">Analiza Porównawcza Fundamentów</h3>
+                    <div class="chart-container">
+                        <canvas id="baseChart"></canvas>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-8">
+                    <button onclick="navigateTo(1)" class="btn-secondary font-bold py-2 px-6 rounded-lg">Wróć</button>
+                    <button id="to-step-3" onclick="navigateTo(3)" class="btn-primary font-bold py-2 px-6 rounded-lg" disabled>Dalej</button>
+                </div>
+            </div>
+            
+            <div id="step-3" class="hidden">
+                <h2 class="text-3xl font-bold text-center mb-2 text-[#673828]">Krok 2: Skomponuj Koronę</h2>
+                <p class="text-center text-lg mb-8">Wybierz puszyste, zdrowe zwieńczenie. To ono nada tarcie lekkości i luksusowego smaku.</p>
+                <div id="cream-selection" class="grid md:grid-cols-3 gap-6 mb-8"></div>
+                 <div class="bg-white/50 p-4 rounded-lg shadow-inner">
+                    <h3 class="text-xl font-bold text-center mb-4">Analiza Porównawcza Kremów</h3>
+                    <div class="chart-container">
+                        <canvas id="creamChart"></canvas>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-8">
+                    <button onclick="navigateTo(2)" class="btn-secondary font-bold py-2 px-6 rounded-lg">Wróć</button>
+                    <button id="to-step-4" onclick="navigateTo(4)" class="btn-primary font-bold py-2 px-6 rounded-lg" disabled>Dalej</button>
+                </div>
+            </div>
+
+            <div id="step-4" class="hidden">
+                <h2 class="text-3xl font-bold text-center mb-2 text-[#673828]">Krok 3: Dodaj Fineszji</h2>
+                <p class="text-center text-lg mb-8">Wzbogać swoje dzieło o dodatkową teksturę i poznaj sekrety mistrzów cukiernictwa.</p>
+                <div class="space-y-6">
+                    <div class="bg-[#E4D5C7] p-6 rounded-lg shadow-md flex items-center justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-[#673828]">Warstwa "Chrupka"</h3>
+                            <p class="mt-1">Dodaj warstwę z prażonych orzechów i gorzkiej czekolady dla niesamowitego kontrastu tekstur.</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                          <input type="checkbox" id="crunchy-layer-toggle" class="sr-only peer" onchange="toggleCrunchyLayer(this.checked)">
+                          <div class="w-14 h-7 bg-gray-300 rounded-full peer peer-focus:ring-4 peer-focus:ring-orange-200 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#A45C40]"></div>
+                        </label>
+                    </div>
+                     <div class="bg-[#E4D5C7] p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-bold text-[#673828]">Porady Mistrzów</h3>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li><b>Bariera Przeciwwilgociowa:</b> Aby spód pozostał kruchy, posmaruj go cienką warstwą rozpuszczonej gorzkiej czekolady przed nałożeniem kremu. Warstwa "chrupka" również pełni tę funkcję!</li>
+                            <li><b>Idealne Krojenie:</b> Zanurz nóż w gorącej wodzie i wytrzyj go do sucha przed każdym cięciem.</li>
+                            <li><b>Przechowywanie:</b> Tartę przechowuj w lodówce. Najlepsza jest w ciągu 24 godzin, kiedy kontrast tekstur jest najmocniejszy.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-8">
+                    <button onclick="navigateTo(3)" class="btn-secondary font-bold py-2 px-6 rounded-lg">Wróć</button>
+                    <button onclick="generateRecipe()" class="btn-primary font-bold py-3 px-8 rounded-lg shadow-md transition-transform transform hover:scale-105">Generuj Mój Przepis</button>
+                </div>
+            </div>
+
+            <div id="step-5" class="hidden">
+                 <h2 class="text-3xl font-bold text-center mb-4 text-[#673828]">Twoja Alchemiczna Tarta</h2>
+                 <div id="recipe-output" class="bg-white p-6 md:p-8 rounded-lg shadow-xl prose max-w-none">
+                 </div>
+                 <div class="flex justify-center gap-4 mt-8">
+                    <button onclick="navigateTo(1, true)" class="btn-secondary font-bold py-2 px-6 rounded-lg">Zacznij od nowa</button>
+                    <button onclick="window.print()" class="btn-primary font-bold py-2 px-6 rounded-lg">Drukuj Przepis</button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+<script>
+const recipeData = {
+    bases: {
+        beetroot: {
+            id: 'beetroot',
+            title: 'Spód Brownie-Burak',
+            icon: '🌰',
+            description: 'Głęboki, ziemisty i intensywnie czekoladowy. Wilgotny i zwarty, stanowi idealną, stabilną bazę.',
+            ingredients: [
+                '400 g buraków, ugotowanych i obranych',
+                '3 duże jajka',
+                '100 g mąki migdałowej',
+                '80 g mąki pełnoziarnistej (np. orkiszowej)',
+                '50 g gorzkiego kakao wysokiej jakości',
+                '80 ml rozpuszczonego oleju kokosowego',
+                '1,5 łyżeczki proszku do pieczenia',
+                'Szczypta soli',
+                'Opcjonalnie: 2-3 łyżki miodu'
+            ],
+            instructions: `1. Piekarnik rozgrzej do 180°C. Formę do tarty (24-26 cm) natłuść i oprósz kakao.\n2. Ugotowane buraki zmiksuj na idealnie gładkie purée. Dodaj jajka, olej i ewentualny miód, ponownie miksując.\n3. W osobnej misce wymieszaj suche składniki. Połącz zawartość obu misek, mieszając delikatnie tylko do połączenia.\n4. Masę przelej do formy, wyrównaj. Piecz ok. 25-30 minut (do testu suchego patyczka z wilgotnymi okruszkami).\n5. Całkowicie wystudź w formie przed dalszymi krokami.`
+        },
+        carrot: {
+            id: 'carrot',
+            title: 'Spód Marchewkowo-Orzechowy',
+            icon: '🥕',
+            description: 'Aromatyczny i korzenny, z chrupiącymi orzechami. Kruchy na brzegach i delikatny w środku.',
+             ingredients: [
+                '200 g marchwi, startej na drobnych oczkach',
+                '120 g zimnego masła lub oleju kokosowego',
+                '100 g zimnego serka ricotta',
+                '150 g mąki pełnoziarnistej',
+                '50 g mąki ziemniaczanej',
+                '60 g posiekanych orzechów włoskich',
+                '1 jajko',
+                '1,5 łyżeczki cynamonu',
+                '0,5 łyżeczki sody oczyszczonej',
+                'Szczypta soli',
+                'Opcjonalnie: 2 łyżki miodu'
+            ],
+            instructions: `1. Piekarnik rozgrzej do 190°C. Formę do tarty (24-26 cm) natłuść.\n2. W misce połącz mąki, cynamon, sodę i sól. Dodaj zimne masło i ricottę, rozcierając do konsystencji mokrego piasku.\n3. Dodaj jajko, odciśniętą marchew i orzechy. Szybko zagnieć ciasto. Nie wyrabiaj zbyt długo.\n4. Ciasto zawiń w folię i schłodź w lodówce przez min. 30 minut.\n5. Schłodzonym ciastem wylep dno i boki formy. Nakłuj widelcem. Piecz ok. 20-25 minut, aż będzie złociste. Całkowicie wystudź.`
+        },
+        noBake: {
+            id: 'noBake',
+            title: 'Spód bez Pieczenia',
+            icon: '🥥',
+            description: 'Intensywnie orzechowo-kakaowy, z karmelową nutą daktyli. Gęsty, ciągnący, z chrupiącymi elementami.',
+            ingredients: [
+                '150 g daktyli Medjool, bez pestek',
+                '120 g płatków owsianych górskich',
+                '100 g orzechów (np. migdałów)',
+                '40 g wiórków kokosowych',
+                '3 łyżki gorzkiego kakao',
+                '4 łyżki rozpuszczonego oleju kokosowego',
+                'Szczypta soli'
+            ],
+            instructions: `1. Upraż płatki owsiane i orzechy na suchej patelni do zarumienienia. Wystudź.\n2. Daktyle zalej wrzątkiem na 15 minut, a następnie dobrze odsącz.\n3. Uprażone składniki zmiksuj pulsacyjnie na grubą mąkę. Przesyp do miski.\n4. Odsączone daktyle zmiksuj na gładką pastę. Dodaj resztę składników i zmiksuj wszystko razem do uzyskania lepkiej masy.\n5. Masą wylep dno i boki formy do tarty (24-26 cm), mocno dociskając. Wstaw do lodówki na min. 1-2 godziny, aby stężał.`
+        }
+    },
+    creams: {
+        mascarpone: {
+            id: 'mascarpone',
+            title: 'Malinowa Chmura z Mascarpone',
+            icon: '🍓',
+            description: 'Lekki i luksusowy krem o intensywnym, świeżym smaku malin. Niezwykle puszysty i stabilny.',
+            ingredients: [
+                '250 g zimnego serka mascarpone',
+                '300 ml zimnej śmietanki 36%',
+                '30-40 g sproszkowanych liofilizowanych malin',
+                'Opcjonalnie: 2-3 łyżki miodu lub erytrytolu'
+            ],
+            instructions: `1. Serek mascarpone i śmietankę umieść w misie miksera. Ubijaj na średnich obrotach, aż masa zacznie gęstnieć.\n2. Zmniejsz obroty i stopniowo dodawaj sproszkowane maliny oraz ewentualne słodzidło.\n3. Miksuj krótko, tylko do połączenia składników.`
+        },
+        coconut: {
+            id: 'coconut',
+            title: 'Tropikalne Marzenie Kokosowe',
+            icon: '🍌',
+            description: 'Bezmleczny, aksamitny krem o bogatym smaku kokosa i słodyczy dojrzałych bananów.',
+            ingredients: [
+                '2 puszki (2x400ml) pełnotłustego mleczka kokosowego (schłodzone min. 24h)',
+                '2 bardzo dojrzałe banany (zmiksowane na purée) LUB 30g liofilizowanego banana w proszku',
+                'Opcjonalnie: 1-2 łyżki syropu klonowego'
+            ],
+            instructions: `1. Ostrożnie otwórz schłodzone puszki i wyjmij tylko stałą, gęstą część mleczka kokosowego. Wodę zachowaj do czegoś innego.\n2. Gęstą śmietankę kokosową ubijaj na wysokich obrotach, aż stanie się puszysta.\n3. Pod koniec ubijania delikatnie wmieszaj purée z banana i ewentualne słodzidło.`
+        },
+        quark: {
+            id: 'quark',
+            title: 'Lekki Mus Twarogowy',
+            icon: '🍋',
+            description: 'Odświeżający, kwaskowaty i lekki jak chmurka. Klasyczny smak w nowoczesnej, eterycznej formie.',
+            ingredients: [
+                '500 g twarogu sernikowego (z wiaderka)',
+                '200 g gęstego jogurtu greckiego',
+                '3-4 łyżki miodu',
+                'Skórka otarta z 1 cytryny',
+                '2 łyżeczki żelatyny rozpuszczone w 4 łyżkach gorącej wody'
+            ],
+            instructions: `1. Twaróg, jogurt, miód i skórkę z cytryny zblenduj na idealnie gładką masę.\n2. Żelatynę rozpuść w gorącej wodzie. Dodaj do niej 2-3 łyżki masy serowej, wymieszaj (hartowanie), a następnie wlej do reszty masy, ciągle miksując.\n3. Gotowy mus wymaga schłodzenia w lodówce przez 3-4 godziny do stężenia.`
+        }
+    },
+    crunchyLayer: {
+        title: 'Warstwa "Chrupka"',
+        ingredients: [
+            '80 g czekolady gorzkiej (min. 85%)',
+            '1 łyżka oleju kokosowego',
+            '50 g grubo posiekanych, uprażonych orzechów',
+            '2 łyżki ziaren kakao (cacao nibs)'
+        ],
+        instructions: `1. Rozpuść czekoladę z olejem kokosowym w kąpieli wodnej.\n2. Wymieszaj z posiekanymi orzechami i ziarnami kakao.\n3. Masę rozprowadź cienką warstwą na papierze do pieczenia i wstaw do lodówki do całkowitego stwardnienia. Połam na kawałki lub ułóż w całości na spodzie tarty.`
+    }
+};
+
+let userSelections = {
+    base: null,
+    cream: null,
+    crunchyLayer: false
+};
+
+let baseChartInstance, creamChartInstance;
+
+function createCard(type, item) {
+    const card = document.createElement('div');
+    card.className = 'step-card bg-white p-6 rounded-lg shadow-md cursor-pointer border-2 border-transparent';
+    card.innerHTML = `
+        <div class="text-4xl mb-3">${item.icon}</div>
+        <h3 class="text-xl font-bold text-[#673828]">${item.title}</h3>
+        <p class="mt-2 text-sm">${item.description}</p>
+    `;
+    card.onclick = () => selectItem(type, item.id);
+    return card;
+}
+
+function selectItem(type, id) {
+    userSelections[type] = id;
+    const selectionContainer = document.getElementById(`${type}-selection`);
+    Array.from(selectionContainer.children).forEach(child => {
+        child.classList.remove('selected-card');
+    });
+    const selectedCard = Array.from(selectionContainer.children).find(child => child.innerHTML.includes(recipeData[`${type}s`][id].title));
+    selectedCard.classList.add('selected-card');
+    
+    if (type === 'base') {
+        document.getElementById('to-step-3').disabled = false;
+    } else if (type === 'cream') {
+        document.getElementById('to-step-4').disabled = false;
+    }
+}
+
+function toggleCrunchyLayer(isChecked) {
+    userSelections.crunchyLayer = isChecked;
+}
+
+function populateSelections() {
+    const baseContainer = document.getElementById('base-selection');
+    const creamContainer = document.getElementById('cream-selection');
+    for (const key in recipeData.bases) {
+        baseContainer.appendChild(createCard('base', recipeData.bases[key]));
+    }
+    for (const key in recipeData.creams) {
+        creamContainer.appendChild(createCard('cream', recipeData.creams[key]));
+    }
+}
+
+function navigateTo(step, isReset = false) {
+    if (isReset) {
+        userSelections = { base: null, cream: null, crunchyLayer: false };
+        document.querySelectorAll('.selected-card').forEach(el => el.classList.remove('selected-card'));
+        document.getElementById('to-step-3').disabled = true;
+        document.getElementById('to-step-4').disabled = true;
+        document.getElementById('crunchy-layer-toggle').checked = false;
+    }
+
+    document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
+    document.getElementById(`step-${step}`).classList.remove('hidden');
+    window.scrollTo(0, 0);
+}
+
+function generateRecipe() {
+    const { base, cream, crunchyLayer } = userSelections;
+    if (!base || !cream) {
+        alert('Proszę wybrać spód i krem!');
+        return;
+    }
+
+    const selectedBase = recipeData.bases[base];
+    const selectedCream = recipeData.creams[cream];
+    
+    let allIngredients = [
+        `<h3>Składniki na ${selectedBase.title}:</h3><ul>${selectedBase.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>`,
+        `<h3>Składniki na ${selectedCream.title}:</h3><ul>${selectedCream.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>`
+    ];
+
+    let allInstructions = [
+        `<h3>Przygotowanie ${selectedBase.title}:</h3><p>${selectedBase.instructions.replace(/\n/g, '<br>')}</p>`,
+    ];
+
+    if (crunchyLayer) {
+        allIngredients.push(`<h3>Składniki na Warstwę "Chrupką":</h3><ul>${recipeData.crunchyLayer.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>`);
+        allInstructions.push(`<h3>Przygotowanie Warstwy "Chrupkiej":</h3><p>${recipeData.crunchyLayer.instructions.replace(/\n/g, '<br>')}</p>`);
+    }
+    
+    allInstructions.push(`<h3>Przygotowanie ${selectedCream.title}:</h3><p>${selectedCream.instructions.replace(/\n/g, '<br>')}</p>`);
+
+    const assemblyInstructions = `<h3>Finalny Montaż:</h3>
+    <ol class="list-decimal list-inside">
+        <li>Upewnij się, że spód jest całkowicie wystudzony.</li>
+        ${crunchyLayer ? '<li>Na wystudzonym spodzie ułóż przygotowaną i schłodzoną warstwę "chrupką".</li>' : '<li>(Opcjonalnie) Posmaruj spód cienką warstwą roztopionej gorzkiej czekolady, aby zabezpieczyć go przed wilgocią.</li>'}
+        <li>Na spód (i ewentualną warstwę chrupką) wyłóż przygotowany krem.</li>
+        <li>Wygładź powierzchnię lub uformuj artystyczne kleksy.</li>
+        <li>Udekoruj tartę według uznania: świeżymi owocami, prażonymi orzechami, wiórkami kokosowymi lub startą czekoladą.</li>
+        <li>Schłodź tartę w lodówce przez co najmniej 1-2 godziny przed podaniem, aby smaki się połączyły. Jeśli użyłeś/aś musu twarogowego, czas chłodzenia to min. 3-4 godziny.</li>
+    </ol>`;
+
+    allInstructions.push(assemblyInstructions);
+
+    const outputDiv = document.getElementById('recipe-output');
+    outputDiv.innerHTML = `
+        <h3 class="text-2xl font-bold mb-4">Twój przepis na tartę: ${selectedBase.title} z ${selectedCream.title}${crunchyLayer ? ' i Warstwą Chrupką' : ''}</h3>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="md:col-span-1">
+                <h4 class="text-xl font-semibold border-b-2 border-[#A45C40] pb-2 mb-3">Lista Składników</h4>
+                ${allIngredients.join('')}
+            </div>
+            <div class="md:col-span-2">
+                 <h4 class="text-xl font-semibold border-b-2 border-[#A45C40] pb-2 mb-3">Instrukcje</h4>
+                ${allInstructions.join('')}
+            </div>
+        </div>
+    `;
+    navigateTo(5);
+}
+
+function createRadarChart(canvasId, labels, datasets) {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    const chartConfig = {
+        type: 'radar',
+        data: {
+            labels: labels,
+            datasets: datasets
+        },
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    angleLines: { color: 'rgba(88, 65, 54, 0.2)' },
+                    grid: { color: 'rgba(88, 65, 54, 0.2)' },
+                    pointLabels: {
+                        font: { size: 12, weight: 'bold' },
+                        color: '#673828'
+                    },
+                    ticks: {
+                        backdropColor: '#F6F4F1',
+                        color: '#8C4D36',
+                        stepSize: 1,
+                        max: 5,
+                        min: 0
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { color: '#584136', font: { size: 12 } }
+                }
+            }
+        }
+    };
+    if (canvasId === 'baseChart' && baseChartInstance) baseChartInstance.destroy();
+    if (canvasId === 'creamChart' && creamChartInstance) creamChartInstance.destroy();
+
+    if (canvasId === 'baseChart') {
+        baseChartInstance = new Chart(ctx, chartConfig);
+    } else {
+        creamChartInstance = new Chart(ctx, chartConfig);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    populateSelections();
+    
+    const baseLabels = ['Smak Ziemisty/Głęboki', 'Smak Korzenny/Lekki', 'Chrupkość', 'Wilgotność', 'Wymagany Wysiłek'];
+    const baseDatasets = [
+        { label: 'Brownie-Burak', data: [5, 1, 1, 5, 3], backgroundColor: 'rgba(131, 56, 23, 0.2)', borderColor: 'rgb(131, 56, 23)', pointBackgroundColor: 'rgb(131, 56, 23)' },
+        { label: 'Marchewkowo-Orzechowy', data: [1, 5, 4, 3, 4], backgroundColor: 'rgba(235, 137, 33, 0.2)', borderColor: 'rgb(235, 137, 33)', pointBackgroundColor: 'rgb(235, 137, 33)' },
+        { label: 'Bez Pieczenia', data: [3, 2, 5, 2, 2], backgroundColor: 'rgba(92, 64, 51, 0.2)', borderColor: 'rgb(92, 64, 51)', pointBackgroundColor: 'rgb(92, 64, 51)' }
+    ];
+    createRadarChart('baseChart', baseLabels, baseDatasets);
+
+    const creamLabels = ['Lekkość/Puszystość', 'Intensywność Smaku', 'Słodycz', 'Kwasowość', 'Stabilność'];
+    const creamDatasets = [
+        { label: 'Chmura z Mascarpone', data: [5, 4, 3, 4, 4], backgroundColor: 'rgba(217, 4, 41, 0.2)', borderColor: 'rgb(217, 4, 41)', pointBackgroundColor: 'rgb(217, 4, 41)' },
+        { label: 'Tropikalne Marzenie', data: [4, 5, 5, 1, 3], backgroundColor: 'rgba(255, 204, 0, 0.2)', borderColor: 'rgb(255, 204, 0)', pointBackgroundColor: 'rgb(255, 204, 0)' },
+        { label: 'Mus Twarogowy', data: [3, 3, 2, 5, 5], backgroundColor: 'rgba(128, 128, 128, 0.2)', borderColor: 'rgb(128, 128, 128)', pointBackgroundColor: 'rgb(128, 128, 128)' }
+    ];
+    createRadarChart('creamChart', creamLabels, creamDatasets);
+});
+</script>
+
+</body>
+</html>
