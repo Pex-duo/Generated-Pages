@@ -4,66 +4,105 @@
   <meta charset="UTF-8">
   <title>HTML Pages in Generated-Pages Repository</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 2em; }
-    h1 { color: #333; }
-    ul { list-style-type: none; padding: 0; }
-    li { padding: 6px 0; }
-    a { text-decoration: none; color: #0074d9; cursor: pointer; }
-    a:hover { text-decoration: underline; }
-    .html-icon::before { content: "🌐 "; }
-    .top-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
+    * { box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; margin: 0; background: #f7f7f7; }
+    .container {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+    }
+    .sidebar {
+      background: #fff;
+      padding: 2em 1em 2em 2em;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.03);
+      min-width: 270px;
+      max-width: 370px;
+      width: 370px;
+      border-right: 1px solid #eee;
+      height: 100vh;
+      overflow-y: auto;
+      transition: max-width 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+    .sidebar.narrow {
+      max-width: 370px;
+      width: 370px;
+    }
+    h1 {
+      color: #333;
+      font-size: 1.4em;
+      margin-bottom: 1.5em;
+      margin-top: 0;
       width: 100%;
-      background: #222;
-      color: #fff;
-      height: 48px;
+      word-break: break-all;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+    }
+    li {
+      padding: 8px 0;
+      width: 100%;
       display: flex;
       align-items: center;
-      padding: 0 16px;
-      z-index: 1000;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      border-bottom: 1px solid #f0f0f0;
     }
-    .top-bar .back-btn {
-      background: #0074d9;
-      color: #fff;
-      border: none;
-      padding: 8px 18px;
-      border-radius: 4px;
-      font-size: 15px;
-      cursor: pointer;
-      margin-right: 14px;
-      transition: background 0.2s;
+    a {
       text-decoration: none;
+      color: #0074d9;
+      font-size: 1em;
+      cursor: pointer;
+      width: 100%;
+      display: inline-block;
+      padding: 6px 0;
+      transition: background 0.2s;
+      border-radius: 4px;
     }
-    .top-bar .back-btn:hover {
-      background: #005fa3;
+    a:hover {
+      background: #e6f7ff;
+      text-decoration: underline;
     }
-    .top-bar h2 {
-      margin: 0;
-      font-size: 19px;
-      font-weight: 500;
-      letter-spacing: 1px;
+    .html-icon::before { content: "🌐 "; }
+    .viewer {
+      flex: 1 1 0%;
+      height: 100vh;
+      background: #f7f7f7;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
     }
-    body { margin-top: 60px; }
-    #file-list { margin-bottom: 2em; }
-    #viewer-container { width: 100%; min-height: 60vh; margin-top: 1em; display: none; }
-    #iframe-viewer { width: 100%; min-height: 60vh; border: 1px solid #ccc; border-radius: 8px; }
-    #close-iframe { margin: 1em 0; background: #e74c3c; color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;}
-    #close-iframe:hover { background: #c0392b; }
+    #iframe-viewer {
+      width: 100%;
+      height: 100vh;
+      border: none;
+      background: #fff;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.03);
+    }
+    .hidden {
+      display: none !important;
+    }
+    @media (max-width: 800px) {
+      .container { flex-direction: column; }
+      .sidebar, .sidebar.narrow { max-width: 100vw; width: 100vw; height: auto; }
+      .viewer { height: 70vh; }
+      #iframe-viewer { height: 70vh; }
+    }
   </style>
 </head>
 <body>
-  <div class="top-bar">
-    <a href="https://pex-duo.github.io/Generated-Pages" class="back-btn">Back</a>
-    <h2>Generated-Pages Repository Browser</h2>
-  </div>
-  <h1>HTML Pages in Generated-Pages Repository</h1>
-  <ul id="file-list"></ul>
-  <div id="viewer-container">
-    <button id="close-iframe">Close</button>
-    <iframe id="iframe-viewer" src="" frameborder="0"></iframe>
+  <div class="container">
+    <div class="sidebar narrow" id="sidebar">
+      <h1>HTML Pages in Generated-Pages Repository</h1>
+      <ul id="file-list"></ul>
+    </div>
+    <div class="viewer hidden" id="viewer-container">
+      <iframe id="iframe-viewer" src=""></iframe>
+    </div>
   </div>
   <script>
     const owner = "Pex-duo";
@@ -103,15 +142,10 @@
     }
 
     function openHtmlInIframe(filename) {
-      document.getElementById('viewer-container').style.display = 'block';
+      document.getElementById('viewer-container').classList.remove('hidden');
       document.getElementById('iframe-viewer').src = githubPagesUrl + filename;
-      window.scrollTo({ top: document.getElementById('viewer-container').offsetTop - 50, behavior: 'smooth' });
+      // Sidebar stays narrow, only shows file list and title
     }
-
-    document.getElementById('close-iframe').onclick = function() {
-      document.getElementById('viewer-container').style.display = 'none';
-      document.getElementById('iframe-viewer').src = "";
-    };
 
     fetchRepoFiles();
   </script>
