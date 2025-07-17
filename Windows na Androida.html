@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktywny Przewodnik po Emulatorach Windows na Androida</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals (Stone, Muted Blue) -->
+    <!-- Application Structure Plan: The application is designed as a task-oriented "selector guide" rather than a linear report. It starts with an interactive recommender to provide immediate value by answering the user's primary question: "Which one should I use?". This is followed by browsable sections for detailed comparisons (cards), data visualization (chart), and technical deep-dives (accordion). This structure prioritizes user decision-making by guiding them from a personalized recommendation to the underlying data, which is more effective for this type of content than simply reproducing the report's layout. The flow is designed to be non-linear, allowing users to engage with the content that is most relevant to them. -->
+    <!-- Visualization & Content Choices: 1. Report Info: User needs (stability, performance, etc.) -> Goal: Guide Choice -> Viz/Method: Interactive Recommender (JS logic) -> Justification: Provides instant, personalized answers, increasing user engagement from the start. 2. Report Info: Project details (Box64Droid, Winlator, forks) -> Goal: Compare Features -> Viz/Method: Interactive Cards with toggleable details (HTML/JS) -> Justification: Organizes dense information neatly, preventing cognitive overload while allowing for detailed exploration. 3. Report Info: Stability/Performance Matrix (Table 1) -> Goal: Visualize Comparison -> Viz/Method: Chart.js Horizontal Bar Chart -> Justification: Translates a dense data table into an easily scannable and digestible visual comparison, making relative strengths and weaknesses immediately apparent. 4. Report Info: Core Technologies (Box64, Wine, etc.) -> Goal: Provide In-Depth Info without Overwhelming -> Viz/Method: Accordion (HTML/JS toggle) -> Justification: Hides complexity from the main view but makes it accessible for expert users, maintaining a clean interface. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .chart-container { position: relative; width: 100%; max-width: 900px; margin-left: auto; margin-right: auto; height: 400px; max-height: 60vh; }
+        @media (min-width: 768px) { .chart-container { height: 500px; } }
+        .nav-link { transition: color 0.3s, border-color 0.3s; }
+        .card, .accordion-header { transition: all 0.3s ease; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
+        .recommendation-card { transition: opacity 0.5s, transform 0.5s; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 border-b border-stone-200">
+        <nav class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <h1 class="text-xl font-bold text-stone-900">Przewodnik po Emulatorach</h1>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#recommender" class="nav-link text-stone-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 pb-1">Pomocnik wyboru</a>
+                    <a href="#solutions" class="nav-link text-stone-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 pb-1">Przegląd rozwiązań</a>
+                    <a href="#comparison" class="nav-link text-stone-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 pb-1">Porównanie</a>
+                    <a href="#tech" class="nav-link text-stone-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 pb-1">Technologie</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 md:py-12">
+
+        <section id="intro" class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4 text-stone-900">Znajdź idealny emulator Windows na Androida</h2>
+            <p class="text-lg md:text-xl text-stone-600 max-w-3xl mx-auto">Uruchamianie gier i aplikacji z Windows na telefonie jest skomplikowane. Ten przewodnik pomoże Ci wybrać najlepsze rozwiązanie, analizując stabilność, wydajność i wsparcie dla Twojego urządzenia na podstawie obszernego raportu technicznego.</p>
+        </section>
+
+        <section id="recommender" class="mb-16 bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-stone-200">
+            <h3 class="text-2xl md:text-3xl font-bold text-center mb-2 text-stone-900">Interaktywny Pomocnik Wyboru</h3>
+            <p class="text-center text-stone-600 mb-8">Ta sekcja to interaktywne narzędzie, które zastępuje czytanie całego raportu. Odpowiedz na trzy kluczowe pytania dotyczące Twoich priorytetów i sprzętu, a my natychmiast zarekomendujemy Ci najbardziej odpowiednie rozwiązanie, bazując na ostatecznych wnioskach z analizy.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div>
+                    <label class="font-semibold text-stone-700 block mb-2">1. Co jest Twoim priorytetem?</label>
+                    <div id="priority-selector" class="flex flex-col space-y-2">
+                        <button data-value="stability" class="w-full text-left p-3 bg-stone-100 rounded-lg hover:bg-blue-100 hover:ring-2 hover:ring-blue-500 focus:ring-2 focus:ring-blue-500 transition">⚙️ Maksymalna stabilność i kompatybilność</button>
+                        <button data-value="performance" class="w-full text-left p-3 bg-stone-100 rounded-lg hover:bg-blue-100 hover:ring-2 hover:ring-blue-500 focus:ring-2 focus:ring-blue-500 transition">🚀 Szczytowa wydajność (nawet kosztem stabilności)</button>
+                        <button data-value="ease" class="w-full text-left p-3 bg-stone-100 rounded-lg hover:bg-blue-100 hover:ring-2 hover:ring-blue-500 focus:ring-2 focus:ring-blue-500 transition">✅ Prostota użycia i konfiguracji</button>
+                    </div>
+                </div>
+                <div>
+                    <label class="font-semibold text-stone-700 block mb-2">2. Jaki masz typ procesora (GPU)?</label>
+                    <div id="gpu-selector" class="flex flex-col space-y-2">
+                        <button data-value="adreno" class="w-full text-left p-3 bg-stone-100 rounded-lg hover:bg-blue-100 hover:ring-2 hover:ring-blue-500 focus:ring-2 focus:ring-blue-500 transition">🔵 Snapdragon (Adreno)</button>
+                        <button data-value="mali" class="w-full text-left p-3 bg-stone-100 rounded-lg hover:bg-blue-100 hover:ring-2 hover:ring-blue-500 focus:ring-2 focus:ring-blue-500 transition">🟢 Inny (Mali / Exynos / Tensor)</button>
+                    </div>
+                </div>
+                 <div>
+                    <label class="font-semibold text-stone-700 block mb-2">3. Czy masz dostęp do roota?</label>
+                    <div id="root-selector" class="flex flex-col space-y-2">
+                         <button data-value="yes" class="w-full text-left p-3 bg-stone-100 rounded-lg hover:bg-blue-100 hover:ring-2 hover:ring-blue-500 focus:ring-2 focus:ring-blue-500 transition">✔️ Tak, mam roota</button>
+                         <button data-value="no" class="w-full text-left p-3 bg-stone-100 rounded-lg hover:bg-blue-100 hover:ring-2 hover:ring-blue-500 focus:ring-2 focus:ring-blue-500 transition">❌ Nie, nie mam roota</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="recommendation-output" class="min-h-[180px]">
+                <div id="recommendation-placeholder" class="text-center text-stone-500 py-12">Wybierz opcje powyżej, aby zobaczyć rekomendację.</div>
+                <div id="recommendation-result" class="hidden recommendation-card opacity-0 transform -translate-y-4 bg-blue-50 border-2 border-blue-200 p-6 rounded-xl">
+                    <h4 class="text-xl font-bold text-blue-900 mb-2">Twoja rekomendacja: <span id="recommendation-title"></span></h4>
+                    <p class="text-blue-800" id="recommendation-description"></p>
+                    <a href="#" id="recommendation-link" class="inline-block mt-4 text-blue-700 font-semibold hover:underline">Zobacz szczegóły poniżej ↓</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="solutions" class="mb-16">
+            <h3 class="text-3xl font-bold text-center mb-2 text-stone-900">Przegląd głównych rozwiązań</h3>
+            <p class="text-center text-stone-600 mb-8 max-w-3xl mx-auto">W tej sekcji znajdziesz szczegółowe opisy kluczowych projektów omówionych w raporcie. Każde rozwiązanie jest przedstawione na interaktywnej karcie. Kliknij na dowolną kartę, aby odsłonić jej mocne i słabe strony, co pozwoli Ci na głębsze zrozumienie różnic między nimi.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+        </section>
+
+        <section id="comparison" class="mb-16">
+            <h3 class="text-3xl font-bold text-center mb-2 text-stone-900">Wizualne porównanie projektów</h3>
+            <p class="text-center text-stone-600 mb-8 max-w-3xl mx-auto">Zamiast analizować skomplikowaną tabelę z danymi, ta sekcja wizualizuje kluczowe metryki w formie interaktywnego wykresu. Pozwala on na szybkie porównanie głównych rozwiązań pod kątem stabilności, wydajności, łatwości użycia i aktywności rozwoju. Najedź kursorem na słupki, aby zobaczyć dokładne oceny.</p>
+            <div class="bg-white p-4 md:p-8 rounded-2xl shadow-lg border border-stone-200">
+                <div class="chart-container">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="tech">
+            <h3 class="text-3xl font-bold text-center mb-2 text-stone-900">Kluczowe technologie - dla ciekawskich</h3>
+             <p class="text-center text-stone-600 mb-8 max-w-3xl mx-auto">Jeśli chcesz zrozumieć, jak działa "magia" emulacji, ta sekcja jest dla Ciebie. Przedstawia ona fundamentalne technologie opisane w raporcie w formie rozwijanej listy. Kliknij na dowolny temat, aby przeczytać zwięzłe wyjaśnienie jego roli w całym procesie.</p>
+            <div id="accordion-container" class="space-y-4 max-w-4xl mx-auto">
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-8 border-t border-stone-200 mt-16">
+        <p class="text-stone-500">Aplikacja wygenerowana na podstawie raportu technicznego z lipca 2025.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const solutionsData = [
+                {
+                    id: 'winlator_frost',
+                    name: 'Winlator@Frost',
+                    target: 'Wybór zrównoważony',
+                    description: 'Najlepszy kompromis między stabilnością, nowymi funkcjami i częstotliwością aktualizacji. Aktywnie rozwijany, wszechstronny wybór dla większości użytkowników, który regularnie integruje najnowsze komponenty i poprawki.',
+                    pros: ['Częste, aktywne aktualizacje', 'Szerokie wsparcie sprzętowe (Adreno i Mali)', 'Bogaty w funkcje i opcje konfiguracyjne', 'Udostępnia wersje "bench" do testów'],
+                    cons: ['Może być mniej stabilny niż oficjalna wersja ze względu na eksperymentalny charakter']
+                },
+                {
+                    id: 'glibc_forks',
+                    name: 'Forki Glibc + Ręczne Aktualizacje',
+                    target: 'Wybór dla entuzjastów',
+                    description: 'Dla użytkowników chcących maksymalnej wydajności i personalizacji. Łączy stabilność sprawdzonej bazy z najnowszymi, ręcznie instalowanymi komponentami (Turnip, DXVK) przez system patchy `.wcp`.',
+                    pros: ['Maksymalna kontrola nad komponentami', 'Dostęp do najnowszych sterowników i poprawek', 'Wysoka potencjalna wydajność i stabilność'],
+                    cons: ['Wymaga wiedzy technicznej i śledzenia sceny', 'Proces jest bardziej skomplikowany niż prosta instalacja APK']
+                },
+                {
+                    id: 'winlator_bionic',
+                    name: 'Winlator Bionic (Eksperymentalny)',
+                    target: 'Dla poszukiwaczy nowości',
+                    description: 'Radykalna re-architektura z potencjałem na ogromny wzrost wydajności. Tylko dla doświadczonych użytkowników, którzy akceptują niestabilność i śledzą dynamiczny rozwój.',
+                    pros: ['Teoretycznie najwyższa możliwa wydajność', 'Innowacyjne podejście architektoniczne eliminujące narzut'],
+                    cons: ['Bardzo niestabilny i eksperymentalny', 'Rozwój jest nieprzewidywalny, kluczowe forki bywają porzucane', 'Nie dla początkujących']
+                },
+                {
+                    id: 'winlator_official',
+                    name: 'Winlator (Oficjalny)',
+                    target: 'Dla początkujących i posiadaczy Mali/Exynos/Tensor',
+                    description: 'Oryginalna, przyjazna dla użytkownika wersja. Dobry punkt startowy. Najnowsze wersje wprowadzają znaczące ulepszenia dla GPU Mali (np. przez sterownik Vortek).',
+                    pros: ['Najwyższa łatwość użycia', 'Stabilna, solidna podstawa', 'Dobre wsparcie dla GPU innych niż Adreno (wersje 10.1+)'],
+                    cons: ['Rzadsze aktualizacje komponentów', 'Mniej opcji konfiguracyjnych niż forki', 'Zamknięty kod źródłowy nowszych wersji']
+                },
+                {
+                    id: 'box64droid',
+                    name: 'Box64Droid',
+                    target: 'Dla zaawansowanych technicznie',
+                    description: 'Zestaw narzędzi oparty na linii poleceń (Termux). Oferuje maksymalną elastyczność i kontrolę, ale wymaga dużej wiedzy technicznej i ręcznej konfiguracji.',
+                    pros: ['Pełna, granularna kontrola nad środowiskiem', 'Wysoka wydajność (zwłaszcza z rootem/chroot)', 'Przejrzysta konfiguracja dla ekspertów'],
+                    cons: ['Bardzo wysoki próg wejścia', 'Wymaga znajomości linii poleceń', 'Mniej przyjazny dla użytkownika (np. konfiguracja gamepada)']
+                }
+            ];
+
+            const accordionData = [
+                { title: 'Box64 / Box86 - Translator instrukcji CPU', content: 'Są to kluczowe komponenty, które tłumaczą kod maszynowy aplikacji z architektury x86/x86_64 (używanej przez komputery PC) na architekturę ARM (używaną przez smartfony). Bez tego aplikacje Windows w ogóle by się nie uruchomiły.' },
+                { title: 'Wine - Warstwa kompatybilności API Windows', content: 'Wine (Wine Is Not an Emulator) tłumaczy wywołania systemowe Windows API (np. tworzenie okien, operacje na plikach) na ich odpowiedniki w systemie Linux, na którym bazuje Android. To dzięki Wine aplikacje "myślą", że działają na Windows.' },
+                { title: 'DXVK / D8VK / WineD3D - Tłumaczenie grafiki 3D', content: 'Gry używają API graficznych jak DirectX. DXVK (dla DirectX 9-11) i D8VK (dla DirectX 8) to wysoce wydajne warstwy, które tłumaczą te wywołania na nowoczesne API Vulkan, zapewniając najlepszą wydajność. WineD3D to starsza alternatywa tłumacząca na OpenGL.' },
+                { title: 'Turnip / VirGL / Vortek - Sterowniki graficzne GPU', content: 'Ostatecznie, przetłumaczone polecenia graficzne Vulkan muszą być wykonane przez sterownik GPU. Turnip to wysokowydajny, otwarty sterownik dla GPU Adreno (w Snapdragonach). VirGL to wolniejsza, uniwersalna opcja. Vortek to nowszy, eksperymentalny sterownik z dużym potencjałem dla GPU Mali.' },
+                { title: 'Proot vs Chroot - Środowiska wykonawcze', content: 'Aby Wine działało, potrzebuje środowiska Linux. Chroot to metoda wymagająca uprawnień roota, która jest bardzo szybka, ponieważ ma minimalny narzut. Proot to alternatywa dla urządzeń bez roota, która emuluje to środowisko, ale kosztem niższej wydajności z powodu dodatkowej warstwy translacji.' },
+                { title: 'Glibc vs Bionic - Fundamentalna różnica architektoniczna', content: 'Glibc to standardowa biblioteka C w Linuksie. Bionic to biblioteka C w Androidzie. Większość rozwiązań używa Glibc dla kompatybilności. Forki "Bionic" próbują używać natywnej biblioteki Androida, co ma potencjał na ogromny wzrost wydajności przez eliminację narzutu Proot/Chroot, ale jest to bardzo eksperymentalne i niestabilne.' }
+            ];
+
+            const recommendations = {
+                'stability-adreno-no': 'winlator_frost',
+                'stability-adreno-yes': 'winlator_frost',
+                'stability-mali-no': 'winlator_official',
+                'stability-mali-yes': 'winlator_official',
+                'performance-adreno-no': 'glibc_forks',
+                'performance-adreno-yes': 'glibc_forks',
+                'performance-mali-no': 'winlator_frost',
+                'performance-mali-yes': 'winlator_frost',
+                'ease-adreno-no': 'winlator_official',
+                'ease-adreno-yes': 'winlator_official',
+                'ease-mali-no': 'winlator_official',
+                'ease-mali-yes': 'winlator_official'
+            };
+
+            let userChoices = { priority: null, gpu: null, root: null };
+
+            function initRecommender() {
+                const selectors = ['priority', 'gpu', 'root'];
+                selectors.forEach(selectorId => {
+                    const container = document.getElementById(`${selectorId}-selector`);
+                    container.addEventListener('click', (e) => {
+                        const button = e.target.closest('button');
+                        if (button) {
+                            userChoices[selectorId] = button.dataset.value;
+                            
+                            Array.from(container.children).forEach(btn => {
+                                btn.classList.remove('bg-blue-600', 'text-white', 'ring-2', 'ring-blue-500');
+                                btn.classList.add('bg-stone-100');
+                            });
+                            button.classList.add('bg-blue-600', 'text-white', 'ring-2', 'ring-blue-500');
+                            button.classList.remove('bg-stone-100');
+                            
+                            updateRecommendation();
+                        }
+                    });
+                });
+            }
+            
+            function updateRecommendation() {
+                if (userChoices.priority && userChoices.gpu && userChoices.root) {
+                    const key = `${userChoices.priority}-${userChoices.gpu}-${userChoices.root}`;
+                    const recommendedId = recommendations[key] || 'winlator_frost';
+                    const recData = solutionsData.find(s => s.id === recommendedId);
+
+                    document.getElementById('recommendation-title').textContent = recData.name;
+                    document.getElementById('recommendation-description').textContent = recData.description;
+                    document.getElementById('recommendation-link').href = `#solution-${recData.id}`;
+
+                    document.getElementById('recommendation-placeholder').classList.add('hidden');
+                    const resultEl = document.getElementById('recommendation-result');
+                    resultEl.classList.remove('hidden');
+                    setTimeout(() => {
+                         resultEl.classList.remove('opacity-0', '-translate-y-4');
+                         resultEl.classList.add('opacity-100', 'translate-y-0');
+                    }, 50);
+                }
+            }
+
+            function initSolutions() {
+                const container = document.querySelector('#solutions .grid');
+                solutionsData.forEach(solution => {
+                    const card = document.createElement('div');
+                    card.className = 'card bg-white p-6 rounded-xl shadow-md border border-stone-200 hover:shadow-xl hover:-translate-y-1';
+                    card.id = `solution-${solution.id}`;
+                    card.innerHTML = `
+                        <h4 class="text-xl font-bold mb-2 text-stone-900">${solution.name}</h4>
+                        <p class="text-sm font-semibold text-blue-600 mb-3">${solution.target}</p>
+                        <p class="text-stone-600 mb-4">${solution.description}</p>
+                        <button class="details-toggle text-blue-600 font-semibold hover:underline">Pokaż szczegóły ▼</button>
+                        <div class="details hidden mt-4 pt-4 border-t border-stone-200">
+                           <h5 class="font-semibold mb-2">Plusy:</h5>
+                           <ul class="list-disc list-inside text-green-700 space-y-1 mb-3">
+                               ${solution.pros.map(pro => `<li>${pro}</li>`).join('')}
+                           </ul>
+                           <h5 class="font-semibold mb-2">Minusy:</h5>
+                           <ul class="list-disc list-inside text-red-700 space-y-1">
+                               ${solution.cons.map(con => `<li>${con}</li>`).join('')}
+                           </ul>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                    
+                    card.querySelector('.details-toggle').addEventListener('click', (e) => {
+                        const details = card.querySelector('.details');
+                        const isHidden = details.classList.contains('hidden');
+                        details.classList.toggle('hidden');
+                        e.target.textContent = isHidden ? 'Ukryj szczegóły ▲' : 'Pokaż szczegóły ▼';
+                    });
+                });
+            }
+
+            function initComparisonChart() {
+                const ctx = document.getElementById('comparisonChart').getContext('2d');
+                const chartData = {
+                    labels: ['Winlator@Frost', 'Forki Glibc (DIY)', 'Winlator Bionic', 'Winlator (Oficjalny)', 'Box64Droid'],
+                    datasets: [
+                        {
+                            label: 'Stabilność',
+                            data: [4, 4.5, 2, 4.5, 4],
+                            backgroundColor: 'rgba(34, 197, 94, 0.7)',
+                            borderColor: 'rgba(34, 197, 94, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Wydajność',
+                            data: [4.5, 5, 5, 3.5, 4.5],
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Łatwość użycia',
+                            data: [4, 3, 2.5, 5, 1],
+                            backgroundColor: 'rgba(249, 115, 22, 0.7)',
+                            borderColor: 'rgba(249, 115, 22, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Aktywność rozwoju',
+                            data: [5, 4, 3, 4, 4.5],
+                             backgroundColor: 'rgba(107, 114, 128, 0.7)',
+                            borderColor: 'rgba(107, 114, 128, 1)',
+                            borderWidth: 1
+                        },
+                    ]
+                };
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: chartData,
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { beginAtZero: true, max: 5, grid: { color: 'rgba(0,0,0,0.05)' } },
+                            y: { grid: { display: false } }
+                        },
+                        plugins: {
+                            legend: { position: 'bottom' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) { label += ': '; }
+                                        if (context.parsed.x !== null) { label += context.parsed.x + ' / 5'; }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function initAccordion() {
+                const container = document.getElementById('accordion-container');
+                accordionData.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden';
+                    div.innerHTML = `
+                        <button class="accordion-header w-full flex justify-between items-center text-left p-5 font-semibold text-stone-800 hover:bg-stone-100">
+                            <span>${item.title}</span>
+                            <span class="transform transition-transform duration-300">▼</span>
+                        </button>
+                        <div class="accordion-content">
+                            <p class="p-5 pt-0 text-stone-600">${item.content}</p>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+
+                container.addEventListener('click', (e) => {
+                    const header = e.target.closest('.accordion-header');
+                    if (header) {
+                        const content = header.nextElementSibling;
+                        const icon = header.querySelector('span:last-child');
+                        const isOpening = !content.style.maxHeight;
+                        
+                        // Close all others
+                        container.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
+                        container.querySelectorAll('.accordion-header span:last-child').forEach(i => i.style.transform = 'rotate(0deg)');
+
+                        if (isOpening) {
+                            content.style.maxHeight = content.scrollHeight + "px";
+                            icon.style.transform = 'rotate(180deg)';
+                        }
+                    }
+                });
+            }
+
+            function initSmoothScroll() {
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        if(targetElement) {
+                           targetElement.scrollIntoView({ behavior: 'smooth' });
+                           if (targetId.startsWith('#solution-')) {
+                                targetElement.classList.add('ring-2', 'ring-blue-500', 'ring-offset-4');
+                                setTimeout(() => {
+                                    targetElement.classList.remove('ring-2', 'ring-blue-500', 'ring-offset-4');
+                                }, 2500);
+                           }
+                        }
+                    });
+                });
+            }
+
+            initRecommender();
+            initSolutions();
+            initComparisonChart();
+            initAccordion();
+            initSmoothScroll();
+        });
+    </script>
+</body>
+</html>
