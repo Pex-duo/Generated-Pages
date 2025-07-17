@@ -12,9 +12,51 @@
     a:hover { text-decoration: underline; }
     .folder { font-weight: bold; color: #222; }
     .html-icon::before { content: "🌐 "; }
+    /* Top bar styles */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #222;
+      color: #fff;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      z-index: 1000;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .top-bar .back-btn {
+      background: #0074d9;
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 4px;
+      font-size: 15px;
+      cursor: pointer;
+      margin-right: 14px;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+    .top-bar .back-btn:hover {
+      background: #005fa3;
+    }
+    .top-bar h2 {
+      margin: 0;
+      font-size: 19px;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+    /* Add spacing below top bar */
+    body { margin-top: 60px; }
   </style>
 </head>
 <body>
+  <div class="top-bar">
+    <a href="https://pex-duo.github.io/Generated-Pages" class="back-btn">Back</a>
+    <h2>Generated-Pages Repository Browser</h2>
+  </div>
   <h1>Files in Generated-Pages Repository</h1>
   <ul id="file-list"></ul>
   <script>
