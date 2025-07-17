@@ -2,17 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Files in Generated-Pages Repository</title>
+  <title>HTML Pages in Generated-Pages Repository</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 2em; }
     h1 { color: #333; }
     ul { list-style-type: none; padding: 0; }
     li { padding: 6px 0; }
-    a { text-decoration: none; color: #0074d9; }
+    a { text-decoration: none; color: #0074d9; cursor: pointer; }
     a:hover { text-decoration: underline; }
-    .folder { font-weight: bold; color: #222; }
     .html-icon::before { content: "🌐 "; }
-    /* Top bar styles */
     .top-bar {
       position: fixed;
       top: 0;
@@ -48,8 +46,12 @@
       font-weight: 500;
       letter-spacing: 1px;
     }
-    /* Add spacing below top bar */
     body { margin-top: 60px; }
+    #file-list { margin-bottom: 2em; }
+    #viewer-container { width: 100%; min-height: 60vh; margin-top: 1em; display: none; }
+    #iframe-viewer { width: 100%; min-height: 60vh; border: 1px solid #ccc; border-radius: 8px; }
+    #close-iframe { margin: 1em 0; background: #e74c3c; color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;}
+    #close-iframe:hover { background: #c0392b; }
   </style>
 </head>
 <body>
@@ -57,8 +59,12 @@
     <a href="https://pex-duo.github.io/Generated-Pages" class="back-btn">Back</a>
     <h2>Generated-Pages Repository Browser</h2>
   </div>
-  <h1>Files in Generated-Pages Repository</h1>
+  <h1>HTML Pages in Generated-Pages Repository</h1>
   <ul id="file-list"></ul>
+  <div id="viewer-container">
+    <button id="close-iframe">Close</button>
+    <iframe id="iframe-viewer" src="" frameborder="0"></iframe>
+  </div>
   <script>
     const owner = "Pex-duo";
     const repo = "Generated-Pages";
@@ -75,19 +81,37 @@
       const list = document.getElementById('file-list');
       list.innerHTML = "";
 
-      files.forEach(file => {
-        const li = document.createElement('li');
-        if (file.type === "dir") {
-          li.innerHTML = `<span class="folder">${file.name}/</span>`;
-        } else if (file.name.endsWith(".html")) {
-          // Link to GitHub Pages
-          li.innerHTML = `<a class="html-icon" href="${githubPagesUrl}${file.name}" target="_blank">${file.name}</a>`;
-        } else {
-          li.innerHTML = `<a href="${file.html_url}" target="_blank">${file.name}</a>`;
-        }
-        list.appendChild(li);
+      files
+        .filter(file =>
+          file.name.endsWith(".html") &&
+          file.name !== "index.html" &&
+          file.type === "file"
+        )
+        .forEach(file => {
+          const li = document.createElement('li');
+          li.innerHTML = `<a class="html-icon" data-filename="${file.name}">${file.name}</a>`;
+          list.appendChild(li);
+        });
+
+      // Add click event listeners for HTML files
+      document.querySelectorAll('#file-list a[data-filename]').forEach(link => {
+        link.addEventListener('click', function() {
+          const filename = this.getAttribute('data-filename');
+          openHtmlInIframe(filename);
+        });
       });
     }
+
+    function openHtmlInIframe(filename) {
+      document.getElementById('viewer-container').style.display = 'block';
+      document.getElementById('iframe-viewer').src = githubPagesUrl + filename;
+      window.scrollTo({ top: document.getElementById('viewer-container').offsetTop - 50, behavior: 'smooth' });
+    }
+
+    document.getElementById('close-iframe').onclick = function() {
+      document.getElementById('viewer-container').style.display = 'none';
+      document.getElementById('iframe-viewer').src = "";
+    };
 
     fetchRepoFiles();
   </script>
