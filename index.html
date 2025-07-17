@@ -68,6 +68,21 @@
       text-decoration: underline;
     }
     .html-icon::before { content: "🌐 "; }
+    .back-btn {
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 4px;
+      font-size: 15px;
+      cursor: pointer;
+      margin-bottom: 22px;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+    .back-btn:hover {
+      background: #c0392b;
+    }
     .viewer {
       flex: 1 1 0%;
       height: 100vh;
@@ -75,6 +90,7 @@
       display: flex;
       align-items: stretch;
       justify-content: stretch;
+      overflow-y: auto;
     }
     #iframe-viewer {
       width: 100%;
@@ -82,7 +98,26 @@
       border: none;
       background: #fff;
       box-shadow: -2px 0 8px rgba(0,0,0,0.03);
+      display: none;
     }
+    #markdown-viewer {
+      width: 100%;
+      height: 100vh;
+      overflow-y: auto;
+      background: #fff;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.03);
+      padding: 2em 3em;
+      font-size: 1.1em;
+      color: #222;
+    }
+    #markdown-viewer h1, #markdown-viewer h2, #markdown-viewer h3 { color: #0074d9; }
+    #markdown-viewer pre, #markdown-viewer code {
+      background: #f4f4f4;
+      border-radius: 5px;
+      padding: 3px 7px;
+      font-family: 'Fira Mono', 'Consolas', 'Monaco', monospace;
+    }
+    #markdown-viewer pre { padding: 10px 15px; }
     .hidden {
       display: none !important;
     }
@@ -90,18 +125,21 @@
       .container { flex-direction: column; }
       .sidebar, .sidebar.narrow { max-width: 100vw; width: 100vw; height: auto; }
       .viewer { height: 70vh; }
-      #iframe-viewer { height: 70vh; }
+      #iframe-viewer, #markdown-viewer { height: 70vh; }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
   <div class="container">
     <div class="sidebar narrow" id="sidebar">
-      <h1>HTML Pages in Generated-Pages Repository</h1>
+      <a href="https://pex-duo.github.io/Generated-Pages" class="back-btn">Back</a>
+      <h1>Generated-Pages</h1>
       <ul id="file-list"></ul>
     </div>
-    <div class="viewer hidden" id="viewer-container">
-      <iframe id="iframe-viewer" src=""></iframe>
+    <div class="viewer" id="viewer-container">
+      <iframe id="iframe-viewer"></iframe>
+      <div id="markdown-viewer" class="hidden"></div>
     </div>
   </div>
   <script>
@@ -119,7 +157,7 @@
       const files = await response.json();
       const list = document.getElementById('file-list');
       list.innerHTML = "";
-
+      // List only .html files except index.html
       files
         .filter(file =>
           file.name.endsWith(".html") &&
@@ -132,7 +170,6 @@
           list.appendChild(li);
         });
 
-      // Add click event listeners for HTML files
       document.querySelectorAll('#file-list a[data-filename]').forEach(link => {
         link.addEventListener('click', function() {
           const filename = this.getAttribute('data-filename');
@@ -142,12 +179,27 @@
     }
 
     function openHtmlInIframe(filename) {
-      document.getElementById('viewer-container').classList.remove('hidden');
       document.getElementById('iframe-viewer').src = githubPagesUrl + filename;
-      // Sidebar stays narrow, only shows file list and title
+      document.getElementById('iframe-viewer').style.display = 'block';
+      document.getElementById('markdown-viewer').classList.add('hidden');
+    }
+
+    async function loadReadme() {
+      const url = `https://raw.githubusercontent.com/${owner}/${repo}/main/README.md`;
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error();
+        const markdown = await response.text();
+        document.getElementById('markdown-viewer').innerHTML = marked.parse(markdown);
+        document.getElementById('markdown-viewer').classList.remove('hidden');
+        document.getElementById('iframe-viewer').style.display = 'none';
+      } catch {
+        document.getElementById('markdown-viewer').innerHTML = "<p>README.md could not be loaded.</p>";
+      }
     }
 
     fetchRepoFiles();
+    loadReadme();
   </script>
 </body>
 </html>
