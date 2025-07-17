@@ -6,6 +6,9 @@
     <title>Kreator Alchemicznej Tarty</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Warm Earth Tones -->
     <!-- Application Structure Plan: A multi-step "Tart Configurator" flow was designed to transform the static report into an interactive, task-oriented experience. This structure guides the user through logical choices (Base -> Cream -> Finishings), making the complex, modular information digestible and actionable. Instead of passive reading, the user actively builds their desired recipe. The final step consolidates all choices into a single, personalized output, directly fulfilling the user's primary goal. This is far more usable and engaging than a linear document representation. -->
     <!-- Visualization & Content Choices: 
@@ -17,72 +20,106 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #FBF9F6;
+            color: #5C4B42;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
         }
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 500px;
+            max-width: 450px;
             margin-left: auto;
             margin-right: auto;
-            height: 320px;
-            max-height: 400px;
+            height: 300px;
+            max-height: 350px;
         }
         @media (min-width: 768px) {
             .chart-container {
-                height: 400px;
+                height: 350px;
+                max-height: 400px;
             }
         }
         .step-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            border: 2px solid transparent;
         }
         .step-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
         }
         .selected-card {
-            border-width: 2px;
             border-color: #A45C40; 
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(164, 92, 64, 0.3), 0 4px 6px -2px rgba(164, 92, 64, 0.2);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px -5px rgba(164, 92, 64, 0.3), 0 4px 8px -2px rgba(164, 92, 64, 0.2);
+            background-color: #FEFDFB;
         }
         .btn-primary {
             background-color: #A45C40;
-            color: #F6F4F1;
+            color: #FBF9F6;
+            transition: background-color 0.3s, transform 0.3s;
         }
         .btn-primary:hover {
             background-color: #8C4D36;
+            transform: scale(1.05);
+        }
+        .btn-primary:disabled {
+            background-color: #C8B7A8;
+            cursor: not-allowed;
+            transform: none;
         }
         .btn-secondary {
             background-color: #E4D5C7;
             color: #584136;
+            transition: background-color 0.3s, transform 0.3s;
         }
         .btn-secondary:hover {
             background-color: #D3C4B6;
+            transform: scale(1.05);
+        }
+        #recipe-output ul, #recipe-output ol {
+            padding-left: 1.5rem;
+        }
+        #recipe-output h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            color: #673828;
+            border-bottom: 2px solid #E4D5C7;
+            padding-bottom: 0.25rem;
+        }
+        #recipe-output h4 {
+             margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+            color: #8C4D36;
         }
     </style>
 </head>
-<body class="bg-[#F6F4F1] text-[#584136]">
+<body class="bg-[#FBF9F6] text-[#5C4B42]">
 
     <div class="container mx-auto p-4 md:p-8 max-w-5xl">
-        <header class="text-center mb-8">
+        <header class="text-center mb-12">
             <h1 class="text-4xl md:text-5xl font-bold text-[#673828]">Kreator Alchemicznej Tarty</h1>
-            <p class="mt-2 text-lg text-[#8C4D36]">Skomponuj swój unikalny, zdrowy deser.</p>
+            <p class="mt-3 text-lg text-[#8C4D36]">Skomponuj swój unikalny, zdrowy deser krok po kroku.</p>
         </header>
 
         <main>
             <div id="step-1" class="text-center">
-                <div class="bg-[#E4D5C7] p-8 rounded-lg shadow-lg">
-                    <h2 class="text-2xl font-bold mb-4 text-[#673828]">Witaj w kulinarnym laboratorium!</h2>
-                    <p class="mb-6">Ta aplikacja pozwoli Ci stworzyć deser idealnie dopasowany do Twoich upodobań. Zamiast jednego przepisu, otrzymujesz zestaw modułów — fundamentów, kremów i dodatków — które możesz dowolnie łączyć. Będziemy balansować smaki, grać teksturami i korzystać z naturalnej słodyczy składników. Jesteś gotów na stworzenie własnego dzieła?</p>
-                    <button onclick="navigateTo(2)" class="btn-primary font-bold py-3 px-8 rounded-lg shadow-md transition-transform transform hover:scale-105">Rozpocznij tworzenie</button>
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-bold mb-4 text-[#673828]">Witaj w kulinarnym laboratorium!</h2>
+                    <p class="mb-8 text-base md:text-lg max-w-3xl mx-auto">Ta aplikacja pozwoli Ci stworzyć deser idealnie dopasowany do Twoich upodobań. Zamiast jednego przepisu, otrzymujesz zestaw modułów — fundamentów, kremów i dodatków — które możesz dowolnie łączyć. Będziemy balansować smaki, grać teksturami i korzystać z naturalnej słodyczy składników. Jesteś gotów na stworzenie własnego dzieła?</p>
+                    <button onclick="navigateTo(2)" class="btn-primary font-bold py-3 px-8 rounded-lg shadow-md">Rozpocznij tworzenie</button>
                 </div>
             </div>
 
             <div id="step-2" class="hidden">
                 <h2 class="text-3xl font-bold text-center mb-2 text-[#673828]">Krok 1: Wybierz Fundament</h2>
-                <p class="text-center text-lg mb-8">Baza to dusza Twojej tarty. Wybierz spód, który najlepiej oddaje pożądany charakter deseru.</p>
+                <p class="text-center text-lg mb-4 text-[#8C4D36]">Baza to dusza Twojej tarty. Wybierz spód, który najlepiej oddaje pożądany charakter deseru.</p>
+                <p id="prompt-base" class="text-center text-sm mb-8 text-[#A45C40] font-semibold">Wybierz jedną z poniższych opcji, by przejść dalej.</p>
                 <div id="base-selection" class="grid md:grid-cols-3 gap-6 mb-8"></div>
-                <div class="bg-white/50 p-4 rounded-lg shadow-inner">
+                <div class="bg-white/60 p-4 rounded-lg shadow-inner mt-12">
                     <h3 class="text-xl font-bold text-center mb-4">Analiza Porównawcza Fundamentów</h3>
                     <div class="chart-container">
                         <canvas id="baseChart"></canvas>
@@ -96,9 +133,10 @@
             
             <div id="step-3" class="hidden">
                 <h2 class="text-3xl font-bold text-center mb-2 text-[#673828]">Krok 2: Skomponuj Koronę</h2>
-                <p class="text-center text-lg mb-8">Wybierz puszyste, zdrowe zwieńczenie. To ono nada tarcie lekkości i luksusowego smaku.</p>
+                <p class="text-center text-lg mb-4 text-[#8C4D36]">Wybierz puszyste, zdrowe zwieńczenie. To ono nada tarcie lekkości i luksusowego smaku.</p>
+                <p id="prompt-cream" class="text-center text-sm mb-8 text-[#A45C40] font-semibold">Wybierz jedną z poniższych opcji, by przejść dalej.</p>
                 <div id="cream-selection" class="grid md:grid-cols-3 gap-6 mb-8"></div>
-                 <div class="bg-white/50 p-4 rounded-lg shadow-inner">
+                 <div class="bg-white/60 p-4 rounded-lg shadow-inner mt-12">
                     <h3 class="text-xl font-bold text-center mb-4">Analiza Porównawcza Kremów</h3>
                     <div class="chart-container">
                         <canvas id="creamChart"></canvas>
@@ -112,9 +150,9 @@
 
             <div id="step-4" class="hidden">
                 <h2 class="text-3xl font-bold text-center mb-2 text-[#673828]">Krok 3: Dodaj Fineszji</h2>
-                <p class="text-center text-lg mb-8">Wzbogać swoje dzieło o dodatkową teksturę i poznaj sekrety mistrzów cukiernictwa.</p>
-                <div class="space-y-6">
-                    <div class="bg-[#E4D5C7] p-6 rounded-lg shadow-md flex items-center justify-between">
+                <p class="text-center text-lg mb-8 text-[#8C4D36]">Wzbogać swoje dzieło o dodatkową teksturę i poznaj sekrety mistrzów cukiernictwa.</p>
+                <div class="space-y-6 max-w-3xl mx-auto">
+                    <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between">
                         <div>
                             <h3 class="text-xl font-bold text-[#673828]">Warstwa "Chrupka"</h3>
                             <p class="mt-1">Dodaj warstwę z prażonych orzechów i gorzkiej czekolady dla niesamowitego kontrastu tekstur.</p>
@@ -124,26 +162,26 @@
                           <div class="w-14 h-7 bg-gray-300 rounded-full peer peer-focus:ring-4 peer-focus:ring-orange-200 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#A45C40]"></div>
                         </label>
                     </div>
-                     <div class="bg-[#E4D5C7] p-6 rounded-lg shadow-md">
+                     <div class="bg-white p-6 rounded-lg shadow-md">
                         <h3 class="text-xl font-bold text-[#673828]">Porady Mistrzów</h3>
-                        <ul class="list-disc list-inside mt-2 space-y-1">
+                        <ul class="list-disc list-inside mt-2 space-y-2">
                             <li><b>Bariera Przeciwwilgociowa:</b> Aby spód pozostał kruchy, posmaruj go cienką warstwą rozpuszczonej gorzkiej czekolady przed nałożeniem kremu. Warstwa "chrupka" również pełni tę funkcję!</li>
                             <li><b>Idealne Krojenie:</b> Zanurz nóż w gorącej wodzie i wytrzyj go do sucha przed każdym cięciem.</li>
                             <li><b>Przechowywanie:</b> Tartę przechowuj w lodówce. Najlepsza jest w ciągu 24 godzin, kiedy kontrast tekstur jest najmocniejszy.</li>
                         </ul>
                     </div>
                 </div>
-                <div class="flex justify-between mt-8">
+                <div class="flex justify-between mt-8 max-w-3xl mx-auto">
                     <button onclick="navigateTo(3)" class="btn-secondary font-bold py-2 px-6 rounded-lg">Wróć</button>
-                    <button onclick="generateRecipe()" class="btn-primary font-bold py-3 px-8 rounded-lg shadow-md transition-transform transform hover:scale-105">Generuj Mój Przepis</button>
+                    <button onclick="generateRecipe()" class="btn-primary font-bold py-3 px-8 rounded-lg shadow-md">Generuj Mój Przepis</button>
                 </div>
             </div>
 
             <div id="step-5" class="hidden">
-                 <h2 class="text-3xl font-bold text-center mb-4 text-[#673828]">Twoja Alchemiczna Tarta</h2>
+                 <h2 class="text-3xl font-bold text-center mb-6 text-[#673828]">Twoja Alchemiczna Tarta</h2>
                  <div id="recipe-output" class="bg-white p-6 md:p-8 rounded-lg shadow-xl prose max-w-none">
                  </div>
-                 <div class="flex justify-center gap-4 mt-8">
+                 <div class="flex justify-center gap-4 mt-8 print:hidden">
                     <button onclick="navigateTo(1, true)" class="btn-secondary font-bold py-2 px-6 rounded-lg">Zacznij od nowa</button>
                     <button onclick="window.print()" class="btn-primary font-bold py-2 px-6 rounded-lg">Drukuj Przepis</button>
                 </div>
@@ -273,7 +311,7 @@ let baseChartInstance, creamChartInstance;
 
 function createCard(type, item) {
     const card = document.createElement('div');
-    card.className = 'step-card bg-white p-6 rounded-lg shadow-md cursor-pointer border-2 border-transparent';
+    card.className = 'step-card bg-white p-6 rounded-lg shadow-md cursor-pointer';
     card.innerHTML = `
         <div class="text-4xl mb-3">${item.icon}</div>
         <h3 class="text-xl font-bold text-[#673828]">${item.title}</h3>
@@ -294,8 +332,10 @@ function selectItem(type, id) {
     
     if (type === 'base') {
         document.getElementById('to-step-3').disabled = false;
+        document.getElementById('prompt-base').style.display = 'none';
     } else if (type === 'cream') {
         document.getElementById('to-step-4').disabled = false;
+        document.getElementById('prompt-cream').style.display = 'none';
     }
 }
 
@@ -306,6 +346,8 @@ function toggleCrunchyLayer(isChecked) {
 function populateSelections() {
     const baseContainer = document.getElementById('base-selection');
     const creamContainer = document.getElementById('cream-selection');
+    baseContainer.innerHTML = '';
+    creamContainer.innerHTML = '';
     for (const key in recipeData.bases) {
         baseContainer.appendChild(createCard('base', recipeData.bases[key]));
     }
@@ -321,6 +363,8 @@ function navigateTo(step, isReset = false) {
         document.getElementById('to-step-3').disabled = true;
         document.getElementById('to-step-4').disabled = true;
         document.getElementById('crunchy-layer-toggle').checked = false;
+        document.getElementById('prompt-base').style.display = 'block';
+        document.getElementById('prompt-cream').style.display = 'block';
     }
 
     document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
@@ -331,7 +375,6 @@ function navigateTo(step, isReset = false) {
 function generateRecipe() {
     const { base, cream, crunchyLayer } = userSelections;
     if (!base || !cream) {
-        alert('Proszę wybrać spód i krem!');
         return;
     }
 
@@ -339,23 +382,23 @@ function generateRecipe() {
     const selectedCream = recipeData.creams[cream];
     
     let allIngredients = [
-        `<h3>Składniki na ${selectedBase.title}:</h3><ul>${selectedBase.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>`,
-        `<h3>Składniki na ${selectedCream.title}:</h3><ul>${selectedCream.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>`
+        `<h4>${selectedBase.title}</h4><ul>${selectedBase.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>`,
+        `<h4>${selectedCream.title}</h4><ul>${selectedCream.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>`
     ];
 
     let allInstructions = [
-        `<h3>Przygotowanie ${selectedBase.title}:</h3><p>${selectedBase.instructions.replace(/\n/g, '<br>')}</p>`,
+        `<h4>${selectedBase.title}</h4><p>${selectedBase.instructions.replace(/\n/g, '<br>')}</p>`,
     ];
 
     if (crunchyLayer) {
-        allIngredients.push(`<h3>Składniki na Warstwę "Chrupką":</h3><ul>${recipeData.crunchyLayer.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>`);
-        allInstructions.push(`<h3>Przygotowanie Warstwy "Chrupkiej":</h3><p>${recipeData.crunchyLayer.instructions.replace(/\n/g, '<br>')}</p>`);
+        allIngredients.push(`<h4>${recipeData.crunchyLayer.title}</h4><ul>${recipeData.crunchyLayer.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>`);
+        allInstructions.push(`<h4>${recipeData.crunchyLayer.title}</h4><p>${recipeData.crunchyLayer.instructions.replace(/\n/g, '<br>')}</p>`);
     }
     
-    allInstructions.push(`<h3>Przygotowanie ${selectedCream.title}:</h3><p>${selectedCream.instructions.replace(/\n/g, '<br>')}</p>`);
+    allInstructions.push(`<h4>${selectedCream.title}</h4><p>${selectedCream.instructions.replace(/\n/g, '<br>')}</p>`);
 
-    const assemblyInstructions = `<h3>Finalny Montaż:</h3>
-    <ol class="list-decimal list-inside">
+    const assemblyInstructions = `<h4>Finalny Montaż</h4>
+    <ol class="list-decimal list-inside space-y-2">
         <li>Upewnij się, że spód jest całkowicie wystudzony.</li>
         ${crunchyLayer ? '<li>Na wystudzonym spodzie ułóż przygotowaną i schłodzoną warstwę "chrupką".</li>' : '<li>(Opcjonalnie) Posmaruj spód cienką warstwą roztopionej gorzkiej czekolady, aby zabezpieczyć go przed wilgocią.</li>'}
         <li>Na spód (i ewentualną warstwę chrupką) wyłóż przygotowany krem.</li>
@@ -368,14 +411,14 @@ function generateRecipe() {
 
     const outputDiv = document.getElementById('recipe-output');
     outputDiv.innerHTML = `
-        <h3 class="text-2xl font-bold mb-4">Twój przepis na tartę: ${selectedBase.title} z ${selectedCream.title}${crunchyLayer ? ' i Warstwą Chrupką' : ''}</h3>
-        <div class="grid md:grid-cols-3 gap-6">
+        <h3 class="text-2xl font-bold mb-4 text-center !border-0">Twój przepis na tartę:<br><span class="text-[#A45C40]">${selectedBase.title} z ${selectedCream.title}${crunchyLayer ? ' i Warstwą Chrupką' : ''}</span></h3>
+        <div class="grid md:grid-cols-3 gap-x-8 gap-y-4">
             <div class="md:col-span-1">
-                <h4 class="text-xl font-semibold border-b-2 border-[#A45C40] pb-2 mb-3">Lista Składników</h4>
+                <h3>Lista Składników</h3>
                 ${allIngredients.join('')}
             </div>
             <div class="md:col-span-2">
-                 <h4 class="text-xl font-semibold border-b-2 border-[#A45C40] pb-2 mb-3">Instrukcje</h4>
+                 <h3>Instrukcje</h3>
                 ${allInstructions.join('')}
             </div>
         </div>
@@ -398,22 +441,23 @@ function createRadarChart(canvasId, labels, datasets) {
                     angleLines: { color: 'rgba(88, 65, 54, 0.2)' },
                     grid: { color: 'rgba(88, 65, 54, 0.2)' },
                     pointLabels: {
-                        font: { size: 12, weight: 'bold' },
+                        font: { size: 12, family: "'Inter', sans-serif" },
                         color: '#673828'
                     },
                     ticks: {
-                        backdropColor: '#F6F4F1',
+                        backdropColor: '#FBF9F6',
                         color: '#8C4D36',
                         stepSize: 1,
                         max: 5,
-                        min: 0
+                        min: 0,
+                        font: { family: "'Inter', sans-serif" }
                     }
                 }
             },
             plugins: {
                 legend: {
                     position: 'top',
-                    labels: { color: '#584136', font: { size: 12 } }
+                    labels: { color: '#584136', font: { size: 12, family: "'Inter', sans-serif" } }
                 }
             }
         }
@@ -431,7 +475,7 @@ function createRadarChart(canvasId, labels, datasets) {
 document.addEventListener('DOMContentLoaded', () => {
     populateSelections();
     
-    const baseLabels = ['Smak Ziemisty/Głęboki', 'Smak Korzenny/Lekki', 'Chrupkość', 'Wilgotność', 'Wymagany Wysiłek'];
+    const baseLabels = ['Smak Ziemisty/Głęboki', 'Smak Korzenny/Lekki', 'Chrupkość', 'Wilgotność', 'Wysiłek'];
     const baseDatasets = [
         { label: 'Brownie-Burak', data: [5, 1, 1, 5, 3], backgroundColor: 'rgba(131, 56, 23, 0.2)', borderColor: 'rgb(131, 56, 23)', pointBackgroundColor: 'rgb(131, 56, 23)' },
         { label: 'Marchewkowo-Orzechowy', data: [1, 5, 4, 3, 4], backgroundColor: 'rgba(235, 137, 33, 0.2)', borderColor: 'rgb(235, 137, 33)', pointBackgroundColor: 'rgb(235, 137, 33)' },
