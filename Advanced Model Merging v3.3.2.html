@@ -107,8 +107,8 @@
                         <span class="font-bold text-lg text-slate-100">Chimera Merge Guide</span>
                     </div>
                     <div class="flex items-center space-x-4 text-sm font-medium">
-                        <a href="#blueprints" class="text-slate-300 hover:text-white transition-colors">Blueprints</a>
-                        <a href="#recipes" class="text-slate-300 hover:text-white transition-colors">Recipes</a>
+                        <a id="nav-blueprints" href="#sdxl-blueprints" class="text-slate-300 hover:text-white transition-colors">Blueprints</a>
+                        <a id="nav-recipes" href="#sdxl-recipes" class="text-slate-300 hover:text-white transition-colors">Recipes</a>
                         <a href="#analysis" class="text-slate-300 hover:text-white transition-colors">Analysis</a>
                         <a href="#glossary" class="text-slate-300 hover:text-white transition-colors">Glossary</a>
                     </div>
@@ -129,7 +129,7 @@
             </div>
 
             <div id="sdxl-content">
-                <section id="blueprints" class="mb-24 scroll-mt-20">
+                <section id="sdxl-blueprints" class="mb-24 scroll-mt-20">
                     <h2 class="text-3xl font-bold text-slate-100 mb-2">Blueprint: SDXL Donor Strategy</h2>
                     <p class="text-slate-400 mb-10 max-w-4xl">This strategy uses a stable anime host model and surgically injects specific "skills" (like style or thematic content) from architecturally different `SDXL 1.0` donors using the DARE-TIES algorithm. This is akin to transplanting an organ, requiring precision to ensure compatibility.</p>
                     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -139,7 +139,7 @@
                         <div class="card p-6 flex flex-col ring-2 ring-red-500/50"><a href="https://civitai.com/models/1655833/d34dch4nn3lsdxl?modelVersionId=1874216" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">D34D.CH4NN3L.SDXL</h3></a><p class="text-sm font-medium text-red-400 mb-2">Thematic Donor</p><p class="text-sm text-slate-400 flex-grow">A powerful and versatile donor for injecting dark, gritty, horror, and sci-fi thematic content.</p></div>
                     </div>
                 </section>
-                <section id="recipes" class="mb-24 scroll-mt-20">
+                <section id="sdxl-recipes" class="mb-24 scroll-mt-20">
                     <h2 class="text-3xl font-bold text-slate-100 mb-2">Recipe & Implementation: SDXL Donor</h2>
                     <div class="card p-6 md:p-8 mb-12">
                         <h3 class="text-xl font-bold text-slate-100 mb-4">Stage 1: Host Creation (Block-Weighted Merge)</h3>
@@ -205,7 +205,7 @@
             </div>
 
             <div id="pony-content" class="hidden">
-                 <section id="blueprints" class="mb-24 scroll-mt-20">
+                 <section id="pony-blueprints" class="mb-24 scroll-mt-20">
                     <h2 class="text-3xl font-bold text-slate-100 mb-2">Blueprint: PONY Family Strategy</h2>
                     <p class="text-slate-400 mb-10 max-w-4xl">This strategy stays within the "Pony" architectural family, ensuring high compatibility between models. It uses `NEW ERA V5.0` (epsilon-prediction) and a re-calculated recipe to compensate for its weaker anatomy while leveraging its strong style, creating a highly coherent and polished result.</p>
                     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -215,7 +215,7 @@
                         <div class="card p-6 flex flex-col"><a href="https://civitai.com/models/1552304?modelVersionId=1782085" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">SinGlo V2.0</h3></a><p class="text-sm font-medium text-amber-400 mb-2">Textural Detail Donor</p><p class="text-sm text-slate-400 flex-grow">An `Illustrious` model with a unique, sharp, and detailed style that will be blended with Graycolor to add textural complexity.</p></div>
                     </div>
                 </section>
-                 <section id="recipes" class="mb-24 scroll-mt-20">
+                 <section id="pony-recipes" class="mb-24 scroll-mt-20">
                     <h2 class="text-3xl font-bold text-slate-100 mb-2">Recipe & Implementation: PONY Family</h2>
                     <div class="card p-6 md:p-8 mb-12">
                         <h3 class="text-xl font-bold text-slate-100 mb-4">Multi-Stage Block Merge Recipes</h3>
@@ -256,7 +256,7 @@
             </div>
             
             <div id="hybrid-content" class="hidden">
-                 <section id="blueprints" class="mb-24 scroll-mt-20">
+                 <section id="hybrid-blueprints" class="mb-24 scroll-mt-20">
                     <h2 class="text-3xl font-bold text-slate-100 mb-2">Blueprint: PONY + SDXL Hybrid Strategy</h2>
                     <p class="text-slate-400 mb-10 max-w-4xl">This advanced strategy creates a Pony-family base and then uses a surgical DARE-TIES injection from an SDXL model to "patch" specific weaknesses, such as anatomy. It's the most complex but offers a unique way to get the best of both worlds.</p>
                     <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
@@ -267,7 +267,7 @@
                         <div class="card p-6 flex flex-col ring-2 ring-red-500/50"><a href="https://civitai.com/models/163139?modelVersionId=481390" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">Boomer Art</h3></a><p class="text-sm font-medium text-red-400 mb-2">Anatomical Patcher</p><p class="text-sm text-slate-400 flex-grow">Chosen for its strong anatomical knowledge, this SDXL model is used to surgically correct flaws in the Pony base.</p></div>
                     </div>
                 </section>
-                 <section id="recipes" class="mb-24 scroll-mt-20">
+                 <section id="hybrid-recipes" class="mb-24 scroll-mt-20">
                     <h2 class="text-3xl font-bold text-slate-100 mb-2">Recipe & Implementation: PONY + SDXL Hybrid</h2>
                     <div class="card p-6 md:p-8 mb-12">
                         <h3 class="text-xl font-bold text-slate-100 mb-4">Four-Stage Hybrid Merge Recipe</h3>
@@ -574,6 +574,8 @@
     const sdxlContent = document.getElementById('sdxl-content');
     const ponyContent = document.getElementById('pony-content');
     const hybridContent = document.getElementById('hybrid-content');
+    const navBlueprints = document.getElementById('nav-blueprints');
+    const navRecipes = document.getElementById('nav-recipes');
 
     function createChart(ctx, onHoverCallback) {
         return new Chart(ctx, {
@@ -729,6 +731,9 @@
         
         allContent.forEach(el => el.style.display = 'none');
         allButtons.forEach(btn => btn.classList.remove('active'));
+
+        navBlueprints.href = `#${version}-blueprints`;
+        navRecipes.href = `#${version}-recipes`;
 
         if (version === 'sdxl') {
             sdxlContent.style.display = 'block';
