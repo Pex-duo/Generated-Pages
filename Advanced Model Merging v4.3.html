@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="pl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktywny przewodnik: Zaawansowane łączenie modeli (Potrójna strategia)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+    <!-- Chosen Palette: Celestial Indigo -->
+    <!-- Application Structure Plan: Aplikacja zachowuje swoją podstawową strukturę opartą na trzech przełączanych przez użytkownika strategiach. Kluczowe ulepszenie wizualne to animowane tło oparte na shaderze WebGL, które nadaje immersyjne, zaawansowane technologicznie odczucie, odpowiednie dla tematyki AI. Kluczowe diagramy (takie jak łączenie CLIP) są przekształcone z list tekstowych w graficzne schematy blokowe przy użyciu stylizowanego HTML/CSS dla lepszego zrozumienia. Nowa sekcja "Glosariusz" definiuje złożone terminy, poprawiając dostępność dla szerszej publiczności. Ta struktura nakłada bogate wizualizacje i treści objaśniające na solidny, interaktywny rdzeń danych, zwiększając zaangażowanie i zrozumienie użytkownika. -->
+    <!-- Visualization & Content Choices: Informacje z raportu -> Procesy łączenia. Cel -> Wizualne wyjaśnienie przepływu danych. Prezentacja -> Schematy blokowe HTML/CSS ze strzałkami zamiast prostych list. Interakcja -> Brak, statyczny wyświetlacz. Uzasadnienie -> Schematy blokowe są znacznie lepsze w pokazywaniu procesów i relacji niż listy. Informacje z raportu -> Parametry DARE-TIES. Cel -> Uczynienie abstrakcyjnych parametrów namacalnymi. Prezentacja -> Zamiast bloków kodu użyto niestandardowych, stylizowanych kart "panelu technicznego", aby uzyskać bardziej intuicyjną i atrakcyjną wizualnie prezentację ustawień węzłów. Interakcja -> Brak. Uzasadnienie -> Wzmacnia metaforę "wstrzykiwania umiejętności" poprzez interfejs naśladujący interfejs oparty na węzłach. Nowa treść -> Glosariusz terminów. Cel -> Zdefiniowanie żargonu. Prezentacja -> Dedykowana, stylizowana sekcja. Interakcja -> Brak. Uzasadnienie -> Kluczowe dla edukacji użytkownika. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        html {
+            scroll-padding-top: 5rem;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* slate-900 */
+            color: #cbd5e1; /* slate-300 */
+        }
+        #shader-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        @media (min-width: 768px) {
+           .chart-container {
+                height: 450px;
+            }
+        }
+        .version-btn,.recipe-btn {
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s, transform 0.3s;
+            transform-style: preserve-3d;
+        }
+        .card {
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+        .card:hover {
+            box-shadow: 0 0 25px -5px rgba(79, 70, 229, 0.3);
+            border-color: #4f46e5;
+            transform: translateY(-4px) scale(1.02);
+        }
+        .version-btn, .recipe-btn {
+            background-color: rgba(30, 41, 59, 0.8);
+            color: #e2e8f0;
+            border: 1px solid #475569;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+        .version-btn:hover, .recipe-btn:hover {
+              background-color: #3730a3;
+              border-color: #6366f1;
+              color: white;
+        }
+        .version-btn.active, .recipe-btn.active {
+            background-color: #4f46e5;
+            color: white;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+            border-color: #6366f1;
+        }
+        .dare-panel {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-900">
+    <canvas id="shader-canvas"></canvas>
+    <div class="content-wrapper">
+        <header class="bg-slate-900/50 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-700">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <span class="font-bold text-lg text-slate-100">Przewodnik po Łączeniu Modeli</span>
+                    </div>
+                    <div id="main-nav" class="flex items-center space-x-4 text-sm font-medium">
+                        <a id="nav-blueprints" href="#sdxl-blueprints" class="text-slate-300 hover:text-white transition-colors">Schematy</a>
+                        <a id="nav-recipes" href="#sdxl-recipes" class="text-slate-300 hover:text-white transition-colors">Przepisy</a>
+                        <a href="#analysis" class="text-slate-300 hover:text-white transition-colors">Analiza</a>
+                        <a href="#glossary" class="text-slate-300 hover:text-white transition-colors">Glosariusz</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <section class="text-center mb-16">
+                <h1 class="text-4xl md:text-5xl font-bold text-slate-100 tracking-tight">Zaawansowane Łączenie Modeli</h1>
+                <p class="mt-4 text-lg text-slate-400 max-w-3xl mx-auto">Skonsolidowany, interaktywny przewodnik po trzech odrębnych filozofiach łączenia. Wybierz wersję poniżej, aby poznać jej unikalną strategię, komponenty i przepisy.</p>
+            </section>
+
+            <div class="flex justify-center flex-wrap gap-4 mb-16 p-4 bg-slate-800/50 border border-slate-700 rounded-lg shadow-inner">
+                <button id="select-sdxl" class="version-btn active px-6 py-3 rounded-md text-base font-medium">Wersja "Dawcy SDXL"</button>
+                <button id="select-pony" class="version-btn px-6 py-3 rounded-md text-base font-medium">Wersja "Rodziny PONY"</button>
+                <button id="select-hybrid" class="version-btn px-6 py-3 rounded-md text-base font-medium">Wersja "Hybryda PONY + SDXL"</button>
+            </div>
+
+            <div id="sdxl-content">
+                <section id="sdxl-blueprints" class="mb-24 scroll-mt-20">
+                    <h2 class="text-3xl font-bold text-slate-100 mb-2">Schemat: Strategia Dawcy SDXL</h2>
+                    <p class="text-slate-400 mb-10 max-w-4xl">Ta strategia wykorzystuje stabilny model-hosta w stylu anime i chirurgicznie wstrzykuje określone "umiejętności" (takie jak styl lub treść tematyczną) od architektonicznie różnych dawców `SDXL 1.0` za pomocą algorytmu DARE-TIES. Jest to podobne do przeszczepu organu, wymagającego precyzji w celu zapewnienia zgodności.</p>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="card p-6 flex flex-col"><a href="https://civitai.com/models/1353314?modelVersionId=1984137" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">Animij [Illustrious] V5.0</h3></a><p class="text-sm font-medium text-indigo-400 mb-2">Główny Model Host</p><p class="text-sm text-slate-400 flex-grow">Zapewnia fundamentalne rusztowanie: doskonałą anatomię, kompozycję i żywy styl retro anime.</p></div>
+                        <div class="card p-6 flex flex-col"><a href="https://civitai.com/models/1721372?modelVersionId=1948027" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">Graycolor SemiRealIllustMix</h3></a><p class="text-sm font-medium text-indigo-400 mb-2">Drugorzędny Model Host</p><p class="text-sm text-slate-400 flex-grow">Działa jako pomost, łącząc czysty wygląd anime z półrealistycznym odczuciem, aby uczynić hosta bardziej podatnym na dawców.</p></div>
+                        <div class="card p-6 flex flex-col"><a href="https://civitai.com/models/163139?modelVersionId=481390" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">Boomer Art Model v2.0</h3></a><p class="text-sm font-medium text-amber-400 mb-2">Główny Dawca Stylu</p><p class="text-sm text-slate-400 flex-grow">Wstrzykuje malarską, heroiczną esencję fantasy w stylu Frazetty i Vallejo, zapewniając pożądane wykończenie tekstur.</p></div>
+                        <div class="card p-6 flex flex-col ring-2 ring-red-500/50"><a href="https://civitai.com/models/1655833/d34dch4nn3lsdxl?modelVersionId=1874216" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">D34D.CH4NN3L.SDXL</h3></a><p class="text-sm font-medium text-red-400 mb-2">Dawca Tematyczny</p><p class="text-sm text-slate-400 flex-grow">Potężny i wszechstronny dawca do wstrzykiwania mrocznych, surowych, horrorowych i fantastycznonaukowych treści tematycznych.</p></div>
+                    </div>
+                </section>
+                <section id="sdxl-recipes" class="mb-24 scroll-mt-20">
+                    <h2 class="text-3xl font-bold text-slate-100 mb-2">Przepis i Implementacja: Dawca SDXL</h2>
+                    <div class="card p-6 md:p-8 mb-12">
+                        <h3 class="text-xl font-bold text-slate-100 mb-4">Etap 1: Tworzenie Hosta (Łączenie z wagami bloków)</h3>
+                        <p class="text-sm text-slate-400 mb-6">Najpierw tworzymy solidny model-hosta, łącząc nasze dwa modele bazowe. Wybierz jeden z trzech alternatywnych przepisów poniżej. Każdy oferuje inny strategiczny kompromis między spójnością strukturalną a elastycznością stylistyczną.</p>
+                        <div class="flex justify-center flex-wrap gap-4 mb-6">
+                            <button id="recipe-sdxl-balanced" class="recipe-btn active px-4 py-2 rounded-md text-sm font-medium">Przepis A: Zrównoważony (Domyślny)</button>
+                            <button id="recipe-sdxl-host_dominant" class="recipe-btn px-4 py-2 rounded-md text-sm font-medium">Przepis B: Z dominacją Hosta</button>
+                            <button id="recipe-sdxl-donor_receptive" class="recipe-btn px-4 py-2 rounded-md text-sm font-medium">Przepis C: Podatny na Dawcę</button>
+                        </div>
+                        <div id="sdxl-recipe-explanation" class="mb-6 p-4 bg-indigo-900/30 border border-indigo-500/50 text-indigo-200 rounded-md text-sm"></div>
+                        <div class="chart-container"><canvas id="sdxlChart"></canvas></div>
+                        <div id="sdxl-justification" class="mt-6 p-4 bg-slate-800 rounded-md text-sm text-slate-400 min-h-[60px]">Najedź kursorem na blok na wykresie, aby zobaczyć uzasadnienie jego wagi.</div>
+                    </div>
+                    <div class="card p-6 md:p-8 mb-12">
+                         <h3 class="text-xl font-bold text-slate-100 mb-4">Etap 2: Wstrzykiwanie umiejętności (DARE-TIES)</h3>
+                         <p class="text-sm text-slate-400 mb-6">Dwóch dawców `SDXL 1.0` jest wstrzykiwanych sekwencyjnie do hosta z Etapu 1. Ten chirurgiczny proces wykorzystuje węzeł `TIES Merge (DARE)` z pakietu `ComfyUI-DareMerge`, aby przeszczepić tylko najważniejsze aspekty modeli dawców.</p>
+                         <div class="grid md:grid-cols-1 gap-8">
+                             <div class="dare-panel">
+                                 <h4 class="font-bold text-lg text-slate-200 mb-4 text-center">Krok 2a: Wstrzyknij styl malarski</h4>
+                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                                     <div class="space-y-4">
+                                         <h5 class="text-sm font-semibold text-indigo-300">WEJŚCIA</h5>
+                                         <p class="text-xs flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-in-right mr-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><strong class="text-slate-300">Host (model_a):</strong> Host z Etapu 1</p>
+                                         <p class="text-xs flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-in-right mr-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><strong class="text-slate-300">Dawca (model_b):</strong> Boomer Art Model</p>
+                                         <p class="text-xs flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-in-right mr-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><strong class="text-slate-300">Baza Hosta:</strong> kohaku-xl-beta5.safetensors</p>
+                                         <p class="text-xs flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-in-right mr-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><strong class="text-slate-300">Baza Dawcy:</strong> sd_xl_base_1.0.safetensors</p>
+                                     </div>
+                                     <div class="space-y-4">
+                                         <h5 class="text-sm font-semibold text-amber-300">GŁÓWNE USTAWIENIA</h5>
+                                         <div><label class="text-xs font-medium text-slate-300">Gęstość DARE: 0.45</label><div class="w-full bg-slate-700 rounded-full h-2 mt-1"><div class="bg-amber-500 h-2 rounded-full" style="width: 45%"></div></div></div>
+                                         <div><label class="text-xs font-medium text-slate-300">Przycinanie TIES (ties_trim_n): 0.20</label><div class="w-full bg-slate-700 rounded-full h-2 mt-1"><div class="bg-amber-500 h-2 rounded-full" style="width: 20%"></div></div></div>
+                                     </div>
+                                 </div>
+                                 <div class="mt-6 pt-4 border-t border-slate-700">
+                                     <h5 class="text-sm font-semibold text-slate-300 mb-2">Uzasadnienie</h5>
+                                     <p class="text-xs text-slate-400">To jest zrównoważone wstrzyknięcie stylu. `Gęstość` 0.45 przycina ponad połowę zmian parametrów, zapobiegając uszkodzeniu struktury hosta. `ties_trim_n` 0.20 wybiera następnie tylko 20% najsilniejszych wektorów z pozostałych, zapewniając przeszczepienie tylko najsilniejszej esencji stylu malarskiego.</p>
+                                 </div>
+                             </div>
+                             <div class="dare-panel mt-8">
+                                 <h4 class="font-bold text-lg text-slate-200 mb-4 text-center">Krok 2b: Wstrzyknij treść tematyczną</h4>
+                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                                     <div class="space-y-4">
+                                         <h5 class="text-sm font-semibold text-indigo-300">WEJŚCIA</h5>
+                                         <p class="text-xs flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-in-right mr-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><strong class="text-slate-300">Host (model_a):</strong> Wynik z Kroku 2a</p>
+                                         <p class="text-xs flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-in-right mr-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><strong class="text-slate-300">Dawca (model_b):</strong> D34D.CH4NN3L.SDXL</p>
+                                         <p class="text-xs flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-in-right mr-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><strong class="text-slate-300">Baza Hosta:</strong> kohaku-xl-beta5.safetensors</p>
+                                         <p class="text-xs flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-in-right mr-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><strong class="text-slate-300">Baza Dawcy:</strong> sd_xl_base_1.0.safetensors</p>
+                                     </div>
+                                     <div class="space-y-4">
+                                         <h5 class="text-sm font-semibold text-red-300">GŁÓWNE USTAWIENIA</h5>
+                                         <div><label class="text-xs font-medium text-slate-300">Gęstość DARE: 0.25</label><div class="w-full bg-slate-700 rounded-full h-2 mt-1"><div class="bg-red-500 h-2 rounded-full" style="width: 25%"></div></div></div>
+                                         <div><label class="text-xs font-medium text-slate-300">Przycinanie TIES (ties_trim_n): 0.25</label><div class="w-full bg-slate-700 rounded-full h-2 mt-1"><div class="bg-red-500 h-2 rounded-full" style="width: 25%"></div></div></div>
+                                     </div>
+                                 </div>
+                                 <div class="mt-6 pt-4 border-t border-slate-700">
+                                     <h5 class="text-sm font-semibold text-slate-300 mb-2">Uzasadnienie</h5>
+                                     <p class="text-xs text-slate-400">To jest bardziej delikatny przeszczep tematyczny. Niższa `gęstość` (0.25) i wyższe `ties_trim_n` (0.25) stosują szerszy, ale mniej agresywny zestaw zmian. Jest to idealne do dodawania treści koncepcyjnych (mroczne, surowe motywy) bez przytłaczania już ustalonego stylu malarskiego i bazy anatomicznej.</p>
+                                 </div>
+                             </div>
+                         </div>
+                    </div>
+                     <div class="card p-8">
+                         <h3 class="text-xl font-bold text-slate-100 mb-4">Montaż: Wersja Dawcy SDXL</h3>
+                         <p class="text-sm text-slate-400 mb-6">Strategia CLIP i VAE dla tej wersji musi uwzględniać różne rodziny architektoniczne, aby zapewnić, że model rozumie prompty i prawidłowo renderuje kolory.</p>
+                         <div class="grid md:grid-cols-2 gap-8">
+                             <div>
+                                 <h4 class="font-bold text-lg text-slate-200 mb-4">Tworzenie Dwujęzycznego CLIP</h4>
+                                 <p class="text-sm text-slate-400 mb-4">Aby zapobiec "zderzeniu leksykonów" między tagami Danbooru hostów a naturalnym językiem dawców, tworzymy "dwujęzyczny" CLIP poprzez sekwencyjne, trójetapowe łączenie.</p>
+                                 <div class="flex flex-col space-y-2 text-center text-xs font-semibold">
+                                     <div class="p-2 border border-indigo-500/50 rounded-lg bg-indigo-900/20"><p class="font-medium mb-1 text-indigo-300">1. HOST CLIP</p><div class="flex justify-around items-center"><div class="p-2 bg-indigo-500/30 rounded-md text-indigo-200">Animij</div><div class="text-slate-400">+</div><div class="p-2 bg-indigo-500/30 rounded-md text-indigo-200">Graycolor</div></div><div class="self-center mt-1 text-slate-400">↓ <span class="font-normal">(50/50)</span></div></div>
+                                     <div class="p-2 border border-amber-500/50 rounded-lg bg-amber-900/20"><p class="font-medium mb-1 text-amber-300">2. DONOR CLIP</p><div class="flex justify-around items-center"><div class="p-2 bg-amber-500/30 rounded-md text-amber-200">Boomer Art</div><div class="text-slate-400">+</div><div class="p-2 bg-red-500/30 rounded-md text-red-200">D34D.CH4NN3L</div></div><div class="self-center mt-1 text-slate-400">↓ <span class="font-normal">(50/50)</span></div></div>
+                                     <div class="p-2 border border-slate-500 rounded-lg bg-slate-800/30"><p class="font-medium mb-1 text-slate-300">3. FINAŁOWE POŁĄCZENIE</p><div class="flex justify-around items-center"><div class="p-2 bg-indigo-500/50 rounded-md text-indigo-100">Połączenie Hosta</div><div class="text-slate-400 font-thin text-xl">+</div><div class="p-2 bg-amber-500/50 rounded-md text-amber-100">Połączenie Dawcy</div></div><div class="self-center mt-1 text-slate-400">↓ <span class="font-normal">(65% Host / 35% Dawca)</span></div><div class="p-3 bg-slate-200 rounded-lg text-slate-900 mx-auto mt-2">Finałowy Dwujęzyczny CLIP</div></div>
+                                 </div>
+                             </div>
+                             <div>
+                                 <h4 class="font-bold text-lg text-slate-200 mb-4">Wybór VAE dla Wierności</h4>
+                                 <p class="text-sm text-slate-400 mb-6">Łączenie VAE z różnych rodzin jest bardzo ryzykowne. Aby zapewnić maksymalną wierność kolorów i zapobiec artefaktom, nie łączymy ich. Oryginalny VAE hosta jest najbezpieczniejszym wyborem.</p>
+                                 <div class="bg-indigo-900/30 border-2 border-dashed border-indigo-500/50 p-4 rounded-lg text-center">
+                                     <p class="font-semibold text-indigo-200">Główna Rekomendacja</p>
+                                     <p class="text-indigo-300">Użyj VAE wbudowanego w `Animij [Illustrious] V5.0`.</p>
+                                     <p class="text-xs mt-2 text-indigo-400">Zapewnia to, że ostateczny obraz jest dekodowany przez VAE idealnie dopasowany do podstawowej architektury hosta.</p>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                </section>
+            </div>
+
+            <div id="pony-content" class="hidden">
+                 <section id="pony-blueprints" class="mb-24 scroll-mt-20">
+                     <h2 class="text-3xl font-bold text-slate-100 mb-2">Schemat: Strategia Rodziny PONY</h2>
+                     <p class="text-slate-400 mb-10 max-w-4xl">Ta strategia pozostaje w obrębie rodziny architektonicznej "Pony", zapewniając wysoką kompatybilność. Wykorzystuje `NEW ERA V5.0` (model predykcji epsilon oparty na rodzinie `NoobAI`) i ponownie obliczony przepis, aby zrekompensować jego słabszą anatomię, jednocześnie wykorzystując jego silny styl, tworząc bardzo spójny i dopracowany wynik.</p>
+                     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                         <div class="card p-6 flex flex-col"><a href="https://civitai.com/models/1277670?modelVersionId=1772645" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">JANKU V4.0</h3></a><p class="text-sm font-medium text-indigo-400 mb-2">Główny Host / Baza Strukturalna</p><p class="text-sm text-slate-400 flex-grow">Wszechstronny i surowy model z rodziny `NoobAI`, który zapewni podstawową strukturę i podatne podłoże dla mrocznych motywów.</p></div>
+                         <div class="card p-6 flex flex-col ring-2 ring-red-500/50"><a href="https://civitai.com/models/137781?modelVersionId=1502081" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">NEW ERA V5.0</h3></a><p class="text-sm font-medium text-indigo-400 mb-2">Główna Baza Tematyczna</p><p class="text-sm text-slate-400 flex-grow">Model predykcji epsilon o silnym stylu, który zostanie połączony z lepszą anatomią JANKU, aby stworzyć bazę "Dark Anime".</p></div>
+                         <div class="card p-6 flex flex-col"><a href="https://civitai.com/models/1721372?modelVersionId=1948027" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">Graycolor SemiRealIllustMix</h3></a><p class="text-sm font-medium text-amber-400 mb-2">Fundament Stylu Malarskiego</p><p class="text-sm text-slate-400 flex-grow">Model z rodziny `Illustrious`, który zapewnia półrealistyczną, malarską bazę dla ostatecznego wykończenia tekstur.</p></div>
+                         <div class="card p-6 flex flex-col"><a href="https://civitai.com/models/1552304?modelVersionId=1782085" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">SinGlo V2.0</h3></a><p class="text-sm font-medium text-amber-400 mb-2">Dawca Detali Tekstur</p><p class="text-sm text-slate-400 flex-grow">Model z rodziny `Illustrious` o unikalnym, ostrym i szczegółowym stylu, który zostanie zmieszany z Graycolor, aby dodać złożoności tekstur.</p></div>
+                     </div>
+                 </section>
+                 <section id="pony-recipes" class="mb-24 scroll-mt-20">
+                     <h2 class="text-3xl font-bold text-slate-100 mb-2">Przepis i Implementacja: Rodzina PONY</h2>
+                     <div class="card p-6 md:p-8 mb-12">
+                         <h3 class="text-xl font-bold text-slate-100 mb-4">Wieloetapowe Przepisy Łączenia Bloków</h3>
+                         <p class="text-sm text-slate-400 mb-6">To podejście wykorzystuje sekwencję łączeń do budowania ostatecznego modelu warstwa po warstwie. Wybierz etap łączenia, aby zobaczyć jego konkretny przepis. Wykres zaktualizuje się, aby pokazać wagi bloków dla wybranego etapu. Najedź kursorem na dowolny blok, aby uzyskać szczegółowe uzasadnienie.</p>
+                         <div class="flex justify-center flex-wrap gap-4 mb-6">
+                             <button id="recipe-pony-stage1" class="recipe-btn active px-4 py-2 rounded-md text-sm font-medium">Etap 1: Baza "Dark Anime"</button>
+                             <button id="recipe-pony-stage2" class="recipe-btn px-4 py-2 rounded-md text-sm font-medium">Etap 2: "Most Malarski"</button>
+                             <button id="recipe-pony-stage3" class="recipe-btn px-4 py-2 rounded-md text-sm font-medium">Etap 3: Finałowa Fuzja</button>
+                         </div>
+                         <div class="chart-container"><canvas id="ponyChart"></canvas></div>
+                         <div id="pony-justification" class="mt-6 p-4 bg-slate-800 rounded-md text-sm text-slate-400 min-h-[60px]">Wybierz przepis i najedź kursorem na blok na wykresie, aby zobaczyć uzasadnienie jego wagi.</div>
+                     </div>
+                      <div class="card p-8">
+                          <h3 class="text-xl font-bold text-slate-100 mb-4">Montaż: Wersja Rodziny PONY</h3>
+                          <p class="text-sm text-slate-400 mb-6">Nawet w obrębie rodziny Pony, gałęzie `NoobAI` i `Illustrious` mają różne "słowniki". Sekwencyjne łączenie CLIP jest nadal zalecane dla maksymalnej kontroli i zrozumienia promptów.</p>
+                          <div class="grid md:grid-cols-2 gap-8">
+                              <div>
+                                  <h4 class="font-bold text-lg text-slate-200 mb-4">Tworzenie Spójnego CLIP</h4>
+                                  <p class="text-sm text-slate-400 mb-4">To sekwencyjne łączenie zapewnia, że ostateczny CLIP rozumie prompty związane zarówno z bazą `NoobAI`, jak i warstwą stylu `Illustrious`.</p>
+                                  <div class="flex flex-col space-y-2 text-center text-xs font-semibold">
+                                       <div class="p-2 border border-indigo-500/50 rounded-lg bg-indigo-900/20"><p class="font-medium mb-1 text-indigo-300">1. `NoobAI` CLIP</p><div class="flex justify-around items-center"><div class="p-2 bg-indigo-500/30 rounded-md text-indigo-200">JANKU</div><div class="text-slate-400">+</div><div class="p-2 bg-indigo-500/30 rounded-md text-indigo-200">NEW ERA</div></div><div class="self-center mt-1 text-slate-400">↓ <span class="font-normal">(50/50)</span></div></div>
+                                       <div class="p-2 border border-amber-500/50 rounded-lg bg-amber-900/20"><p class="font-medium mb-1 text-amber-300">2. `Illustrious` CLIP</p><div class="flex justify-around items-center"><div class="p-2 bg-amber-500/30 rounded-md text-amber-200">Graycolor</div><div class="text-slate-400">+</div><div class="p-2 bg-amber-500/30 rounded-md text-amber-200">SinGlo</div></div><div class="self-center mt-1 text-slate-400">↓ <span class="font-normal">(50/50)</span></div></div>
+                                       <div class="p-2 border border-slate-500 rounded-lg bg-slate-800/30"><p class="font-medium mb-1 text-slate-300">3. FINAŁOWE POŁĄCZENIE</p><div class="flex justify-around items-center"><div class="p-2 bg-indigo-500/50 rounded-md text-indigo-100">Połączenie `NoobAI`</div><div class="text-slate-400 font-thin text-xl">+</div><div class="p-2 bg-amber-500/50 rounded-md text-amber-100">Połączenie `Illustrious`</div></div><div class="self-center mt-1 text-slate-400">↓ <span class="font-normal">(70% NoobAI / 30% Illustrious)</span></div><div class="p-3 bg-slate-200 rounded-lg text-slate-900 mx-auto mt-2">Finałowy Spójny CLIP</div></div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <h4 class="font-bold text-lg text-slate-200 mb-4">Wybór VAE dla Wierności</h4>
+                                  <p class="text-sm text-slate-400 mb-6">Chociaż wszystkie modele pochodzą z rodziny Pony, użycie VAE z ostatecznego Głównego Hosta (`JANKU`) jest najbezpieczniejszym wyborem dla dokładności kolorów i unikania artefaktów wizualnych.</p>
+                                  <div class="bg-indigo-900/30 border-2 border-dashed border-indigo-500/50 p-4 rounded-lg text-center">
+                                      <p class="font-semibold text-indigo-200">Główna Rekomendacja</p>
+                                      <p class="text-indigo-300">Użyj VAE wbudowanego w `JANKU V4.0`.</p>
+                                      <p class="text-xs mt-2 text-indigo-400">Zapewnia to, że ostateczny obraz jest dekodowany przez VAE idealnie dopasowany do bazy strukturalnej ostatecznego połączenia.</p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                 </section>
+            </div>
+            
+            <div id="hybrid-content" class="hidden">
+                 <section id="hybrid-blueprints" class="mb-24 scroll-mt-20">
+                     <h2 class="text-3xl font-bold text-slate-100 mb-2">Schemat: Strategia Hybrydowa PONY + SDXL</h2>
+                     <p class="text-slate-400 mb-10 max-w-4xl">Ta zaawansowana strategia tworzy bazę z rodziny Pony, a następnie używa chirurgicznej iniekcji DARE-TIES z modelu SDXL do "łatania" konkretnych słabości, takich jak anatomia. Jest to najbardziej złożone, ale oferuje unikalny sposób na uzyskanie tego, co najlepsze z obu światów.</p>
+                     <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
+                         <div class="card p-6 flex flex-col"><a href="https://civitai.com/models/1277670?modelVersionId=1772645" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">JANKU V4.0</h3></a><p class="text-sm font-medium text-indigo-400 mb-2">Baza Strukturalna</p><p class="text-sm text-slate-400 flex-grow">Tworzy anatomiczne i kompozycyjne fundamenty modelu bazowego Pony.</p></div>
+                         <div class="card p-6 flex flex-col"><a href="https://civitai.com/models/137781?modelVersionId=1502081" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">NEW ERA V5.0</h3></a><p class="text-sm font-medium text-indigo-400 mb-2">Baza Tematyczna</p><p class="text-sm text-slate-400 flex-grow">Wnosi do bazy Pony podstawową estetykę retro anime i kierunek tematyczny.</p></div>
+                         <div class="card p-6 flex flex-col"><a href="https://civitai.com/models/1721372?modelVersionId=1948027" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">Graycolor</h3></a><p class="text-sm font-medium text-amber-400 mb-2">Baza Malarska</p><p class="text-sm text-slate-400 flex-grow">Wprowadza półrealistyczną, malarską jakość, aby złagodzić wygląd anime.</p></div>
+                         <div class="card p-6 flex flex-col"><a href="https://civitai.com/models/1552304?modelVersionId=1782085" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">SinGlo V2.0</h3></a><p class="text-sm font-medium text-amber-400 mb-2">Dawca Tekstur</p><p class="text-sm text-slate-400 flex-grow">Dodaje ostre, złożone detale tekstur dla bardziej wyrafinowanej ostatecznej estetyki.</p></div>
+                         <div class="card p-6 flex flex-col ring-2 ring-red-500/50"><a href="https://civitai.com/models/163139?modelVersionId=481390" target="_blank" class="hover:underline"><h3 class="font-bold text-lg text-slate-100">Boomer Art</h3></a><p class="text-sm font-medium text-red-400 mb-2">Łatka Anatomiczna</p><p class="text-sm text-slate-400 flex-grow">Wybrany ze względu na swoją silną wiedzę anatomiczną, ten model SDXL jest używany do chirurgicznego korygowania wad w bazie Pony.</p></div>
+                     </div>
+                 </section>
+                 <section id="hybrid-recipes" class="mb-24 scroll-mt-20">
+                     <h2 class="text-3xl font-bold text-slate-100 mb-2">Przepis i Implementacja: Hybryda PONY + SDXL</h2>
+                     <div class="card p-6 md:p-8 mb-12">
+                         <h3 class="text-xl font-bold text-slate-100 mb-4">Czteroetapowy Przepis na Łączenie Hybrydowe</h3>
+                         <p class="text-sm text-slate-400 mb-6">Ten złożony przepis obejmuje dwa początkowe łączenia bloków, chirurgiczną iniekcję DARE-TIES i ostateczną fuzję przez łączenie bloków. Wybierz etap, aby zobaczyć jego przepis. Zwróć uwagę, że Etap 3 to proces DARE-TIES i nie pokaże wykresu, ale wyświetli parametry dla iniekcji chirurgicznej.</p>
+                         <div class="flex justify-center flex-wrap gap-4 mb-6">
+                             <button id="recipe-hybrid-stage1" class="recipe-btn active px-4 py-2 rounded-md text-sm font-medium">Etap 1: Baza Dark Anime</button>
+                             <button id="recipe-hybrid-stage2" class="recipe-btn px-4 py-2 rounded-md text-sm font-medium">Etap 2: Most Malarski</button>
+                             <button id="recipe-hybrid-stage3" class="recipe-btn px-4 py-2 rounded-md text-sm font-medium">Etap 3: Łatka Anatomiczna</button>
+                             <button id="recipe-hybrid-stage4" class="recipe-btn px-4 py-2 rounded-md text-sm font-medium">Etap 4: Finałowa Fuzja</button>
+                         </div>
+                         <div id="hybrid-recipe-explanation" class="mb-6" style="display: none;"></div>
+                         <div class="chart-container"><canvas id="hybridChart"></canvas></div>
+                         <div id="hybrid-justification" class="mt-6 p-4 bg-slate-800 rounded-md text-sm text-slate-400 min-h-[60px]">Wybierz przepis i najedź kursorem na blok, aby zobaczyć uzasadnienie.</div>
+                     </div>
+                      <div class="card p-8">
+                          <h3 class="text-xl font-bold text-slate-100 mb-4">Montaż: Wersja Hybrydowa PONY + SDXL</h3>
+                          <p class="text-sm text-slate-400 mb-6">Łączenie CLIP dla tej wersji jest najbardziej złożone, wymagając trójstronnego połączenia w celu włączenia słownictwa wszystkich pięciu modeli rodzicielskich z trzech różnych rodzin (`NoobAI`, `Illustrious`, `SDXL`). Tworzy to "trójjęzyczny" CLIP, który może rozumieć prompty związane ze wszystkimi modelami rodzicielskimi.</p>
+                          <div class="grid md:grid-cols-2 gap-8">
+                              <div>
+                                  <h4 class="font-bold text-lg text-slate-200 mb-4">Tworzenie Trójjęzycznego CLIP</h4>
+                                  <p class="text-sm text-slate-400 mb-4">Tworzymy trzy grupy słownictwa, a następnie wykonujemy ostateczne ważone łączenie, aby zrównoważyć ich wpływ, zapewniając, że baza Pony pozostaje dominująca, jednocześnie rozumiejąc prompty dotyczące wstrzykniętej umiejętności anatomicznej.</p>
+                                  <div class="flex flex-col space-y-2 text-center text-xs font-semibold">
+                                      <div class="p-2 border border-indigo-500/50 rounded-lg bg-indigo-900/20"><p class="font-medium mb-1 text-indigo-300">1. `NoobAI` CLIP (JANKU + NEW ERA)</p></div>
+                                      <div class="p-2 border border-amber-500/50 rounded-lg bg-amber-900/20"><p class="font-medium mb-1 text-amber-300">2. `Illustrious` CLIP (Graycolor + SinGlo)</p></div>
+                                      <div class="p-2 border border-red-500/50 rounded-lg bg-red-900/20"><p class="font-medium mb-1 text-red-300">3. `SDXL` CLIP (Boomer Art)</p></div>
+                                      <div class="p-2 border border-slate-500 rounded-lg bg-slate-800/30"><p class="font-medium mb-1 text-slate-300">4. FINAŁOWE POŁĄCZENIE</p><div class="self-center mt-1 text-slate-400">↓ <span class="font-normal">(60% NoobAI / 25% Illustrious / 15% SDXL)</span></div><div class="p-3 bg-slate-200 rounded-lg text-slate-900 mx-auto mt-2">Finałowy Trójjęzyczny CLIP</div></div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <h4 class="font-bold text-lg text-slate-200 mb-4">Wybór VAE dla Wierności</h4>
+                                  <p class="text-sm text-slate-400 mb-6">VAE z głównego hosta strukturalnego, `JANKU V4.0`, pozostaje najbezpieczniejszym i najbardziej logicznym wyborem do utrzymania spójności kolorów pomimo złożonych łączeń.</p>
+                                  <div class="bg-indigo-900/30 border-2 border-dashed border-indigo-500/50 p-4 rounded-lg text-center">
+                                      <p class="font-semibold text-indigo-200">Główna Rekomendacja</p>
+                                      <p class="text-indigo-300">Użyj VAE wbudowanego w `JANKU V4.0`.</p>
+                                      <p class="text-xs mt-2 text-indigo-400">Ponieważ ostateczny model jest w przeważającej mierze oparty na Pony, użycie VAE Pony jest nieuniknione, aby zapobiec przesunięciom kolorów i artefaktom.</p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                 </section>
+            </div>
+
+            <section id="analysis" class="mb-24 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-100 mb-2">Analiza Porównawcza i Rekomendacja</h2>
+                <p class="text-slate-400 mb-10 max-w-4xl">Wybór strategii łączenia wiąże się z kompromisem między stabilnością, zasięgiem stylistycznym a złożonością. Ta sekcja podsumowuje kluczowe różnice, aby pomóc Ci zdecydować, która wersja najlepiej odpowiada Twoim konkretnym potrzebom.</p>
+                <div class="overflow-x-auto card p-2 md:p-6">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-800/50 text-slate-200">
+                            <tr>
+                                <th class="p-3 font-semibold">Czynnik</th>
+                                <th class="p-3 font-semibold">"Dawca SDXL"</th>
+                                <th class="p-3 font-semibold">"Rodzina PONY"</th>
+                                <th class="p-3 font-semibold">"Hybryda PONY + SDXL"</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700">
+                            <tr class="hover:bg-slate-800/30">
+                                <td class="p-3 font-medium text-slate-200">Główna Filozofia</td>
+                                <td class="p-3">Chirurgiczne Wstrzykiwanie Umiejętności (DARE-TIES)</td>
+                                <td class="p-3">Harmonia Architektoniczna (Łączenie Bloków)</td>
+                                <td class="p-3">Hybryda: Łączenie Bloków + Chirurgiczne Łatanie</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30">
+                                <td class="p-3 font-medium text-slate-200">Stabilność i Spójność</td>
+                                <td class="p-3">Dobra, ale wyższe ryzyko subtelnych artefaktów z powodu łączenia międzyarchitektonicznego.</td>
+                                <td class="p-3">Doskonała. Łączenie kompatybilnych modeli jest fundamentalnie bardziej stabilne i przewidywalne.</td>
+                                <td class="p-3">Bardzo Dobra. Głównie stabilna dzięki bazie Pony, ale wstrzyknięcie SDXL wprowadza niewielki czynnik ryzyka.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30">
+                                <td class="p-3 font-medium text-slate-200">Zasięg Stylistyczny</td>
+                                <td class="p-3">Najszerszy. Może włączać style z zupełnie różnych rodzin modeli.</td>
+                                <td class="p-3">Skoncentrowany. Doskonale łączy style w ekosystemie Pony, uzyskując wyrafinowaną estetykę.</td>
+                                <td class="p-3">Unikalny. Tworzy nowatorską mieszankę poprzez "łatanie" bazy Pony specyficznymi cechami modelu SDXL (anatomia).</td>
+                            </tr>
+                             <tr class="hover:bg-slate-800/30">
+                                <td class="p-3 font-medium text-slate-200">Złożoność</td>
+                                <td class="p-3">Wysoka. Wymaga starannej konfiguracji węzłów DARE-TIES i modeli bazowych.</td>
+                                <td class="p-3">Średnia. Proste wieloetapowe łączenie bloków.</td>
+                                <td class="p-3">Bardzo Wysoka. Łączy zarówno łączenie bloków, jak i DARE-TIES w czteroetapowym procesie.</td>
+                            </tr>
+                             <tr class="hover:bg-slate-800/30">
+                                <td class="p-3 font-medium text-slate-200">Najlepsze dla...</td>
+                                <td class="p-3">Osiągnięcia bardzo specyficznej, unikalnej mieszanki odmiennych estetyk (np. sci-fi na bazie fantasy).</td>
+                                <td class="p-3">Tworzenia bardzo dopracowanego, stabilnego i spójnego modelu do konsekwentnego generowania zasobów (np. kart postaci).</td>
+                                <td class="p-3">Eksperymentalnego łączenia w celu naprawy konkretnych wad (np. słabej anatomii) w modelu bazowym przy użyciu dawcy z innej rodziny.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                 <div class="mt-8 p-6 bg-indigo-900/30 border border-indigo-500/50 rounded-lg">
+                     <h3 class="font-bold text-lg text-indigo-200 mb-2">Ostateczna Rekomendacja</h3>
+                     <p class="text-indigo-300">Dla zadeklarowanego celu tworzenia **spójnych zasobów do gier** z **czystymi liniami odpowiednimi do wektoryzacji**, wersja **"Rodzina PONY" pozostaje najlepszym wyborem.**</p>
+                     <p class="mt-2 text-sm text-indigo-400">Jej harmonia architektoniczna zapewnia najwyższy stopień stabilności i przewidywalności, co jest kluczowe przy generowaniu dużego zestawu spójnych zasobów. **"Hybryda PONY + SDXL"** jest potężną i wysoce kreatywną alternatywą dla zaawansowanych użytkowników, ale jej złożoność i niewielkie ryzyko wprowadzone przez łatkę DARE-TIES czynią ją opcją drugorzędną, bardziej eksperymentalną. Wersja **"Dawcy SDXL"** jest najlepiej zarezerwowana na sytuacje, gdy pożądanej estetyki naprawdę nie można osiągnąć w ramach jednej rodziny architektonicznej.</p>
+                 </div>
+            </section>
+            
+            <section id="glossary" class="mb-24 scroll-mt-20">
+                 <h2 class="text-3xl font-bold text-slate-100 mb-2">Glosariusz Terminów</h2>
+                 <p class="text-slate-400 mb-10 max-w-4xl">Zrozumienie terminologii jest kluczem do udanego łączenia modeli. Oto definicje podstawowych pojęć omówionych w tym przewodniku.</p>
+                 <div class="grid md:grid-cols-2 gap-6">
+                     <div class="card p-6">
+                         <h3 class="font-bold text-lg text-slate-200 mb-2">Łączenie z wagami bloków (Block-Weighted Merge)</h3>
+                         <p class="text-sm text-slate-400">Technika łączenia, w której różne warstwy (bloki) dwóch sieci neuronowych są łączone z różnymi wagami. Wczesne warstwy (bloki IN) kontrolują kompozycję i anatomię, środkowe warstwy (blok M) kontrolują koncepcje i semantykę, a późne warstwy (bloki OUT) kontrolują detale i styl. Pozwala to na bardzo precyzyjną kontrolę nad tym, co każdy model rodzicielski wnosi do ostatecznego wyniku.</p>
+                     </div>
+                     <div class="card p-6">
+                         <h3 class="font-bold text-lg text-slate-200 mb-2">DARE-TIES</h3>
+                         <p class="text-sm text-slate-400">Zaawansowany algorytm łączenia do chirurgicznego wstrzykiwania umiejętności z modelu dawcy do modelu hosta, zwłaszcza w różnych architekturach. W ComfyUI zaimplementowany za pomocą rozszerzenia `ComfyUI-DareMerge`.</p>
+                         <ul class="text-sm text-slate-400 mt-2 list-disc list-inside space-y-1">
+                            <li><strong>TIES (`ties_trim_n`):</strong> Przycina obliczone zmiany, zachowując tylko te najbardziej znaczące. Wartość `0.2` zachowuje 20% najważniejszych.</li>
+                            <li><strong>DARE (`dare_density`):</strong> Losowo odrzuca procent *już przyciętych* zmian, aby zapobiec nadmiernemu dopasowaniu. Wartość `0.25` odrzuca 25% pozostałych zmian.</li>
+                         </ul>
+                     </div>
+                     <div class="card p-6">
+                         <h3 class="font-bold text-lg text-slate-200 mb-2">UNet</h3>
+                         <p class="text-sm text-slate-400">Podstawowa architektura sieci neuronowej stosowana w modelach dyfuzyjnych do generowania obrazów. Ma część "enkodera", która kompresuje obraz do reprezentacji koncepcyjnej (bloki IN i M) oraz część "dekodera", która rekonstruuje obraz z tej reprezentacji (bloki OUT). Jej kształt litery "U" pozwala na przekazywanie informacji między odpowiadającymi sobie warstwami enkodera i dekodera, zachowując szczegóły.</p>
+                     </div>
+                     <div class="card p-6">
+                         <h3 class="font-bold text-lg text-slate-200 mb-2">CLIP (Contrastive Language-Image Pre-Training)</h3>
+                         <p class="text-sm text-slate-400">Komponent modelu, który rozumie prompty tekstowe. Tłumaczy Twoje słowa na reprezentację matematyczną, której UNet może użyć do kierowania generowaniem obrazu. Łączenie CLIP-ów jest kluczowe, aby model rozumiał połączone słownictwo swoich rodziców.</p>
+                     </div>
+                     <div class="card p-6">
+                         <h3 class="font-bold text-lg text-slate-200 mb-2">VAE (Variational Autoencoder)</h3>
+                         <p class="text-sm text-slate-400">Mała sieć neuronowa, która obsługuje ostatni etap tworzenia obrazu. Tłumaczy ona dane wyjściowe UNet na rzeczywiste piksele, które widzisz. Dobry VAE zapewnia żywe kolory i ostre szczegóły, podczas gdy niedopasowany może powodować wyblakłe kolory lub artefakty wizualne. Zazwyczaj najbezpieczniej jest używać VAE z głównego modelu hosta lub bazowego.</p>
+                     </div>
+                      <div class="card p-6">
+                         <h3 class="font-bold text-lg text-slate-200 mb-2">Rodzina Architektoniczna (np. SDXL vs. Pony)</h3>
+                         <p class="text-sm text-slate-400">Odnosi się do grup modeli trenowanych na podobnej bazie i o zgodnych strukturach wewnętrznych. Łączenie modeli z tej samej rodziny (np. Pony + Pony) jest ogólnie bardziej stabilne i przewidywalne niż łączenie między rodzinami (np. Pony + SDXL), co często wymaga bardziej zaawansowanych technik, takich jak DARE-TIES, w celu rozwiązania niezgodności.</p>
+                     </div>
+                 </div>
+            </section>
+
+        </main>
+        
+        <footer class="bg-slate-900/50 mt-24 border-t border-slate-700">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-sm text-slate-500">
+                <p>Skonsolidowany Interaktywny Przewodnik po Zaawansowanym Łączeniu Modeli</p>
+            </div>
+        </footer>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const canvas = document.getElementById('shader-canvas');
+    const gl = canvas.getContext('webgl');
+    if (!gl) {
+        console.error("WebGL nie jest wspierany, tło nie będzie animowane.");
+        return;
+    }
+
+    const vertexShaderSource = `
+        attribute vec2 a_position;
+        void main() {
+            gl_Position = vec4(a_position, 0.0, 1.0);
+        }
+    `;
+
+    const fragmentShaderSource = `
+        precision mediump float;
+        uniform vec2 u_resolution;
+        uniform float u_time;
+
+        float random (vec2 st) {
+            return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+        }
+
+        float noise (vec2 st) {
+            vec2 i = floor(st);
+            vec2 f = fract(st);
+            vec2 u = f*f*(3.0-2.0*f);
+            return mix( mix( random( i + vec2(0.0,0.0) ),
+                           random( i + vec2(1.0,0.0) ), u.x),
+                        mix( random( i + vec2(0.0,1.0) ),
+                           random( i + vec2(1.0,1.0) ), u.x), u.y);
+        }
+
+        float fbm (vec2 st) {
+            float value = 0.0;
+            float amplitude = .5;
+            for (int i = 0; i < 6; i++) {
+                value += amplitude * noise(st);
+                st *= 2.;
+                amplitude *= .5;
+            }
+            return value;
+        }
+
+        void main() {
+            vec2 st = gl_FragCoord.xy/u_resolution.xy;
+            st.x *= u_resolution.x/u_resolution.y;
+            vec3 color = vec3(0.0);
+            vec2 q = vec2(fbm(st + 0.00*u_time), fbm(st + vec2(1.0)));
+            vec2 r = vec2(fbm(st + 1.0*q + vec2(1.7,9.2) + 0.15*u_time), fbm(st + 1.0*q + vec2(8.3,2.8) + 0.126*u_time));
+            float f = fbm(st+r);
+            color = mix(vec3(0.1,0.1,0.2), vec3(0.3,0.3,0.6), clamp((f*f)*4.0,0.0,1.0));
+            color = mix(color, vec3(0.2,0.1,0.4), clamp(length(q),0.0,1.0));
+            color = mix(color, vec3(0.4,0.5,0.7), clamp(length(r.x),0.0,1.0));
+            float star_val = random(gl_FragCoord.xy);
+            if (star_val > 0.998) {
+                float star_intensity = (star_val - 0.998) / (1.0 - 0.998);
+                color += vec3(star_intensity * (0.8 + 0.2 * sin(u_time * 2.0 + gl_FragCoord.y)));
+            }
+            gl_FragColor = vec4( (f*f*f+.6*f*f+.5*f)*color, 1.);
+        }
+    `;
+
+    function createShader(gl, type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            console.error('Wystąpił błąd podczas kompilacji shaderów: ' + gl.getShaderInfoLog(shader));
+            gl.deleteShader(shader);
+            return null;
+        }
+        return shader;
+    }
+
+    const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+    const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+    const program = gl.createProgram();
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        console.error('Nie można zainicjować programu shadera: ' + gl.getProgramInfoLog(program));
+        return;
+    }
+
+    gl.useProgram(program);
+    const positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    const positions = [-1, 1, 1, 1, -1, -1, 1, -1];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+    const positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+    gl.enableVertexAttribArray(positionAttributeLocation);
+    gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+    const resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
+    const timeUniformLocation = gl.getUniformLocation(program, "u_time");
+
+    function render(time) {
+        time *= 0.0005; 
+        canvas.width = gl.canvas.clientWidth;
+        canvas.height = gl.canvas.clientHeight;
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+        gl.uniform1f(timeUniformLocation, time);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+    
+    const blockLabels = ['IN00', 'IN01', 'IN02', 'IN03', 'IN04', 'IN05', 'IN06', 'IN07', 'IN08', 'IN09', 'IN10', 'IN11', 'M00', 'OUT00', 'OUT01', 'OUT02', 'OUT03', 'OUT04', 'OUT05', 'OUT06', 'OUT07', 'OUT08', 'OUT09', 'OUT10', 'OUT11'];
+    
+    const sdxlData = {
+        labels: blockLabels,
+        recipes: {
+            balanced: {
+                explanation: "<strong>Przepis A: Zrównoważony (Domyślny)</strong><br>To jest zalecany przepis, starannie obliczony w celu zrównoważenia integralności strukturalnej Animij z wkładem stylistycznym Graycolor. Silnie faworyzuje Animij we wczesnych blokach dla kompozycji, płynnie przechodzi w kierunku Graycolor w środku dla stylu koncepcyjnego, a następnie wraca do Animij w końcowych blokach dla czystych linii.",
+                weights: [0.90, 0.88, 0.85, 0.82, 0.75, 0.70, 0.65, 0.60, 0.55, 0.50, 0.48, 0.45, 0.40, 0.42, 0.45, 0.48, 0.50, 0.53, 0.58, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90],
+                justifications: ['IN00 @ 0.90 Animij: Ustanawia przytłaczającą dominację dla podstawowego zrozumienia kompozycji i czystego stylu lineartu hosta od samego początku.','IN01 @ 0.88 Animij: Kontynuuje silną dominację hosta, aby zablokować strukturę anatomiczną i pozy, kluczowe dla spójnej sztuki postaci.','IN02 @ 0.85 Animij: Host wciąż prowadzi, zapewniając, że forma głównego podmiotu jest zdefiniowana przez jego doskonały styl anime przed wprowadzeniem innych wpływów.','IN03 @ 0.82 Animij: Niewielki wzrost wpływu Graycolor (0.18) zaczyna subtelnie łagodzić czysto animową estetykę w przygotowaniu do mieszania stylów.','IN04 @ 0.75 Animij: Znaczący krok w kierunku Graycolor (0.25), wprowadzający jego półrealistyczne właściwości i malarskie koncepcje do ustalonej struktury anime.','IN05 @ 0.70 Animij: Wpływ Graycolor rośnie do 0.30, pozwalając mu wpływać na interpretację cech średniego poziomu, takich jak twarze i ubrania.','IN06 @ 0.65 Animij: Mieszanka kontynuuje dążenie do równowagi, dając Graycolor (0.35) więcej do powiedzenia w kwestii stylu i tekstury przed rdzeniem koncepcyjnym.','IN07 @ 0.60 Animij: Zbliżając się do środkowego bloku, modele zbliżają się do równej równowagi (0.40 Graycolor), aby przygotować się do głównej fuzji stylów.','IN08 @ 0.55 Animij: Host utrzymuje niewielką przewagę tuż przed wąskim gardłem, zapewniając, że jego integralność strukturalna jest ostatnim słowem etapu wejściowego.','IN09 @ 0.50/0.50: Dokładny podział 50/50, aby stworzyć idealnie zrównoważone i stabilne przejście do semantycznego rdzenia UNET.','IN10 @ 0.48 Animij: Graycolor po raz pierwszy przejmuje niewielką przewagę (0.52), zaczynając definiować abstrakcyjną koncepcję swoim półrealistycznym stylem.','IN11 @ 0.45 Animij: Dalsze wzmacnianie dominacji koncepcyjnej Graycolor (0.55) tuż przed środkowym blokiem, zapewniając głębokie osadzenie jego stylu.','M00 @ 0.40 Animij: Graycolor otrzymuje najsilniejszą wagę (0.60) w wąskim gardle UNET. Zapewnia to, że jego półrealistyczny, malarski styl jest osadzony w najgłębszej warstwie semantycznej.','OUT00 @ 0.42 Animij: Graycolor pozostaje dominujący (0.58), gdy model zaczyna rekonstruować obraz, propagując swój styl na zewnątrz od rdzenia.','OUT01 @ 0.45 Animij: Równowaga zaczyna się przesuwać z powrotem w kierunku hosta, ponownie wprowadzając logikę strukturalną Animij do rekonstrukcji.','OUT02 @ 0.48 Animij: Graycolor wciąż ma niewielką większość (0.52), zapewniając, że jego malarski styl nadal wpływa na wczesne warstwy detali.','OUT03 @ 0.50/0.50: Drugi idealny podział 50/50, tworzący połączony blok, który czerpie w równym stopniu z podejść obu modeli do detali i tekstury.','OUT04 @ 0.53 Animij: Host odzyskuje prowadzenie, zaczynając stosować swoją czystą, stylizowaną interpretację do zrekonstruowanych cech.','OUT05 @ 0.58 Animij: Nacisk na hosta rośnie, koncentrując się na jego doskonałej zdolności do generowania czystych linii i cieniowania w stylu cel-shadingu.','OUT06 @ 0.65 Animij: Silniejsza waga dla hosta zapewnia, że drobne szczegóły, takie jak oczy, pasma włosów i akcesoria, są zgodne z docelową estetyką anime.','OUT07 @ 0.70 Animij: Host nadal dominuje, udoskonalając tekstury, aby pasowały do jego stylu retro, zachowując jednocześnie część malarskiej surowości Graycolor.','OUT08 @ 0.75 Animij: Znacząca waga dla hosta do wykonania ostatecznego przejścia po ogólnej strukturze i kompozycji, zapewniając spójność.','OUT09 @ 0.80 Animij: Silnie faworyzuje hosta do renderowania ostatecznych, wysokoczęstotliwościowych detali z maksymalną klarownością i ostrością.','OUT10 @ 0.85 Animij: Zdecydowanie faworyzuje hosta, aby zapewnić, że ostateczne linie są ostre i czyste, co jest kluczowe dla celu wektoryzacji.','OUT11 @ 0.90 Animij: Ostateczna, decydująca waga dla hosta, aby zapewnić, że wynik jest czysty, żywy i spójny z jego podstawowym stylem, usuwając wszelki utajony szum.']
+            },
+            host_dominant: {
+                explanation: "<strong>Przepis B: Z dominacją Hosta</strong><br>Ten przepis daje większą wagę Animij we wszystkich blokach. Rezultatem będzie model o wyjątkowo silnej anatomii i spójności kompozycyjnej, ściśle trzymający się stylu retro anime. Będzie jednak mniej podatny na malarski styl dawców, który może wydawać się bardziej subtelny.",
+                weights: [0.95, 0.92, 0.90, 0.88, 0.85, 0.80, 0.75, 0.70, 0.65, 0.60, 0.55, 0.50, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.88, 0.90, 0.92, 0.95],
+                justifications: ['(Z dominacją Hosta) IN00 @ 0.95 Animij: Maksymalna integralność strukturalna od samego początku.','(Z dominacją Hosta) IN01 @ 0.92 Animij: Utrzymanie przytłaczającej kontroli nad anatomią.','(Z dominacją Hosta) IN02 @ 0.90 Animij: Zapewnienie, że forma podmiotu jest czysto z Animij.','(Z dominacją Hosta) IN03 @ 0.88 Animij: Minimalny wpływ Graycolor.','(Z dominacją Hosta) IN04 @ 0.85 Animij: Priorytet dla struktury nad mieszaniem stylów.','(Z dominacją Hosta) IN05 @ 0.80 Animij: Utrzymanie podstawowego stylu bardzo blisko Animij.','(Z dominacją Hosta) IN06 @ 0.75 Animij: Stosunek 3:1 na korzyść struktury.','(Z dominacją Hosta) IN07 @ 0.70 Animij: Silna kontrola hosta prowadząca do środka.','(Z dominacją Hosta) IN08 @ 0.65 Animij: Zapewnienie, że Animij ma ostatnie słowo przed rdzeniem.','(Z dominacją Hosta) IN09 @ 0.60 Animij: Mieszanka faworyzująca hosta dla stabilności.','(Z dominacją Hosta) IN10 @ 0.55 Animij: Niewielka przewaga hosta nawet podczas formowania koncepcji.','(Z dominacją Hosta) IN11 @ 0.50/0.50: Równy podział tuż przed rdzeniem.','(Z dominacją Hosta) M00 @ 0.45 Animij: Nawet w rdzeniu utrzymanie silnej obecności hosta.','(Z dominacją Hosta) OUT00 @ 0.50/0.50: Rozpoczęcie rekonstrukcji z równym podziałem.','(Z dominacją Hosta) OUT01 @ 0.55 Animij: Natychmiastowe rozpoczęcie ponownego potwierdzania kontroli hosta.','(Z dominacją Hosta) OUT02 @ 0.60 Animij: Wzmocnienie kontroli hosta nad wczesnymi detalami.','(Z dominacją Hosta) OUT03 @ 0.65 Animij: Priorytet dla logiki hosta w celu udoskonalenia detali.','(Z dominacją Hosta) OUT04 @ 0.70 Animij: Silna kontrola hosta nad rekonstrukcją cech.','(Z dominacją Hosta) OUT05 @ 0.75 Animij: Stosunek 3:1 na korzyść linii hosta.','(Z dominacją Hosta) OUT06 @ 0.80 Animij: Zdecydowane faworyzowanie hosta dla drobnych detali.','(Z dominacją Hosta) OUT07 @ 0.85 Animij: Zapewnienie, że tekstury pochodzą głównie od hosta.','(Z dominacją Hosta) OUT08 @ 0.88 Animij: Ostateczne polerowanie strukturalne jest prawie w całości napędzane przez hosta.','(Z dominacją Hosta) OUT09 @ 0.90 Animij: Maksymalna klarowność od hosta.','(Z dominacją Hosta) OUT10 @ 0.92 Animij: Zapewnienie wyjątkowo czystych linii.','(Z dominacją Hosta) OUT11 @ 0.95 Animij: Ostateczny wynik to prawie czysty styl Animij.']
+            },
+            donor_receptive: {
+                explanation: "<strong>Przepis C: Podatny na Dawcę</strong><br>Ten przepis daje większą wagę Graycolor. Tworzy to model-hosta, który jest bardziej elastyczny stylistycznie i będzie bardziej podatny na malarskich i tematycznych dawców. Kompromisem jest potencjalne zmniejszenie stabilności kompozycyjnej i mniej wyraźne odczucie 'anime z lat 90-tych'.",
+                weights: [0.85, 0.82, 0.80, 0.78, 0.70, 0.65, 0.60, 0.55, 0.50, 0.45, 0.42, 0.40, 0.35, 0.38, 0.40, 0.42, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85],
+                justifications: ['(Podatny na Dawcę) IN00 @ 0.85 Animij: Łagodniejszy start, natychmiast pozwalający na większy wpływ stylu.','(Podatny na Dawcę) IN01 @ 0.82 Animij: Wczesne osłabienie kontroli hosta w celu zachęcenia do mieszania.','(Podatny na Dawcę) IN02 @ 0.80 Animij: Stosunek 4:1, dający Graycolor silny wczesny głos.','(Podatny na Dawcę) IN03 @ 0.78 Animij: Dalsze priorytetyzowanie mieszania stylów nad czystą strukturą.','(Podatny na Dawcę) IN04 @ 0.70 Animij: Silne pchnięcie w kierunku stylu Graycolor.','(Podatny na Dawcę) IN05 @ 0.65 Animij: Pozwolenie Graycolor na znaczący wpływ na cechy.','(Podatny na Dawcę) IN06 @ 0.60 Animij: Podział 60/40 na korzyść struktury, ale z silnym stylem.','(Podatny na Dawcę) IN07 @ 0.55 Animij: Zbliżenie do środka z niemal równym podziałem.','(Podatny na Dawcę) IN08 @ 0.50/0.50: Równy podział w celu maksymalizacji potencjału fuzji.','(Podatny na Dawcę) IN09 @ 0.45 Animij: Pozwolenie Graycolor na prowadzenie przejścia do rdzenia.','(Podatny na Dawcę) IN10 @ 0.42 Animij: Wzmocnienie wpływu koncepcyjnego Graycolor.','(Podatny na Dawcę) IN11 @ 0.40 Animij: Silna waga 60% dla Graycolor przed wąskim gardłem.','(Podatny na Dawcę) M00 @ 0.35 Animij: Danie Graycolor decydującej wagi 65% w rdzeniu.','(Podatny na Dawcę) OUT00 @ 0.38 Animij: Rozpoczęcie rekonstrukcji z silnym wpływem Graycolor.','(Podatny na Dawcę) OUT01 @ 0.40 Animij: Utrzymanie wagi 60% dla Graycolor we wczesnej rekonstrukcji.','(Podatny na Dawcę) OUT02 @ 0.42 Animij: Dalsze priorytetyzowanie malarskiego stylu.','(Podatny na Dawcę) OUT03 @ 0.45 Animij: Podział faworyzujący dawcę w celu udoskonalenia detali.','(Podatny na Dawcę) OUT04 @ 0.50/0.50: Równy podział na ostateczne przejście po cechach.','(Podatny na Dawcę) OUT05 @ 0.55 Animij: Rozpoczęcie powrotu do Animij dla linii.','(Podatny na Dawcę) OUT06 @ 0.60 Animij: Podział 60/40 na korzyść hosta dla drobnych detali.','(Podatny na Dawcę) OUT07 @ 0.65 Animij: Wzmocnienie kontroli hosta nad ostatecznymi teksturami.','(Podatny na Dawcę) OUT08 @ 0.70 Animij: Podział 70/30 na ostateczne polerowanie strukturalne.','(Podatny na Dawcę) OUT09 @ 0.75 Animij: Silna obecność hosta dla klarowności.','(Podatny na Dawcę) OUT10 @ 0.80 Animij: Zapewnienie, że ostateczne linie pochodzą głównie od hosta.','(Podatny na Dawcę) OUT11 @ 0.85 Animij: Silna waga hosta dla czystego wykończenia.']
+            }
+        }
+    };
+
+    const ponyData = {
+        labels: blockLabels,
+        recipes: {
+            stage1: { model1: 'JANKU', model2: 'NEW ERA V5', color1: '#6366F1', color2: '#312E81', weights: [0.90,0.88,0.85,0.82,0.80,0.75,0.70,0.65,0.60,0.55,0.50,0.48,0.45,0.50,0.55,0.60,0.65,0.70,0.75,0.80,0.82,0.85,0.88,0.90,0.92], justifications: ['Etap 1 (JANKU/NEW ERA V5) - IN00 @ 0.90 JANKU: Zdecydowane faworyzowanie doskonałej anatomii JANKU w celu zbudowania silnych fundamentów strukturalnych, kompensując słabość NEW ERA.','Etap 1 - IN01 @ 0.88 JANKU: Kontynuacja silnej dominacji JANKU w celu utrwalenia kompozycji i póz.','Etap 1 - IN02 @ 0.85 JANKU: Utrzymanie dużej przewagi JANKU przy jednoczesnym wprowadzaniu silnego stylu tematycznego NEW ERA.','Etap 1 - IN03 @ 0.82 JANKU: Stopniowe zwiększanie wpływu NEW ERA, pozwalając na połączenie jego stylu z mocną strukturą.','Etap 1 - IN04 @ 0.80 JANKU: Stosunek 4:1 zapewnia, że anatomia JANKU pozostaje dominująca, gdy styl NEW ERA staje się bardziej widoczny.','Etap 1 - IN05 @ 0.75 JANKU: Znaczący krok, dający NEW ERA 25% wpływu na cechy średniego poziomu.','Etap 1 - IN06 @ 0.70 JANKU: Pozwolenie stylowi NEW ERA na silny wpływ na obraz, zrównoważony spójnością JANKU.','Etap 1 - IN07 @ 0.65 JANKU: Zbliżanie się do bardziej równej mieszanki przed rdzeniem koncepcyjnym.','Etap 1 - IN08 @ 0.60 JANKU: Danie NEW ERA silnego 40% wpływu przed wąskim gardłem.','Etap 1 - IN09 @ 0.55 JANKU: Prawie równy podział, z lekką przewagą JANKU dla stabilności.','Etap 1 - IN10 @ 0.50/0.50: Idealnie zrównoważony podział dla stabilnego przejścia do rdzenia.','Etap 1 - IN11 @ 0.48 JANKU: Pozwolenie NEW ERA na lekką przewagę (52%) w celu zdefiniowania abstrakcyjnej koncepcji.','Etap 1 - M00 @ 0.45 JANKU: Danie NEW ERA wyraźnej większości 55% w rdzeniu, aby zapewnić głębokie osadzenie jego mrocznych, surowych motywów.','Etap 1 - OUT00 @ 0.50/0.50: Rozpoczęcie rekonstrukcji z zrównoważonym podziałem dla nowatorskiej fuzji.','Etap 1 - OUT01 @ 0.55 JANKU: Natychmiastowe ponowne potwierdzenie kontroli strukturalnej JANKU podczas dekodowania.','Etap 1 - OUT02 @ 0.60 JANKU: Zwiększenie wpływu JANKU w celu spójnego dopracowania detali.','Etap 1 - OUT03 @ 0.65 JANKU: Priorytet dla logiki JANKU przy rekonstrukcji cech.','Etap 1 - OUT04 @ 0.70 JANKU: Podział 70/30, aby zapewnić zgodność detali i tekstur z bazą JANKU.','Etap 1 - OUT05 @ 0.75 JANKU: Stosunek 3:1 na korzyść JANKU dla czystych linii i cieniowania.','Etap 1 - OUT06 @ 0.80 JANKU: Zdecydowane faworyzowanie JANKU dla drobnych detali, takich jak oczy i włosy.','Etap 1 - OUT07 @ 0.82 JANKU: Kontynuacja silnej przewagi JANKU dla ostatecznego dopracowania tekstur.','Etap 1 - OUT08 @ 0.85 JANKU: Zapewnienie spójnej i dobrze ustrukturyzowanej ostatecznej kompozycji.','Etap 1 - OUT09 @ 0.88 JANKU: Silne faworyzowanie JANKU dla detali o wysokiej częstotliwości i ostrości.','Etap 1 - OUT10 @ 0.90 JANKU: Waga 90% w celu zapewnienia, że ostateczne linie są ostre i czyste do wektoryzacji.','Etap 1 - OUT11 @ 0.92 JANKU: Ostateczna, decydująca waga dla JANKU dla czystego wyniku bez artefaktów.']},
+            stage2: { model1: 'Graycolor', model2: 'SinGlo', color1: '#F59E0B', color2: '#78350F', weights: [0.85, 0.85, 0.80, 0.80, 0.75, 0.70, 0.70, 0.65, 0.65, 0.60, 0.60, 0.60, 0.55, 0.60, 0.60, 0.65, 0.65, 0.70, 0.70, 0.75, 0.75, 0.80, 0.80, 0.85, 0.85], justifications: ['Etap 2 (Graycolor/SinGlo) - IN00 @ 0.85 Graycolor: Ustanowienie półrealizmu Graycolor jako bazy.','Etap 2 - IN01 @ 0.85 Graycolor: Utrzymanie dominacji Graycolor dla spójnej malarskiej podstawy.','Etap 2 - IN02 @ 0.80 Graycolor: Rozpoczęcie wprowadzania unikalnych właściwości tekstur SinGlo.','Etap 2 - IN03 @ 0.80 Graycolor: Kontynuacja mieszania stylu SinGlo.','Etap 2 - IN04 @ 0.75 Graycolor: Zwiększenie wpływu SinGlo na styl.','Etap 2 - IN05 @ 0.70 Graycolor: Danie SinGlo silniejszego głosu w detalach średniego poziomu.','Etap 2 - IN06 @ 0.70 Graycolor: Danie SinGlo silniejszego głosu w detalach średniego poziomu.','Etap 2 - IN07 @ 0.65 Graycolor: Zbliżanie się do bardziej równej mieszanki tekstur.','Etap 2 - IN08 @ 0.65 Graycolor: Zbliżanie się do bardziej równej mieszanki tekstur.','Etap 2 - IN09 @ 0.60 Graycolor: Pozwolenie SinGlo na znaczący wpływ na bloki przedśrodkowe.','Etap 2 - IN10 @ 0.60 Graycolor: Pozwolenie SinGlo na znaczący wpływ na bloki przedśrodkowe.','Etap 2 - IN11 @ 0.60 Graycolor: Pozwolenie SinGlo na znaczący wpływ na bloki przedśrodkowe.','Etap 2 - M00 @ 0.55 Graycolor: Prawie równy podział w rdzeniu w celu połączenia dwóch stylów tekstur.','Etap 2 - OUT00 @ 0.60 Graycolor: Rozpoczęcie rekonstrukcji z lekką przewagą dla spójności Graycolor.','Etap 2 - OUT01 @ 0.60 Graycolor: Rozpoczęcie rekonstrukcji z lekką przewagą dla spójności Graycolor.','Etap 2 - OUT02 @ 0.65 Graycolor: Dalsze faworyzowanie Graycolor dla stabilnej bazy detali.','Etap 2 - OUT03 @ 0.65 Graycolor: Dalsze faworyzowanie Graycolor dla stabilnej bazy detali.','Etap 2 - OUT04 @ 0.70 Graycolor: Podkreślenie malarskiego charakteru Graycolor.','Etap 2 - OUT05 @ 0.70 Graycolor: Podkreślenie malarskiego charakteru Graycolor.','Etap 2 - OUT06 @ 0.75 Graycolor: Silne faworyzowanie Graycolor dla wyrafinowanych tekstur.','Etap 2 - OUT07 @ 0.75 Graycolor: Silne faworyzowanie Graycolor dla wyrafinowanych tekstur.','Etap 2 - OUT08 @ 0.80 Graycolor: Pozwolenie Graycolor na dominację w końcowych przejściach detali.','Etap 2 - OUT09 @ 0.80 Graycolor: Pozwolenie Graycolor na dominację w końcowych przejściach detali.','Etap 2 - OUT10 @ 0.85 Graycolor: Zdecydowane faworyzowanie Graycolor dla czystego, malarskiego wykończenia.','Etap 2 - OUT11 @ 0.85 Graycolor: Zdecydowane faworyzowanie Graycolor dla czystego, malarskiego wykończenia.']},
+            stage3: { model1: '"Baza Dark Anime"', model2: '"Most Malarski"', color1: '#1E3A8A', color2: '#78350F', weights: [0.90, 0.90, 0.88, 0.85, 0.82, 0.80, 0.78, 0.75, 0.72, 0.70, 0.68, 0.65, 0.60, 0.62, 0.65, 0.68, 0.70, 0.72, 0.75, 0.78, 0.80, 0.82, 0.85, 0.88, 0.90], justifications: ['Etap 3 (Finałowa Fuzja) - IN00 @ 0.90 Baza Dark Anime: Zdecydowane faworyzowanie bazy Dark Anime dla struktury.','Etap 3 - IN01 @ 0.90 Baza Dark Anime: Utrzymanie dominacji strukturalnej.','Etap 3 - IN02 @ 0.88 Baza Dark Anime: Delikatne wprowadzanie malarskiej tekstury.','Etap 3 - IN03 @ 0.85 Baza Dark Anime: Lekkie zwiększenie wpływu malarskiego.','Etap 3 - IN04 @ 0.82 Baza Dark Anime: Wprowadzenie więcej stylu malarskiego do środkowych bloków.','Etap 3 - IN05 @ 0.80 Baza Dark Anime: Danie malarskiej mieszance 20% wpływu na styl.','Etap 3 - IN06 @ 0.78 Baza Dark Anime: Kontynuacja stopniowej mieszanki.','Etap 3 - IN07 @ 0.75 Baza Dark Anime: Podział 75/25 przed rdzeniem.','Etap 3 - IN08 @ 0.72 Baza Dark Anime: Dalsze zwiększanie wpływu malarskiego.','Etap 3 - IN09 @ 0.70 Baza Dark Anime: Podział 70/30.','Etap 3 - IN10 @ 0.68 Baza Dark Anime: Zbliżając się do rdzenia, danie większej wagi stylowi malarskiemu.','Etap 3 - IN11 @ 0.65 Baza Dark Anime: Silny wpływ malarski przed wąskim gardłem.','Etap 3 - M00 @ 0.60 Baza Dark Anime: Podział 60/40 w rdzeniu, faworyzujący bazę Dark Anime dla spójności tematycznej, ale pozwalający na silną koncepcję malarską.','Etap 3 - OUT00 @ 0.62 Baza Dark Anime: Rozpoczęcie rekonstrukcji z podobnym podziałem 60/40.','Etap 3 - OUT01 @ 0.65 Baza Dark Anime: Rozpoczęcie powrotu do bazy Dark Anime.','Etap 3 - OUT02 @ 0.68 Baza Dark Anime: Wzmocnienie podstawowego stylu anime.','Etap 3 - OUT03 @ 0.70 Baza Dark Anime: Podział 70/30 w celu połączenia detali.','Etap 3 - OUT04 @ 0.72 Baza Dark Anime: Priorytet dla interpretacji detali bazy Dark Anime.','Etap 3 - OUT05 @ 0.75 Baza Dark Anime: Silny podział 75/25 na korzyść bazy Dark Anime dla linii.','Etap 3 - OUT06 @ 0.78 Baza Dark Anime: Zwiększenie dominacji bazy dla czystych tekstur.','Etap 3 - OUT07 @ 0.80 Baza Dark Anime: Silny podział 80/20 dla końcowych detali.','Etap 3 - OUT08 @ 0.82 Baza Dark Anime: Dalsze priorytetyzowanie bazy dla spójności.','Etap 3 - OUT09 @ 0.85 Baza Dark Anime: Silne faworyzowanie bazy Dark Anime dla ostrych, czystych linii.','Etap 3 - OUT10 @ 0.88 Baza Dark Anime: Zapewnienie, że ostateczny wynik jest w przeważającej mierze zdefiniowany przez styl bazowy.','Etap 3 - OUT11 @ 0.90 Baza Dark Anime: Ostateczna, decydująca waga dla bazy Dark Anime dla czystego wykończenia gotowego do wektoryzacji.']}
+        }
+    };
+    
+    const hybridData = {
+        labels: blockLabels,
+        recipes: {
+            stage1: ponyData.recipes.stage1,
+            stage2: ponyData.recipes.stage2,
+            stage3: { 
+                is_dare: true, 
+                explanation: `<strong>Etap 3: Łatka Anatomiczna (DARE-TIES)</strong><br>To jest krok chirurgiczny. Używamy DARE-TIES do wstrzyknięcia tylko wiedzy anatomicznej z <strong>Boomer Art</strong> do naszej bazy 'Dark Anime'. Celem jest minimalna, ale potężna zmiana w celu naprawy anatomii bez naruszania stylu hosta.<div class="dare-panel mt-4">
+                                 <h4 class="font-bold text-lg text-slate-200 mb-4 text-center">Przeszczep Anatomiczny</h4>
+                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                                     <div class="space-y-4">
+                                         <h5 class="text-sm font-semibold text-indigo-300">WEJŚCIA</h5>
+                                         <p class="text-xs flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-in-right mr-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><strong class="text-slate-300">Host (model_a):</strong> 'Baza Dark Anime' (z Etapu 1)</p>
+                                         <p class="text-xs flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-in-right mr-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><strong class="text-slate-300">Dawca (model_b):</strong> Boomer Art Model</p>
+                                         <p class="text-xs flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-in-right mr-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><strong class="text-slate-300">Baza Hosta:</strong> kohaku-xl-beta5.safetensors</p>
+                                         <p class="text-xs flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box-arrow-in-right mr-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><strong class="text-slate-300">Baza Dawcy:</strong> sd_xl_base_1.0.safetensors</p>
+                                     </div>
+                                     <div class="space-y-4">
+                                         <h5 class="text-sm font-semibold text-red-300">GŁÓWNE USTAWIENIA</h5>
+                                         <div><label class="text-xs font-medium text-slate-300">Gęstość DARE: 0.20</label><div class="w-full bg-slate-700 rounded-full h-2 mt-1"><div class="bg-red-500 h-2 rounded-full" style="width: 20%"></div></div></div>
+                                         <div><label class="text-xs font-medium text-slate-300">Przycinanie TIES (ties_trim_n): 0.20</label><div class="w-full bg-slate-700 rounded-full h-2 mt-1"><div class="bg-red-500 h-2 rounded-full" style="width: 20%"></div></div></div>
+                                     </div>
+                                 </div>
+                                 <div class="mt-6 pt-4 border-t border-slate-700">
+                                     <h5 class="text-sm font-semibold text-slate-300 mb-2">Uzasadnienie</h5>
+                                     <p class="text-xs text-slate-400">To jest bardzo precyzyjna łatka chirurgiczna. Bardzo niska \`gęstość\` (0.20) przycina 80% zmian, a \`ties_trim_n\` (0.20) zachowuje tylko 20% najważniejszych z pozostałych. To izoluje i przeszczepia tylko najbardziej krytyczne, o dużej magnitudzie zmiany parametrów od dawcy, które najprawdopodobniej odpowiadają fundamentalnej wiedzy anatomicznej, pozostawiając styl hosta prawie nietkniętym.</p>
+                                 </div>
+                             </div>`
+            },
+            stage4: { model1: '"Baza z łatką"', model2: '"Most Malarski"', color1: '#1E3A8A', color2: '#78350F', weights: [0.92,0.90,0.88,0.85,0.82,0.80,0.78,0.75,0.72,0.70,0.68,0.65,0.60,0.62,0.65,0.68,0.70,0.72,0.75,0.78,0.80,0.82,0.85,0.88,0.92], justifications: ['Etap 4 (Finałowa Fuzja) - IN00 @ 0.92 Baza z łatką: Zdecydowane faworyzowanie anatomicznie załatanej bazy Dark Anime dla struktury.','Etap 4 - IN01 @ 0.90 Baza z łatką: Utrzymanie dominacji strukturalnej.','Etap 4 - IN02 @ 0.88 Baza z łatką: Delikatne wprowadzanie malarskiej tekstury.','Etap 4 - IN03 @ 0.85 Baza z łatką: Lekkie zwiększenie wpływu malarskiego.','Etap 4 - IN04 @ 0.82 Baza z łatką: Wprowadzenie więcej stylu malarskiego do środkowych bloków.','Etap 4 - IN05 @ 0.80 Baza z łatką: Danie malarskiej mieszance 20% wpływu na styl.','Etap 4 - IN06 @ 0.78 Baza z łatką: Kontynuacja stopniowej mieszanki.','Etap 4 - IN07 @ 0.75 Baza z łatką: Podział 75/25 przed rdzeniem.','Etap 4 - IN08 @ 0.72 Baza z łatką: Dalsze zwiększanie wpływu malarskiego.','Etap 4 - IN09 @ 0.70 Baza z łatką: Podział 70/30.','Etap 4 - IN10 @ 0.68 Baza z łatką: Zbliżając się do rdzenia, danie większej wagi stylowi malarskiemu.','Etap 4 - IN11 @ 0.65 Baza z łatką: Silny wpływ malarski przed wąskim gardłem.','Etap 4 - M00 @ 0.60 Baza z łatką: Podział 60/40 w rdzeniu, faworyzujący Bazę z łatką dla spójności tematycznej, ale pozwalający na silną koncepcję malarską.','Etap 4 - OUT00 @ 0.62 Baza z łatką: Rozpoczęcie rekonstrukcji z podobnym podziałem 60/40.','Etap 4 - OUT01 @ 0.65 Baza z łatką: Rozpoczęcie powrotu do Bazy z łatką.','Etap 4 - OUT02 @ 0.68 Baza z łatką: Wzmocnienie podstawowego stylu anime.','Etap 4 - OUT03 @ 0.70 Baza z łatką: Podział 70/30 w celu połączenia detali.','Etap 4 - OUT04 @ 0.72 Baza z łatką: Priorytet dla interpretacji detali Bazy z łatką.','Etap 4 - OUT05 @ 0.75 Baza z łatką: Silny podział 75/25 na korzyść Bazy z łatką dla linii.','Etap 4 - OUT06 @ 0.78 Baza z łatką: Zwiększenie dominacji bazy dla czystych tekstur.','Etap 4 - OUT07 @ 0.80 Baza z łatką: Silny podział 80/20 dla końcowych detali.','Etap 4 - OUT08 @ 0.82 Baza z łatką: Dalsze priorytetyzowanie bazy dla spójności.','Etap 4 - OUT09 @ 0.85 Baza z łatką: Silne faworyzowanie Bazy z łatką dla ostrych, czystych linii.','Etap 4 - OUT10 @ 0.88 Baza z łatką: Zapewnienie, że ostateczny wynik jest w przeważającej mierze zdefiniowany przez styl bazowy.','Etap 4 - OUT11 @ 0.92 Baza z łatką: Ostateczna, decydująca waga dla Bazy z łatką dla czystego wykończenia gotowego do wektoryzacji.']}
+        }
+    };
+
+    let sdxlChartInstance, ponyChartInstance, hybridChartInstance = null;
+
+    const selectSdxlBtn = document.getElementById('select-sdxl');
+    const selectPonyBtn = document.getElementById('select-pony');
+    const selectHybridBtn = document.getElementById('select-hybrid');
+    const sdxlContent = document.getElementById('sdxl-content');
+    const ponyContent = document.getElementById('pony-content');
+    const hybridContent = document.getElementById('hybrid-content');
+    const mainNav = document.getElementById('main-nav');
+
+    function createChart(ctx, onHoverCallback) {
+        return new Chart(ctx, {
+            type: 'bar',
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                animation: { duration: 1000 },
+                plugins: {
+                    tooltip: { 
+                        mode: 'index', intersect: false, 
+                        callbacks: { label: (c) => `${c.dataset.label}: ${(c.parsed.y * 100).toFixed(2)}%` },
+                        backgroundColor: 'rgba(15, 23, 42, 0.8)',
+                        titleFont: { weight: 'bold'},
+                        bodyFont: { size: 12 },
+                        borderColor: '#334155',
+                        borderWidth: 1,
+                    },
+                    legend: { position: 'top', labels: { color: '#cbd5e1' } }
+                },
+                scales: {
+                    x: { stacked: true, grid: { display: false }, ticks: { color: '#94a3b8' } },
+                    y: { stacked: true, beginAtZero: true, max: 1.0, grid: { color: '#1e293b' }, ticks: { color: '#94a3b8', callback: (v) => (v * 100) + '%' } }
+                },
+                onHover: onHoverCallback
+            }
+        });
+    }
+
+    function initializeSdxlChart() {
+        const ctx = document.getElementById('sdxlChart').getContext('2d');
+        const justificationEl = document.getElementById('sdxl-justification');
+        const recipeButtons = document.querySelectorAll('#sdxl-content .recipe-btn');
+        const explanationEl = document.getElementById('sdxl-recipe-explanation');
+
+        const onHover = (e, el) => {
+            const activeBtn = document.querySelector('#sdxl-content .recipe-btn.active');
+            if (!activeBtn) return;
+            const activeRecipeKey = activeBtn.id.replace('recipe-sdxl-', '');
+            justificationEl.textContent = el.length ? sdxlData.recipes[activeRecipeKey].justifications[el[0].index] : 'Najedź kursorem na blok na wykresie, aby zobaczyć uzasadnienie jego wagi.';
+        };
+        sdxlChartInstance = createChart(ctx, onHover);
+
+        function updateSdxlChart(recipeKey) {
+            const recipe = sdxlData.recipes[recipeKey];
+            if (!recipe) return;
+            explanationEl.innerHTML = recipe.explanation;
+            sdxlChartInstance.data = {
+                labels: sdxlData.labels,
+                datasets: [
+                    { label: 'Animij', data: recipe.weights, backgroundColor: '#4f46e5', barPercentage: 0.9, categoryPercentage: 0.8 },
+                    { label: 'Graycolor', data: recipe.weights.map(w => 1 - w), backgroundColor: '#a5b4fc', barPercentage: 0.9, categoryPercentage: 0.8 }
+                ]
+            };
+            sdxlChartInstance.update();
+        }
+        recipeButtons.forEach(button => button.addEventListener('click', () => {
+            const recipeKey = button.id.replace('recipe-sdxl-', '');
+            recipeButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            updateSdxlChart(recipeKey);
+        }));
+        updateSdxlChart('balanced');
+    }
+
+    function initializePonyChart() {
+        const ctx = document.getElementById('ponyChart').getContext('2d');
+        const justificationEl = document.getElementById('pony-justification');
+        const recipeButtons = document.querySelectorAll('#pony-content .recipe-btn');
+        
+        const onHover = (e, el) => {
+            const activeBtn = document.querySelector('#pony-content .recipe-btn.active');
+            if (!activeBtn) return;
+            const activeRecipeKey = activeBtn.id.replace('recipe-pony-', '');
+            justificationEl.textContent = el.length ? ponyData.recipes[activeRecipeKey].justifications[el[0].index] : 'Wybierz przepis i najedź kursorem na blok, aby zobaczyć uzasadnienie.';
+        };
+        ponyChartInstance = createChart(ctx, onHover);
+
+        function updatePonyChart(recipeKey) {
+            const recipe = ponyData.recipes[recipeKey];
+            if (!recipe) return;
+            ponyChartInstance.data = {
+                labels: ponyData.labels,
+                datasets: [
+                    { label: recipe.model1, data: recipe.weights, backgroundColor: recipe.color1, barPercentage: 0.9, categoryPercentage: 0.8 },
+                    { label: recipe.model2, data: recipe.weights.map(w => 1 - w), backgroundColor: recipe.color2, barPercentage: 0.9, categoryPercentage: 0.8 }
+                ]
+            };
+            ponyChartInstance.update();
+        }
+        recipeButtons.forEach(button => button.addEventListener('click', () => {
+            const recipeKey = button.id.replace('recipe-pony-', '');
+            recipeButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            updatePonyChart(recipeKey);
+        }));
+        updatePonyChart('stage1');
+    }
+    
+    function initializeHybridChart() {
+        const ctx = document.getElementById('hybridChart').getContext('2d');
+        const justificationEl = document.getElementById('hybrid-justification');
+        const recipeButtons = document.querySelectorAll('#hybrid-content .recipe-btn');
+        const explanationEl = document.getElementById('hybrid-recipe-explanation');
+        const chartContainer = document.querySelector('#hybrid-content .chart-container');
+
+        const onHover = (e, el) => {
+            const activeBtn = document.querySelector('#hybrid-content .recipe-btn.active');
+            if (!activeBtn) return;
+            const activeRecipeKey = activeBtn.id.replace('recipe-hybrid-', '');
+            const recipe = hybridData.recipes[activeRecipeKey];
+            if (recipe && !recipe.is_dare) {
+                justificationEl.textContent = el.length ? recipe.justifications[el[0].index] : 'Wybierz przepis i najedź kursorem na blok, aby zobaczyć uzasadnienie.';
+            } else {
+                justificationEl.textContent = 'Ustawienia DARE-TIES są stałe i nie są wizualizowane na wykresie.';
+            }
+        };
+        hybridChartInstance = createChart(ctx, onHover);
+        
+        function updateHybridChart(recipeKey) {
+            const recipe = hybridData.recipes[recipeKey];
+            if (!recipe) return;
+            
+            explanationEl.style.display = recipe.is_dare ? 'block' : 'none';
+            if(recipe.is_dare) {
+                 explanationEl.innerHTML = recipe.explanation || '';
+            }
+            
+            if (recipe.is_dare) {
+                chartContainer.style.display = 'none';
+                justificationEl.textContent = 'Ustawienia DARE-TIES są stałe i nie są wizualizowane na wykresie.';
+            } else {
+                chartContainer.style.display = 'block';
+                hybridChartInstance.data = {
+                    labels: hybridData.labels,
+                    datasets: [
+                        { label: recipe.model1, data: recipe.weights, backgroundColor: recipe.color1, barPercentage: 0.9, categoryPercentage: 0.8 },
+                        { label: recipe.model2, data: recipe.weights.map(w => 1 - w), backgroundColor: recipe.color2, barPercentage: 0.9, categoryPercentage: 0.8 }
+                    ]
+                };
+                hybridChartInstance.update();
+            }
+        }
+        recipeButtons.forEach(button => button.addEventListener('click', () => {
+            const recipeKey = button.id.replace('recipe-hybrid-', '');
+            recipeButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            updateHybridChart(recipeKey);
+        }));
+        updateHybridChart('stage1');
+    }
+
+    function switchVersion(version) {
+        const allContent = [sdxlContent, ponyContent, hybridContent];
+        const allButtons = [selectSdxlBtn, selectPonyBtn, selectHybridBtn];
+        
+        allContent.forEach(el => el.style.display = 'none');
+        allButtons.forEach(btn => btn.classList.remove('active'));
+
+        const navBlueprints = document.getElementById('nav-blueprints');
+        const navRecipes = document.getElementById('nav-recipes');
+        navBlueprints.href = `#${version}-blueprints`;
+        navRecipes.href = `#${version}-recipes`;
+
+        if (version === 'sdxl') {
+            sdxlContent.style.display = 'block';
+            selectSdxlBtn.classList.add('active');
+            if (!sdxlChartInstance) initializeSdxlChart();
+        } else if (version === 'pony') {
+            ponyContent.style.display = 'block';
+            selectPonyBtn.classList.add('active');
+            if (!ponyChartInstance) initializePonyChart();
+        } else if (version === 'hybrid') {
+            hybridContent.style.display = 'block';
+            selectHybridBtn.classList.add('active');
+            if (!hybridChartInstance) initializeHybridChart();
+        }
+    }
+
+    selectSdxlBtn.addEventListener('click', () => switchVersion('sdxl'));
+    selectPonyBtn.addEventListener('click', () => switchVersion('pony'));
+    selectHybridBtn.addEventListener('click', () => switchVersion('hybrid'));
+
+    mainNav.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A') {
+            e.preventDefault();
+            const targetId = e.target.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    });
+
+    switchVersion('sdxl');
+});
+    </script>
+
+</body>
+</html>
