@@ -6,7 +6,6 @@
     <title>Interaktywny przewodnik: Zaawansowane łączenie modeli (Potrójna strategia)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
     <!-- Chosen Palette: Celestial Indigo -->
     <!-- Application Structure Plan: Aplikacja zachowuje swoją podstawową strukturę opartą na trzech przełączanych przez użytkownika strategiach. Kluczowe ulepszenie wizualne to animowane tło oparte na shaderze WebGL, które nadaje immersyjne, zaawansowane technologicznie odczucie, odpowiednie dla tematyki AI. Kluczowe diagramy (takie jak łączenie CLIP) są przekształcone z list tekstowych w graficzne schematy blokowe przy użyciu stylizowanego HTML/CSS dla lepszego zrozumienia. Nowa sekcja "Glosariusz" definiuje złożone terminy, poprawiając dostępność dla szerszej publiczności. Ta struktura nakłada bogate wizualizacje i treści objaśniające na solidny, interaktywny rdzeń danych, zwiększając zaangażowanie i zrozumienie użytkownika. -->
     <!-- Visualization & Content Choices: Informacje z raportu -> Procesy łączenia. Cel -> Wizualne wyjaśnienie przepływu danych. Prezentacja -> Schematy blokowe HTML/CSS ze strzałkami zamiast prostych list. Interakcja -> Brak, statyczny wyświetlacz. Uzasadnienie -> Schematy blokowe są znacznie lepsze w pokazywaniu procesów i relacji niż listy. Informacje z raportu -> Parametry DARE-TIES. Cel -> Uczynienie abstrakcyjnych parametrów namacalnymi. Prezentacja -> Zamiast bloków kodu użyto niestandardowych, stylizowanych kart "panelu technicznego", aby uzyskać bardziej intuicyjną i atrakcyjną wizualnie prezentację ustawień węzłów. Interakcja -> Brak. Uzasadnienie -> Wzmacnia metaforę "wstrzykiwania umiejętności" poprzez interfejs naśladujący interfejs oparty na węzłach. Nowa treść -> Glosariusz terminów. Cel -> Zdefiniowanie żargonu. Prezentacja -> Dedykowana, stylizowana sekcja. Interakcja -> Brak. Uzasadnienie -> Kluczowe dla edukacji użytkownika. -->
@@ -132,8 +131,8 @@
                     <h2 class="text-3xl font-bold text-slate-100 mb-2">Schemat: Strategia "Przeszczepu SDXL"</h2>
                     <p class="text-slate-400 mb-10 max-w-4xl">Ta strategia wykorzystuje stabilny model-host w stylu anime i chirurgicznie wstrzykuje określone "umiejętności" od architektonicznie różnych dawców `SDXL 1.0` za pomocą algorytmu DARE-TIES. Celem jest połączenie czystego stylu retro anime (Priorytet 1) z estetyką dark fantasy/sci-fi (Priorytet 2) i malarskim stylem (Priorytet 3).</p>
                     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">Animij [Illustrious] V5.0</h3><p class="text-sm font-medium text-indigo-400 mb-2">Główny Model Host (Priorytet 1)</p><p class="text-sm text-slate-400 flex-grow">Zapewnia fundamentalne rusztowanie: doskonałą anatomię, kompozycję i żywy styl retro anime z czystymi liniami.</p></div>
-                        <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">Graycolor SemiRealIllustMix</h3><p class="text-sm font-medium text-indigo-400 mb-2">Model Pomostowy</p><p class="text-sm text-slate-400 flex-grow">Działa jako pomost, łącząc czysty wygląd anime z półrealistycznym odczuciem, aby uczynić hosta bardziej podatnym na dawców.</p></div>
+                        <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">Animij [Illustrious] V5.0</h3><p class="text-sm font-medium text-indigo-400 mb-2">Model A (Host, Priorytet 1)</p><p class="text-sm text-slate-400 flex-grow">Zapewnia fundamentalne rusztowanie: doskonałą anatomię, kompozycję i żywy styl retro anime z czystymi liniami.</p></div>
+                        <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">Graycolor SemiRealIllustMix</h3><p class="text-sm font-medium text-indigo-400 mb-2">Model B (Pomostowy)</p><p class="text-sm text-slate-400 flex-grow">Działa jako pomost, łącząc czysty wygląd anime z półrealistycznym odczuciem, aby uczynić hosta bardziej podatnym na dawców.</p></div>
                         <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">Boomer Art Model v2.0</h3><p class="text-sm font-medium text-amber-400 mb-2">Dawca Stylu Malarskiego (Priorytet 3)</p><p class="text-sm text-slate-400 flex-grow">Wstrzykuje malarską, heroiczną esencję fantasy w stylu Frazetty i Vallejo, zapewniając pożądane wykończenie tekstur.</p></div>
                         <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">D34D.CH4NN3L.SDXL</h3><p class="text-sm font-medium text-red-400 mb-2">Dawca Tematyczny (Priorytet 2)</p><p class="text-sm text-slate-400 flex-grow">Potężny dawca do wstrzykiwania mrocznych, surowych, horrorowych i fantastycznonaukowych treści tematycznych.</p></div>
                     </div>
@@ -142,7 +141,7 @@
                     <h2 class="text-3xl font-bold text-slate-100 mb-2">Przepis i Implementacja: Przeszczep SDXL</h2>
                     <div class="card p-6 md:p-8 mb-12">
                         <h3 class="text-xl font-bold text-slate-100 mb-4">Etap 1: Tworzenie Hosta (Łączenie z wagami bloków)</h3>
-                        <p class="text-sm text-slate-400 mb-6">Najpierw tworzymy solidny model-hosta, łącząc nasze dwa modele bazowe. Wybierz jeden z trzech alternatywnych przepisów poniżej. Każdy oferuje inny kompromis między spójnością a elastycznością stylistyczną.</p>
+                        <p class="text-sm text-slate-400 mb-6">Najpierw tworzymy solidny model-hosta, łącząc Animij (Model A) i Graycolor (Model B). Wartość wagi (`weight`) odnosi się do wkładu Modelu B. Waga `1.0` to 100% Modelu B, a `0.0` to 100% Modelu A.</p>
                         <div class="flex justify-center flex-wrap gap-4 mb-6">
                             <button id="recipe-sdxl-balanced" class="recipe-btn active px-4 py-2 rounded-md text-sm font-medium">Przepis A: Zrównoważony</button>
                             <button id="recipe-sdxl-host_dominant" class="recipe-btn px-4 py-2 rounded-md text-sm font-medium">Przepis B: Z dominacją Hosta</button>
@@ -154,46 +153,58 @@
                     </div>
                     <div class="card p-6 md:p-8 mb-12">
                          <h3 class="text-xl font-bold text-slate-100 mb-4">Etap 2: Wstrzykiwanie umiejętności (DARE-TIES)</h3>
-                         <p class="text-sm text-slate-400 mb-6">Dwóch dawców `SDXL 1.0` jest wstrzykiwanych sekwencyjnie do hosta z Etapu 1. Ten chirurgiczny proces wykorzystuje węzeł `TIES Merge (DARE)` z pakietu `ComfyUI-DareMerge`.</p>
+                         <p class="text-sm text-slate-400 mb-6">W tym etapie używamy zaawansowanego węzła `Model Merger (Advanced/DARE)`. Ta metoda jest alternatywą dla łączenia blokowego i ignoruje wagi ustawione dla poszczególnych bloków. Kontrola nad procesem odbywa się poprzez parametry DARE i TIES. Ogólna waga modelu powinna być ustawiona na `1.0`, aby zmiany zostały w pełni zastosowane.</p>
                          <div class="grid md:grid-cols-1 gap-8">
                              <div class="dare-panel">
                                  <h4 class="font-bold text-lg text-slate-200 mb-4 text-center">Krok 2a: Wstrzyknij styl malarski (Priorytet 3)</h4>
                                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                                     <div class="space-y-4 text-xs">
-                                        <p><strong class="text-slate-300">Host (model_a):</strong> Host z Etapu 1</p>
-                                        <p><strong class="text-slate-300">Dawca (model_b):</strong> Boomer Art Model</p>
-                                        <p><strong class="text-slate-300">Baza Hosta:</strong> kohaku-xl-beta5.safetensors</p>
-                                        <p><strong class="text-slate-300">Baza Dawcy:</strong> sd_xl_base_1.0.safetensors</p>
+                                     <div>
+                                         <h5 class="text-sm font-semibold text-indigo-300 mb-2">Krok 1: Przycinanie (TIES Trim)</h5>
+                                         <p class="text-xs text-slate-400 mb-4">Użyj węzła `Magnitude Masker`, aby zachować 40% najważniejszych zmian.</p>
+                                         <p class="text-xs"><strong class="text-slate-300">model_a:</strong> Host z Etapu 1</p>
+                                         <p class="text-xs"><strong class="text-slate-300">model_b:</strong> sd_xl_base_1.0</p>
+                                         <p class="text-xs"><strong class="text-slate-300">threshold:</strong> 0.60</p>
+                                         <p class="text-xs"><strong class="text-slate-300">threshold_type:</strong> quantile</p>
                                      </div>
-                                     <div class="space-y-4">
-                                         <h5 class="text-sm font-semibold text-amber-300">GŁÓWNE USTAWIENIA</h5>
-                                         <div><label class="text-xs font-medium text-slate-300">Gęstość DARE: 0.45</label><div class="w-full bg-slate-700 rounded-full h-2 mt-1"><div class="bg-amber-500 h-2 rounded-full" style="width: 45%"></div></div></div>
-                                         <div><label class="text-xs font-medium text-slate-300">Waga TIES: 0.80</label><div class="w-full bg-slate-700 rounded-full h-2 mt-1"><div class="bg-amber-500 h-2 rounded-full" style="width: 80%"></div></div></div>
+                                     <div>
+                                         <h5 class="text-sm font-semibold text-amber-300 mb-2">Krok 2: Łączenie (DARE Merge)</h5>
+                                         <p class="text-xs text-slate-400 mb-4">Użyj `Model Merger (DARE)` z utworzoną maską.</p>
+                                         <p class="text-xs"><strong class="text-slate-300">model1:</strong> Host z Etapu 1</p>
+                                         <p class="text-xs"><strong class="text-slate-300">model2:</strong> Boomer Art Model</p>
+                                         <p class="text-xs"><strong class="text-slate-300">base_model:</strong> sd_xl_base_1.0</p>
+                                         <p class="text-xs"><strong class="text-slate-300">density:</strong> 0.45</p>
+                                         <p class="text-xs"><strong class="text-slate-300">ties_mode:</strong> sum</p>
                                      </div>
                                  </div>
                                  <div class="mt-6 pt-4 border-t border-slate-700">
                                      <h5 class="text-sm font-semibold text-slate-300 mb-2">Uzasadnienie</h5>
-                                     <p class="text-xs text-slate-400">To jest zrównoważone wstrzyknięcie stylu. `Gęstość` 0.45 zachowuje znaczną część wektorów zmian, a wyższa `Waga` 0.80 silnie narzuca styl malarski, aby osiągnąć estetykę Frazetty/Vallejo bez całkowitego nadpisywania bazy anime.</p>
+                                     <p class="text-xs text-slate-400">`threshold: 0.60` w trybie `quantile` zachowuje 40% najważniejszych wektorów zmian, precyzyjnie izolując esencję stylu malarskiego. `density: 0.45` dodatkowo przerzedza te wektory, zapobiegając nadpisaniu bazy anime. Tryb `sum` jest standardowym, zalecanym wyborem dla TIES.</p>
                                  </div>
                              </div>
                              <div class="dare-panel mt-8">
                                  <h4 class="font-bold text-lg text-slate-200 mb-4 text-center">Krok 2b: Wstrzyknij treść tematyczną (Priorytet 2)</h4>
-                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                                     <div class="space-y-4 text-xs">
-                                        <p><strong class="text-slate-300">Host (model_a):</strong> Wynik z Kroku 2a</p>
-                                        <p><strong class="text-slate-300">Dawca (model_b):</strong> D34D.CH4NN3L.SDXL</p>
-                                        <p><strong class="text-slate-300">Baza Hosta:</strong> kohaku-xl-beta5.safetensors</p>
-                                        <p><strong class="text-slate-300">Baza Dawcy:</strong> sd_xl_base_1.0.safetensors</p>
-                                     </div>
-                                     <div class="space-y-4">
-                                         <h5 class="text-sm font-semibold text-red-300">GŁÓWNE USTAWIENIA</h5>
-                                         <div><label class="text-xs font-medium text-slate-300">Gęstość DARE: 0.35</label><div class="w-full bg-slate-700 rounded-full h-2 mt-1"><div class="bg-red-500 h-2 rounded-full" style="width: 35%"></div></div></div>
-                                         <div><label class="text-xs font-medium text-slate-300">Waga TIES: 0.70</label><div class="w-full bg-slate-700 rounded-full h-2 mt-1"><div class="bg-red-500 h-2 rounded-full" style="width: 70%"></div></div></div>
-                                     </div>
-                                 </div>
+                                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                                      <div>
+                                          <h5 class="text-sm font-semibold text-indigo-300 mb-2">Krok 1: Przycinanie (TIES Trim)</h5>
+                                          <p class="text-xs text-slate-400 mb-4">Użyj `Magnitude Masker`, aby zachować 50% najważniejszych zmian.</p>
+                                          <p class="text-xs"><strong class="text-slate-300">model_a:</strong> Wynik z Kroku 2a</p>
+                                          <p class="text-xs"><strong class="text-slate-300">model_b:</strong> sd_xl_base_1.0</p>
+                                          <p class="text-xs"><strong class="text-slate-300">threshold:</strong> 0.50</p>
+                                          <p class="text-xs"><strong class="text-slate-300">threshold_type:</strong> quantile</p>
+                                      </div>
+                                      <div>
+                                          <h5 class="text-sm font-semibold text-red-300 mb-2">Krok 2: Łączenie (DARE Merge)</h5>
+                                          <p class="text-xs text-slate-400 mb-4">Użyj `Model Merger (DARE)` z nową maską.</p>
+                                          <p class="text-xs"><strong class="text-slate-300">model1:</strong> Wynik z Kroku 2a</p>
+                                          <p class="text-xs"><strong class="text-slate-300">model2:</strong> D34D.CH4NN3L.SDXL</p>
+                                          <p class="text-xs"><strong class="text-slate-300">base_model:</strong> sd_xl_base_1.0</p>
+                                          <p class="text-xs"><strong class="text-slate-300">density:</strong> 0.35</p>
+                                          <p class="text-xs"><strong class="text-slate-300">ties_mode:</strong> sum</p>
+                                      </div>
+                                  </div>
                                  <div class="mt-6 pt-4 border-t border-slate-700">
                                      <h5 class="text-sm font-semibold text-slate-300 mb-2">Uzasadnienie</h5>
-                                     <p class="text-xs text-slate-400">To jest delikatniejszy przeszczep tematyczny. Niższa `gęstość` (0.35) i `waga` (0.70) stosują mniej agresywny zestaw zmian. Jest to idealne do dodawania treści koncepcyjnych (gore, mroczne motywy sci-fi) bez przytłaczania już ustalonego stylu malarskiego i bazy anatomicznej.</p>
+                                     <p class="text-xs text-slate-400">Mniej agresywne przycinanie (`threshold: 0.50`) pozwala na przeszczepienie szerszego spektrum cech tematycznych. Niższa `gęstość` (0.35) zapewnia, że te zmiany są stosowane subtelnie, dodając mroczne motywy bez niszczenia ustalonego już stylu.</p>
                                  </div>
                              </div>
                          </div>
@@ -275,7 +286,7 @@
                      </div>
                 </section>
             </div>
-             
+            
             <div id="hybrid-content" class="hidden">
                 <section id="hybrid-blueprints" class="mb-24 scroll-mt-20">
                     <h2 class="text-3xl font-bold text-slate-100 mb-2">Schemat: Strategia "Hybrydowego Łatania"</h2>
@@ -369,7 +380,7 @@
                                 <td class="p-3">Średnia. Proste wieloetapowe łączenie bloków.</td>
                                 <td class="p-3">Bardzo Wysoka. Łączy obie techniki w czteroetapowym procesie.</td>
                             </tr>
-                            <tr class="hover:bg-slate-800/30">
+                             <tr class="hover:bg-slate-800/30">
                                 <td class="p-3 font-medium text-slate-200">Najlepsze dla...</td>
                                 <td class="p-3">Osiągnięcia bardzo specyficznej, unikalnej mieszanki odmiennych estetyk (np. retro anime + styl Frazetty).</td>
                                 <td class="p-3">Tworzenia bardzo dopracowanego i stabilnego modelu do konsekwentnego generowania zasobów z czystymi liniami.</td>
@@ -379,26 +390,26 @@
                     </table>
                 </div>
                  <div class="mt-8 p-6 bg-indigo-900/30 border border-indigo-500/50 rounded-lg">
-                     <h3 class="font-bold text-lg text-indigo-200 mb-2">Ostateczna Rekomendacja</h3>
-                     <p class="text-indigo-300">Dla celu tworzenia **spójnych zasobów do gier** z **czystymi liniami do wektoryzacji**, wersja **"Czystej Krwi PONY" jest najlepszym i najbezpieczniejszym wyborem.**</p>
-                     <p class="mt-2 text-sm text-indigo-400">Jej harmonia architektoniczna zapewnia najwyższą stabilność i przewidywalność. **"Hybrydowe Łatanie"** to potężna alternatywa dla zaawansowanych użytkowników, ale jej złożoność czyni ją bardziej eksperymentalną. Wersja **"Przeszczepu SDXL"** jest najlepsza, gdy pożądanej estetyki nie można osiągnąć w ramach jednej rodziny.</p>
-                 </div>
+                    <h3 class="font-bold text-lg text-indigo-200 mb-2">Ostateczna Rekomendacja</h3>
+                    <p class="text-indigo-300">Dla celu tworzenia **spójnych zasobów do gier** z **czystymi liniami do wektoryzacji**, wersja **"Czystej Krwi PONY" jest najlepszym i najbezpieczniejszym wyborem.**</p>
+                    <p class="mt-2 text-sm text-indigo-400">Jej harmonia architektoniczna zapewnia najwyższą stabilność i przewidywalność. **"Hybrydowe Łatanie"** to potężna alternatywa dla zaawansowanych użytkowników, ale jej złożoność czyni ją bardziej eksperymentalną. Wersja **"Przeszczepu SDXL"** jest najlepsza, gdy pożądanej estetyki nie można osiągnąć w ramach jednej rodziny.</p>
+                </div>
             </section>
-             
+            
             <section id="glossary" class="mb-24 scroll-mt-20">
                  <h2 class="text-3xl font-bold text-slate-100 mb-2">Glosariusz Terminów</h2>
                  <p class="text-slate-400 mb-10 max-w-4xl">Zrozumienie terminologii jest kluczem do udanego łączenia modeli. Oto definicje podstawowych pojęć omówionych w tym przewodniku.</p>
                 <div class="grid md:grid-cols-2 gap-6">
                     <div class="card p-6">
                         <h3 class="font-bold text-lg text-slate-200 mb-2">Łączenie z wagami bloków</h3>
-                        <p class="text-sm text-slate-400">Technika, w której różne warstwy (bloki) dwóch sieci neuronowych są łączone z różnymi wagami. Wczesne warstwy (IN) kontrolują kompozycję i anatomię, środkowe (M) kontrolują koncepcje, a późne (OUT) kontrolują detale i styl. Pozwala to na precyzyjną kontrolę nad wynikiem.</p>
+                        <p class="text-sm text-slate-400">Technika, w której różne warstwy (bloki) dwóch sieci neuronowych są łączone z różnymi wagami. Wczesne warstwy (IN) kontrolują kompozycję i anatomię, środkowe (M) kontrolują koncepcje, a późne (OUT) kontrolują detale i styl. Jest to metoda odrębna od DARE-TIES.</p>
                     </div>
                     <div class="card p-6">
                         <h3 class="font-bold text-lg text-slate-200 mb-2">DARE-TIES</h3>
-                        <p class="text-sm text-slate-400">Zaawansowany algorytm do chirurgicznego wstrzykiwania umiejętności, zaimplementowany w `ComfyUI-DareMerge`.</p>
+                        <p class="text-sm text-slate-400">Zaawansowany algorytm do chirurgicznego wstrzykiwania umiejętności, zaimplementowany w `ComfyUI-DareMerge`. Składa się z dwóch głównych mechanizmów:</p>
                         <ul class="text-sm text-slate-400 mt-2 list-disc list-inside space-y-1">
-                            <li><strong>TIES (`weight`):</strong> Określa siłę, z jaką zmiany z modelu-dawcy są stosowane do modelu-hosta.</li>
-                            <li><strong>DARE (`dare_density`):</strong> Losowo odrzuca procent wektorów zmian, aby zapobiec nadmiernemu dopasowaniu i zachować cechy hosta. Gęstość `0.35` oznacza, że 65% zmian zostanie odrzuconych.</li>
+                            <li><strong>DARE (`density`):</strong> Określa, jaki procent (`density`) wektorów zmian jest **zachowywany** podczas losowego przerzedzania. Jest to odwrotność `drop_rate` z publikacji (`density = 1 - drop_rate`). Wartość `0.2` oznacza zachowanie 20% i odrzucenie 80%.</li>
+                            <li><strong>TIES (`ties_mode`):</strong> Rozwiązuje konflikty między modelami. Kluczowym krokiem jest "Przycinanie" (Trim), które w `ComfyUI-DareMerge` realizuje się za pomocą węzła `Magnitude Masker` (np. z `threshold_type: quantile`), aby zachować tylko najważniejsze zmiany przed właściwym łączeniem.</li>
                         </ul>
                     </div>
                     <div class="card p-6">
@@ -421,7 +432,7 @@
             </section>
 
         </main>
-         
+        
         <footer class="bg-slate-900/50 mt-24 border-t border-slate-700">
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-sm text-slate-500">
                 <p>Skonsolidowany Interaktywny Przewodnik po Zaawansowanym Łączeniu Modeli</p>
@@ -432,116 +443,124 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    const canvas = document.getElementById('shader-canvas');
-    const gl = canvas.getContext('webgl');
-    if (!gl) {
-        console.error("WebGL nie jest wspierany, tło nie będzie animowane.");
-        return;
-    }
-
-    const vertexShaderSource = `
-        attribute vec2 a_position;
-        void main() {
-            gl_Position = vec4(a_position, 0.0, 1.0);
-        }
-    `;
-
-    const fragmentShaderSource = `
-        precision mediump float;
-        uniform vec2 u_resolution;
-        uniform float u_time;
-
-        float random (vec2 st) {
-            return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
-        }
-
-        float noise (vec2 st) {
-            vec2 i = floor(st);
-            vec2 f = fract(st);
-            vec2 u = f*f*(3.0-2.0*f);
-            return mix( mix( random( i + vec2(0.0,0.0) ),
-                             random( i + vec2(1.0,0.0) ), u.x),
-                        mix( random( i + vec2(0.0,1.0) ),
-                             random( i + vec2(1.0,1.0) ), u.x), u.y);
-        }
-
-        float fbm (vec2 st) {
-            float value = 0.0;
-            float amplitude = .5;
-            for (int i = 0; i < 6; i++) {
-                value += amplitude * noise(st);
-                st *= 2.;
-                amplitude *= .5;
+    function initShaderBackground() {
+        try {
+            const canvas = document.getElementById('shader-canvas');
+            const gl = canvas.getContext('webgl');
+            if (!gl) {
+                console.error("WebGL nie jest wspierany, tło nie będzie animowane.");
+                return;
             }
-            return value;
-        }
 
-        void main() {
-            vec2 st = gl_FragCoord.xy/u_resolution.xy;
-            st.x *= u_resolution.x/u_resolution.y;
-            vec3 color = vec3(0.0);
-            vec2 q = vec2(fbm(st + 0.00*u_time), fbm(st + vec2(1.0)));
-            vec2 r = vec2(fbm(st + 1.0*q + vec2(1.7,9.2) + 0.15*u_time), fbm(st + 1.0*q + vec2(8.3,2.8) + 0.126*u_time));
-            float f = fbm(st+r);
-            color = mix(vec3(0.1,0.1,0.2), vec3(0.3,0.3,0.6), clamp((f*f)*4.0,0.0,1.0));
-            color = mix(color, vec3(0.2,0.1,0.4), clamp(length(q),0.0,1.0));
-            color = mix(color, vec3(0.4,0.5,0.7), clamp(length(r.x),0.0,1.0));
-            float star_val = random(gl_FragCoord.xy);
-            if (star_val > 0.998) {
-                float star_intensity = (star_val - 0.998) / (1.0 - 0.998);
-                color += vec3(star_intensity * (0.8 + 0.2 * sin(u_time * 2.0 + gl_FragCoord.y)));
+            const vertexShaderSource = `
+                attribute vec2 a_position;
+                void main() {
+                    gl_Position = vec4(a_position, 0.0, 1.0);
+                }
+            `;
+
+            const fragmentShaderSource = `
+                precision mediump float;
+                uniform vec2 u_resolution;
+                uniform float u_time;
+
+                float random (vec2 st) {
+                    return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+                }
+
+                float noise (vec2 st) {
+                    vec2 i = floor(st);
+                    vec2 f = fract(st);
+                    vec2 u = f*f*(3.0-2.0*f);
+                    return mix( mix( random( i + vec2(0.0,0.0) ),
+                                   random( i + vec2(1.0,0.0) ), u.x),
+                                mix( random( i + vec2(0.0,1.0) ),
+                                   random( i + vec2(1.0,1.0) ), u.x), u.y);
+                }
+
+                float fbm (vec2 st) {
+                    float value = 0.0;
+                    float amplitude = .5;
+                    for (int i = 0; i < 6; i++) {
+                        value += amplitude * noise(st);
+                        st *= 2.;
+                        amplitude *= .5;
+                    }
+                    return value;
+                }
+
+                void main() {
+                    vec2 st = gl_FragCoord.xy/u_resolution.xy;
+                    st.x *= u_resolution.x/u_resolution.y;
+                    vec3 color = vec3(0.0);
+                    vec2 q = vec2(fbm(st + 0.00*u_time), fbm(st + vec2(1.0)));
+                    vec2 r = vec2(fbm(st + 1.0*q + vec2(1.7,9.2) + 0.15*u_time), fbm(st + 1.0*q + vec2(8.3,2.8) + 0.126*u_time));
+                    float f = fbm(st+r);
+                    color = mix(vec3(0.1,0.1,0.2), vec3(0.3,0.3,0.6), clamp((f*f)*4.0,0.0,1.0));
+                    color = mix(color, vec3(0.2,0.1,0.4), clamp(length(q),0.0,1.0));
+                    color = mix(color, vec3(0.4,0.5,0.7), clamp(length(r.x),0.0,1.0));
+                    float star_val = random(gl_FragCoord.xy);
+                    if (star_val > 0.998) {
+                        float star_intensity = (star_val - 0.998) / (1.0 - 0.998);
+                        color += vec3(star_intensity * (0.8 + 0.2 * sin(u_time * 2.0 + gl_FragCoord.y)));
+                    }
+                    gl_FragColor = vec4( (f*f*f+.6*f*f+.5*f)*color, 1.);
+                }
+            `;
+
+            function createShader(gl, type, source) {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                    console.error('Wystąpił błąd podczas kompilacji shaderów: ' + gl.getShaderInfoLog(shader));
+                    gl.deleteShader(shader);
+                    return null;
+                }
+                return shader;
             }
-            gl_FragColor = vec4( (f*f*f+.6*f*f+.5*f)*color, 1.);
+
+            const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+            const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+
+            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                console.error('Nie można zainicjować programu shadera: ' + gl.getProgramInfoLog(program));
+                return;
+            }
+
+            gl.useProgram(program);
+            const positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            const positions = [-1, 1, 1, 1, -1, -1, 1, -1];
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+            const positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+            const resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
+            const timeUniformLocation = gl.getUniformLocation(program, "u_time");
+
+            function render(time) {
+                time *= 0.0005; 
+                canvas.width = gl.canvas.clientWidth;
+                canvas.height = gl.canvas.clientHeight;
+                gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+                gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+                gl.uniform1f(timeUniformLocation, time);
+                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+                requestAnimationFrame(render);
+            }
+            requestAnimationFrame(render);
+        } catch (e) {
+            console.error("Błąd podczas inicjalizacji tła WebGL:", e);
         }
-    `;
-
-    function createShader(gl, type, source) {
-        const shader = gl.createShader(type);
-        gl.shaderSource(shader, source);
-        gl.compileShader(shader);
-        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-            console.error('Wystąpił błąd podczas kompilacji shaderów: ' + gl.getShaderInfoLog(shader));
-            gl.deleteShader(shader);
-            return null;
-        }
-        return shader;
     }
 
-    const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-    const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-    const program = gl.createProgram();
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
+    initShaderBackground();
 
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        console.error('Nie można zainicjować programu shadera: ' + gl.getProgramInfoLog(program));
-        return;
-    }
-
-    gl.useProgram(program);
-    const positionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    const positions = [-1, 1, 1, 1, -1, -1, 1, -1];
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-    const positionAttributeLocation = gl.getAttribLocation(program, "a_position");
-    gl.enableVertexAttribArray(positionAttributeLocation);
-    gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
-    const resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
-    const timeUniformLocation = gl.getUniformLocation(program, "u_time");
-
-    function render(time) {
-        time *= 0.0005; 
-        canvas.width = gl.canvas.clientWidth;
-        canvas.height = gl.canvas.clientHeight;
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-        gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
-        gl.uniform1f(timeUniformLocation, time);
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-        requestAnimationFrame(render);
-    }
-    requestAnimationFrame(render);
-    
     const blockLabels = ['IN00', 'IN01', 'IN02', 'IN03', 'IN04', 'IN05', 'IN06', 'IN07', 'IN08', 'IN09', 'IN10', 'IN11', 'M00', 'OUT00', 'OUT01', 'OUT02', 'OUT03', 'OUT04', 'OUT05', 'OUT06', 'OUT07', 'OUT08', 'OUT09', 'OUT10', 'OUT11'];
     
     const sdxlData = {
@@ -549,18 +568,18 @@ document.addEventListener('DOMContentLoaded', () => {
         recipes: {
             balanced: {
                 explanation: "<strong>Przepis A: Zrównoważony (Domyślny)</strong><br>Zalecany przepis, starannie obliczony w celu zrównoważenia integralności Animij z wkładem Graycolor. Faworyzuje Animij we wczesnych blokach, płynnie przechodzi w kierunku Graycolor w środku, a następnie wraca do Animij w końcowych blokach dla czystych linii.",
-                weights: [0.90, 0.88, 0.85, 0.82, 0.75, 0.70, 0.65, 0.60, 0.55, 0.50, 0.48, 0.45, 0.40, 0.42, 0.45, 0.48, 0.50, 0.53, 0.58, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90],
-                justifications: ['IN00 @ 0.90 Animij: Ustanawia dominację dla podstawowej kompozycji i stylu lineartu hosta.','IN01 @ 0.88 Animij: Kontynuuje silną dominację hosta, aby zablokować strukturę anatomiczną.','IN02 @ 0.85 Animij: Host wciąż prowadzi, zapewniając, że forma podmiotu jest zdefiniowana przez jego styl anime.','IN03 @ 0.82 Animij: Subtelne łagodzenie czysto animowej estetyki.','IN04 @ 0.75 Animij: Wprowadza półrealistyczne właściwości Graycolor do struktury anime.','IN05 @ 0.70 Animij: Wpływ Graycolor rośnie, wpływając na cechy średniego poziomu.','IN06 @ 0.65 Animij: Mieszanka dąży do równowagi stylów.','IN07 @ 0.60 Animij: Zbliżając się do środkowego bloku, modele zbliżają się do równej równowagi.','IN08 @ 0.55 Animij: Host utrzymuje niewielką przewagę tuż przed wąskim gardłem.','IN09 @ 0.50/0.50: Dokładny podział 50/50, aby stworzyć zrównoważone przejście.','IN10 @ 0.48 Animij: Graycolor po raz pierwszy przejmuje niewielką przewagę, definiując koncepcję.','IN11 @ 0.45 Animij: Wzmacnianie dominacji koncepcyjnej Graycolor.','M00 @ 0.40 Animij: Graycolor otrzymuje najsilniejszą wagę w rdzeniu, osadzając styl malarski.','OUT00 @ 0.42 Animij: Graycolor pozostaje dominujący, propagując swój styl na zewnątrz.','OUT01 @ 0.45 Animij: Równowaga zaczyna się przesuwać z powrotem w kierunku hosta.','OUT02 @ 0.48 Animij: Graycolor wciąż ma niewielką większość, wpływając na wczesne detale.','OUT03 @ 0.50/0.50: Drugi idealny podział 50/50 dla detali i tekstury.','OUT04 @ 0.53 Animij: Host odzyskuje prowadzenie, stosując swoją czystą interpretację.','OUT05 @ 0.58 Animij: Nacisk na hosta rośnie, koncentrując się na czystych liniach.','OUT06 @ 0.65 Animij: Silniejsza waga dla hosta dla drobnych detali.','OUT07 @ 0.70 Animij: Host dominuje, udoskonalając tekstury.','OUT08 @ 0.75 Animij: Znacząca waga dla hosta do ostatecznego przejścia.','OUT09 @ 0.80 Animij: Silnie faworyzuje hosta dla detali o wysokiej częstotliwości.','OUT10 @ 0.85 Animij: Zdecydowanie faworyzuje hosta, aby zapewnić ostre i czyste linie.','OUT11 @ 0.90 Animij: Ostateczna waga dla hosta, aby zapewnić czysty i żywy wynik.']
+                weights: [0.10, 0.12, 0.15, 0.18, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.52, 0.55, 0.60, 0.58, 0.55, 0.52, 0.50, 0.47, 0.42, 0.35, 0.30, 0.25, 0.20, 0.15, 0.10],
+                justifications: ['IN00 @ 0.10: Dominacja Hosta (Animij @ 90%) dla podstawowej kompozycji i stylu lineartu.','IN01 @ 0.12: Utrzymanie silnej dominacji Hosta (88%) dla zablokowania struktury anatomicznej.','IN02 @ 0.15: Host (85%) wciąż prowadzi, definiując formę podmiotu.','IN03 @ 0.18: Subtelne łagodzenie czysto animowej estetyki (Host @ 82%).','IN04 @ 0.25: Wprowadzenie 25% półrealistycznych właściwości Graycolor do struktury anime.','IN05 @ 0.30: Wpływ Graycolor (30%) rośnie, wpływając na cechy średniego poziomu.','IN06 @ 0.35: Mieszanka dąży do równowagi stylów (Host @ 65%).','IN07 @ 0.40: Zbliżając się do środkowego bloku, modele zbliżają się do równowagi.','IN08 @ 0.45: Host utrzymuje niewielką przewagę (55%) tuż przed wąskim gardłem.','IN09 @ 0.50: Dokładny podział 50/50, aby stworzyć zrównoważone przejście.','IN10 @ 0.52: Graycolor po raz pierwszy przejmuje niewielką przewagę (52%), definiując koncepcję.','IN11 @ 0.55: Wzmacnianie dominacji koncepcyjnej Graycolor (55%).','M00 @ 0.60: Graycolor otrzymuje najsilniejszą wagę (60%) w rdzeniu, osadzając styl malarski.','OUT00 @ 0.58: Graycolor pozostaje dominujący (58%), propagując swój styl na zewnątrz.','OUT01 @ 0.55: Równowaga zaczyna się przesuwać z powrotem w kierunku hosta (45%).','OUT02 @ 0.52: Graycolor wciąż ma niewielką większość (52%), wpływając na wczesne detale.','OUT03 @ 0.50: Drugi idealny podział 50/50 dla detali i tekstury.','OUT04 @ 0.47: Host odzyskuje prowadzenie (53%), stosując swoją czystą interpretację.','OUT05 @ 0.42: Nacisk na hosta rośnie (58%), koncentrując się na czystych liniach.','OUT06 @ 0.35: Silniejsza waga dla hosta (65%) dla drobnych detali.','OUT07 @ 0.30: Host dominuje (70%), udoskonalając tekstury.','OUT08 @ 0.25: Znacząca waga dla hosta (75%) do ostatecznego przejścia.','OUT09 @ 0.20: Silnie faworyzuje hosta (80%) dla detali o wysokiej częstotliwości.','OUT10 @ 0.15: Zdecydowanie faworyzuje hosta (85%), aby zapewnić ostre i czyste linie.','OUT11 @ 0.10: Ostateczna, decydująca waga dla hosta (90%), aby zapewnić czysty i żywy wynik.']
             },
             host_dominant: {
                 explanation: "<strong>Przepis B: Z dominacją Hosta</strong><br>Daje większą wagę Animij we wszystkich blokach. Rezultatem będzie model o wyjątkowo silnej anatomii i spójności, ściśle trzymający się stylu retro anime. Wpływ dawców będzie bardziej subtelny.",
-                weights: [0.95, 0.92, 0.90, 0.88, 0.85, 0.80, 0.75, 0.70, 0.65, 0.60, 0.55, 0.50, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.88, 0.90, 0.92, 0.95],
-                justifications: ['(Z dominacją Hosta) IN00 @ 0.95 Animij: Maksymalna integralność strukturalna.','(Z dominacją Hosta) IN01 @ 0.92 Animij: Kontrola nad anatomią.','(Z dominacją Hosta) IN02 @ 0.90 Animij: Czysta forma z Animij.','(Z dominacją Hosta) IN03 @ 0.88 Animij: Minimalny wpływ stylu.','(Z dominacją Hosta) IN04 @ 0.85 Animij: Priorytet dla struktury.','(Z dominacją Hosta) IN05 @ 0.80 Animij: Styl bliski Animij.','(Z dominacją Hosta) IN06 @ 0.75 Animij: Stosunek 3:1 na korzyść struktury.','(Z dominacją Hosta) IN07 @ 0.70 Animij: Silna kontrola hosta.','(Z dominacją Hosta) IN08 @ 0.65 Animij: Ostatnie słowo dla Animij.','(Z dominacją Hosta) IN09 @ 0.60 Animij: Mieszanka faworyzująca hosta.','(Z dominacją Hosta) IN10 @ 0.55 Animij: Przewaga hosta w koncepcji.','(Z dominacją Hosta) IN11 @ 0.50/0.50: Równy podział.','(Z dominacją Hosta) M00 @ 0.45 Animij: Silna obecność hosta w rdzeniu.','(Z dominacją Hosta) OUT00 @ 0.50/0.50: Równy podział w rekonstrukcji.','(Z dominacją Hosta) OUT01 @ 0.55 Animij: Ponowne potwierdzenie kontroli hosta.','(Z dominacją Hosta) OUT02 @ 0.60 Animij: Kontrola nad wczesnymi detalami.','(Z dominacją Hosta) OUT03 @ 0.65 Animij: Priorytet dla logiki hosta.','(Z dominacją Hosta) OUT04 @ 0.70 Animij: Silna kontrola nad rekonstrukcją.','(Z dominacją Hosta) OUT05 @ 0.75 Animij: Stosunek 3:1 dla linii hosta.','(Z dominacją Hosta) OUT06 @ 0.80 Animij: Faworyzowanie hosta dla drobnych detali.','(Z dominacją Hosta) OUT07 @ 0.85 Animij: Tekstury głównie od hosta.','(Z dominacją Hosta) OUT08 @ 0.88 Animij: Polerowanie strukturalne przez hosta.','(Z dominacją Hosta) OUT09 @ 0.90 Animij: Maksymalna klarowność od hosta.','(Z dominacją Hosta) OUT10 @ 0.92 Animij: Wyjątkowo czyste linie.','(Z dominacją Hosta) OUT11 @ 0.95 Animij: Wynik w stylu czystego Animij.']
+                weights: [0.05, 0.08, 0.10, 0.12, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.50, 0.45, 0.40, 0.35, 0.30, 0.25, 0.20, 0.15, 0.12, 0.10, 0.08, 0.05],
+                justifications: ['(Z dominacją Hosta) IN00 @ 0.05: Maksymalna integralność strukturalna Hosta (95%).','(Z dominacją Hosta) IN01 @ 0.08: Przytłaczająca kontrola Hosta (92%) nad anatomią.','(Z dominacją Hosta) IN02 @ 0.10: Czysta forma z Animij (90%).','(Z dominacją Hosta) IN03 @ 0.12: Minimalny wpływ stylu (Host @ 88%).','(Z dominacją Hosta) IN04 @ 0.15: Priorytet dla struktury Hosta (85%).','(Z dominacją Hosta) IN05 @ 0.20: Styl bliski Animij (80%).','(Z dominacją Hosta) IN06 @ 0.25: Stosunek 3:1 na korzyść struktury Hosta.','(Z dominacją Hosta) IN07 @ 0.30: Silna kontrola hosta (70%).','(Z dominacją Hosta) IN08 @ 0.35: Ostatnie słowo dla Animij (65%) przed rdzeniem.','(Z dominacją Hosta) IN09 @ 0.40: Mieszanka faworyzująca hosta (60%).','(Z dominacją Hosta) IN10 @ 0.45: Niewielka przewaga hosta (55%) w koncepcji.','(Z dominacją Hosta) IN11 @ 0.50: Równy podział tuż przed rdzeniem.','(Z dominacją Hosta) M00 @ 0.55: Nawet w rdzeniu, silna obecność hosta (45%).','(Z dominacją Hosta) OUT00 @ 0.50: Rozpoczęcie rekonstrukcji z równym podziałem.','(Z dominacją Hosta) OUT01 @ 0.45: Natychmiastowe ponowne potwierdzenie kontroli hosta (55%).','(Z dominacją Hosta) OUT02 @ 0.40: Wzmocnienie kontroli hosta (60%) nad wczesnymi detalami.','(Z dominacją Hosta) OUT03 @ 0.35: Priorytet dla logiki hosta (65%).','(Z dominacją Hosta) OUT04 @ 0.30: Silna kontrola hosta (70%) nad rekonstrukcją.','(Z dominacją Hosta) OUT05 @ 0.25: Stosunek 3:1 dla linii hosta (75%).','(Z dominacją Hosta) OUT06 @ 0.20: Faworyzowanie hosta (80%) dla drobnych detali.','(Z dominacją Hosta) OUT07 @ 0.15: Tekstury głównie od hosta (85%).','(Z dominacją Hosta) OUT08 @ 0.12: Polerowanie strukturalne przez hosta (88%).','(Z dominacją Hosta) OUT09 @ 0.10: Maksymalna klarowność od hosta (90%).','(Z dominacją Hosta) OUT10 @ 0.08: Wyjątkowo czyste linie (Host @ 92%).','(Z dominacją Hosta) OUT11 @ 0.05: Wynik w stylu czystego Animij (95%).']
             },
             donor_receptive: {
                 explanation: "<strong>Przepis C: Podatny na Dawcę</strong><br>Daje większą wagę Graycolor. Tworzy to hosta bardziej elastycznego stylistycznie i podatnego na dawców. Kompromisem jest potencjalne zmniejszenie stabilności kompozycyjnej.",
-                weights: [0.85, 0.82, 0.80, 0.78, 0.70, 0.65, 0.60, 0.55, 0.50, 0.45, 0.42, 0.40, 0.35, 0.38, 0.40, 0.42, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85],
-                justifications: ['(Podatny na Dawcę) IN00 @ 0.85 Animij: Łagodniejszy start.','(Podatny na Dawcę) IN01 @ 0.82 Animij: Wczesne osłabienie kontroli hosta.','(Podatny na Dawcę) IN02 @ 0.80 Animij: Silny wczesny głos dla Graycolor.','(Podatny na Dawcę) IN03 @ 0.78 Animij: Priorytet dla mieszania stylów.','(Podatny na Dawcę) IN04 @ 0.70 Animij: Silne pchnięcie w kierunku stylu Graycolor.','(Podatny na Dawcę) IN05 @ 0.65 Animij: Znaczący wpływ Graycolor.','(Podatny na Dawcę) IN06 @ 0.60 Animij: Podział 60/40.','(Podatny na Dawcę) IN07 @ 0.55 Animij: Niemal równy podział.','(Podatny na Dawcę) IN08 @ 0.50/0.50: Równy podział dla fuzji.','(Podatny na Dawcę) IN09 @ 0.45 Animij: Graycolor prowadzi do rdzenia.','(Podatny na Dawcę) IN10 @ 0.42 Animij: Wzmocnienie wpływu Graycolor.','(Podatny na Dawcę) IN11 @ 0.40 Animij: Silna waga dla Graycolor.','(Podatny na Dawcę) M00 @ 0.35 Animij: Decydująca waga dla Graycolor w rdzeniu.','(Podatny na Dawcę) OUT00 @ 0.38 Animij: Silny wpływ Graycolor w rekonstrukcji.','(Podatny na Dawcę) OUT01 @ 0.40 Animij: Utrzymanie wagi dla Graycolor.','(Podatny na Dawcę) OUT02 @ 0.42 Animij: Priorytet dla stylu malarskiego.','(Podatny na Dawcę) OUT03 @ 0.45 Animij: Podział faworyzujący dawcę.','(Podatny na Dawcę) OUT04 @ 0.50/0.50: Równy podział dla cech.','(Podatny na Dawcę) OUT05 @ 0.55 Animij: Powrót do Animij dla linii.','(Podatny na Dawcę) OUT06 @ 0.60 Animij: Podział 60/40 dla hosta.','(Podatny na Dawcę) OUT07 @ 0.65 Animij: Wzmocnienie kontroli hosta.','(Podatny na Dawcę) OUT08 @ 0.70 Animij: Podział 70/30 dla polerowania.','(Podatny na Dawcę) OUT09 @ 0.75 Animij: Silna obecność hosta dla klarowności.','(Podatny na Dawcę) OUT10 @ 0.80 Animij: Linie głównie od hosta.','(Podatny na Dawcę) OUT11 @ 0.85 Animij: Silna waga hosta dla czystego wykończenia.']
+                weights: [0.15, 0.18, 0.20, 0.22, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.58, 0.60, 0.65, 0.62, 0.60, 0.58, 0.55, 0.50, 0.45, 0.40, 0.35, 0.30, 0.25, 0.20, 0.15],
+                justifications: ['(Podatny na Dawcę) IN00 @ 0.15: Łagodniejszy start (Host @ 85%).','(Podatny na Dawcę) IN01 @ 0.18: Wczesne osłabienie kontroli hosta (82%).','(Podatny na Dawcę) IN02 @ 0.20: Silny wczesny głos dla Graycolor (20%).','(Podatny na Dawcę) IN03 @ 0.22: Priorytet dla mieszania stylów (Host @ 78%).','(Podatny na Dawcę) IN04 @ 0.30: Silne pchnięcie w kierunku stylu Graycolor (30%).','(Podatny na Dawcę) IN05 @ 0.35: Znaczący wpływ Graycolor (35%).','(Podatny na Dawcę) IN06 @ 0.40: Podział 60/40 na korzyść Hosta.','(Podatny na Dawcę) IN07 @ 0.45: Niemal równy podział (Host @ 55%).','(Podatny na Dawcę) IN08 @ 0.50: Równy podział dla fuzji.','(Podatny na Dawcę) IN09 @ 0.55: Graycolor prowadzi (55%) do rdzenia.','(Podatny na Dawcę) IN10 @ 0.58: Wzmocnienie wpływu Graycolor (58%).','(Podatny na Dawcę) IN11 @ 0.60: Silna waga dla Graycolor (60%).','(Podatny na Dawcę) M00 @ 0.65: Decydująca waga dla Graycolor (65%) w rdzeniu.','(Podatny na Dawcę) OUT00 @ 0.62: Silny wpływ Graycolor (62%) w rekonstrukcji.','(Podatny na Dawcę) OUT01 @ 0.60: Utrzymanie wagi dla Graycolor (60%).','(Podatny na Dawcę) OUT02 @ 0.58: Priorytet dla stylu malarskiego (58%).','(Podatny na Dawcę) OUT03 @ 0.55: Podział faworyzujący dawcę (55%).','(Podatny na Dawcę) OUT04 @ 0.50: Równy podział dla cech.','(Podatny na Dawcę) OUT05 @ 0.45: Powrót do Animij (55%) dla linii.','(Podatny na Dawcę) OUT06 @ 0.40: Podział 60/40 dla hosta.','(Podatny na Dawcę) OUT07 @ 0.35: Wzmocnienie kontroli hosta (65%).','(Podatny na Dawcę) OUT08 @ 0.30: Podział 70/30 dla polerowania.','(Podatny na Dawcę) OUT09 @ 0.25: Silna obecność hosta (75%) dla klarowności.','(Podatny na Dawcę) OUT10 @ 0.20: Linie głównie od hosta (80%).','(Podatny na Dawcę) OUT11 @ 0.15: Silna waga hosta (85%) dla czystego wykończenia.']
             }
         }
     };
@@ -568,9 +587,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const ponyData = {
         labels: blockLabels,
         recipes: {
-            stage1: { model1: 'JANKU', model2: 'NEW ERA V5', color1: '#6366F1', color2: '#312E81', weights: [0.90,0.88,0.85,0.82,0.80,0.75,0.70,0.65,0.60,0.55,0.50,0.48,0.45,0.50,0.55,0.60,0.65,0.70,0.75,0.80,0.82,0.85,0.88,0.90,0.92], justifications: ['Etap 1 (JANKU/NEW ERA V5) - IN00 @ 0.90 JANKU: Faworyzuje anatomię JANKU dla silnych fundamentów.','Etap 1 - IN01 @ 0.88 JANKU: Utrwalenie kompozycji i póz.','Etap 1 - IN02 @ 0.85 JANKU: Wprowadzenie stylu tematycznego NEW ERA.','Etap 1 - IN03 @ 0.82 JANKU: Stopniowe zwiększanie wpływu NEW ERA.','Etap 1 - IN04 @ 0.80 JANKU: Stosunek 4:1 zapewnia dominację anatomii JANKU.','Etap 1 - IN05 @ 0.75 JANKU: Danie NEW ERA 25% wpływu na cechy.','Etap 1 - IN06 @ 0.70 JANKU: Zrównoważenie stylu NEW ERA ze spójnością JANKU.','Etap 1 - IN07 @ 0.65 JANKU: Zbliżanie się do równej mieszanki.','Etap 1 - IN08 @ 0.60 JANKU: Danie NEW ERA 40% wpływu przed rdzeniem.','Etap 1 - IN09 @ 0.55 JANKU: Lekka przewaga JANKU dla stabilności.','Etap 1 - IN10 @ 0.50/0.50: Zrównoważony podział dla stabilnego przejścia.','Etap 1 - IN11 @ 0.48 JANKU: Lekka przewaga NEW ERA (52%) dla koncepcji.','Etap 1 - M00 @ 0.45 JANKU: Większość 55% dla NEW ERA w rdzeniu dla osadzenia motywów.','Etap 1 - OUT00 @ 0.50/0.50: Zrównoważony podział dla nowatorskiej fuzji.','Etap 1 - OUT01 @ 0.55 JANKU: Ponowne potwierdzenie kontroli strukturalnej JANKU.','Etap 1 - OUT02 @ 0.60 JANKU: Zwiększenie wpływu JANKU dla spójnych detali.','Etap 1 - OUT03 @ 0.65 JANKU: Priorytet dla logiki JANKU.','Etap 1 - OUT04 @ 0.70 JANKU: Podział 70/30 dla zgodności detali.','Etap 1 - OUT05 @ 0.75 JANKU: Stosunek 3:1 na korzyść JANKU dla czystych linii.','Etap 1 - OUT06 @ 0.80 JANKU: Faworyzowanie JANKU dla drobnych detali.','Etap 1 - OUT07 @ 0.82 JANKU: Silna przewaga JANKU dla dopracowania tekstur.','Etap 1 - OUT08 @ 0.85 JANKU: Zapewnienie spójnej kompozycji.','Etap 1 - OUT09 @ 0.88 JANKU: Faworyzowanie JANKU dla ostrości.','Etap 1 - OUT10 @ 0.90 JANKU: Waga 90% dla ostrych, czystych linii.','Etap 1 - OUT11 @ 0.92 JANKU: Ostateczna waga dla JANKU dla czystego wyniku.']},
-            stage2: { model1: 'Graycolor', model2: 'SinGlo', color1: '#F59E0B', color2: '#78350F', weights: [0.85, 0.85, 0.80, 0.80, 0.75, 0.70, 0.70, 0.65, 0.65, 0.60, 0.60, 0.60, 0.55, 0.60, 0.60, 0.65, 0.65, 0.70, 0.70, 0.75, 0.75, 0.80, 0.80, 0.85, 0.85], justifications: ['Etap 2 (Graycolor/SinGlo) - IN00 @ 0.85 Graycolor: Ustanowienie półrealizmu Graycolor jako bazy.','Etap 2 - IN01 @ 0.85 Graycolor: Utrzymanie dominacji Graycolor dla spójności.','Etap 2 - IN02 @ 0.80 Graycolor: Wprowadzanie tekstur SinGlo.','Etap 2 - IN03 @ 0.80 Graycolor: Kontynuacja mieszania stylu.','Etap 2 - IN04 @ 0.75 Graycolor: Zwiększenie wpływu SinGlo.','Etap 2 - IN05 @ 0.70 Graycolor: Danie SinGlo głosu w detalach.','Etap 2 - IN06 @ 0.70 Graycolor: Danie SinGlo głosu w detalach.','Etap 2 - IN07 @ 0.65 Graycolor: Zbliżanie się do równej mieszanki tekstur.','Etap 2 - IN08 @ 0.65 Graycolor: Zbliżanie się do równej mieszanki tekstur.','Etap 2 - IN09 @ 0.60 Graycolor: Znaczący wpływ SinGlo.','Etap 2 - IN10 @ 0.60 Graycolor: Znaczący wpływ SinGlo.','Etap 2 - IN11 @ 0.60 Graycolor: Znaczący wpływ SinGlo.','Etap 2 - M00 @ 0.55 Graycolor: Prawie równy podział w rdzeniu.','Etap 2 - OUT00 @ 0.60 Graycolor: Lekka przewaga Graycolor.','Etap 2 - OUT01 @ 0.60 Graycolor: Lekka przewaga Graycolor.','Etap 2 - OUT02 @ 0.65 Graycolor: Faworyzowanie Graycolor dla stabilności.','Etap 2 - OUT03 @ 0.65 Graycolor: Faworyzowanie Graycolor dla stabilności.','Etap 2 - OUT04 @ 0.70 Graycolor: Podkreślenie malarskiego charakteru.','Etap 2 - OUT05 @ 0.70 Graycolor: Podkreślenie malarskiego charakteru.','Etap 2 - OUT06 @ 0.75 Graycolor: Silne faworyzowanie Graycolor.','Etap 2 - OUT07 @ 0.75 Graycolor: Silne faworyzowanie Graycolor.','Etap 2 - OUT08 @ 0.80 Graycolor: Dominacja Graycolor w detalach.','Etap 2 - OUT09 @ 0.80 Graycolor: Dominacja Graycolor w detalach.','Etap 2 - OUT10 @ 0.85 Graycolor: Czyste, malarskie wykończenie.','Etap 2 - OUT11 @ 0.85 Graycolor: Czyste, malarskie wykończenie.']},
-            stage3: { model1: '"Baza Dark Anime"', model2: '"Most Malarski"', color1: '#1E3A8A', color2: '#78350F', weights: [0.90, 0.90, 0.88, 0.85, 0.82, 0.80, 0.78, 0.75, 0.72, 0.70, 0.68, 0.65, 0.60, 0.62, 0.65, 0.68, 0.70, 0.72, 0.75, 0.78, 0.80, 0.82, 0.85, 0.88, 0.90], justifications: ['Etap 3 (Finał) - IN00 @ 0.90 Baza: Faworyzowanie bazy Dark Anime dla struktury.','Etap 3 - IN01 @ 0.90 Baza: Utrzymanie dominacji strukturalnej.','Etap 3 - IN02 @ 0.88 Baza: Wprowadzanie malarskiej tekstury.','Etap 3 - IN03 @ 0.85 Baza: Zwiększenie wpływu malarskiego.','Etap 3 - IN04 @ 0.82 Baza: Więcej stylu malarskiego.','Etap 3 - IN05 @ 0.80 Baza: 20% wpływu malarskiego.','Etap 3 - IN06 @ 0.78 Baza: Kontynuacja mieszanki.','Etap 3 - IN07 @ 0.75 Baza: Podział 75/25.','Etap 3 - IN08 @ 0.72 Baza: Dalsze zwiększanie wpływu.','Etap 3 - IN09 @ 0.70 Baza: Podział 70/30.','Etap 3 - IN10 @ 0.68 Baza: Większa waga dla stylu.','Etap 3 - IN11 @ 0.65 Baza: Silny wpływ malarski.','Etap 3 - M00 @ 0.60 Baza: Podział 60/40 w rdzeniu.','Etap 3 - OUT00 @ 0.62 Baza: Podobny podział w rekonstrukcji.','Etap 3 - OUT01 @ 0.65 Baza: Powrót do bazy Dark Anime.','Etap 3 - OUT02 @ 0.68 Baza: Wzmocnienie stylu anime.','Etap 3 - OUT03 @ 0.70 Baza: Podział 70/30 dla detali.','Etap 3 - OUT04 @ 0.72 Baza: Priorytet dla interpretacji bazy.','Etap 3 - OUT05 @ 0.75 Baza: Silny podział 75/25 dla linii.','Etap 3 - OUT06 @ 0.78 Baza: Zwiększenie dominacji bazy.','Etap 3 - OUT07 @ 0.80 Baza: Podział 80/20 dla detali.','Etap 3 - OUT08 @ 0.82 Baza: Priorytet dla spójności.','Etap 3 - OUT09 @ 0.85 Baza: Faworyzowanie bazy dla ostrych linii.','Etap 3 - OUT10 @ 0.88 Baza: Wynik zdefiniowany przez bazę.','Etap 3 - OUT11 @ 0.90 Baza: Czyste wykończenie.']}
+            stage1: { model1: 'JANKU', model2: 'NEW ERA V5', color1: '#6366F1', color2: '#312E81', weights: [0.10,0.12,0.15,0.18,0.20,0.25,0.30,0.35,0.40,0.45,0.50,0.52,0.55,0.50,0.45,0.40,0.35,0.30,0.25,0.20,0.18,0.15,0.12,0.10,0.08], justifications: ['Etap 1 (JANKU/NEW ERA V5) - IN00 @ 0.10: Faworyzuje anatomię JANKU (90%) dla silnych fundamentów.','Etap 1 - IN01 @ 0.12: Utrwalenie kompozycji i póz (JANKU @ 88%).','Etap 1 - IN02 @ 0.15: Wprowadzenie stylu tematycznego NEW ERA (15%).','Etap 1 - IN03 @ 0.18: Stopniowe zwiększanie wpływu NEW ERA (18%).','Etap 1 - IN04 @ 0.20: Stosunek 4:1 zapewnia dominację anatomii JANKU (80%).','Etap 1 - IN05 @ 0.25: Danie NEW ERA 25% wpływu na cechy.','Etap 1 - IN06 @ 0.30: Zrównoważenie stylu NEW ERA (30%) ze spójnością JANKU.','Etap 1 - IN07 @ 0.35: Zbliżanie się do równej mieszanki.','Etap 1 - IN08 @ 0.40: Danie NEW ERA 40% wpływu przed rdzeniem.','Etap 1 - IN09 @ 0.45: Lekka przewaga JANKU (55%) dla stabilności.','Etap 1 - IN10 @ 0.50: Zrównoważony podział dla stabilnego przejścia.','Etap 1 - IN11 @ 0.52: Lekka przewaga NEW ERA (52%) dla koncepcji.','Etap 1 - M00 @ 0.55: Większość 55% dla NEW ERA w rdzeniu dla osadzenia motywów.','Etap 1 - OUT00 @ 0.50: Zrównoważony podział dla nowatorskiej fuzji.','Etap 1 - OUT01 @ 0.45: Ponowne potwierdzenie kontroli strukturalnej JANKU (55%).','Etap 1 - OUT02 @ 0.40: Zwiększenie wpływu JANKU (60%) dla spójnych detali.','Etap 1 - OUT03 @ 0.35: Priorytet dla logiki JANKU (65%).','Etap 1 - OUT04 @ 0.30: Podział 70/30 dla zgodności detali (JANKU @ 70%).','Etap 1 - OUT05 @ 0.25: Stosunek 3:1 na korzyść JANKU (75%) dla czystych linii.','Etap 1 - OUT06 @ 0.20: Faworyzowanie JANKU (80%) dla drobnych detali.','Etap 1 - OUT07 @ 0.18: Silna przewaga JANKU (82%) dla dopracowania tekstur.','Etap 1 - OUT08 @ 0.15: Zapewnienie spójnej kompozycji (JANKU @ 85%).','Etap 1 - OUT09 @ 0.12: Faworyzowanie JANKU (88%) dla ostrości.','Etap 1 - OUT10 @ 0.10: Waga 90% dla JANKU dla ostrych, czystych linii.','Etap 1 - OUT11 @ 0.08: Ostateczna waga dla JANKU (92%) dla czystego wyniku.']}, 
+            stage2: { model1: 'Graycolor', model2: 'SinGlo', color1: '#F59E0B', color2: '#78350F', weights: [0.15, 0.15, 0.20, 0.20, 0.25, 0.30, 0.30, 0.35, 0.35, 0.40, 0.40, 0.40, 0.45, 0.40, 0.40, 0.35, 0.35, 0.30, 0.30, 0.25, 0.25, 0.20, 0.20, 0.15, 0.15], justifications: ['Etap 2 (Graycolor/SinGlo) - IN00 @ 0.15: Ustanowienie półrealizmu Graycolor (85%) jako bazy.','Etap 2 - IN01 @ 0.15: Utrzymanie dominacji Graycolor (85%) dla spójności.','Etap 2 - IN02 @ 0.20: Wprowadzanie tekstur SinGlo (20%).','Etap 2 - IN03 @ 0.20: Kontynuacja mieszania stylu (SinGlo @ 20%).','Etap 2 - IN04 @ 0.25: Zwiększenie wpływu SinGlo (25%).','Etap 2 - IN05 @ 0.30: Danie SinGlo (30%) głosu w detalach.','Etap 2 - IN06 @ 0.30: Danie SinGlo (30%) głosu w detalach.','Etap 2 - IN07 @ 0.35: Zbliżanie się do równej mieszanki tekstur.','Etap 2 - IN08 @ 0.35: Zbliżanie się do równej mieszanki tekstur.','Etap 2 - IN09 @ 0.40: Znaczący wpływ SinGlo (40%).','Etap 2 - IN10 @ 0.40: Znaczący wpływ SinGlo (40%).','Etap 2 - IN11 @ 0.40: Znaczący wpływ SinGlo (40%).','Etap 2 - M00 @ 0.45: Prawie równy podział w rdzeniu.','Etap 2 - OUT00 @ 0.40: Lekka przewaga Graycolor (60%).','Etap 2 - OUT01 @ 0.40: Lekka przewaga Graycolor (60%).','Etap 2 - OUT02 @ 0.35: Faworyzowanie Graycolor (65%) dla stabilności.','Etap 2 - OUT03 @ 0.35: Faworyzowanie Graycolor (65%) dla stabilności.','Etap 2 - OUT04 @ 0.30: Podkreślenie malarskiego charakteru (Graycolor @ 70%).','Etap 2 - OUT05 @ 0.30: Podkreślenie malarskiego charakteru (Graycolor @ 70%).','Etap 2 - OUT06 @ 0.25: Silne faworyzowanie Graycolor (75%).','Etap 2 - OUT07 @ 0.25: Silne faworyzowanie Graycolor (75%).','Etap 2 - OUT08 @ 0.20: Dominacja Graycolor (80%) w detalach.','Etap 2 - OUT09 @ 0.20: Dominacja Graycolor (80%) w detalach.','Etap 2 - OUT10 @ 0.15: Czyste, malarskie wykończenie (Graycolor @ 85%).','Etap 2 - OUT11 @ 0.15: Czyste, malarskie wykończenie (Graycolor @ 85%).']}, 
+            stage3: { model1: '"Baza Dark Anime"', model2: '"Most Malarski"', color1: '#1E3A8A', color2: '#78350F', weights: [0.10, 0.10, 0.12, 0.15, 0.18, 0.20, 0.22, 0.25, 0.28, 0.30, 0.32, 0.35, 0.40, 0.38, 0.35, 0.32, 0.30, 0.28, 0.25, 0.22, 0.20, 0.18, 0.15, 0.12, 0.10], justifications: ['Etap 3 (Finał) - IN00 @ 0.10: Faworyzowanie bazy Dark Anime (90%) dla struktury.','Etap 3 - IN01 @ 0.10: Utrzymanie dominacji strukturalnej (Baza @ 90%).','Etap 3 - IN02 @ 0.12: Wprowadzanie malarskiej tekstury (12%).','Etap 3 - IN03 @ 0.15: Zwiększenie wpływu malarskiego (15%).','Etap 3 - IN04 @ 0.18: Więcej stylu malarskiego (18%).','Etap 3 - IN05 @ 0.20: 20% wpływu malarskiego.','Etap 3 - IN06 @ 0.22: Kontynuacja mieszanki.','Etap 3 - IN07 @ 0.25: Podział 75/25 na korzyść Bazy.','Etap 3 - IN08 @ 0.28: Dalsze zwiększanie wpływu.','Etap 3 - IN09 @ 0.30: Podział 70/30.','Etap 3 - IN10 @ 0.32: Większa waga dla stylu.','Etap 3 - IN11 @ 0.35: Silny wpływ malarski (35%).','Etap 3 - M00 @ 0.40: Podział 60/40 w rdzeniu na korzyść Bazy.','Etap 3 - OUT00 @ 0.38: Podobny podział w rekonstrukcji.','Etap 3 - OUT01 @ 0.35: Powrót do bazy Dark Anime (65%).','Etap 3 - OUT02 @ 0.32: Wzmocnienie podstawowego stylu anime (Baza @ 68%).','Etap 3 - OUT03 @ 0.30: Podział 70/30 dla detali.','Etap 3 - OUT04 @ 0.28: Priorytet dla interpretacji bazy (72%).','Etap 3 - OUT05 @ 0.25: Silny podział 75/25 dla linii.','Etap 3 - OUT06 @ 0.22: Zwiększenie dominacji bazy (78%).','Etap 3 - OUT07 @ 0.20: Podział 80/20 dla detali.','Etap 3 - OUT08 @ 0.18: Priorytet dla spójności (Baza @ 82%).','Etap 3 - OUT09 @ 0.15: Faworyzowanie bazy (85%) dla ostrych linii.','Etap 3 - OUT10 @ 0.12: Wynik zdefiniowany przez bazę (88%).','Etap 3 - OUT11 @ 0.10: Czyste wykończenie (Baza @ 90%).']} 
         }
     };
     
@@ -581,28 +600,35 @@ document.addEventListener('DOMContentLoaded', () => {
             stage2: ponyData.recipes.stage2,
             stage3: { 
                 is_dare: true, 
-                explanation: `<strong>Etap 3: Łatka Anatomiczna (DARE-TIES)</strong><br>Krok chirurgiczny. Używamy DARE-TIES do wstrzyknięcia wiedzy anatomicznej z <strong>Boomer Art</strong> do naszej bazy 'Dark Anime', aby naprawić anatomię bez naruszania stylu hosta.<div class="dare-panel mt-4">
-                                     <h4 class="font-bold text-lg text-slate-200 mb-4 text-center">Przeszczep Anatomiczny</h4>
-                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                                         <div class="space-y-4 text-xs">
-                                            <p><strong class="text-slate-300">Host (model_a):</strong> 'Baza Dark Anime' (z Etapu 1)</p>
-                                            <p><strong class="text-slate-300">Dawca (model_b):</strong> Boomer Art Model (SDXL)</p>
-                                            <p><strong class="text-slate-300">Baza Hosta:</strong> kohaku-xl-beta5.safetensors</p>
-                                            <p><strong class="text-slate-300">Baza Dawcy:</strong> sd_xl_base_1.0.safetensors</p>
-                                         </div>
-                                         <div class="space-y-4">
-                                             <h5 class="text-sm font-semibold text-red-300">GŁÓWNE USTAWIENIA</h5>
-                                             <div><label class="text-xs font-medium text-slate-300">Gęstość DARE: 0.20</label><div class="w-full bg-slate-700 rounded-full h-2 mt-1"><div class="bg-red-500 h-2 rounded-full" style="width: 20%"></div></div></div>
-                                             <div><label class="text-xs font-medium text-slate-300">Waga TIES: 0.40</label><div class="w-full bg-slate-700 rounded-full h-2 mt-1"><div class="bg-red-500 h-2 rounded-full" style="width: 40%"></div></div></div>
-                                         </div>
-                                     </div>
-                                     <div class="mt-6 pt-4 border-t border-slate-700">
-                                         <h5 class="text-sm font-semibold text-slate-300 mb-2">Uzasadnienie</h5>
-                                         <p class="text-xs text-slate-400">To jest bardzo precyzyjna łatka chirurgiczna. Bardzo niska \`gęstość\` (0.20) i niska \`waga\` (0.40) izolują i przeszczepiają tylko najbardziej krytyczne wektory zmian od dawcy, które najprawdopodobniej odpowiadają fundamentalnej wiedzy anatomicznej, pozostawiając styl hosta prawie nietkniętym.</p>
-                                     </div>
-                                 </div>`
+                explanation: `<strong>Etap 3: Łatka Anatomiczna (DARE-TIES)</strong><br>Krok chirurgiczny. Używamy DARE-TIES do wstrzyknięcia wiedzy anatomicznej z <strong>Boomer Art</strong> do naszej bazy 'Dark Anime', aby naprawić anatomię bez naruszania stylu hosta. Poniżej przedstawiono dokładny, dwuetapowy proces z użyciem węzłów z ComfyUI-DareMerge.
+                <div class="dare-panel mt-4">
+                    <h4 class="font-bold text-lg text-slate-200 mb-4 text-center">Przeszczep Anatomiczny</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                        <div>
+                            <h5 class="text-sm font-semibold text-indigo-300 mb-2">Krok 1: Przycinanie (TIES Trim)</h5>
+                            <p class="text-xs text-slate-400 mb-4">Użyj \`Magnitude Masker\`, aby zachować 20% najważniejszych zmian anatomicznych.</p>
+                            <p class="text-xs"><strong class="text-slate-300">model_a:</strong> 'Baza Dark Anime'</p>
+                            <p class="text-xs"><strong class="text-slate-300">model_b:</strong> sd_xl_base_1.0</p>
+                            <p class="text-xs"><strong class="text-slate-300">threshold:</strong> 0.80</p>
+                            <p class="text-xs"><strong class="text-slate-300">threshold_type:</strong> quantile</p>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-semibold text-red-300 mb-2">Krok 2: Łączenie (DARE Merge)</h5>
+                            <p class="text-xs text-slate-400 mb-4">Użyj \`Model Merger (DARE)\` z utworzoną maską.</p>
+                            <p class="text-xs"><strong class="text-slate-300">model1:</strong> 'Baza Dark Anime'</p>
+                            <p class="text-xs"><strong class="text-slate-300">model2:</strong> Boomer Art Model</p>
+                            <p class="text-xs"><strong class="text-slate-300">base_model:</strong> sd_xl_base_1.0</p>
+                            <p class="text-xs"><strong class="text-slate-300">density:</strong> 0.20</p>
+                            <p class="text-xs"><strong class="text-slate-300">ties_mode:</strong> sum</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-700">
+                        <h5 class="text-sm font-semibold text-slate-300 mb-2">Uzasadnienie</h5>
+                        <p class="text-xs text-slate-400">Bardzo agresywne przycinanie (\`threshold: 0.80\`) izoluje tylko 20% najsilniejszych wektorów zmian, które z największym prawdopodobieństwem odpowiadają za fundamentalną wiedzę o anatomii. Niska \`gęstość\` (0.20) zapewnia, że ta "łatka" jest stosowana bardzo precyzyjnie i nie narusza stylu bazy Pony.</p>
+                    </div>
+                </div>`
             },
-            stage4: { model1: '"Baza z łatką"', model2: '"Most Malarski"', color1: '#1E3A8A', color2: '#78350F', weights: [0.92,0.90,0.88,0.85,0.82,0.80,0.78,0.75,0.72,0.70,0.68,0.65,0.60,0.62,0.65,0.68,0.70,0.72,0.75,0.78,0.80,0.82,0.85,0.88,0.92], justifications: ['Etap 4 (Finał) - IN00 @ 0.92 Baza: Faworyzowanie załatanej bazy dla struktury.','Etap 4 - IN01 @ 0.90 Baza: Utrzymanie dominacji strukturalnej.','Etap 4 - IN02 @ 0.88 Baza: Wprowadzanie malarskiej tekstury.','Etap 4 - IN03 @ 0.85 Baza: Zwiększenie wpływu malarskiego.','Etap 4 - IN04 @ 0.82 Baza: Więcej stylu malarskiego.','Etap 4 - IN05 @ 0.80 Baza: 20% wpływu malarskiego.','Etap 4 - IN06 @ 0.78 Baza: Kontynuacja mieszanki.','Etap 4 - IN07 @ 0.75 Baza: Podział 75/25.','Etap 4 - IN08 @ 0.72 Baza: Dalsze zwiększanie wpływu.','Etap 4 - IN09 @ 0.70 Baza: Podział 70/30.','Etap 4 - IN10 @ 0.68 Baza: Większa waga dla stylu.','Etap 4 - IN11 @ 0.65 Baza: Silny wpływ malarski.','Etap 4 - M00 @ 0.60 Baza: Podział 60/40 w rdzeniu.','Etap 4 - OUT00 @ 0.62 Baza: Podobny podział w rekonstrukcji.','Etap 4 - OUT01 @ 0.65 Baza: Powrót do bazy z łatką.','Etap 4 - OUT02 @ 0.68 Baza: Wzmocnienie stylu anime.','Etap 4 - OUT03 @ 0.70 Baza: Podział 70/30 dla detali.','Etap 4 - OUT04 @ 0.72 Baza: Priorytet dla interpretacji bazy.','Etap 4 - OUT05 @ 0.75 Baza: Silny podział 75/25 dla linii.','Etap 4 - OUT06 @ 0.78 Baza: Zwiększenie dominacji bazy.','Etap 4 - OUT07 @ 0.80 Baza: Podział 80/20 dla detali.','Etap 4 - OUT08 @ 0.82 Baza: Priorytet dla spójności.','Etap 4 - OUT09 @ 0.85 Baza: Faworyzowanie bazy dla ostrych linii.','Etap 4 - OUT10 @ 0.88 Baza: Wynik zdefiniowany przez bazę.','Etap 4 - OUT11 @ 0.92 Baza: Czyste wykończenie.']}
+            stage4: { model1: '"Baza z łatką"', model2: '"Most Malarski"', color1: '#1E3A8A', color2: '#78350F', weights: [0.08,0.10,0.12,0.15,0.18,0.20,0.22,0.25,0.28,0.30,0.32,0.35,0.40,0.38,0.35,0.32,0.30,0.28,0.25,0.22,0.20,0.18,0.15,0.12,0.08], justifications: ['Etap 4 (Finał) - IN00 @ 0.08: Faworyzowanie załatanej bazy (92%) dla struktury.','Etap 4 - IN01 @ 0.10: Utrzymanie dominacji strukturalnej (Baza @ 90%).','Etap 4 - IN02 @ 0.12: Wprowadzanie malarskiej tekstury (12%).','Etap 4 - IN03 @ 0.15: Zwiększenie wpływu malarskiego (15%).','Etap 4 - IN04 @ 0.18: Więcej stylu malarskiego (18%).','Etap 4 - IN05 @ 0.20: 20% wpływu malarskiego.','Etap 4 - IN06 @ 0.22: Kontynuacja mieszanki.','Etap 4 - IN07 @ 0.25: Podział 75/25 na korzyść Bazy.','Etap 4 - IN08 @ 0.28: Dalsze zwiększanie wpływu.','Etap 4 - IN09 @ 0.30: Podział 70/30.','Etap 4 - IN10 @ 0.32: Większa waga dla stylu.','Etap 4 - IN11 @ 0.35: Silny wpływ malarski (35%).','Etap 4 - M00 @ 0.40: Podział 60/40 w rdzeniu na korzyść Bazy.','Etap 4 - OUT00 @ 0.38: Podobny podział w rekonstrukcji.','Etap 4 - OUT01 @ 0.35: Powrót do bazy z łatką (65%).','Etap 4 - OUT02 @ 0.32: Wzmocnienie stylu anime (Baza @ 68%).','Etap 4 - OUT03 @ 0.30: Podział 70/30 dla detali.','Etap 4 - OUT04 @ 0.28: Priorytet dla interpretacji bazy (72%).','Etap 4 - OUT05 @ 0.25: Silny podział 75/25 dla linii.','Etap 4 - OUT06 @ 0.22: Zwiększenie dominacji bazy (78%).','Etap 4 - OUT07 @ 0.20: Podział 80/20 dla detali.','Etap 4 - OUT08 @ 0.18: Priorytet dla spójności (Baza @ 82%).','Etap 4 - OUT09 @ 0.15: Faworyzowanie bazy (85%) dla ostrych linii.','Etap 4 - OUT10 @ 0.12: Wynik zdefiniowany przez bazę (88%).','Etap 4 - OUT11 @ 0.08: Czyste wykończenie (Baza @ 92%).']}
         }
     };
 
@@ -659,13 +685,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function updateSdxlChart(recipeKey) {
             const recipe = sdxlData.recipes[recipeKey];
-            if (!recipe) return;
+            if (!recipe || !sdxlChartInstance) return;
             explanationEl.innerHTML = recipe.explanation;
             sdxlChartInstance.data = {
                 labels: sdxlData.labels,
                 datasets: [
-                    { label: 'Animij', data: recipe.weights, backgroundColor: '#4f46e5', barPercentage: 0.9, categoryPercentage: 0.8 },
-                    { label: 'Graycolor', data: recipe.weights.map(w => 1 - w), backgroundColor: '#a5b4fc', barPercentage: 0.9, categoryPercentage: 0.8 }
+                    { label: 'Animij (A)', data: recipe.weights.map(w => 1 - w), backgroundColor: '#4f46e5', barPercentage: 0.9, categoryPercentage: 0.8 },
+                    { label: 'Graycolor (B)', data: recipe.weights, backgroundColor: '#a5b4fc', barPercentage: 0.9, categoryPercentage: 0.8 }
                 ]
             };
             sdxlChartInstance.update();
@@ -694,12 +720,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function updatePonyChart(recipeKey) {
             const recipe = ponyData.recipes[recipeKey];
-            if (!recipe) return;
+            if (!recipe || !ponyChartInstance) return;
             ponyChartInstance.data = {
                 labels: ponyData.labels,
                 datasets: [
-                    { label: recipe.model1, data: recipe.weights, backgroundColor: recipe.color1, barPercentage: 0.9, categoryPercentage: 0.8 },
-                    { label: recipe.model2, data: recipe.weights.map(w => 1 - w), backgroundColor: recipe.color2, barPercentage: 0.9, categoryPercentage: 0.8 }
+                    { label: `${recipe.model1} (A)`, data: recipe.weights.map(w => 1 - w), backgroundColor: recipe.color1, barPercentage: 0.9, categoryPercentage: 0.8 },
+                    { label: `${recipe.model2} (B)`, data: recipe.weights, backgroundColor: recipe.color2, barPercentage: 0.9, categoryPercentage: 0.8 }
                 ]
             };
             ponyChartInstance.update();
@@ -747,11 +773,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 justificationEl.textContent = 'Ustawienia DARE-TIES są stałe i nie są wizualizowane na wykresie.';
             } else {
                 chartContainer.style.display = 'block';
+                if (!hybridChartInstance) return;
                 hybridChartInstance.data = {
                     labels: hybridData.labels,
                     datasets: [
-                        { label: recipe.model1, data: recipe.weights, backgroundColor: recipe.color1, barPercentage: 0.9, categoryPercentage: 0.8 },
-                        { label: recipe.model2, data: recipe.weights.map(w => 1 - w), backgroundColor: recipe.color2, barPercentage: 0.9, categoryPercentage: 0.8 }
+                        { label: `${recipe.model1} (A)`, data: recipe.weights.map(w => 1 - w), backgroundColor: recipe.color1, barPercentage: 0.9, categoryPercentage: 0.8 },
+                        { label: `${recipe.model2} (B)`, data: recipe.weights, backgroundColor: recipe.color2, barPercentage: 0.9, categoryPercentage: 0.8 }
                     ]
                 };
                 hybridChartInstance.update();
