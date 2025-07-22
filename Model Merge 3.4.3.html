@@ -22,6 +22,7 @@
         .version-btn.active, .recipe-btn.active, .lang-btn.active { background-color: #4f46e5; color: white; box-shadow: 0 0 15px rgba(99, 102, 241, 0.5); border-color: #6366f1; }
         .dare-panel { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3); }
         .flow-arrow { font-family: monospace; font-weight: bold; }
+        .info-panel { background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(96, 165, 250, 0.3); color: #bfdbfe; }
     </style>
 </head>
 <body class="bg-slate-900">
@@ -83,7 +84,7 @@
                             <button data-recipe="host_dominant" class="recipe-btn px-4 py-2 rounded-md text-sm font-medium" data-i18n-key="sdxl.recipes.step1.btnHost"></button>
                             <button data-recipe="donor_receptive" class="recipe-btn px-4 py-2 rounded-md text-sm font-medium" data-i18n-key="sdxl.recipes.step1.btnDonor"></button>
                          </div>
-                         <div id="sdxl-recipe-explanation" class="mb-6 p-4 bg-indigo-900/30 border border-indigo-500/50 text-indigo-200 rounded-md text-sm"></div>
+                         <div id="sdxl-recipe-explanation" class="mb-6 p-4 info-panel rounded-md text-sm"></div>
                          <div class="chart-container lazy-chart" id="sdxlChartContainer"><canvas id="sdxlChart"></canvas></div>
                          <div id="sdxl-justification" class="mt-6 p-4 bg-slate-800 rounded-md text-sm text-slate-400 min-h-[60px]" data-i18n-key="chart.hoverPrompt"></div>
                      </div>
@@ -144,6 +145,7 @@
                             <button data-recipe="stage2" class="recipe-btn px-4 py-2 rounded-md text-sm font-medium" data-i18n-key="pony.recipes.step1.btnStage2"></button>
                             <button data-recipe="stage3" class="recipe-btn px-4 py-2 rounded-md text-sm font-medium" data-i18n-key="pony.recipes.step1.btnStage3"></button>
                          </div>
+                         <div id="pony-recipe-explanation" class="mb-6 p-4 info-panel rounded-md text-sm"></div>
                          <div class="chart-container lazy-chart" id="ponyChartContainer"><canvas id="ponyChart"></canvas></div>
                          <div id="pony-justification" class="mt-6 p-4 bg-slate-800 rounded-md text-sm text-slate-400 min-h-[60px]" data-i18n-key="chart.hoverPrompt"></div>
                      </div>
@@ -211,7 +213,7 @@
                             <button data-recipe="stage3" class="recipe-btn px-4 py-2 rounded-md text-sm font-medium" data-i18n-key="hybrid.recipes.step1.btnStage3"></button>
                             <button data-recipe="stage4" class="recipe-btn px-4 py-2 rounded-md text-sm font-medium" data-i18n-key="hybrid.recipes.step1.btnStage4"></button>
                          </div>
-                         <div id="hybrid-recipe-explanation" class="mb-6" style="display: none;"></div>
+                         <div id="hybrid-recipe-explanation" class="mb-6 p-4 info-panel rounded-md text-sm"></div>
                          <div class="chart-container lazy-chart" id="hybridChartContainer"><canvas id="hybridChart"></canvas></div>
                          <div id="hybrid-justification" class="mt-6 p-4 bg-slate-800 rounded-md text-sm text-slate-400 min-h-[60px]" data-i18n-key="chart.hoverPrompt"></div>
                     </div>
@@ -475,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "hybrid.assembly.clip.step2Title": "Etap 2: Łączenie z SDXL",
             "hybrid.assembly.clip.final": "Finałowy Trójjęzyczny CLIP",
             "hybrid.assembly.clip.noteTitle": "Uwaga: Łatanie niezgodności CLIP",
-            "hybrid.assembly.clip.noteDesc": "CLIP modelu \"Boomer Art\" (SDXL) jest architektonicznie niezgodny z CLIP-ami Pony. Aby to załagodzić, zaleca się użycie dwuetapowego procesu DARE-TIES. **Najpierw**, użyj węzła `Magnitude Masker`, aby wyizolować najważniejsze wektory zmian z CLIP modelu SDXL, używając `progu` (np. 0.7-0.8). **Następnie**, użyj tej maski w wejściu `ties_mask` węzła `Model Merger (DARE)` z niską `gęstością` (np. 0.2-0.3). To pozwala na wstrzyknięcie tylko podstawowego 'słownictwa', minimalizując zakłócenia.",
+            "hybrid.assembly.clip.noteDesc": "CLIP modelu \"Boomer Art\" (SDXL) jest architektonicznie niezgodny z CLIP-ami Pony. Zaawansowane techniki jak DARE-TIES z maskowaniem nie mają tu zastosowania, gdyż węzły do łączenia CLIP nie posiadają wejścia na maskę. Zamiast tego, 'łatanie' niezgodności osiąga się poprzez **proste łączenie wagowe** (np. w węźle `CLIPMergeSimple`), nadając bardzo niską wagę niezgodnemu CLIP-owi z SDXL (np. 0.15-0.20). To pozwala na 'wstrzyknięcie' odrobiny jego słownictwa bez niszczenia głównej bazy Pony.",
             "hybrid.assembly.vae.desc": "VAE z głównego hosta strukturalnego, `JANKU V4.0`, pozostaje najbezpieczniejszym wyborem do utrzymania spójności kolorów pomimo złożonych łączeń.",
             "hybrid.assembly.vae.justification": "Ponieważ ostateczny model jest w przeważającej mierze oparty na Pony, użycie VAE Pony jest kluczowe, aby zapobiec artefaktom.",
             "analysis.title": "Analiza Porównawcza i Rekomendacja",
@@ -563,7 +565,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "hybrid.assembly.clip.step2Title": "Step 2: Merge with SDXL",
             "hybrid.assembly.clip.final": "Final Trilingual CLIP",
             "hybrid.assembly.clip.noteTitle": "Note: Patching CLIP Incompatibility",
-            "hybrid.assembly.clip.noteDesc": "The \"Boomer Art\" model's CLIP (SDXL) is architecturally incompatible with Pony CLIPs. To mitigate this, a two-step DARE-TIES process is recommended. **First**, use the `Magnitude Masker` node to isolate the most significant change vectors from the SDXL CLIP using a `threshold` (e.g., 0.7-0.8). **Then**, use this mask in the `ties_mask` input of the `Model Merger (DARE)` node with a low `density` (e.g., 0.2-0.3). This allows only its core 'vocabulary' to be injected, minimizing disruption.",
+            "hybrid.assembly.clip.noteDesc": "The \"Boomer Art\" model's CLIP (SDXL) is architecturally incompatible with Pony CLIPs. Advanced techniques like DARE-TIES with masking do not apply here, as CLIP merging nodes do not have a mask input. Instead, 'patching' the incompatibility is achieved through a **simple weighted merge** (e.g., in the `CLIPMergeSimple` node), giving a very low weight to the incompatible SDXL CLIP (e.g., 0.15-0.20). This allows for 'injecting' a small amount of its vocabulary without destroying the main Pony base.",
             "hybrid.assembly.vae.desc": "The VAE from the main structural host, `JANKU V4.0`, remains the safest choice for maintaining color consistency despite the complex merges.",
             "hybrid.assembly.vae.justification": "Since the final model is predominantly Pony-based, using a Pony VAE is crucial to prevent artifacts.",
             "analysis.title": "Comparative Analysis and Recommendation",
@@ -772,6 +774,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updatePonyChart(recipeKey) {
         if (!ponyChartInstance) return;
         const recipe = chartDataStore.pony.recipes[recipeKey];
+        document.getElementById('pony-recipe-explanation').innerHTML = i18nData[currentLanguage][`pony.recipes.explanation.${recipeKey}`] || '';
         ponyChartInstance.data = {
             labels: blockLabels,
             datasets: [
@@ -802,12 +805,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const explanationEl = document.getElementById('hybrid-recipe-explanation');
         const chartContainer = document.getElementById('hybridChartContainer');
         
+        explanationEl.innerHTML = i18nData[currentLanguage][`hybrid.recipes.explanation.${recipeKey}`] || '';
+        
         if (recipe.is_dare) {
-            explanationEl.innerHTML = i18nData[currentLanguage]['hybrid.recipes.dareExplanation'] || '';
             explanationEl.style.display = 'block';
             chartContainer.style.display = 'none';
         } else {
-            explanationEl.style.display = 'none';
+            explanationEl.style.display = 'block'; // Always show for consistency
             chartContainer.style.display = 'block';
             if (!hybridChartInstance) return;
             hybridChartInstance.data = {
