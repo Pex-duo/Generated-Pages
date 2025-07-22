@@ -121,6 +121,7 @@
                      </div>
                 </section>
             </div>
+
             <div id="pony-content" class="hidden">
                  <section id="pony-blueprints" class="mb-24 scroll-mt-20">
                      <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="pony.blueprint.title"></h2>
@@ -265,7 +266,8 @@
                      </div>
                  </section>
             </div>
-            <section id="analysis" class="mb-24 scroll-mt-20">
+             
+             <section id="analysis" class="mb-24 scroll-mt-20">
                  <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="analysis.title"></h2>
                  <p class="text-slate-400 mb-10 max-w-4xl" data-i18n-key="analysis.desc"></p>
                 <div class="overflow-x-auto card p-2 md:p-6">
@@ -752,6 +754,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "chart.hoverPrompt": "Najedź kursorem na blok na wykresie, aby zobaczyć uzasadnienie."
         },
         en: {
+            // ENGLISH TRANSLATIONS
             pageTitle: "Interactive Guide: Advanced Model Merging",
             guideTitle: "Model Merging Guide",
             "nav.blueprints": "Blueprints", "nav.recipes": "Recipes", "nav.analysis": "Analysis", "nav.glossary": "Glossary",
@@ -1016,10 +1019,10 @@ document.addEventListener('DOMContentLoaded', () => {
             "hybrid.recipes.justification.stage2.23": "Clean, painterly finish (Graycolor @ 85%).",
             "hybrid.recipes.justification.stage2.24": "Clean, painterly finish (Graycolor @ 85%).",
             
-            "hybrid.recipes.explanation.stage3": "<strong>Cel:</strong> Chirurgiczne wstrzyknięcie lepszej wiedzy anatomicznej z modelu 'Boomer Art' (SDXL) do 'Bazy Dark Anime' (Pony), aby naprawić anatomię bez naruszania stylu hosta. <br><strong>Logika:</strong> Używamy DARE-TIES. Bardzo agresywne przycinanie (`threshold: 0.80`) izoluje tylko 20% najsilniejszych wektorów zmian, które najprawdopodobniej odpowiadają fundamentalnej wiedzy anatomicznej. Niska `gęstość` (0.20) zapewnia, że ta 'łatka' jest stosowana bardzo precyzyjnie i nie zakłóca stylu bazy Pony.",
-            "hybrid.recipes.justification.stage3.0": "DARE-TIES nie używa wag blokowych.",
+            "hybrid.recipes.explanation.stage3": "<strong>Goal:</strong> To surgically inject superior anatomical knowledge from the 'Boomer Art' model (SDXL) into the 'Dark Anime Base' (Pony) to fix anatomy without corrupting the host's style. <br><strong>Logika:</strong> We use DARE-TIES. Very aggressive pruning (`threshold: 0.80`) isolates only the top 20% of the strongest change vectors, which are most likely to correspond to fundamental anatomical knowledge. A low `density` (0.20) ensures this 'patch' is applied very precisely and does not disrupt the style of the Pony base.",
+            "hybrid.recipes.justification.stage3.0": "DARE-TIES does not use block weights.",
             
-            "hybrid.recipes.explanation.stage4": "<strong>Cel:</strong> Zastosowanie 'Mostu Malarskiego' jako warstwy wykończeniowej na 'Bazie z łatką', aby osiągnąć ostateczny wygląd. <br><strong>Logika:</strong> Wagi są utrzymywane bardzo nisko, aby styl malarski był subtelnym wykończeniem, a nie dominującą cechą. Chroni to zarówno bazę anime, jak i precyzyjną 'łatkę' anatomiczną wstrzykniętą w poprzednim etapie.",
+            "hybrid.recipes.explanation.stage4": "<strong>Goal:</strong> To apply the 'Painterly Bridge' as a finishing layer onto the 'Patched Base' to achieve the final look. <br><strong>Rationale:</strong> The weights are kept very low to ensure the painterly style is a subtle finish, not a dominant feature. This protects both the anime base and the precise anatomical 'patch' injected in the previous stage.",
             "hybrid.recipes.justification.stage4.0": "Favoring the patched base (92%) for structure.",
             "hybrid.recipes.justification.stage4.1": "Maintaining structural dominance (Base @ 90%).",
             "hybrid.recipes.justification.stage4.2": "Introducing painterly texture (12%).",
