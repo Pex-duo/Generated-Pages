@@ -434,87 +434,9 @@ document.addEventListener('DOMContentLoaded', () => {
             "sdxl.recipes.step1.title": "Etap 1: Tworzenie Hosta (Łączenie z wagami bloków)",
             "sdxl.recipes.step1.desc": "Najpierw tworzymy solidny model-hosta, łącząc Animij (Model A) i Graycolor (Model B). Wartość wagi (`weight`) odnosi się do wkładu Modelu B. Waga `1.0` to 100% Modelu B, a `0.0` to 100% Modelu A.",
             "sdxl.recipes.step1.btnBalanced": "Przepis A: Zrównoważony", "sdxl.recipes.step1.btnHost": "Przepis B: Z dominacją Hosta", "sdxl.recipes.step1.btnDonor": "Przepis C: Podatny na Dawcę",
-            "sdxl.recipes.explanation.balanced": "<strong>Cel:</strong> Stworzenie zrównoważonej bazy, w której styl anime jest wyraźny, ale na tyle stonowany, aby przyjąć dawców. <br><strong>Logika:</strong> Wagi są niskie w blokach wejściowych (IN), aby zachować mocną anatomię Hosta, stopniowo rosną w kierunku bloku środkowego (M), aby połączyć style, i maleją w blokach wyjściowych (OUT), aby zachować szczegóły Hosta.",
-            "sdxl.recipes.justification.balanced.0": "Dominacja Hosta (Animij @ 90%) dla bazowej kompozycji i stylu lineartu.",
-            "sdxl.recipes.justification.balanced.1": "Utrzymanie silnej dominacji Hosta (88%) w celu zablokowania struktury anatomicznej.",
-            "sdxl.recipes.justification.balanced.2": "Host (85%) nadal prowadzi, definiując formę obiektu.",
-            "sdxl.recipes.justification.balanced.3": "Subtelne złagodzenie czystej estetyki anime (Host @ 82%).",
-            "sdxl.recipes.justification.balanced.4": "Wprowadzenie 25% półrealistycznych właściwości Graycolor do struktury anime.",
-            "sdxl.recipes.justification.balanced.5": "Wpływ Graycolor (30%) rośnie, wpływając na cechy średniego poziomu.",
-            "sdxl.recipes.justification.balanced.6": "Mieszanka przesuwa się w kierunku równowagi stylów (Host @ 65%).",
-            "sdxl.recipes.justification.balanced.7": "Zbliżając się do bloku środkowego, modele osiągają równowagę.",
-            "sdxl.recipes.justification.balanced.8": "Host utrzymuje niewielką przewagę (55%) tuż przed wąskim gardłem.",
-            "sdxl.recipes.justification.balanced.9": "Dokładny podział 50/50, aby stworzyć zrównoważone przejście.",
-            "sdxl.recipes.justification.balanced.10": "Graycolor po raz pierwszy obejmuje niewielkie prowadzenie (52%), definiując koncepcję.",
-            "sdxl.recipes.justification.balanced.11": "Wzmocnienie dominacji koncepcyjnej Graycolor (55%).",
-            "sdxl.recipes.justification.balanced.12": "Graycolor otrzymuje najsilniejszą wagę (60%) w rdzeniu, osadzając styl malarski.",
-            "sdxl.recipes.justification.balanced.13": "Graycolor pozostaje dominujący (58%), propagując swój styl na zewnątrz.",
-            "sdxl.recipes.justification.balanced.14": "Równowaga zaczyna przesuwać się z powrotem w stronę hosta (45%).",
-            "sdxl.recipes.justification.balanced.15": "Graycolor wciąż ma niewielką większość (52%), wpływając na wczesne detale.",
-            "sdxl.recipes.justification.balanced.16": "Drugi idealny podział 50/50 dla detali i tekstury.",
-            "sdxl.recipes.justification.balanced.17": "Host odzyskuje prowadzenie (53%), stosując swoją czystą interpretację.",
-            "sdxl.recipes.justification.balanced.18": "Nacisk na hosta wzrasta (58%), koncentrując się na czystych liniach.",
-            "sdxl.recipes.justification.balanced.19": "Silniejsza waga dla hosta (65%) dla drobnych detali.",
-            "sdxl.recipes.justification.balanced.20": "Host dominuje (70%), udoskonalając tekstury.",
-            "sdxl.recipes.justification.balanced.21": "Znaczna waga dla hosta (75%) na ostatnim etapie.",
-            "sdxl.recipes.justification.balanced.22": "Mocno faworyzuje hosta (80%) dla detali o wysokiej częstotliwości.",
-            "sdxl.recipes.justification.balanced.23": "Mocno faworyzuje hosta (85%), aby zapewnić ostre i czyste linie.",
-            "sdxl.recipes.justification.balanced.24": "Ostateczna, decydująca waga dla hosta (90%), aby zapewnić czysty i żywy wynik.",
-
-            "sdxl.recipes.explanation.host_dominant": "<strong>Cel:</strong> Wzmocnienie czystego stylu anime Hosta kosztem podatności na dawców. <br><strong>Logika:</strong> Wagi dla Modelu B są utrzymywane na bardzo niskim poziomie przez większość bloków, co zapewnia, że podstawowa struktura, styl i szczegóły są zdominowane przez Model A (Animij).",
-            "sdxl.recipes.justification.host_dominant.0": "Maksymalna integralność strukturalna od Hosta (95%).",
-            "sdxl.recipes.justification.host_dominant.1": "Przytłaczająca kontrola Hosta (92%) nad anatomią.",
-            "sdxl.recipes.justification.host_dominant.2": "Czysta forma z Animij (90%).",
-            "sdxl.recipes.justification.host_dominant.3": "Minimalny wpływ stylistyczny (Host @ 88%).",
-            "sdxl.recipes.justification.host_dominant.4": "Priorytet dla struktury Hosta (85%).",
-            "sdxl.recipes.justification.host_dominant.5": "Styl zbliżony do Animij (80%).",
-            "sdxl.recipes.justification.host_dominant.6": "Stosunek 3:1 na korzyść struktury Hosta.",
-            "sdxl.recipes.justification.host_dominant.7": "Silna kontrola hosta (70%).",
-            "sdxl.recipes.justification.host_dominant.8": "Ostatnie słowo dla Animij (65%) przed rdzeniem.",
-            "sdxl.recipes.justification.host_dominant.9": "Mieszanka faworyzująca hosta (60%).",
-            "sdxl.recipes.justification.host_dominant.10": "Niewielka przewaga hosta (55%) w koncepcji.",
-            "sdxl.recipes.justification.host_dominant.11": "Równy podział tuż przed rdzeniem.",
-            "sdxl.recipes.justification.host_dominant.12": "Nawet w rdzeniu, silna obecność hosta (45%).",
-            "sdxl.recipes.justification.host_dominant.13": "Rozpoczęcie rekonstrukcji z równym podziałem.",
-            "sdxl.recipes.justification.host_dominant.14": "Natychmiastowe ponowne przejęcie kontroli przez hosta (55%).",
-            "sdxl.recipes.justification.host_dominant.15": "Wzmacnianie kontroli hosta (60%) nad wczesnymi detalami.",
-            "sdxl.recipes.justification.host_dominant.16": "Priorytet dla logiki hosta (65%).",
-            "sdxl.recipes.justification.host_dominant.17": "Silna kontrola hosta (70%) nad rekonstrukcją.",
-            "sdxl.recipes.justification.host_dominant.18": "Stosunek 3:1 dla linii hosta (75%).",
-            "sdxl.recipes.justification.host_dominant.19": "Faworyzowanie hosta (80%) dla drobnych detali.",
-            "sdxl.recipes.justification.host_dominant.20": "Tekstury głównie z hosta (85%).",
-            "sdxl.recipes.justification.host_dominant.21": "Polerowanie strukturalne przez hosta (88%).",
-            "sdxl.recipes.justification.host_dominant.22": "Maksymalna czystość od hosta (90%).",
-            "sdxl.recipes.justification.host_dominant.23": "Wyjątkowo czyste linie (Host @ 92%).",
-            "sdxl.recipes.justification.host_dominant.24": "Czysty styl Animij na wyjściu (95%).",
-            
-            "sdxl.recipes.explanation.donor_receptive": "<strong>Cel:</strong> Uczynienie Hosta maksymalnie podatnym na wpływy stylistyczne, nawet ryzykując osłabienie jego podstawowej tożsamości. <br><strong>Logika:</strong> Wagi dla Modelu B są znacznie wyższe, szczególnie w bloku środkowym (M) i późnych blokach wejściowych (IN), co pozwala Modelowi B na silne wpłynięcie na podstawowy styl i koncepcję.",
-            "sdxl.recipes.justification.donor_receptive.0": "Łagodniejszy start (Host @ 85%).",
-            "sdxl.recipes.justification.donor_receptive.1": "Wczesne osłabienie kontroli hosta (82%).",
-            "sdxl.recipes.justification.donor_receptive.2": "Silny wczesny głos dla Graycolor (20%).",
-            "sdxl.recipes.justification.donor_receptive.3": "Priorytet dla mieszania stylów (Host @ 78%).",
-            "sdxl.recipes.justification.donor_receptive.4": "Silne pchnięcie w kierunku stylu Graycolor (30%).",
-            "sdxl.recipes.justification.donor_receptive.5": "Znaczący wpływ Graycolor (35%).",
-            "sdxl.recipes.justification.donor_receptive.6": "Podział 60/40 na korzyść Hosta.",
-            "sdxl.recipes.justification.donor_receptive.7": "Prawie równy podział (Host @ 55%).",
-            "sdxl.recipes.justification.donor_receptive.8": "Równy podział dla fuzji.",
-            "sdxl.recipes.justification.donor_receptive.9": "Graycolor prowadzi (55%) do rdzenia.",
-            "sdxl.recipes.justification.donor_receptive.10": "Wzmocnienie wpływu Graycolor (58%).",
-            "sdxl.recipes.justification.donor_receptive.11": "Silna waga dla Graycolor (60%).",
-            "sdxl.recipes.justification.donor_receptive.12": "Decydująca waga dla Graycolor (65%) w rdzeniu.",
-            "sdxl.recipes.justification.donor_receptive.13": "Silny wpływ Graycolor (62%) w rekonstrukcji.",
-            "sdxl.recipes.justification.donor_receptive.14": "Utrzymanie wagi dla Graycolor (60%).",
-            "sdxl.recipes.justification.donor_receptive.15": "Priorytet dla stylu malarskiego (58%).",
-            "sdxl.recipes.justification.donor_receptive.16": "Podział faworyzujący dawcę (55%).",
-            "sdxl.recipes.justification.donor_receptive.17": "Równy podział dla cech.",
-            "sdxl.recipes.justification.donor_receptive.18": "Powrót do Animij (55%) dla linii.",
-            "sdxl.recipes.justification.donor_receptive.19": "Podział 60/40 dla hosta.",
-            "sdxl.recipes.justification.donor_receptive.20": "Wzmacnianie kontroli hosta (65%).",
-            "sdxl.recipes.justification.donor_receptive.21": "Podział 70/30 dla polerowania.",
-            "sdxl.recipes.justification.donor_receptive.22": "Silna obecność hosta (75%) dla czystości.",
-            "sdxl.recipes.justification.donor_receptive.23": "Linie głównie z hosta (80%).",
-            "sdxl.recipes.justification.donor_receptive.24": "Silna waga hosta (85%) dla czystego wykończenia.",
-
+            "sdxl.recipes.explanation.balanced": "<strong>Przepis A: Zrównoważony</strong><br>Zalecany przepis, starannie obliczony, aby zrównoważyć integralność Animij z wkładem Graycolor. Faworyzuje Animij we wczesnych blokach, płynnie przechodzi w kierunku Graycolor w środku, a następnie wraca do Animij w końcowych blokach, aby uzyskać czyste linie.",
+            "sdxl.recipes.explanation.host_dominant": "<strong>Przepis B: Z dominacją Hosta</strong><br>Daje większą wagę Animij we wszystkich blokach. Rezultatem będzie model o wyjątkowo silnej anatomii i spójności, ściśle przylegający do stylu retro anime. Wpływ dawców będzie bardziej subtelny.",
+            "sdxl.recipes.explanation.donor_receptive": "<strong>Przepis C: Podatny na Dawcę</strong><br>Daje większą wagę Graycolor. Tworzy to bardziej elastyczny stylistycznie host, który jest otwarty na dawców. Kompromisem jest potencjalny spadek stabilności kompozycyjnej.",
             "sdxl.recipes.step2.title": "Etap 2: Wstrzykiwanie umiejętności (DARE-TIES)",
             "sdxl.recipes.step2.desc": "W tym etapie używamy zaawansowanego węzła `Model Merger (Advanced/DARE)`. Ta metoda jest alternatywą dla łączenia blokowego i ignoruje wagi ustawione dla poszczególnych bloków. Kontrola nad procesem odbywa się poprzez parametry DARE i TIES. Ogólna waga modelu powinna być ustawiona na `1.0`, aby zmiany zostały w pełni zastosowane.",
             "sdxl.recipes.step2a.title": "Krok 2a: Wstrzyknij styl malarski (Priorytet 3)",
@@ -531,86 +453,8 @@ document.addEventListener('DOMContentLoaded', () => {
             "pony.recipes.step1.desc": "To podejście wykorzystuje sekwencję łączeń do budowania ostatecznego modelu warstwa po warstwie. Wybierz etap, aby zobaczyć jego przepis. Wykres zaktualizuje się, aby pokazać wagi bloków. Najedź kursorem na dowolny blok, aby uzyskać szczegółowe uzasadnienie.",
             "pony.recipes.step1.btnStage1": "Etap 1: Baza \"Dark Anime\"", "pony.recipes.step1.btnStage2": "Etap 2: \"Most Malarski\"", "pony.recipes.step1.btnStage3": "Etap 3: Finałowa Fuzja",
             "pony.recipes.explanation.stage1": "<strong>Cel:</strong> Połączenie lepszej anatomii z JANKU (Model A) z mrocznym, stylizowanym tematem NEW ERA (Model B). <br><strong>Logika:</strong> Niskie wagi dla Modelu B we wczesnych blokach (IN00-04) zachowują anatomię z JANKU. Wagi rosną w środku (IN05-M00), aby w pełni zintegrować styl tematyczny NEW ERA, a następnie stopniowo maleją w blokach wyjściowych (OUT), aby zachować subtelne detale strukturalne z JANKU.",
-            "pony.recipes.justification.stage1.0": "Faworyzuje anatomię JANKU (90%) dla mocnych fundamentów.",
-            "pony.recipes.justification.stage1.1": "Utrwalenie kompozycji i póz (JANKU @ 88%).",
-            "pony.recipes.justification.stage1.2": "Wprowadzenie stylu tematycznego NEW ERA (15%).",
-            "pony.recipes.justification.stage1.3": "Stopniowe zwiększanie wpływu NEW ERA (18%).",
-            "pony.recipes.justification.stage1.4": "Stosunek 4:1 zapewnia dominację anatomii JANKU (80%).",
-            "pony.recipes.justification.stage1.5": "Nadanie NEW ERA 25% wpływu na cechy.",
-            "pony.recipes.justification.stage1.6": "Równoważenie stylu NEW ERA (30%) ze spójnością JANKU.",
-            "pony.recipes.justification.stage1.7": "Zbliżanie się do równej mieszanki.",
-            "pony.recipes.justification.stage1.8": "Nadanie NEW ERA 40% wpływu przed rdzeniem.",
-            "pony.recipes.justification.stage1.9": "Niewielka przewaga JANKU (55%) dla stabilności.",
-            "pony.recipes.justification.stage1.10": "Zrównoważony podział dla stabilnego przejścia.",
-            "pony.recipes.justification.stage1.11": "Niewielka przewaga NEW ERA (52%) dla koncepcji.",
-            "pony.recipes.justification.stage1.12": "Większość 55% dla NEW ERA w rdzeniu, aby osadzić motywy.",
-            "pony.recipes.justification.stage1.13": "Zrównoważony podział dla nowatorskiej fuzji.",
-            "pony.recipes.justification.stage1.14": "Ponowne przejęcie kontroli strukturalnej przez JANKU (55%).",
-            "pony.recipes.justification.stage1.15": "Zwiększenie wpływu JANKU (60%) dla spójnych detali.",
-            "pony.recipes.justification.stage1.16": "Priorytet dla logiki JANKU (65%).",
-            "pony.recipes.justification.stage1.17": "Podział 70/30 dla spójności detali (JANKU @ 70%).",
-            "pony.recipes.justification.stage1.18": "Stosunek 3:1 na korzyść JANKU (75%) dla czystych linii.",
-            "pony.recipes.justification.stage1.19": "Faworyzowanie JANKU (80%) dla drobnych detali.",
-            "pony.recipes.justification.stage1.20": "Silna przewaga JANKU (82%) dla udoskonalenia tekstur.",
-            "pony.recipes.justification.stage1.21": "Zapewnienie spójnej kompozycji (JANKU @ 85%).",
-            "pony.recipes.justification.stage1.22": "Faworyzowanie JANKU (88%) dla ostrości.",
-            "pony.recipes.justification.stage1.23": "Waga 90% dla JANKU dla ostrych, czystych linii.",
-            "pony.recipes.justification.stage1.24": "Ostateczna waga dla JANKU (92%) dla czystego wyniku.",
-
             "pony.recipes.explanation.stage2": "<strong>Cel:</strong> Stworzenie warstwy malarskiej poprzez połączenie półrealistycznej bazy Graycolor (Model A) z unikalnymi detalami tekstur SinGlo (Model B). <br><strong>Logika:</strong> Umiarkowane wagi dla Modelu B w środkowych i późnych blokach (IN08-OUT08) pozwalają na wprowadzenie charakterystycznych tekstur SinGlo bez przytłaczania bardziej stonowanej, malarskiej bazy Graycolor.",
-            "pony.recipes.justification.stage2.0": "Ustanowienie półrealizmu Graycolor (85%) jako bazy.",
-            "pony.recipes.justification.stage2.1": "Utrzymanie dominacji Graycolor (85%) dla spójności.",
-            "pony.recipes.justification.stage2.2": "Wprowadzenie tekstur SinGlo (20%).",
-            "pony.recipes.justification.stage2.3": "Kontynuacja mieszania stylów (SinGlo @ 20%).",
-            "pony.recipes.justification.stage2.4": "Zwiększenie wpływu SinGlo (25%).",
-            "pony.recipes.justification.stage2.5": "Nadanie SinGlo (30%) głosu w detalach.",
-            "pony.recipes.justification.stage2.6": "Nadanie SinGlo (30%) głosu w detalach.",
-            "pony.recipes.justification.stage2.7": "Zbliżanie się do równej mieszanki tekstur.",
-            "pony.recipes.justification.stage2.8": "Zbliżanie się do równej mieszanki tekstur.",
-            "pony.recipes.justification.stage2.9": "Znaczący wpływ SinGlo (40%).",
-            "pony.recipes.justification.stage2.10": "Znaczący wpływ SinGlo (40%).",
-            "pony.recipes.justification.stage2.11": "Znaczący wpływ SinGlo (40%).",
-            "pony.recipes.justification.stage2.12": "Prawie równy podział w rdzeniu.",
-            "pony.recipes.justification.stage2.13": "Niewielka przewaga Graycolor (60%).",
-            "pony.recipes.justification.stage2.14": "Niewielka przewaga Graycolor (60%).",
-            "pony.recipes.justification.stage2.15": "Faworyzowanie Graycolor (65%) dla stabilności.",
-            "pony.recipes.justification.stage2.16": "Faworyzowanie Graycolor (65%) dla stabilności.",
-            "pony.recipes.justification.stage2.17": "Podkreślenie malarskiego charakteru (Graycolor @ 70%).",
-            "pony.recipes.justification.stage2.18": "Podkreślenie malarskiego charakteru (Graycolor @ 70%).",
-            "pony.recipes.justification.stage2.19": "Mocne faworyzowanie Graycolor (75%).",
-            "pony.recipes.justification.stage2.20": "Mocne faworyzowanie Graycolor (75%).",
-            "pony.recipes.justification.stage2.21": "Dominacja Graycolor (80%) w detalach.",
-            "pony.recipes.justification.stage2.22": "Dominacja Graycolor (80%) w detalach.",
-            "pony.recipes.justification.stage2.23": "Czyste, malarskie wykończenie (Graycolor @ 85%).",
-            "pony.recipes.justification.stage2.24": "Czyste, malarskie wykończenie (Graycolor @ 85%).",
-
             "pony.recipes.explanation.stage3": "<strong>Cel:</strong> Ostateczna fuzja, która nakłada \"Most Malarski\" (Model B) na bazę \"Dark Anime\" (Model A). <br><strong>Logika:</strong> Wagi są bardzo niskie na początku (IN00-IN06), aby chronić kompozycję i anatomię bazy anime. Stopniowo rosną, aby wprowadzić styl malarski w koncepcji (M00) i detalach (OUT), ale pozostają poniżej 0.5, aby zapewnić, że malarska estetyka działa jako warstwa wykończeniowa, a nie przytłaczająca transformacja.",
-            "pony.recipes.justification.stage3.0": "Faworyzowanie bazy Dark Anime (90%) dla struktury.",
-            "pony.recipes.justification.stage3.1": "Utrzymanie dominacji strukturalnej (Baza @ 90%).",
-            "pony.recipes.justification.stage3.2": "Wprowadzenie malarskiej tekstury (12%).",
-            "pony.recipes.justification.stage3.3": "Zwiększenie wpływu malarskiego (15%).",
-            "pony.recipes.justification.stage3.4": "Więcej stylu malarskiego (18%).",
-            "pony.recipes.justification.stage3.5": "20% wpływu malarskiego.",
-            "pony.recipes.justification.stage3.6": "Kontynuacja mieszanki.",
-            "pony.recipes.justification.stage3.7": "Podział 75/25 na korzyść Bazy.",
-            "pony.recipes.justification.stage3.8": "Dalsze zwiększanie wpływu.",
-            "pony.recipes.justification.stage3.9": "Podział 70/30.",
-            "pony.recipes.justification.stage3.10": "Większa waga dla stylu.",
-            "pony.recipes.justification.stage3.11": "Silny wpływ malarski (35%).",
-            "pony.recipes.justification.stage3.12": "Podział 60/40 w rdzeniu na korzyść Bazy.",
-            "pony.recipes.justification.stage3.13": "Podobny podział w rekonstrukcji.",
-            "pony.recipes.justification.stage3.14": "Powrót do bazy Dark Anime (65%).",
-            "pony.recipes.justification.stage3.15": "Wzmacnianie bazowego stylu anime (Baza @ 68%).",
-            "pony.recipes.justification.stage3.16": "Podział 70/30 dla detali.",
-            "pony.recipes.justification.stage3.17": "Priorytet dla interpretacji bazy (72%).",
-            "pony.recipes.justification.stage3.18": "Silny podział 75/25 dla linii.",
-            "pony.recipes.justification.stage3.19": "Zwiększenie dominacji bazy (78%).",
-            "pony.recipes.justification.stage3.20": "Podział 80/20 dla detali.",
-            "pony.recipes.justification.stage3.21": "Priorytet dla spójności (Baza @ 82%).",
-            "pony.recipes.justification.stage3.22": "Faworyzowanie bazy (85%) dla ostrych linii.",
-            "pony.recipes.justification.stage3.23": "Wynik zdefiniowany przez bazę (88%).",
-            "pony.recipes.justification.stage3.24": "Czyste wykończenie (Baza @ 90%).",
-
             "pony.assembly.title": "Montaż: Wersja \"Czystej Krwi PONY\"",
             "pony.assembly.desc": "Nawet w obrębie rodziny Pony, gałęzie `NoobAI` i `Illustrious` mają różne \"słowniki\". Sekwencyjne łączenie CLIP jest nadal zalecane dla maksymalnej kontroli i zrozumienia promptów.",
             "pony.assembly.clip.title": "Tworzenie Spójnego CLIP",
@@ -629,89 +473,35 @@ document.addEventListener('DOMContentLoaded', () => {
             "hybrid.recipes.step1.desc": "Ten przepis obejmuje łączenie bloków, chirurgiczną iniekcję DARE-TIES i ostateczną fuzję. Wybierz etap, aby zobaczyć jego przepis. Etap 3 to proces DARE-TIES i zamiast wykresu pokaże parametry iniekcji.",
             "hybrid.recipes.step1.btnStage1": "Etap 1: Baza Dark Anime", "hybrid.recipes.step1.btnStage2": "Etap 2: Most Malarski", "hybrid.recipes.step1.btnStage3": "Etap 3: Łatka Anatomiczna", "hybrid.recipes.step1.btnStage4": "Etap 4: Finałowa Fuzja",
             "hybrid.recipes.explanation.stage1": "<strong>Cel:</strong> Połączenie lepszej anatomii z JANKU (Model A) z mrocznym, stylizowanym tematem NEW ERA (Model B), tworząc solidną bazę Pony. <br><strong>Logika:</strong> Identyczna jak w Etapie 1 strategii 'Czystej Krwi Pony', aby stworzyć tę samą solidną bazę anime.",
-            "hybrid.recipes.justification.stage1.0": "Faworyzuje anatomię JANKU (90%) dla mocnych fundamentów.",
-            "hybrid.recipes.justification.stage1.1": "Utrwalenie kompozycji i póz (JANKU @ 88%).",
-            "hybrid.recipes.justification.stage1.2": "Wprowadzenie stylu tematycznego NEW ERA (15%).",
-            "hybrid.recipes.justification.stage1.3": "Stopniowe zwiększanie wpływu NEW ERA (18%).",
-            "hybrid.recipes.justification.stage1.4": "Stosunek 4:1 zapewnia dominację anatomii JANKU (80%).",
-            "hybrid.recipes.justification.stage1.5": "Nadanie NEW ERA 25% wpływu na cechy.",
-            "hybrid.recipes.justification.stage1.6": "Równoważenie stylu NEW ERA (30%) ze spójnością JANKU.",
-            "hybrid.recipes.justification.stage1.7": "Zbliżanie się do równej mieszanki.",
-            "hybrid.recipes.justification.stage1.8": "Nadanie NEW ERA 40% wpływu przed rdzeniem.",
-            "hybrid.recipes.justification.stage1.9": "Niewielka przewaga JANKU (55%) dla stabilności.",
-            "hybrid.recipes.justification.stage1.10": "Zrównoważony podział dla stabilnego przejścia.",
-            "hybrid.recipes.justification.stage1.11": "Niewielka przewaga NEW ERA (52%) dla koncepcji.",
-            "hybrid.recipes.justification.stage1.12": "Większość 55% dla NEW ERA w rdzeniu, aby osadzić motywy.",
-            "hybrid.recipes.justification.stage1.13": "Zrównoważony podział dla nowatorskiej fuzji.",
-            "hybrid.recipes.justification.stage1.14": "Ponowne przejęcie kontroli strukturalnej przez JANKU (55%).",
-            "hybrid.recipes.justification.stage1.15": "Zwiększenie wpływu JANKU (60%) dla spójnych detali.",
-            "hybrid.recipes.justification.stage1.16": "Priorytet dla logiki JANKU (65%).",
-            "hybrid.recipes.justification.stage1.17": "Podział 70/30 dla spójności detali (JANKU @ 70%).",
-            "hybrid.recipes.justification.stage1.18": "Stosunek 3:1 na korzyść JANKU (75%) dla czystych linii.",
-            "hybrid.recipes.justification.stage1.19": "Faworyzowanie JANKU (80%) dla drobnych detali.",
-            "hybrid.recipes.justification.stage1.20": "Silna przewaga JANKU (82%) dla udoskonalenia tekstur.",
-            "hybrid.recipes.justification.stage1.21": "Zapewnienie spójnej kompozycji (JANKU @ 85%).",
-            "hybrid.recipes.justification.stage1.22": "Faworyzowanie JANKU (88%) dla ostrości.",
-            "hybrid.recipes.justification.stage1.23": "Waga 90% dla JANKU dla ostrych, czystych linii.",
-            "hybrid.recipes.justification.stage1.24": "Ostateczna waga dla JANKU (92%) dla czystego wyniku.",
-            
             "hybrid.recipes.explanation.stage2": "<strong>Cel:</strong> Stworzenie warstwy malarskiej poprzez połączenie półrealistycznej bazy Graycolor (Model A) z unikalnymi detalami tekstur SinGlo (Model B). <br><strong>Logika:</strong> Identyczna jak w Etapie 2 strategii 'Czystej Krwi Pony', aby stworzyć tę samą warstwę stylu.",
-            "hybrid.recipes.justification.stage2.0": "Ustanowienie półrealizmu Graycolor (85%) jako bazy.",
-            "hybrid.recipes.justification.stage2.1": "Utrzymanie dominacji Graycolor (85%) dla spójności.",
-            "hybrid.recipes.justification.stage2.2": "Wprowadzenie tekstur SinGlo (20%).",
-            "hybrid.recipes.justification.stage2.3": "Kontynuacja mieszania stylów (SinGlo @ 20%).",
-            "hybrid.recipes.justification.stage2.4": "Zwiększenie wpływu SinGlo (25%).",
-            "hybrid.recipes.justification.stage2.5": "Nadanie SinGlo (30%) głosu w detalach.",
-            "hybrid.recipes.justification.stage2.6": "Nadanie SinGlo (30%) głosu w detalach.",
-            "hybrid.recipes.justification.stage2.7": "Zbliżanie się do równej mieszanki tekstur.",
-            "hybrid.recipes.justification.stage2.8": "Zbliżanie się do równej mieszanki tekstur.",
-            "hybrid.recipes.justification.stage2.9": "Znaczący wpływ SinGlo (40%).",
-            "hybrid.recipes.justification.stage2.10": "Znaczący wpływ SinGlo (40%).",
-            "hybrid.recipes.justification.stage2.11": "Znaczący wpływ SinGlo (40%).",
-            "hybrid.recipes.justification.stage2.12": "Prawie równy podział w rdzeniu.",
-            "hybrid.recipes.justification.stage2.13": "Niewielka przewaga Graycolor (60%).",
-            "hybrid.recipes.justification.stage2.14": "Niewielka przewaga Graycolor (60%).",
-            "hybrid.recipes.justification.stage2.15": "Faworyzowanie Graycolor (65%) dla stabilności.",
-            "hybrid.recipes.justification.stage2.16": "Faworyzowanie Graycolor (65%) dla stabilności.",
-            "hybrid.recipes.justification.stage2.17": "Podkreślenie malarskiego charakteru (Graycolor @ 70%).",
-            "hybrid.recipes.justification.stage2.18": "Podkreślenie malarskiego charakteru (Graycolor @ 70%).",
-            "hybrid.recipes.justification.stage2.19": "Mocne faworyzowanie Graycolor (75%).",
-            "hybrid.recipes.justification.stage2.20": "Mocne faworyzowanie Graycolor (75%).",
-            "hybrid.recipes.justification.stage2.21": "Dominacja Graycolor (80%) w detalach.",
-            "hybrid.recipes.justification.stage2.22": "Dominacja Graycolor (80%) w detalach.",
-            "hybrid.recipes.justification.stage2.23": "Czyste, malarskie wykończenie (Graycolor @ 85%).",
-            "hybrid.recipes.justification.stage2.24": "Czyste, malarskie wykończenie (Graycolor @ 85%).",
-            
-            "hybrid.recipes.explanation.stage3": "<strong>Cel:</strong> Chirurgiczne wstrzyknięcie lepszej wiedzy anatomicznej z modelu 'Boomer Art' (SDXL) do 'Bazy Dark Anime' (Pony), aby naprawić anatomię bez naruszania stylu hosta. <br><strong>Logika:</strong> Używamy DARE-TIES. Bardzo agresywne przycinanie (`threshold: 0.80`) izoluje tylko 20% najsilniejszych wektorów zmian, które najprawdopodobniej odpowiadają fundamentalnej wiedzy anatomicznej. Niska `gęstość` (0.20) zapewnia, że ta 'łatka' jest stosowana bardzo precyzyjnie i nie zakłóca stylu bazy Pony.",
-            "hybrid.recipes.justification.stage3.0": "DARE-TIES nie używa wag blokowych.",
-            
+            "hybrid.recipes.explanation.stage3": `<strong>Etap 3: Łatka Anatomiczna (DARE-TIES)</strong><br>Krok chirurgiczny. Używamy DARE-TIES do wstrzyknięcia wiedzy anatomicznej z <strong>Boomer Art</strong> do naszej bazy 'Dark Anime', aby naprawić anatomię bez naruszania stylu hosta. Poniżej przedstawiono dokładny dwuetapowy proces z użyciem węzłów z ComfyUI-DareMerge.
+                         <div class="dare-panel mt-4">
+                             <h4 class="font-bold text-lg text-slate-200 mb-4 text-center">Przeszczep Anatomiczny</h4>
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                                 <div>
+                                     <h5 class="text-sm font-semibold text-indigo-300 mb-2">Krok 1: Przycinanie (TIES Trim)</h5>
+                                     <p class="text-xs text-slate-400 mb-4">Użyj węzła \`Magnitude Masker\`, aby zachować 20% najważniejszych zmian anatomicznych.</p>
+                                     <p class="text-xs"><strong class="text-slate-300">model_a:</strong> 'Baza Dark Anime'</p>
+                                     <p class="text-xs"><strong class="text-slate-300">model_b:</strong> sd_xl_base_1.0</p>
+                                     <p class="text-xs"><strong class="text-slate-300">threshold:</strong> 0.80</p>
+                                     <p class="text-xs"><strong class="text-slate-300">threshold_type:</strong> quantile</p>
+                                 </div>
+                                 <div>
+                                     <h5 class="text-sm font-semibold text-red-300 mb-2">Krok 2: Łączenie (DARE Merge)</h5>
+                                     <p class="text-xs text-slate-400 mb-4">Użyj węzła \`Model Merger (DARE)\` z utworzoną maską.</p>
+                                     <p class="text-xs"><strong class="text-slate-300">model1:</strong> 'Baza Dark Anime'</p>
+                                     <p class="text-xs"><strong class="text-slate-300">model2:</strong> Boomer Art Model</p>
+                                     <p class="text-xs"><strong class="text-slate-300">base_model:</strong> sd_xl_base_1.0</p>
+                                     <p class="text-xs"><strong class="text-slate-300">density:</strong> 0.20</p>
+                                     <p class="text-xs"><strong class="text-slate-300">ties_mode:</strong> sum</p>
+                                 </div>
+                             </div>
+                             <div class="mt-6 pt-4 border-t border-slate-700">
+                                 <h5 class="text-sm font-semibold text-slate-300 mb-2">Uzasadnienie</h5>
+                                 <p class="text-xs text-slate-400">Bardzo agresywne przycinanie (\`threshold: 0.80\`) izoluje tylko 20% najsilniejszych wektorów zmian, które najprawdopodobniej odpowiadają fundamentalnej wiedzy anatomicznej. Niska \`gęstość\` (0.20) zapewnia, że ta 'łatka' jest stosowana bardzo precyzyjnie i nie zakłóca stylu bazy Pony.</p>
+                             </div>
+                         </div>`,
             "hybrid.recipes.explanation.stage4": "<strong>Cel:</strong> Zastosowanie 'Mostu Malarskiego' jako warstwy wykończeniowej na 'Bazie z łatką', aby osiągnąć ostateczny wygląd. <br><strong>Logika:</strong> Wagi są utrzymywane bardzo nisko, aby styl malarski był subtelnym wykończeniem, a nie dominującą cechą. Chroni to zarówno bazę anime, jak i precyzyjną 'łatkę' anatomiczną wstrzykniętą w poprzednim etapie.",
-            "hybrid.recipes.justification.stage4.0": "Faworyzowanie bazy z łatką (92%) dla struktury.",
-            "hybrid.recipes.justification.stage4.1": "Utrzymanie dominacji strukturalnej (Baza @ 90%).",
-            "hybrid.recipes.justification.stage4.2": "Wprowadzenie malarskiej tekstury (12%).",
-            "hybrid.recipes.justification.stage4.3": "Zwiększenie wpływu malarskiego (15%).",
-            "hybrid.recipes.justification.stage4.4": "Więcej stylu malarskiego (18%).",
-            "hybrid.recipes.justification.stage4.5": "20% wpływu malarskiego.",
-            "hybrid.recipes.justification.stage4.6": "Kontynuacja mieszanki.",
-            "hybrid.recipes.justification.stage4.7": "Podział 75/25 na korzyść Bazy.",
-            "hybrid.recipes.justification.stage4.8": "Dalsze zwiększanie wpływu.",
-            "hybrid.recipes.justification.stage4.9": "Podział 70/30.",
-            "hybrid.recipes.justification.stage4.10": "Większa waga dla stylu.",
-            "hybrid.recipes.justification.stage4.11": "Silny wpływ malarski (35%).",
-            "hybrid.recipes.justification.stage4.12": "Podział 60/40 w rdzeniu na korzyść Bazy.",
-            "hybrid.recipes.justification.stage4.13": "Podobny podział w rekonstrukcji.",
-            "hybrid.recipes.justification.stage4.14": "Powrót do bazy z łatką (65%).",
-            "hybrid.recipes.justification.stage4.15": "Wzmacnianie stylu anime (Baza @ 68%).",
-            "hybrid.recipes.justification.stage4.16": "Podział 70/30 dla detali.",
-            "hybrid.recipes.justification.stage4.17": "Priorytet dla interpretacji bazy (72%).",
-            "hybrid.recipes.justification.stage4.18": "Silny podział 75/25 dla linii.",
-            "hybrid.recipes.justification.stage4.19": "Zwiększenie dominacji bazy (78%).",
-            "hybrid.recipes.justification.stage4.20": "Podział 80/20 dla detali.",
-            "hybrid.recipes.justification.stage4.21": "Priorytet dla spójności (Baza @ 82%).",
-            "hybrid.recipes.justification.stage4.22": "Faworyzowanie bazy (85%) dla ostrych linii.",
-            "hybrid.recipes.justification.stage4.23": "Wynik zdefiniowany przez bazę (88%).",
-            "hybrid.recipes.justification.stage4.24": "Czyste wykończenie (Baza @ 92%).",
-
             "hybrid.assembly.title": "Montaż: Wersja Hybrydowa",
             "hybrid.assembly.desc": "Łączenie CLIP jest tu najbardziej złożone, wymagając sekwencyjnego, dwuetapowego połączenia w celu włączenia słownictwa wszystkich modeli.",
             "hybrid.assembly.clip.title": "Tworzenie \"Trójjęzycznego\" CLIP",
@@ -743,7 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "glossary.term5.title": "VAE (Variational Autoencoder)", "glossary.term5.desc": "Mała sieć neuronowa, która tłumaczy dane wyjściowe UNet na rzeczywiste piksele. Dobry VAE zapewnia żywe kolory. Najbezpieczniej jest używać VAE z głównego modelu bazowego.",
             "glossary.term6.title": "Rodzina Architektoniczna", "glossary.term6.desc": "Grupa modeli o zgodnych strukturach wewnętrznych (np. Pony, SDXL 1.0). Łączenie w obrębie tej samej rodziny jest generalnie bardziej stabilne niż łączenie między rodzinami, które często wymaga DARE-TIES do rozwiązania niezgodności.",
             "dare.trim.title": "Krok 1: Przycinanie (TIES Trim)", "dare.merge.title": "Krok 2: Łączenie (DARE Merge)", "dare.merge.desc": "Użyj `Model Merger (DARE)` z utworzoną maską.", "dare.hostFromStep1": "Host z Etapu 1", "dare.justification": "Uzasadnienie",
-            "dare.fixed": "Ten etap to operacja DARE, która nie wykorzystuje wag bloków. Parametry są stałe: `density: 0.25`, `threshold: 0.75` (quantile), `ties_mode: sum`.",
+            "dare.fixed": "Ten etap to operacja DARE, która nie wykorzystuje wag bloków. Parametry są stałe.",
             "clip.merge.noobai.title": "Połączenie `NoobAI` CLIPs", "clip.merge.noobai.weights": "(50% / 50%)", "clip.merge.noobai.result": "Połączenie `NoobAI`",
             "clip.merge.illustrious.title": "Połączenie `Illustrious` CLIPs", "clip.merge.illustrious.weights": "(50% / 50%)", "clip.merge.illustrious.result": "Połączenie `Illustrious`",
             "clip.merge.pony.title": "Finałowe Połączenie Pony", "clip.merge.pony.weights": "(70% NoobAI / 30% Illustrious)", "clip.merge.pony.final": "Finałowy Spójny CLIP",
@@ -751,10 +541,9 @@ document.addEventListener('DOMContentLoaded', () => {
             "clip.merge.hybrid.ponyweights": "(60% NoobAI / 40% Illustrious)", "clip.merge.hybrid.finalweights": "(85% Pony Base / 15% SDXL)",
             "vae.title": "Wybór VAE dla Wierności", "vae.recommendation": "Główna Rekomendacja",
             "footer.text": "Skonsolidowany Interaktywny Przewodnik po Zaawansowanym Łączeniu Modeli",
-            "chart.hoverPrompt": "Najedź kursorem na blok na wykresie, aby zobaczyć uzasadnienie."
+            "chart.hoverPrompt": "Najedź kursorem na blok na wykresie, aby zobaczyć jego funkcję."
         },
         en: {
-            // ENGLISH TRANSLATIONS
             pageTitle: "Interactive Guide: Advanced Model Merging",
             guideTitle: "Model Merging Guide",
             "nav.blueprints": "Blueprints", "nav.recipes": "Recipes", "nav.analysis": "Analysis", "nav.glossary": "Glossary",
@@ -771,87 +560,9 @@ document.addEventListener('DOMContentLoaded', () => {
             "sdxl.recipes.step1.title": "Step 1: Host Creation (Block Weight Merge)",
             "sdxl.recipes.step1.desc": "First, we create a robust host model by merging Animij (Model A) and Graycolor (Model B). The `weight` value refers to Model B's contribution. A weight of `1.0` is 100% Model B, and `0.0` is 100% Model A.",
             "sdxl.recipes.step1.btnBalanced": "Recipe A: Balanced", "sdxl.recipes.step1.btnHost": "Recipe B: Host-Dominant", "sdxl.recipes.step1.btnDonor": "Recipe C: Donor-Receptive",
-            "sdxl.recipes.explanation.balanced": "<strong>Goal:</strong> To create a balanced base where the anime style is prominent but muted enough to accept donors. <br><strong>Rationale:</strong> Weights are low in the input blocks (IN) to preserve the Host's strong anatomy, ramp up towards the middle block (M) to blend styles, and taper off in the output blocks (OUT) to retain the Host's details.",
-            "sdxl.recipes.justification.balanced.0": "Host Dominance (Animij @ 90%) for base composition and lineart style.",
-            "sdxl.recipes.justification.balanced.1": "Maintaining strong Host dominance (88%) to lock in anatomical structure.",
-            "sdxl.recipes.justification.balanced.2": "Host (85%) still leads, defining the subject's form.",
-            "sdxl.recipes.justification.balanced.3": "Subtle softening of the pure anime aesthetic (Host @ 82%).",
-            "sdxl.recipes.justification.balanced.4": "Introducing 25% of Graycolor's semi-realistic properties into the anime structure.",
-            "sdxl.recipes.justification.balanced.5": "Graycolor's influence (30%) grows, affecting mid-level features.",
-            "sdxl.recipes.justification.balanced.6": "The blend moves towards a balance of styles (Host @ 65%).",
-            "sdxl.recipes.justification.balanced.7": "Nearing the middle block, the models approach equilibrium.",
-            "sdxl.recipes.justification.balanced.8": "Host maintains a slight edge (55%) just before the bottleneck.",
-            "sdxl.recipes.justification.balanced.9": "An exact 50/50 split to create a balanced transition.",
-            "sdxl.recipes.justification.balanced.10": "Graycolor takes a slight lead for the first time (52%), defining the concept.",
-            "sdxl.recipes.justification.balanced.11": "Reinforcing Graycolor's conceptual dominance (55%).",
-            "sdxl.recipes.justification.balanced.12": "Graycolor receives its strongest weight (60%) at the core, embedding the painterly style.",
-            "sdxl.recipes.justification.balanced.13": "Graycolor remains dominant (58%), propagating its style outward.",
-            "sdxl.recipes.justification.balanced.14": "The balance begins to shift back towards the host (45%).",
-            "sdxl.recipes.justification.balanced.15": "Graycolor still has a slight majority (52%), influencing early details.",
-            "sdxl.recipes.justification.balanced.16": "A second perfect 50/50 split for details and texture.",
-            "sdxl.recipes.justification.balanced.17": "Host regains the lead (53%), applying its clean interpretation.",
-            "sdxl.recipes.justification.balanced.18": "Emphasis on the host increases (58%), focusing on clean lines.",
-            "sdxl.recipes.justification.balanced.19": "Stronger weight for the host (65%) for fine details.",
-            "sdxl.recipes.justification.balanced.20": "Host dominates (70%), refining textures.",
-            "sdxl.recipes.justification.balanced.21": "Significant weight for the host (75%) for the final pass.",
-            "sdxl.recipes.justification.balanced.22": "Heavily favors the host (80%) for high-frequency details.",
-            "sdxl.recipes.justification.balanced.23": "Strongly favors the host (85%) to ensure sharp and clean lines.",
-            "sdxl.recipes.justification.balanced.24": "A final, decisive weight for the host (90%) to ensure a clean and vibrant output.",
-
-            "sdxl.recipes.explanation.host_dominant": "<strong>Goal:</strong> To emphasize the Host's clean anime style at the expense of donor receptiveness. <br><strong>Rationale:</strong> Weights for Model B are kept very low throughout most of the blocks, ensuring the foundational structure, style, and details are dominated by Model A (Animij).",
-            "sdxl.recipes.justification.host_dominant.0": "Maximum structural integrity from the Host (95%).",
-            "sdxl.recipes.justification.host_dominant.1": "Overwhelming Host control (92%) over anatomy.",
-            "sdxl.recipes.justification.host_dominant.2": "Clean form from Animij (90%).",
-            "sdxl.recipes.justification.host_dominant.3": "Minimal stylistic influence (Host @ 88%).",
-            "sdxl.recipes.justification.host_dominant.4": "Prioritizing Host structure (85%).",
-            "sdxl.recipes.justification.host_dominant.5": "Style close to Animij (80%).",
-            "sdxl.recipes.justification.host_dominant.6": "3:1 ratio in favor of Host structure.",
-            "sdxl.recipes.justification.host_dominant.7": "Strong host control (70%).",
-            "sdxl.recipes.justification.host_dominant.8": "Final say for Animij (65%) before the core.",
-            "sdxl.recipes.justification.host_dominant.9": "A blend favoring the host (60%).",
-            "sdxl.recipes.justification.host_dominant.10": "Slight host advantage (55%) in concept.",
-            "sdxl.recipes.justification.host_dominant.11": "Equal split just before the core.",
-            "sdxl.recipes.justification.host_dominant.12": "Even at the core, a strong host presence (45%).",
-            "sdxl.recipes.justification.host_dominant.13": "Starting reconstruction with an even split.",
-            "sdxl.recipes.justification.host_dominant.14": "Immediate re-assertion of host control (55%).",
-            "sdxl.recipes.justification.host_dominant.15": "Strengthening host control (60%) over early details.",
-            "sdxl.recipes.justification.host_dominant.16": "Prioritizing host logic (65%).",
-            "sdxl.recipes.justification.host_dominant.17": "Strong host control (70%) over reconstruction.",
-            "sdxl.recipes.justification.host_dominant.18": "3:1 ratio for host lines (75%).",
-            "sdxl.recipes.justification.host_dominant.19": "Favoring the host (80%) for fine details.",
-            "sdxl.recipes.justification.host_dominant.20": "Textures mainly from the host (85%).",
-            "sdxl.recipes.justification.host_dominant.21": "Structural polishing by the host (88%).",
-            "sdxl.recipes.justification.host_dominant.22": "Maximum clarity from the host (90%).",
-            "sdxl.recipes.justification.host_dominant.23": "Exceptionally clean lines (Host @ 92%).",
-            "sdxl.recipes.justification.host_dominant.24": "A pure Animij style output (95%).",
-            
-            "sdxl.recipes.explanation.donor_receptive": "<strong>Goal:</strong> To make the Host as receptive as possible to stylistic inputs, even at the risk of weakening its core identity. <br><strong>Rationale:</strong> Weights for Model B are significantly higher, especially in the middle block (M) and late input blocks (IN), allowing Model B to heavily influence the core style and concept.",
-            "sdxl.recipes.justification.donor_receptive.0": "A gentler start (Host @ 85%).",
-            "sdxl.recipes.justification.donor_receptive.1": "Early weakening of host control (82%).",
-            "sdxl.recipes.justification.donor_receptive.2": "Strong early voice for Graycolor (20%).",
-            "sdxl.recipes.justification.donor_receptive.3": "Prioritizing style mixing (Host @ 78%).",
-            "sdxl.recipes.justification.donor_receptive.4": "A strong push towards Graycolor's style (30%).",
-            "sdxl.recipes.justification.donor_receptive.5": "Significant Graycolor influence (35%).",
-            "sdxl.recipes.justification.donor_receptive.6": "60/40 split in favor of the Host.",
-            "sdxl.recipes.justification.donor_receptive.7": "Near-equal split (Host @ 55%).",
-            "sdxl.recipes.justification.donor_receptive.8": "Equal split for fusion.",
-            "sdxl.recipes.justification.donor_receptive.9": "Graycolor leads (55%) into the core.",
-            "sdxl.recipes.justification.donor_receptive.10": "Reinforcing Graycolor's influence (58%).",
-            "sdxl.recipes.justification.donor_receptive.11": "Strong weight for Graycolor (60%).",
-            "sdxl.recipes.justification.donor_receptive.12": "Decisive weight for Graycolor (65%) at the core.",
-            "sdxl.recipes.justification.donor_receptive.13": "Strong Graycolor influence (62%) in reconstruction.",
-            "sdxl.recipes.justification.donor_receptive.14": "Maintaining weight for Graycolor (60%).",
-            "sdxl.recipes.justification.donor_receptive.15": "Prioritizing painterly style (58%).",
-            "sdxl.recipes.justification.donor_receptive.16": "A split favoring the donor (55%).",
-            "sdxl.recipes.justification.donor_receptive.17": "Equal split for features.",
-            "sdxl.recipes.justification.donor_receptive.18": "Return to Animij (55%) for lines.",
-            "sdxl.recipes.justification.donor_receptive.19": "60/40 split for the host.",
-            "sdxl.recipes.justification.donor_receptive.20": "Strengthening host control (65%).",
-            "sdxl.recipes.justification.donor_receptive.21": "70/30 split for polishing.",
-            "sdxl.recipes.justification.donor_receptive.22": "Strong host presence (75%) for clarity.",
-            "sdxl.recipes.justification.donor_receptive.23": "Lines mainly from the host (80%).",
-            "sdxl.recipes.justification.donor_receptive.24": "Strong host weight (85%) for a clean finish.",
-
+            "sdxl.recipes.explanation.balanced": "<strong>Recipe A: Balanced (Default)</strong><br>The recommended recipe, carefully calculated to balance the integrity of Animij with the contribution of Graycolor. It favors Animij in the early blocks, smoothly transitions towards Graycolor in the middle, and then returns to Animij in the final blocks for clean lines.",
+            "sdxl.recipes.explanation.host_dominant": "<strong>Recipe B: Host-Dominant</strong><br>Gives more weight to Animij across all blocks. The result will be a model with exceptionally strong anatomy and coherence, adhering closely to the retro anime style. The influence of donors will be more subtle.",
+            "sdxl.recipes.explanation.donor_receptive": "<strong>Recipe C: Donor-Receptive</strong><br>Gives more weight to Graycolor. This creates a more stylistically flexible host that is receptive to donors. The trade-off is a potential decrease in compositional stability.",
             "sdxl.recipes.step2.title": "Step 2: Skill Injection (DARE-TIES)",
             "sdxl.recipes.step2.desc": "In this step, we use the advanced `Model Merger (Advanced/DARE)` node. This method is an alternative to block merging and ignores the weights set for individual blocks. Control over the process is done via DARE and TIES parameters. The overall model weight should be set to `1.0` for the changes to be fully applied.",
             "sdxl.recipes.step2a.title": "Step 2a: Inject Painterly Style (Priority 3)",
@@ -868,86 +579,8 @@ document.addEventListener('DOMContentLoaded', () => {
             "pony.recipes.step1.desc": "This approach uses a sequence of merges to build the final model layer by layer. Select a stage to see its recipe. The chart will update to show the block weights. Hover over any block for a detailed justification.",
             "pony.recipes.step1.btnStage1": "Stage 1: \"Dark Anime\" Base", "pony.recipes.step1.btnStage2": "Stage 2: \"Painterly Bridge\"", "pony.recipes.step1.btnStage3": "Stage 3: Final Fusion",
             "pony.recipes.explanation.stage1": "<strong>Goal:</strong> To combine the superior anatomy of JANKU (Model A) with the dark, stylized theme of NEW ERA (Model B). <br><strong>Rationale:</strong> Low weights for Model B in the early blocks (IN00-04) preserve JANKU's anatomy. The weights increase in the middle (IN05-M00) to fully integrate NEW ERA's thematic style, then gradually decrease in the output blocks (OUT) to retain subtle structural details from JANKU.",
-            "pony.recipes.justification.stage1.0": "Favors JANKU anatomy (90%) for strong foundations.",
-            "pony.recipes.justification.stage1.1": "Solidifying composition and poses (JANKU @ 88%).",
-            "pony.recipes.justification.stage1.2": "Introducing NEW ERA's thematic style (15%).",
-            "pony.recipes.justification.stage1.3": "Gradually increasing NEW ERA's influence (18%).",
-            "pony.recipes.justification.stage1.4": "4:1 ratio ensures JANKU's anatomy dominates (80%).",
-            "pony.recipes.justification.stage1.5": "Giving NEW ERA 25% influence on features.",
-            "pony.recipes.justification.stage1.6": "Balancing NEW ERA's style (30%) with JANKU's coherence.",
-            "pony.recipes.justification.stage1.7": "Approaching an even mix.",
-            "pony.recipes.justification.stage1.8": "Giving NEW ERA 40% influence before the core.",
-            "pony.recipes.justification.stage1.9": "Slight JANKU advantage (55%) for stability.",
-            "pony.recipes.justification.stage1.10": "Balanced split for a stable transition.",
-            "pony.recipes.justification.stage1.11": "Slight NEW ERA advantage (52%) for concept.",
-            "pony.recipes.justification.stage1.12": "55% majority for NEW ERA at the core to embed themes.",
-            "pony.recipes.justification.stage1.13": "Balanced split for a novel fusion.",
-            "pony.recipes.justification.stage1.14": "Re-asserting JANKU's structural control (55%).",
-            "pony.recipes.justification.stage1.15": "Increasing JANKU's influence (60%) for coherent details.",
-            "pony.recipes.justification.stage1.16": "Prioritizing JANKU's logic (65%).",
-            "pony.recipes.justification.stage1.17": "70/30 split for detail coherence (JANKU @ 70%).",
-            "pony.recipes.justification.stage1.18": "3:1 ratio in favor of JANKU (75%) for clean lines.",
-            "pony.recipes.justification.stage1.19": "Favoring JANKU (80%) for fine details.",
-            "pony.recipes.justification.stage1.20": "Strong JANKU advantage (82%) for texture refinement.",
-            "pony.recipes.justification.stage1.21": "Ensuring coherent composition (JANKU @ 85%).",
-            "pony.recipes.justification.stage1.22": "Favoring JANKU (88%) for sharpness.",
-            "pony.recipes.justification.stage1.23": "90% weight for JANKU for sharp, clean lines.",
-            "pony.recipes.justification.stage1.24": "Final weight for JANKU (92%) for a clean output.",
-
             "pony.recipes.explanation.stage2": "<strong>Goal:</strong> To create a painterly layer by merging the semi-realistic base of Graycolor (Model A) with the unique texture details of SinGlo (Model B). <br><strong>Rationale:</strong> Moderate weights for Model B in the mid-to-late blocks (IN08-OUT08) allow SinGlo's distinctive textures to be introduced without overpowering the more subdued, painterly base of Graycolor.",
-            "pony.recipes.justification.stage2.0": "Establishing Graycolor's semi-realism (85%) as the base.",
-            "pony.recipes.justification.stage2.1": "Maintaining Graycolor's dominance (85%) for coherence.",
-            "pony.recipes.justification.stage2.2": "Introducing SinGlo's textures (20%).",
-            "pony.recipes.justification.stage2.3": "Continuing the style blend (SinGlo @ 20%).",
-            "pony.recipes.justification.stage2.4": "Increasing SinGlo's influence (25%).",
-            "pony.recipes.justification.stage2.5": "Giving SinGlo (30%) a voice in details.",
-            "pony.recipes.justification.stage2.6": "Giving SinGlo (30%) a voice in details.",
-            "pony.recipes.justification.stage2.7": "Approaching an even texture mix.",
-            "pony.recipes.justification.stage2.8": "Approaching an even texture mix.",
-            "pony.recipes.justification.stage2.9": "Significant SinGlo influence (40%).",
-            "pony.recipes.justification.stage2.10": "Significant SinGlo influence (40%).",
-            "pony.recipes.justification.stage2.11": "Significant SinGlo influence (40%).",
-            "pony.recipes.justification.stage2.12": "Near-even split at the core.",
-            "pony.recipes.justification.stage2.13": "Slight Graycolor advantage (60%).",
-            "pony.recipes.justification.stage2.14": "Slight Graycolor advantage (60%).",
-            "pony.recipes.justification.stage2.15": "Favoring Graycolor (65%) for stability.",
-            "pony.recipes.justification.stage2.16": "Favoring Graycolor (65%) for stability.",
-            "pony.recipes.justification.stage2.17": "Emphasizing the painterly character (Graycolor @ 70%).",
-            "pony.recipes.justification.stage2.18": "Emphasizing the painterly character (Graycolor @ 70%).",
-            "pony.recipes.justification.stage2.19": "Strongly favoring Graycolor (75%).",
-            "pony.recipes.justification.stage2.20": "Strongly favoring Graycolor (75%).",
-            "pony.recipes.justification.stage2.21": "Graycolor dominance (80%) in details.",
-            "pony.recipes.justification.stage2.22": "Graycolor dominance (80%) in details.",
-            "pony.recipes.justification.stage2.23": "Clean, painterly finish (Graycolor @ 85%).",
-            "pony.recipes.justification.stage2.24": "Clean, painterly finish (Graycolor @ 85%).",
-
             "pony.recipes.explanation.stage3": "<strong>Goal:</strong> The final fusion, which applies the 'Painterly Bridge' (Model B) on top of the 'Dark Anime' base (Model A). <br><strong>Rationale:</strong> Weights are kept very low at the beginning (IN00-IN06) to protect the anime base's composition and anatomy. They gradually increase to introduce the painterly style in the concept (M00) and details (OUT), but are kept below 0.5 to ensure the painterly aesthetic acts as a finishing layer, not an overwhelming transformation.",
-            "pony.recipes.justification.stage3.0": "Favoring the Dark Anime base (90%) for structure.",
-            "pony.recipes.justification.stage3.1": "Maintaining structural dominance (Base @ 90%).",
-            "pony.recipes.justification.stage3.2": "Introducing painterly texture (12%).",
-            "pony.recipes.justification.stage3.3": "Increasing painterly influence (15%).",
-            "pony.recipes.justification.stage3.4": "More painterly style (18%).",
-            "pony.recipes.justification.stage3.5": "20% painterly influence.",
-            "pony.recipes.justification.stage3.6": "Continuing the blend.",
-            "pony.recipes.justification.stage3.7": "75/25 split in favor of the Base.",
-            "pony.recipes.justification.stage3.8": "Further increasing influence.",
-            "pony.recipes.justification.stage3.9": "70/30 split.",
-            "pony.recipes.justification.stage3.10": "More weight for style.",
-            "pony.recipes.justification.stage3.11": "Strong painterly influence (35%).",
-            "pony.recipes.justification.stage3.12": "60/40 split at the core in favor of the Base.",
-            "pony.recipes.justification.stage3.13": "Similar split in reconstruction.",
-            "pony.recipes.justification.stage3.14": "Return to the Dark Anime base (65%).",
-            "pony.recipes.justification.stage3.15": "Strengthening the base anime style (Base @ 68%).",
-            "pony.recipes.justification.stage3.16": "70/30 split for details.",
-            "pony.recipes.justification.stage3.17": "Prioritizing base interpretation (72%).",
-            "pony.recipes.justification.stage3.18": "Strong 75/25 split for lines.",
-            "pony.recipes.justification.stage3.19": "Increasing base dominance (78%).",
-            "pony.recipes.justification.stage3.20": "80/20 split for details.",
-            "pony.recipes.justification.stage3.21": "Prioritizing coherence (Base @ 82%).",
-            "pony.recipes.justification.stage3.22": "Favoring the base (85%) for sharp lines.",
-            "pony.recipes.justification.stage3.23": "Result defined by the base (88%).",
-            "pony.recipes.justification.stage3.24": "Clean finish (Base @ 90%).",
-
             "pony.assembly.title": "Assembly: \"Pureblood PONY\" Version",
             "pony.assembly.desc": "Even within the Pony family, the `NoobAI` and `Illustrious` branches have different \"vocabularies.\" Sequential CLIP merging is still recommended for maximum control and prompt understanding.",
             "pony.assembly.clip.title": "Creating a Coherent CLIP",
@@ -966,89 +599,35 @@ document.addEventListener('DOMContentLoaded', () => {
             "hybrid.recipes.step1.desc": "This recipe involves block merging, a surgical DARE-TIES injection, and a final fusion. Select a stage to see its recipe. Stage 3 is a DARE-TIES process and will show injection parameters instead of a chart.",
             "hybrid.recipes.step1.btnStage1": "Stage 1: Dark Anime Base", "hybrid.recipes.step1.btnStage2": "Stage 2: Painterly Bridge", "hybrid.recipes.step1.btnStage3": "Stage 3: Anatomical Patch", "hybrid.recipes.step1.btnStage4": "Stage 4: Final Fusion",
             "hybrid.recipes.explanation.stage1": "<strong>Goal:</strong> To combine the superior anatomy of JANKU (Model A) with the dark, stylized theme of NEW ERA (Model B), creating a solid Pony base. <br><strong>Rationale:</strong> Identical to Stage 1 of the 'Pureblood Pony' strategy to create the same robust anime base.",
-            "hybrid.recipes.justification.stage1.0": "Favors JANKU anatomy (90%) for strong foundations.",
-            "hybrid.recipes.justification.stage1.1": "Solidifying composition and poses (JANKU @ 88%).",
-            "hybrid.recipes.justification.stage1.2": "Introducing NEW ERA's thematic style (15%).",
-            "hybrid.recipes.justification.stage1.3": "Gradually increasing NEW ERA's influence (18%).",
-            "hybrid.recipes.justification.stage1.4": "4:1 ratio ensures JANKU's anatomy dominates (80%).",
-            "hybrid.recipes.justification.stage1.5": "Giving NEW ERA 25% influence on features.",
-            "hybrid.recipes.justification.stage1.6": "Balancing NEW ERA's style (30%) with JANKU's coherence.",
-            "hybrid.recipes.justification.stage1.7": "Approaching an even mix.",
-            "hybrid.recipes.justification.stage1.8": "Giving NEW ERA 40% influence before the core.",
-            "hybrid.recipes.justification.stage1.9": "Slight JANKU advantage (55%) for stability.",
-            "hybrid.recipes.justification.stage1.10": "Balanced split for a stable transition.",
-            "hybrid.recipes.justification.stage1.11": "Slight NEW ERA advantage (52%) for concept.",
-            "hybrid.recipes.justification.stage1.12": "55% majority for NEW ERA at the core to embed themes.",
-            "hybrid.recipes.justification.stage1.13": "Balanced split for a novel fusion.",
-            "hybrid.recipes.justification.stage1.14": "Re-asserting JANKU's structural control (55%).",
-            "hybrid.recipes.justification.stage1.15": "Increasing JANKU's influence (60%) for coherent details.",
-            "hybrid.recipes.justification.stage1.16": "Prioritizing JANKU's logic (65%).",
-            "hybrid.recipes.justification.stage1.17": "70/30 split for detail coherence (JANKU @ 70%).",
-            "hybrid.recipes.justification.stage1.18": "3:1 ratio in favor of JANKU (75%) for clean lines.",
-            "hybrid.recipes.justification.stage1.19": "Favoring JANKU (80%) for fine details.",
-            "hybrid.recipes.justification.stage1.20": "Strong JANKU advantage (82%) for texture refinement.",
-            "hybrid.recipes.justification.stage1.21": "Ensuring coherent composition (JANKU @ 85%).",
-            "hybrid.recipes.justification.stage1.22": "Favoring JANKU (88%) for sharpness.",
-            "hybrid.recipes.justification.stage1.23": "90% weight for JANKU for sharp, clean lines.",
-            "hybrid.recipes.justification.stage1.24": "Final weight for JANKU (92%) for a clean output.",
-
             "hybrid.recipes.explanation.stage2": "<strong>Goal:</strong> To create a painterly layer by merging the semi-realistic base of Graycolor (Model A) with the unique texture details of SinGlo (Model B). <br><strong>Rationale:</strong> Identical to Stage 2 of the 'Pureblood Pony' strategy to create the same style layer.",
-            "hybrid.recipes.justification.stage2.0": "Establishing Graycolor's semi-realism (85%) as the base.",
-            "hybrid.recipes.justification.stage2.1": "Maintaining Graycolor's dominance (85%) for coherence.",
-            "hybrid.recipes.justification.stage2.2": "Introducing SinGlo's textures (20%).",
-            "hybrid.recipes.justification.stage2.3": "Continuing the style blend (SinGlo @ 20%).",
-            "hybrid.recipes.justification.stage2.4": "Increasing SinGlo's influence (25%).",
-            "hybrid.recipes.justification.stage2.5": "Giving SinGlo (30%) a voice in details.",
-            "hybrid.recipes.justification.stage2.6": "Giving SinGlo (30%) a voice in details.",
-            "hybrid.recipes.justification.stage2.7": "Approaching an even texture mix.",
-            "hybrid.recipes.justification.stage2.8": "Approaching an even texture mix.",
-            "hybrid.recipes.justification.stage2.9": "Significant SinGlo influence (40%).",
-            "hybrid.recipes.justification.stage2.10": "Significant SinGlo influence (40%).",
-            "hybrid.recipes.justification.stage2.11": "Significant SinGlo influence (40%).",
-            "hybrid.recipes.justification.stage2.12": "Near-even split at the core.",
-            "hybrid.recipes.justification.stage2.13": "Slight Graycolor advantage (60%).",
-            "hybrid.recipes.justification.stage2.14": "Slight Graycolor advantage (60%).",
-            "hybrid.recipes.justification.stage2.15": "Favoring Graycolor (65%) for stability.",
-            "hybrid.recipes.justification.stage2.16": "Favoring Graycolor (65%) for stability.",
-            "hybrid.recipes.justification.stage2.17": "Emphasizing the painterly character (Graycolor @ 70%).",
-            "hybrid.recipes.justification.stage2.18": "Emphasizing the painterly character (Graycolor @ 70%).",
-            "hybrid.recipes.justification.stage2.19": "Strongly favoring Graycolor (75%).",
-            "hybrid.recipes.justification.stage2.20": "Strongly favoring Graycolor (75%).",
-            "hybrid.recipes.justification.stage2.21": "Graycolor dominance (80%) in details.",
-            "hybrid.recipes.justification.stage2.22": "Graycolor dominance (80%) in details.",
-            "hybrid.recipes.justification.stage2.23": "Clean, painterly finish (Graycolor @ 85%).",
-            "hybrid.recipes.justification.stage2.24": "Clean, painterly finish (Graycolor @ 85%).",
-            
-            "hybrid.recipes.explanation.stage3": "<strong>Goal:</strong> To surgically inject superior anatomical knowledge from the 'Boomer Art' model (SDXL) into the 'Dark Anime Base' (Pony) to fix anatomy without corrupting the host's style. <br><strong>Logika:</strong> We use DARE-TIES. Very aggressive pruning (`threshold: 0.80`) isolates only the top 20% of the strongest change vectors, which are most likely to correspond to fundamental anatomical knowledge. A low `density` (0.20) ensures this 'patch' is applied very precisely and does not disrupt the style of the Pony base.",
-            "hybrid.recipes.justification.stage3.0": "DARE-TIES does not use block weights.",
-            
+            "hybrid.recipes.explanation.stage3": `<strong>Stage 3: Anatomy Patch (DARE-TIES)</strong><br>A surgical step. We use DARE-TIES to inject anatomical knowledge from <strong>Boomer Art</strong> into our 'Dark Anime' base to fix anatomy without compromising the host's style. The exact two-step process using nodes from ComfyUI-DareMerge is shown below.
+                         <div class="dare-panel mt-4">
+                             <h4 class="font-bold text-lg text-slate-200 mb-4 text-center">Anatomy Graft</h4>
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                                 <div>
+                                     <h5 class="text-sm font-semibold text-indigo-300 mb-2">Step 1: Pruning (TIES Trim)</h5>
+                                     <p class="text-xs text-slate-400 mb-4">Use \`Magnitude Masker\` to keep the top 20% of the most significant anatomical changes.</p>
+                                     <p class="text-xs"><strong class="text-slate-300">model_a:</strong> 'Dark Anime Base'</p>
+                                     <p class="text-xs"><strong class="text-slate-300">model_b:</strong> sd_xl_base_1.0</p>
+                                     <p class="text-xs"><strong class="text-slate-300">threshold:</strong> 0.80</p>
+                                     <p class="text-xs"><strong class="text-slate-300">threshold_type:</strong> quantile</p>
+                                 </div>
+                                 <div>
+                                     <h5 class="text-sm font-semibold text-red-300 mb-2">Step 2: Merging (DARE Merge)</h5>
+                                     <p class="text-xs text-slate-400 mb-4">Use \`Model Merger (DARE)\` with the created mask.</p>
+                                     <p class="text-xs"><strong class="text-slate-300">model1:</strong> 'Dark Anime Base'</p>
+                                     <p class="text-xs"><strong class="text-slate-300">model2:</strong> Boomer Art Model</p>
+                                     <p class="text-xs"><strong class="text-slate-300">base_model:</strong> sd_xl_base_1.0</p>
+                                     <p class="text-xs"><strong class="text-slate-300">density:</strong> 0.20</p>
+                                     <p class="text-xs"><strong class="text-slate-300">ties_mode:</strong> sum</p>
+                                 </div>
+                             </div>
+                             <div class="mt-6 pt-4 border-t border-slate-700">
+                                 <h5 class="text-sm font-semibold text-slate-300 mb-2">Justification</h5>
+                                 <p class="text-xs text-slate-400">Very aggressive pruning (\`threshold: 0.80\`) isolates only the top 20% of the strongest change vectors, which are most likely to correspond to fundamental anatomical knowledge. A low \`density\` (0.20) ensures this "patch" is applied very precisely and does not disrupt the style of the Pony base.</p>
+                             </div>
+                         </div>`,
             "hybrid.recipes.explanation.stage4": "<strong>Goal:</strong> To apply the 'Painterly Bridge' as a finishing layer onto the 'Patched Base' to achieve the final look. <br><strong>Rationale:</strong> The weights are kept very low to ensure the painterly style is a subtle finish, not a dominant feature. This protects both the anime base and the precise anatomical 'patch' injected in the previous stage.",
-            "hybrid.recipes.justification.stage4.0": "Favoring the patched base (92%) for structure.",
-            "hybrid.recipes.justification.stage4.1": "Maintaining structural dominance (Base @ 90%).",
-            "hybrid.recipes.justification.stage4.2": "Introducing painterly texture (12%).",
-            "hybrid.recipes.justification.stage4.3": "Increasing painterly influence (15%).",
-            "hybrid.recipes.justification.stage4.4": "More painterly style (18%).",
-            "hybrid.recipes.justification.stage4.5": "20% painterly influence.",
-            "hybrid.recipes.justification.stage4.6": "Continuing the blend.",
-            "hybrid.recipes.justification.stage4.7": "75/25 split in favor of the Base.",
-            "hybrid.recipes.justification.stage4.8": "Further increasing influence.",
-            "hybrid.recipes.justification.stage4.9": "70/30 split.",
-            "hybrid.recipes.justification.stage4.10": "More weight for style.",
-            "hybrid.recipes.justification.stage4.11": "Strong painterly influence (35%).",
-            "hybrid.recipes.justification.stage4.12": "60/40 split at the core in favor of the Base.",
-            "hybrid.recipes.justification.stage4.13": "Similar split in reconstruction.",
-            "hybrid.recipes.justification.stage4.14": "Return to the patched base (65%).",
-            "hybrid.recipes.justification.stage4.15": "Strengthening the anime style (Base @ 68%).",
-            "hybrid.recipes.justification.stage4.16": "70/30 split for details.",
-            "hybrid.recipes.justification.stage4.17": "Prioritizing base interpretation (72%).",
-            "hybrid.recipes.justification.stage4.18": "Strong 75/25 split for lines.",
-            "hybrid.recipes.justification.stage4.19": "Increasing base dominance (78%).",
-            "hybrid.recipes.justification.stage4.20": "80/20 split for details.",
-            "hybrid.recipes.justification.stage4.21": "Prioritizing coherence (Base @ 82%).",
-            "hybrid.recipes.justification.stage4.22": "Favoring the base (85%) for sharp lines.",
-            "hybrid.recipes.justification.stage4.23": "Result defined by the base (88%).",
-            "hybrid.recipes.justification.stage4.24": "Clean finish (Base @ 92%).",
-
             "hybrid.assembly.title": "Assembly: Hybrid Version",
             "hybrid.assembly.desc": "CLIP merging is most complex here, requiring a sequential, two-step merge to incorporate the vocabulary of all models.",
             "hybrid.assembly.clip.title": "Creating a \"Trilingual\" CLIP",
@@ -1080,7 +659,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "glossary.term5.title": "VAE (Variational Autoencoder)", "glossary.term5.desc": "A small neural network that translates the UNet's output into actual pixels. A good VAE ensures vibrant colors. It's safest to use the VAE from the main base model.",
             "glossary.term6.title": "Architectural Family", "glossary.term6.desc": "A group of models with compatible internal structures (e.g., Pony, SDXL 1.0). Merging within the same family is generally more stable than merging between families, which often requires DARE-TIES to resolve incompatibilities.",
             "dare.trim.title": "Step 1: Trimming (TIES Trim)", "dare.merge.title": "Step 2: Merging (DARE Merge)", "dare.merge.desc": "Use `Model Merger (DARE)` with the created mask.", "dare.hostFromStep1": "Host from Step 1", "dare.justification": "Justification",
-            "dare.fixed": "This stage is a DARE operation, which does not use block weights. Parameters are fixed: `density: 0.25`, `threshold: 0.75` (quantile), `ties_mode: sum`.",
+            "dare.fixed": "This stage is a DARE operation, which does not use block weights. Parameters are fixed.",
             "clip.merge.noobai.title": "`NoobAI` CLIPs Merge", "clip.merge.noobai.weights": "(50% / 50%)", "clip.merge.noobai.result": "`NoobAI` Merge",
             "clip.merge.illustrious.title": "`Illustrious` CLIPs Merge", "clip.merge.illustrious.weights": "(50% / 50%)", "clip.merge.illustrious.result": "`Illustrious` Merge",
             "clip.merge.pony.title": "Final Pony Merge", "clip.merge.pony.weights": "(70% NoobAI / 30% Illustrious)", "clip.merge.pony.final": "Final Coherent CLIP",
@@ -1088,7 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "clip.merge.hybrid.ponyweights": "(60% NoobAI / 40% Illustrious)", "clip.merge.hybrid.finalweights": "(85% Pony Base / 15% SDXL)",
             "vae.title": "Choosing a VAE for Fidelity", "vae.recommendation": "Top Recommendation",
             "footer.text": "Consolidated Interactive Guide to Advanced Model Merging",
-            "chart.hoverPrompt": "Hover over a block on the chart to see the rationale for its weight."
+            "chart.hoverPrompt": "Hover over a block on the chart to see its function."
         }
     };
     let currentLanguage = 'pl';
@@ -1113,6 +692,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Charting Logic (with lazy loading) ---
     const blockLabels = ['IN00', 'IN01', 'IN02', 'IN03', 'IN04', 'IN05', 'IN06', 'IN07', 'IN08', 'IN09', 'IN10', 'IN11', 'M00', 'OUT00', 'OUT01', 'OUT02', 'OUT03', 'OUT04', 'OUT05', 'OUT06', 'OUT07', 'OUT08', 'OUT09', 'OUT10', 'OUT11'];
+    const blockDescriptions = {
+        pl: [
+            "Wczesny blok wejściowy: Wpływa na ogólną kompozycję i podstawowe kształty.", "Wczesny blok wejściowy: Kontynuuje definiowanie podstawowej struktury i anatomii.", "Wczesny blok wejściowy: Dalsze kształtowanie anatomii i głównych elementów.", "Wczesny blok wejściowy: Zaczyna wprowadzać elementy stylistyczne do kompozycji.", "Środkowy blok wejściowy: Równoważy kompozycję i styl, kluczowy dla anatomii.", "Środkowy blok wejściowy: Wpływa na główne cechy i elementy tematyczne.", "Środkowy blok wejściowy: Dalsze mieszanie stylu z anatomią.", "Późny blok wejściowy: Silnie wpływa na styl, mniej na kompozycję.", "Późny blok wejściowy: Wprowadza bardziej szczegółowe elementy stylistyczne.", "Późny blok wejściowy: Kluczowy dla spójności stylu przed blokiem środkowym.", "Późny blok wejściowy: Finalizuje styl przed rdzeniem koncepcyjnym.", "Późny blok wejściowy: Ostatni blok przed rdzeniem, cementuje styl.", "Blok środkowy (M00): Rdzeń modelu. Odpowiada za interpretację koncepcji i główny temat.", "Wczesny blok wyjściowy: Rozpoczyna rekonstrukcję obrazu z rdzenia, wpływa na detale.", "Wczesny blok wyjściowy: Dalsze definiowanie detali i tekstur.", "Wczesny blok wyjściowy: Kluczowy dla wczesnych szczegółów i oświetlenia.", "Wczesny blok wyjściowy: Równoważy detale i ogólny styl.", "Środkowy blok wyjściowy: Wpływa na średniej wielkości detale i wykończenie powierzchni.", "Środkowy blok wyjściowy: Dalsze udoskonalanie tekstur i detali.", "Późny blok wyjściowy: Odpowiada za drobne detale i czystość linii.", "Późny blok wyjściowy: Wpływa na mikro-detale i ostateczną teksturę.", "Późny blok wyjściowy: Finalizuje wygląd linii i drobnych elementów.", "Późny blok wyjściowy: Polerowanie obrazu, usuwanie artefaktów.", "Późny blok wyjściowy: Ostatni szlif, wpływa na ostrość i czystość.", "Późny blok wyjściowy: Ostateczne wykończenie, zapewnia spójność kolorów i detali."
+        ],
+        en: [
+            "Early Input Block: Influences overall composition and basic shapes.", "Early Input Block: Continues to define the core structure and anatomy.", "Early Input Block: Further shaping of anatomy and major elements.", "Early Input Block: Begins to introduce stylistic elements to the composition.", "Mid Input Block: Balances composition and style, crucial for anatomy.", "Mid Input Block: Affects the main features and thematic elements.", "Mid Input Block: Further blending of style with anatomy.", "Late Input Block: Strongly influences style, less so composition.", "Late Input Block: Introduces more detailed stylistic elements.", "Late Input Block: Key for style coherence before the middle block.", "Late Input Block: Finalizes the style before the conceptual core.", "Late Input Block: Last block before the core, cements the style.", "Middle Block (M00): The core of the model. Responsible for interpreting the concept and main theme.", "Early Output Block: Begins reconstructing the image from the core, affects details.", "Early Output Block: Further defines details and textures.", "Early Output Block: Crucial for early details and lighting.", "Early Output Block: Balances details and overall style.", "Mid Output Block: Affects medium-sized details and surface finishing.", "Mid Output Block: Further refines textures and details.", "Late Output Block: Responsible for fine details and line art cleanliness.", "Late Output Block: Influences micro-details and final textures.", "Late Output Block: Finalizes the look of lines and small elements.", "Late Output Block: Polishes the image, removing artifacts.", "Late Output Block: Adds the final touches, affects sharpness and clarity.", "Late Output Block: Final finishing, ensures color and detail consistency."
+        ]
+    };
     let sdxlChartInstance, ponyChartInstance, hybridChartInstance;
     const chartDataStore = {
         sdxl: {
@@ -1228,15 +815,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    const onBlockHover = (justificationEl) => (e, el) => {
+        if (el.length > 0) {
+            const blockIndex = el[0].index;
+            justificationEl.innerHTML = `<strong>[${blockLabels[blockIndex]}]</strong>: ${blockDescriptions[currentLanguage][blockIndex]}`;
+        } else {
+            justificationEl.innerHTML = i18nData[currentLanguage]['chart.hoverPrompt'];
+        }
+    };
     
     function initializeSdxlChart() {
         const ctx = document.getElementById('sdxlChart').getContext('2d');
         const justificationEl = document.getElementById('sdxl-justification');
-        const onHover = (e, el) => {
-            const activeRecipeKey = document.querySelector('#sdxl-recipe-buttons .active').dataset.recipe;
-            justificationEl.textContent = el.length ? `[${blockLabels[el[0].index]}] ` + i18nData[currentLanguage][`sdxl.recipes.justification.${activeRecipeKey}.${el[0].index}`] : i18nData[currentLanguage]['chart.hoverPrompt'];
-        };
-        sdxlChartInstance = createChart(ctx, onHover);
+        sdxlChartInstance = createChart(ctx, onBlockHover(justificationEl));
         updateSdxlChart(document.querySelector('#sdxl-recipe-buttons .active').dataset.recipe);
     }
 
@@ -1257,11 +849,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function initializePonyChart() {
         const ctx = document.getElementById('ponyChart').getContext('2d');
         const justificationEl = document.getElementById('pony-justification');
-        const onHover = (e, el) => {
-            const activeRecipeKey = document.querySelector('#pony-recipe-buttons .active').dataset.recipe;
-             justificationEl.textContent = el.length ? `[${blockLabels[el[0].index]}] ` + i18nData[currentLanguage][`pony.recipes.justification.${activeRecipeKey}.${el[0].index}`] : i18nData[currentLanguage]['chart.hoverPrompt'];
-        };
-        ponyChartInstance = createChart(ctx, onHover);
+        ponyChartInstance = createChart(ctx, onBlockHover(justificationEl));
         updatePonyChart(document.querySelector('#pony-recipe-buttons .active').dataset.recipe);
     }
 
@@ -1282,15 +870,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function initializeHybridChart() {
         const ctx = document.getElementById('hybridChart').getContext('2d');
         const justificationEl = document.getElementById('hybrid-justification');
-        const onHover = (e, el) => {
-            const activeRecipeKey = document.querySelector('#hybrid-recipe-buttons .active').dataset.recipe;
-            if (chartDataStore.hybrid.recipes[activeRecipeKey].is_dare) {
-                 justificationEl.textContent = i18nData[currentLanguage]['dare.fixed'];
-            } else {
-                 justificationEl.textContent = el.length ? `[${blockLabels[el[0].index]}] ` + i18nData[currentLanguage][`hybrid.recipes.justification.${activeRecipeKey}.${el[0].index}`] : i18nData[currentLanguage]['chart.hoverPrompt'];
-            }
-        };
-        hybridChartInstance = createChart(ctx, onHover);
+        hybridChartInstance = createChart(ctx, onBlockHover(justificationEl));
         updateHybridChart(document.querySelector('#hybrid-recipe-buttons .active').dataset.recipe);
     }
     
@@ -1298,15 +878,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const recipe = chartDataStore.hybrid.recipes[recipeKey];
         const explanationEl = document.getElementById('hybrid-recipe-explanation');
         const chartContainer = document.getElementById('hybridChartContainer');
+        const justificationEl = document.getElementById('hybrid-justification');
         
         explanationEl.innerHTML = i18nData[currentLanguage][`hybrid.recipes.explanation.${recipeKey}`] || '';
         
         if (recipe.is_dare) {
             explanationEl.style.display = 'block';
             chartContainer.style.display = 'none';
+            justificationEl.style.display = 'none';
         } else {
-            explanationEl.style.display = 'block'; // Always show for consistency
+            explanationEl.style.display = 'block';
             chartContainer.style.display = 'block';
+            justificationEl.style.display = 'block';
             if (!hybridChartInstance) return;
             hybridChartInstance.data = {
                 labels: blockLabels,
