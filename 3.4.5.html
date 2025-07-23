@@ -4,120 +4,243 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n-key="pageTitle">Interaktywny przewodnik: Zaawansowane łączenie modeli</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;500&display=swap');
-        
+        /* Import nowych czcionek z Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=DotGothic16&family=VT323&display=swap');
+
+        /* Definicja palety kolorów i zmiennych CSS */
         :root {
-            --bg-color: #0d0c1d;
-            --primary-color: #be00ff; 
-            --secondary-color: #00f0ff;
-            --text-color: #e0e0e0;
-            --text-muted-color: #a0a0c0;
-            --border-color: rgba(0, 240, 255, 0.2);
-            --glow-color-primary: rgba(190, 0, 255, 0.5);
-            --glow-color-secondary: rgba(0, 240, 255, 0.4);
+            --bg-main: #1a1a1a;
+            --frame-color: #dcdcdc;
+            --text-color: #dcdcdc;
+            --accent-primary: #9a1e1e; /* Czerwień */
+            --accent-secondary: #32cd32; /* Zielony */
+            --accent-tertiary: #ffbf00; /* Bursztynowy */
+            --glow-color-red: rgba(154, 30, 30, 0.7);
+            --glow-color-green: rgba(50, 205, 50, 0.5);
+            --glow-color-amber: rgba(255, 191, 0, 0.5);
+            --glow-color-frame: rgba(220, 220, 220, 0.15);
         }
 
-        html { scroll-padding-top: 5rem; }
-        
-        body { 
-            font-family: 'Roboto Mono', monospace; 
-            background-color: var(--bg-color); 
+        html {
+            scroll-padding-top: 3rem;
+            background-color: var(--bg-main); /* Zapewnia spójność tła */
+        }
+
+        /* Podstawowe style body */
+        body {
+            font-family: 'VT323', monospace;
+            background-color: var(--bg-main);
             color: var(--text-color);
-            background-image: 
-                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
+            padding: 25px; /* Przestrzeń na ramkę */
+        }
+        
+        /* Implementacja ramki w stylu PC-98 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 2px solid var(--frame-color);
+            box-shadow: inset 0 0 8px var(--glow-color-frame);
+            pointer-events: none; /* Umożliwia klikanie przez ramkę */
+            z-index: 1000;
         }
 
-        #shader-canvas { 
-            position: fixed; 
-            top: 0; left: 0; 
-            width: 100%; height: 100%; 
-            z-index: -1; opacity: 0.15; 
+        /* Shader w tle */
+        #shader-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 1; /* Shader sam kontroluje przezroczystość */
         }
 
-        .scanlines::before {
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Nowa typografia */
+        h1, h2, h3, h4, h5, h6, .font-bold {
+            font-family: 'DotGothic16', sans-serif;
+            color: var(--accent-primary);
+            text-shadow: 0 0 5px var(--glow-color-red);
+        }
+
+        p, span, div, li, th, td, button {
+            font-family: 'VT323', monospace;
+            text-shadow: 0 0 3px rgba(220, 220, 220, 0.2);
+        }
+        
+        a {
+          color: var(--accent-secondary);
+          text-decoration: underline;
+          text-shadow: 0 0 5px var(--glow-color-green);
+        }
+        a:hover {
+            color: var(--accent-tertiary);
+            text-shadow: 0 0 8px var(--glow-color-amber);
+        }
+
+        /* --- Reset i przeprojektowanie komponentów --- */
+
+        /* Ogólny reset do ostrej, retro stylistyki */
+        .card, .version-btn, .recipe-btn, .lang-btn, .dare-panel, .info-panel, table, th, td, [class*="bg-"], [class*="border-"], * {
+            border-radius: 0 !important;
+            transition: none !important;
+        }
+
+        /* Integracja nagłówka i stopki z ramką */
+        header, footer {
+            border-bottom: 1px solid var(--frame-color);
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            position: static; /* Uproszczenie layoutu */
+            box-shadow: none !important;
+        }
+        header {
+            padding-bottom: 10px;
+            margin-bottom: 2rem;
+        }
+        footer {
+            margin-top: 2rem;
+            padding-top: 10px;
+            border-top: 1px solid var(--frame-color);
+            border-bottom: none;
+        }
+        
+        /* Tło anatomiczne/techniczne dla sekcji "Schematy" */
+        #sdxl-blueprints, #pony-blueprints, #hybrid-blueprints {
+            position: relative;
+            /* Schemat siatki jako tło SVG w base64 */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='%239a1e1e' fill-opacity='0.05'%3E%3Crect x='0' y='0' width='100' height='1'/%3E%3Crect x='0' y='50' width='100' height='1'/%3E%3Crect x='0' y='0' width='1' height='100'/%3E%3Crect x='50' y='0' width='1' height='100'/%3E%3C/g%3E%3C/svg%3E");
+            padding: 1rem;
+            border: 1px solid var(--accent-primary);
+        }
+
+        /* Nowy styl Kart (.card) */
+        .card {
+            background-color: rgba(10, 10, 10, 0.7) !important;
+            backdrop-filter: none;
+            border: 1px solid var(--frame-color);
+            box-shadow: none;
+            position: relative; /* Wymagane dla pseudo-elementu */
+            isolation: isolate; /* Nowy kontekst stosu dla ditheringu */
+        }
+        .card:hover {
+            transform: none;
+            background-color: rgba(20, 20, 20, 0.8) !important;
+            border-color: var(--accent-secondary);
+        }
+        /* Nakładka z ditheringiem dla kart */
+        .card::after {
             content: '';
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(0,0,0,0.4) 50%, transparent 50%);
-            background-size: 100% 4px;
+            /* Wzór ditheringu 2x2 w base64 */
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAABJJREFUGFdjZGBg/M+ABYwIAO0AB63Ofv1IAAAAAElFTkSuQmCC');
+            opacity: 0.1;
             pointer-events: none;
-            z-index: 2;
-            opacity: 0.5;
+            z-index: -1;
         }
 
-        .content-wrapper { position: relative; z-index: 1; }
-        .chart-container { position: relative; width: 100%; max-width: 900px; margin: auto; height: 400px; max-height: 50vh; }
-        @media (min-width: 768px) { .chart-container { height: 450px; } }
-
-        h1, h2, h3 { font-family: 'Orbitron', sans-serif; text-shadow: 0 0 8px var(--glow-color-secondary); }
-
-        .card {
-            background: linear-gradient(145deg, rgba(20, 19, 41, 0.7), rgba(13, 12, 29, 0.8));
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid var(--border-color);
-            border-radius: 0; /* Sharp edges */
-            transition: all 0.3s ease;
-            box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.1), 0 0 10px rgba(0,0,0,0.5);
-            position: relative;
-        }
-
-        .card:hover {
-            border-color: var(--secondary-color);
-            box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.2), 0 0 20px var(--glow-color-secondary), 0 0 10px rgba(0,0,0,0.5);
-            transform: translateY(-2px);
-        }
-
+        /* Nowy styl przycisków */
         .version-btn, .recipe-btn, .lang-btn {
-            font-family: 'Orbitron', sans-serif;
-            background-color: transparent;
-            color: var(--secondary-color);
-            border: 1px solid var(--border-color);
-            box-shadow: inset 0 0 8px rgba(0, 240, 255, 0.2);
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 0;
+            background-color: transparent !important;
+            color: var(--text-color) !important;
+            border: 1px solid var(--frame-color) !important;
+            box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.2), inset -1px -1px 0px rgba(0, 0, 0, 0.5);
+            padding: 0.5rem 1rem;
         }
-
         .version-btn:hover, .recipe-btn:hover, .lang-btn:hover {
-            background-color: var(--border-color);
-            color: white;
-            box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.4), 0 0 15px var(--glow-color-secondary);
+            background-color: var(--accent-secondary) !important;
+            color: var(--bg-main) !important;
+            border-color: var(--accent-secondary) !important;
         }
-
         .version-btn.active, .recipe-btn.active, .lang-btn.active {
-            background-color: var(--secondary-color);
-            color: var(--bg-color);
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 20px var(--glow-color-secondary);
+            background-color: var(--accent-primary) !important;
+            color: var(--text-color) !important;
+            border-color: var(--accent-primary) !important;
+            box-shadow: inset 1px 1px 4px #000 !important; /* Efekt wciśnięcia */
+        }
+        
+        /* Panele specjalne */
+        .dare-panel {
+            background: transparent !important;
+            border: 1px solid var(--accent-tertiary);
+            padding: 1rem;
+            box-shadow: none;
+        }
+        .info-panel {
+            background-color: rgba(50, 205, 50, 0.1) !important;
+            border: 1px solid var(--accent-secondary) !important;
+            color: var(--text-color) !important;
+            padding: 1rem;
+        }
+        
+        /* Tabela */
+        table { border-collapse: collapse; border: 1px solid var(--frame-color); }
+        th, td { border: 1px solid var(--frame-color); padding: 0.5rem; }
+        thead { background-color: rgba(154, 30, 30, 0.2) !important; }
+        tbody tr:hover { background-color: rgba(50, 205, 50, 0.1) !important; }
+        .divide-y > :not([hidden]) ~ :not([hidden]) {
+            border-top-width: 1px;
+            border-bottom-width: 0;
+            border-color: var(--frame-color) !important;
         }
 
-        .dare-panel {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--border-color);
-            padding: 1.5rem;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        /* Usunięcie konfliktujących klas Tailwind */
+        [class*="bg-slate-"], [class*="bg-indigo-"] {
+            background-color: transparent !important;
         }
-        .flow-arrow { font-family: 'Roboto Mono', monospace; }
+        [class*="border-slate-"], [class*="border-indigo-"] {
+            border-color: var(--frame-color);
+        }
+        [class*="text-slate-"], [class*="text-indigo-"], [class*="text-amber-"], [class*="text-red-"] {
+            color: inherit;
+        }
+        h3, h4 { color: var(--accent-primary) !important; }
         
-        .info-panel {
-            background-color: rgba(190, 0, 255, 0.05);
-            border: 1px solid rgba(190, 0, 255, 0.3);
-            color: var(--text-color);
+        /* Kontener wykresu */
+         .chart-container { 
+            position: relative; width: 100%; max-width: 900px; 
+            margin-left: auto; margin-right: auto; height: 400px; 
+            max-height: 50vh; border: 1px solid var(--frame-color);
+            background: rgba(0,0,0,0.3); padding: 10px;
+         }
+        @media (min-width: 768px) { .chart-container { height: 450px; } }
+        
+        #sdxl-justification, #pony-justification, #hybrid-justification {
+            border: 1px solid var(--frame-color);
+            background-color: #111;
+            padding: 1rem;
+            min-height: 60px;
         }
+
+        /* Poprawki dla Flowchart */
+        .flow-arrow { font-family: 'VT323', monospace; }
+        .p-2.border { border-color: rgba(220, 220, 220, 0.4) !important; }
+        .bg-indigo-900\/20, .bg-amber-900\/20, .bg-slate-800\/30, .bg-indigo-500\/30, .bg-amber-500\/30, .bg-indigo-500\/50, .bg-amber-500\/50, .bg-slate-200, .bg-purple-900\/20, .bg-purple-500\/50, .bg-red-500\/50 {
+            background-color: rgba(30,30,30,0.5) !important;
+        }
+        .text-indigo-300, .text-amber-300, .text-slate-300, .text-indigo-200, .text-amber-200, .text-indigo-100, .text-amber-100, .text-slate-900, .text-purple-300, .text-purple-100, .text-red-100 {
+            color: var(--text-color) !important;
+        }
+
     </style>
 </head>
-<body class="bg-slate-900">
-    <canvas id="shader-canvas"></canvas>
+<body class="bg-slate-900"> <canvas id="shader-canvas"></canvas>
     <div class="content-wrapper">
-        <header class="bg-black/50 backdrop-blur-lg sticky top-0 z-50 border-b-2 border-primary-color shadow-[0_0_25px_var(--glow-color-primary)]">
+        <header class="bg-slate-900/50 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-700">
             <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <div class="flex items-center">
@@ -125,10 +248,10 @@
                     </div>
                     <div class="flex items-center space-x-8">
                         <div id="main-nav" class="flex items-center space-x-4 text-sm font-medium">
-                            <a id="nav-blueprints" href="#sdxl-blueprints" class="text-slate-300 hover:text-white transition-colors" data-i18n-key="nav.blueprints"></a>
-                            <a id="nav-recipes" href="#sdxl-recipes" class="text-slate-300 hover:text-white transition-colors" data-i18n-key="nav.recipes"></a>
-                            <a href="#analysis" class="text-slate-300 hover:text-white transition-colors" data-i18n-key="nav.analysis"></a>
-                            <a href="#glossary" class="text-slate-300 hover:text-white transition-colors" data-i18n-key="nav.glossary"></a>
+                            <a id="nav-blueprints" href="#sdxl-blueprints" class="text-slate-300 hover:text-white" data-i18n-key="nav.blueprints"></a>
+                            <a id="nav-recipes" href="#sdxl-recipes" class="text-slate-300 hover:text-white" data-i18n-key="nav.recipes"></a>
+                            <a href="#analysis" class="text-slate-300 hover:text-white" data-i18n-key="nav.analysis"></a>
+                            <a href="#glossary" class="text-slate-300 hover:text-white" data-i18n-key="nav.glossary"></a>
                         </div>
                          <div class="flex items-center">
                             <button id="lang-pl" class="lang-btn active px-3 py-1 text-xs font-medium">PL</button>
@@ -142,84 +265,290 @@
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <section class="text-center mb-16">
                 <h1 class="text-4xl md:text-5xl font-bold text-slate-100 tracking-tight" data-i18n-key="header.title"></h1>
-                <p class="mt-4 text-lg text-muted-color max-w-3xl mx-auto" data-i18n-key="header.subtitle"></p>
+                <p class="mt-4 text-lg text-slate-400 max-w-3xl mx-auto" data-i18n-key="header.subtitle"></p>
             </section>
 
-            <div id="strategy-selector" class="flex justify-center flex-wrap gap-4 mb-16 p-4 bg-black/30 border border-border-color shadow-inner">
+            <div id="strategy-selector" class="flex justify-center flex-wrap gap-4 mb-16 p-4 bg-slate-800/50 border border-slate-700 shadow-inner">
                 <button id="select-sdxl" class="version-btn active px-6 py-3 text-base font-medium" data-i18n-key="strategy.sdxl"></button>
                 <button id="select-pony" class="version-btn px-6 py-3 text-base font-medium" data-i18n-key="strategy.pony"></button>
                 <button id="select-hybrid" class="version-btn px-6 py-3 text-base font-medium" data-i18n-key="strategy.hybrid"></button>
             </div>
 
             <div id="sdxl-content">
-                <section id="sdxl-blueprints" class="mb-24 scroll-mt-20">
-                    <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="sdxl.blueprint.title"></h2>
-                    <p class="text-muted-color mb-10 max-w-4xl" data-i18n-key="sdxl.blueprint.description"></p>
-                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="card p-6 flex flex-col scanlines"><h3 class="font-bold text-lg text-slate-100">Animij [Illustrious] V5.0</h3><p class="text-sm font-medium text-secondary-color mb-2" data-i18n-key="sdxl.blueprint.card1.role"></p><p class="text-sm text-muted-color flex-grow" data-i18n-key="sdxl.blueprint.card1.desc"></p></div>
-                        <div class="card p-6 flex flex-col scanlines"><h3 class="font-bold text-lg text-slate-100">Graycolor SemiRealIllustMix</h3><p class="text-sm font-medium text-secondary-color mb-2" data-i18n-key="sdxl.blueprint.card2.role"></p><p class="text-sm text-muted-color flex-grow" data-i18n-key="sdxl.blueprint.card2.desc"></p></div>
-                        <div class="card p-6 flex flex-col scanlines"><h3 class="font-bold text-lg text-slate-100">Boomer Art Model v2.0</h3><p class="text-sm font-medium" style="color: #ff8c00;" data-i18n-key="sdxl.blueprint.card3.role"></p><p class="text-sm text-muted-color flex-grow" data-i18n-key="sdxl.blueprint.card3.desc"></p></div>
-                        <div class="card p-6 flex flex-col scanlines"><h3 class="font-bold text-lg text-slate-100">D34D.CH4NN3L.SDXL</h3><p class="text-sm font-medium" style="color: #ff4545;" data-i18n-key="sdxl.blueprint.card4.role"></p><p class="text-sm text-muted-color flex-grow" data-i18n-key="sdxl.blueprint.card4.desc"></p></div>
-                    </div>
-                </section>
-                <section id="sdxl-recipes" class="mb-24 scroll-mt-20">
+                 <section id="sdxl-blueprints" class="mb-24 scroll-mt-20">
+                     <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="sdxl.blueprint.title"></h2>
+                     <p class="text-slate-400 mb-10 max-w-4xl" data-i18n-key="sdxl.blueprint.description"></p>
+                     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                         <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">Animij [Illustrious] V5.0</h3><p class="text-sm font-medium text-indigo-400 mb-2" data-i18n-key="sdxl.blueprint.card1.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="sdxl.blueprint.card1.desc"></p></div>
+                         <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">Graycolor SemiRealIllustMix</h3><p class="text-sm font-medium text-indigo-400 mb-2" data-i18n-key="sdxl.blueprint.card2.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="sdxl.blueprint.card2.desc"></p></div>
+                         <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">Boomer Art Model v2.0</h3><p class="text-sm font-medium text-amber-400 mb-2" data-i18n-key="sdxl.blueprint.card3.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="sdxl.blueprint.card3.desc"></p></div>
+                         <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">D34D.CH4NN3L.SDXL</h3><p class="text-sm font-medium text-red-400 mb-2" data-i18n-key="sdxl.blueprint.card4.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="sdxl.blueprint.card4.desc"></p></div>
+                     </div>
+                 </section>
+                 <section id="sdxl-recipes" class="mb-24 scroll-mt-20">
                      <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="sdxl.recipes.title"></h2>
-                     <div class="card p-6 md:p-8 mb-12 scanlines">
+                     <div class="card p-6 md:p-8 mb-12">
                          <h3 class="text-xl font-bold text-slate-100 mb-4" data-i18n-key="sdxl.recipes.step1.title"></h3>
-                         <p class="text-sm text-muted-color mb-6" data-i18n-key="sdxl.recipes.step1.desc"></p>
+                         <p class="text-sm text-slate-400 mb-6" data-i18n-key="sdxl.recipes.step1.desc"></p>
                          <div class="flex justify-center flex-wrap gap-4 mb-6" id="sdxl-recipe-buttons">
                              <button data-recipe="balanced" class="recipe-btn active px-4 py-2 text-sm font-medium" data-i18n-key="sdxl.recipes.step1.btnBalanced"></button>
                              <button data-recipe="host_dominant" class="recipe-btn px-4 py-2 text-sm font-medium" data-i18n-key="sdxl.recipes.step1.btnHost"></button>
                              <button data-recipe="donor_receptive" class="recipe-btn px-4 py-2 text-sm font-medium" data-i18n-key="sdxl.recipes.step1.btnDonor"></button>
                          </div>
-                         <div id="sdxl-recipe-explanation" class="mb-6 p-4 info-panel rounded-none text-sm"></div>
+                         <div id="sdxl-recipe-explanation" class="mb-6 p-4 info-panel text-sm"></div>
                          <div class="chart-container lazy-chart" id="sdxlChartContainer"><canvas id="sdxlChart"></canvas></div>
-                         <div id="sdxl-justification" class="mt-6 p-4 bg-black/30 rounded-none text-sm text-muted-color min-h-[60px] border border-border-color" data-i18n-key="chart.hoverPrompt"></div>
+                         <div id="sdxl-justification" class="mt-6 p-4 bg-slate-800 text-sm text-slate-400 min-h-[60px]" data-i18n-key="chart.hoverPrompt"></div>
                      </div>
-                     <div class="card p-6 md:p-8 mb-12 scanlines">
+                     <div class="card p-6 md:p-8 mb-12">
                          <h3 class="text-xl font-bold text-slate-100 mb-4" data-i18n-key="sdxl.recipes.step2.title"></h3>
-                         <p class="text-sm text-muted-color mb-6" data-i18n-key="sdxl.recipes.step2.desc"></p>
+                         <p class="text-sm text-slate-400 mb-6" data-i18n-key="sdxl.recipes.step2.desc"></p>
                          <div class="grid md:grid-cols-1 gap-8">
                              <div class="dare-panel">
                                  <h4 class="font-bold text-lg text-slate-200 mb-4 text-center" data-i18n-key="sdxl.recipes.step2a.title"></h4>
                                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                                      <div>
-                                         <h5 class="text-sm font-semibold text-primary-color mb-2" data-i18n-key="dare.trim.title"></h5>
-                                         <p class="text-xs text-muted-color mb-4" data-i18n-key="sdxl.recipes.step2a.trimDesc"></p>
-                                         <p class="text-xs"><strong class="text-text-color">model_a:</strong> <span data-i18n-key="dare.hostFromStep1"></span></p>
-                                         <p class="text-xs"><strong class="text-text-color">model_b:</strong> sd_xl_base_1.0</p>
-                                         <p class="text-xs"><strong class="text-text-color">threshold:</strong> 0.60</p>
-                                         <p class="text-xs"><strong class="text-text-color">threshold_type:</strong> quantile</p>
+                                         <h5 class="text-sm font-semibold text-indigo-300 mb-2" data-i18n-key="dare.trim.title"></h5>
+                                         <p class="text-xs text-slate-400 mb-4" data-i18n-key="sdxl.recipes.step2a.trimDesc"></p>
+                                         <p class="text-xs"><strong class="text-slate-300">model_a:</strong> <span data-i18n-key="dare.hostFromStep1"></span></p>
+                                         <p class="text-xs"><strong class="text-slate-300">model_b:</strong> sd_xl_base_1.0</p>
+                                         <p class="text-xs"><strong class="text-slate-300">threshold:</strong> 0.60</p>
+                                         <p class="text-xs"><strong class="text-slate-300">threshold_type:</strong> quantile</p>
                                      </div>
                                      <div>
-                                         <h5 class="text-sm font-semibold text-secondary-color mb-2" data-i18n-key="dare.merge.title"></h5>
-                                         <p class="text-xs text-muted-color mb-4" data-i18n-key="dare.merge.desc"></p>
-                                         <p class="text-xs"><strong class="text-text-color">model1:</strong> <span data-i18n-key="dare.hostFromStep1"></span></p>
-                                         <p class="text-xs"><strong class="text-text-color">model2:</strong> Boomer Art Model</p>
-                                         <p class="text-xs"><strong class="text-text-color">base_model:</strong> sd_xl_base_1.0</p>
-                                         <p class="text-xs"><strong class="text-text-color">density:</strong> 0.45</p>
-                                         <p class="text-xs"><strong class="text-text-color">ties_mode:</strong> sum</p>
+                                         <h5 class="text-sm font-semibold text-amber-300 mb-2" data-i18n-key="dare.merge.title"></h5>
+                                         <p class="text-xs text-slate-400 mb-4" data-i18n-key="dare.merge.desc"></p>
+                                         <p class="text-xs"><strong class="text-slate-300">model1:</strong> <span data-i18n-key="dare.hostFromStep1"></span></p>
+                                         <p class="text-xs"><strong class="text-slate-300">model2:</strong> Boomer Art Model</p>
+                                         <p class="text-xs"><strong class="text-slate-300">base_model:</strong> sd_xl_base_1.0</p>
+                                         <p class="text-xs"><strong class="text-slate-300">density:</strong> 0.45</p>
+                                         <p class="text-xs"><strong class="text-slate-300">ties_mode:</strong> sum</p>
                                      </div>
                                  </div>
-                                 <div class="mt-6 pt-4 border-t border-border-color">
-                                     <h5 class="text-sm font-semibold text-text-color mb-2" data-i18n-key="dare.justification"></h5>
-                                     <p class="text-xs text-muted-color" data-i18n-key="sdxl.recipes.step2a.justification"></p>
+                                 <div class="mt-6 pt-4 border-t border-slate-700">
+                                     <h5 class="text-sm font-semibold text-slate-300 mb-2" data-i18n-key="dare.justification"></h5>
+                                     <p class="text-xs text-slate-400" data-i18n-key="sdxl.recipes.step2a.justification"></p>
                                  </div>
                              </div>
                          </div>
                      </div>
-                </section>
+                 </section>
+            </div>
+
+            <div id="pony-content" class="hidden">
+                 <section id="pony-blueprints" class="mb-24 scroll-mt-20">
+                     <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="pony.blueprint.title"></h2>
+                     <p class="text-slate-400 mb-10 max-w-4xl" data-i18n-key="pony.blueprint.description"></p>
+                     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                         <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">JANKU V4.0</h3><p class="text-sm font-medium text-indigo-400 mb-2" data-i18n-key="pony.blueprint.card1.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="pony.blueprint.card1.desc"></p></div>
+                         <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">NEW ERA V5.0</h3><p class="text-sm font-medium text-indigo-400 mb-2" data-i18n-key="pony.blueprint.card2.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="pony.blueprint.card2.desc"></p></div>
+                         <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">Graycolor SemiRealIllustMix</h3><p class="text-sm font-medium text-amber-400 mb-2" data-i18n-key="pony.blueprint.card3.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="pony.blueprint.card3.desc"></p></div>
+                         <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">SinGlo V2.0</h3><p class="text-sm font-medium text-amber-400 mb-2" data-i18n-key="pony.blueprint.card4.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="pony.blueprint.card4.desc"></p></div>
+                     </div>
+                 </section>
+                 <section id="pony-recipes" class="mb-24 scroll-mt-20">
+                     <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="pony.recipes.title"></h2>
+                     <div class="card p-6 md:p-8 mb-12">
+                         <h3 class="text-xl font-bold text-slate-100 mb-4" data-i18n-key="pony.recipes.step1.title"></h3>
+                         <p class="text-sm text-slate-400 mb-6" data-i18n-key="pony.recipes.step1.desc"></p>
+                         <div class="flex justify-center flex-wrap gap-4 mb-6" id="pony-recipe-buttons">
+                             <button data-recipe="stage1" class="recipe-btn active px-4 py-2 text-sm font-medium" data-i18n-key="pony.recipes.step1.btnStage1"></button>
+                             <button data-recipe="stage2" class="recipe-btn px-4 py-2 text-sm font-medium" data-i18n-key="pony.recipes.step1.btnStage2"></button>
+                             <button data-recipe="stage3" class="recipe-btn px-4 py-2 text-sm font-medium" data-i18n-key="pony.recipes.step1.btnStage3"></button>
+                         </div>
+                         <div id="pony-recipe-explanation" class="mb-6 p-4 info-panel text-sm"></div>
+                         <div class="chart-container lazy-chart" id="ponyChartContainer"><canvas id="ponyChart"></canvas></div>
+                         <div id="pony-justification" class="mt-6 p-4 bg-slate-800 text-sm text-slate-400 min-h-[60px]" data-i18n-key="chart.hoverPrompt"></div>
+                     </div>
+                     <div class="card p-8">
+                         <h3 class="text-xl font-bold text-slate-100 mb-4" data-i18n-key="pony.assembly.title"></h3>
+                         <p class="text-sm text-slate-400 mb-6" data-i18n-key="pony.assembly.desc"></p>
+                         <div class="grid md:grid-cols-2 gap-8">
+                             <div>
+                                 <h4 class="font-bold text-lg text-slate-200 mb-4" data-i18n-key="pony.assembly.clip.title"></h4>
+                                 <p class="text-sm text-slate-400 mb-4" data-i18n-key="pony.assembly.clip.desc"></p>
+                                 <div class="flex flex-col space-y-2 text-center text-xs font-semibold">
+                                     <div class="p-2 border border-indigo-500/50">
+                                         <p class="font-medium mb-1 text-indigo-300" data-i18n-key="clip.merge.noobai.title"></p>
+                                         <div class="flex justify-around items-center"><div class="p-2 bg-indigo-500/30 text-indigo-200">JANKU CLIP</div><div class="text-slate-400 flow-arrow">+</div><div class="p-2 bg-indigo-500/30 text-indigo-200">NEW ERA CLIP</div></div>
+                                         <div class="self-center mt-1 text-slate-400 flow-arrow">↓ <span class="font-normal" data-i18n-key="clip.merge.noobai.weights"></span></div>
+                                     </div>
+                                     <div class="p-2 border border-amber-500/50">
+                                         <p class="font-medium mb-1 text-amber-300" data-i18n-key="clip.merge.illustrious.title"></p>
+                                         <div class="flex justify-around items-center"><div class="p-2 bg-amber-500/30 text-amber-200">Graycolor CLIP</div><div class="text-slate-400 flow-arrow">+</div><div class="p-2 bg-amber-500/30 text-amber-200">SinGlo CLIP</div></div>
+                                         <div class="self-center mt-1 text-slate-400 flow-arrow">↓ <span class="font-normal" data-i18n-key="clip.merge.illustrious.weights"></span></div>
+                                     </div>
+                                     <div class="p-2 border border-slate-500">
+                                         <p class="font-medium mb-1 text-slate-300" data-i18n-key="clip.merge.pony.title"></p>
+                                         <div class="flex justify-around items-center"><div class="p-2 bg-indigo-500/50 text-indigo-100" data-i18n-key="clip.merge.noobai.result"></div><div class="text-slate-400 font-thin text-xl flow-arrow">+</div><div class="p-2 bg-amber-500/50 text-amber-100" data-i18n-key="clip.merge.illustrious.result"></div></div>
+                                         <div class="self-center mt-1 text-slate-400 flow-arrow">↓ <span class="font-normal" data-i18n-key="clip.merge.pony.weights"></span></div>
+                                         <div class="p-3 bg-slate-200 text-slate-900 mx-auto mt-2" data-i18n-key="clip.merge.pony.final"></div>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div>
+                                 <h4 class="font-bold text-lg text-slate-200 mb-4" data-i18n-key="vae.title"></h4>
+                                 <p class="text-sm text-slate-400 mb-6" data-i18n-key="pony.assembly.vae.desc"></p>
+                                 <div class="border-2 border-dashed p-4 text-center">
+                                     <p class="font-semibold text-indigo-200" data-i18n-key="vae.recommendation"></p>
+                                     <p class="text-indigo-300">Use the VAE built into `JANKU V4.0`.</p>
+                                     <p class="text-xs mt-2 text-indigo-400" data-i18n-key="pony.assembly.vae.justification"></p>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </section>
             </div>
             
-            <div id="pony-content" class="hidden">...</div>
-             <div id="hybrid-content" class="hidden">...</div>
+            <div id="hybrid-content" class="hidden">
+                 <section id="hybrid-blueprints" class="mb-24 scroll-mt-20">
+                     <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="hybrid.blueprint.title"></h2>
+                     <p class="text-slate-400 mb-10 max-w-4xl" data-i18n-key="hybrid.blueprint.description"></p>
+                     <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
+                         <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">JANKU V4.0</h3><p class="text-sm font-medium text-indigo-400 mb-2" data-i18n-key="hybrid.blueprint.card1.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="hybrid.blueprint.card1.desc"></p></div>
+                         <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">NEW ERA V5.0</h3><p class="text-sm font-medium text-indigo-400 mb-2" data-i18n-key="hybrid.blueprint.card2.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="hybrid.blueprint.card2.desc"></p></div>
+                         <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">Graycolor</h3><p class="text-sm font-medium text-amber-400 mb-2" data-i18n-key="hybrid.blueprint.card3.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="hybrid.blueprint.card3.desc"></p></div>
+                         <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">SinGlo V2.0</h3><p class="text-sm font-medium text-amber-400 mb-2" data-i18n-key="hybrid.blueprint.card4.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="hybrid.blueprint.card4.desc"></p></div>
+                         <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">Boomer Art (SDXL)</h3><p class="text-sm font-medium text-red-400 mb-2" data-i18n-key="hybrid.blueprint.card5.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="hybrid.blueprint.card5.desc"></p></div>
+                     </div>
+                 </section>
+                 <section id="hybrid-recipes" class="mb-24 scroll-mt-20">
+                     <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="hybrid.recipes.title"></h2>
+                     <div class="card p-6 md:p-8 mb-12">
+                         <h3 class="text-xl font-bold text-slate-100 mb-4" data-i18n-key="hybrid.recipes.step1.title"></h3>
+                         <p class="text-sm text-slate-400 mb-6" data-i18n-key="hybrid.recipes.step1.desc"></p>
+                         <div class="flex justify-center flex-wrap gap-4 mb-6" id="hybrid-recipe-buttons">
+                             <button data-recipe="stage1" class="recipe-btn active px-4 py-2 text-sm font-medium" data-i18n-key="hybrid.recipes.step1.btnStage1"></button>
+                             <button data-recipe="stage2" class="recipe-btn px-4 py-2 text-sm font-medium" data-i18n-key="hybrid.recipes.step1.btnStage2"></button>
+                             <button data-recipe="stage3" class="recipe-btn px-4 py-2 text-sm font-medium" data-i18n-key="hybrid.recipes.step1.btnStage3"></button>
+                             <button data-recipe="stage4" class="recipe-btn px-4 py-2 text-sm font-medium" data-i18n-key="hybrid.recipes.step1.btnStage4"></button>
+                         </div>
+                         <div id="hybrid-recipe-explanation" class="mb-6 p-4 info-panel text-sm"></div>
+                         <div class="chart-container lazy-chart" id="hybridChartContainer"><canvas id="hybridChart"></canvas></div>
+                         <div id="hybrid-justification" class="mt-6 p-4 bg-slate-800 text-sm text-slate-400 min-h-[60px]" data-i18n-key="chart.hoverPrompt"></div>
+                     </div>
+                     <div class="card p-8">
+                         <h3 class="text-xl font-bold text-slate-100 mb-4" data-i18n-key="hybrid.assembly.title"></h3>
+                         <p class="text-sm text-slate-400 mb-6" data-i18n-key="hybrid.assembly.desc"></p>
+                         <div class="grid md:grid-cols-2 gap-8">
+                             <div>
+                                 <h4 class="font-bold text-lg text-slate-200 mb-4" data-i18n-key="hybrid.assembly.clip.title"></h4>
+                                 <p class="text-sm text-slate-400 mb-4" data-i18n-key="hybrid.assembly.clip.desc"></p>
+                                 <div class="flex flex-col space-y-2 text-center text-xs font-semibold">
+                                     <div class="p-2 border border-purple-500/50">
+                                         <p class="font-medium mb-1 text-purple-300" data-i18n-key="hybrid.assembly.clip.step1Title"></p>
+                                         <div class="flex flex-col space-y-2">
+                                             <div class="p-2 border border-indigo-500/50">
+                                                 <p class="font-medium mb-1 text-indigo-300" data-i18n-key="clip.merge.noobai.title"></p>
+                                                 <div class="flex justify-around items-center"><div class="p-2">JANKU CLIP</div><div class="flow-arrow">+</div><div class="p-2">NEW ERA CLIP</div></div>
+                                                 <div class="self-center mt-1 flow-arrow">↓ <span class="font-normal" data-i18n-key="clip.merge.noobai.weights"></span></div>
+                                             </div>
+                                             <div class="self-center flow-arrow">+</div>
+                                             <div class="p-2 border border-amber-500/50">
+                                                 <p class="font-medium mb-1 text-amber-300" data-i18n-key="clip.merge.illustrious.title"></p>
+                                                 <div class="flex justify-around items-center"><div class="p-2">Graycolor CLIP</div><div class="flow-arrow">+</div><div class="p-2">SinGlo CLIP</div></div>
+                                                 <div class="self-center mt-1 flow-arrow">↓ <span class="font-normal" data-i18n-key="clip.merge.illustrious.weights"></span></div>
+                                             </div>
+                                         </div>
+                                         <div class="self-center mt-2 flow-arrow">↓ <span class="font-normal" data-i18n-key="clip.merge.hybrid.ponyweights"></span></div>
+                                         <div class="p-2 mt-1" data-i18n-key="clip.merge.pony.result"></div>
+                                     </div>
+                                     <div class="self-center mt-1 flow-arrow text-2xl">↓</div>
+                                     <div class="p-2 border border-slate-500">
+                                         <p class="font-medium mb-1 text-slate-300" data-i18n-key="hybrid.assembly.clip.step2Title"></p>
+                                         <div class="flex justify-around items-center"><div class="p-2">Pony Base CLIP</div><div class="font-thin text-xl flow-arrow">+</div><div class="p-2">SDXL CLIP</div></div>
+                                         <div class="self-center mt-1 flow-arrow">↓ <span class="font-normal" data-i18n-key="clip.merge.hybrid.finalweights"></span></div>
+                                         <div class="p-3 mx-auto mt-2" data-i18n-key="hybrid.assembly.clip.final"></div>
+                                     </div>
+                                 </div>
+                                 <div class="dare-panel mt-6">
+                                     <h5 class="text-sm font-semibold text-slate-300 mb-2" data-i18n-key="hybrid.assembly.clip.noteTitle"></h5>
+                                     <p class="text-xs text-slate-400" data-i18n-key="hybrid.assembly.clip.noteDesc"></p>
+                                 </div>
+                             </div>
+                             <div>
+                                 <h4 class="font-bold text-lg text-slate-200 mb-4" data-i18n-key="vae.title"></h4>
+                                 <p class="text-sm text-slate-400 mb-6" data-i18n-key="hybrid.assembly.vae.desc"></p>
+                                 <div class="border-2 border-dashed p-4 text-center">
+                                     <p class="font-semibold text-indigo-200" data-i18n-key="vae.recommendation"></p>
+                                     <p class="text-indigo-300">Use the VAE built into `JANKU V4.0`.</p>
+                                     <p class="text-xs mt-2 text-indigo-400" data-i18n-key="hybrid.assembly.vae.justification"></p>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </section>
+            </div>
+             
+             <section id="analysis" class="mb-24 scroll-mt-20">
+                 <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="analysis.title"></h2>
+                 <p class="text-slate-400 mb-10 max-w-4xl" data-i18n-key="analysis.desc"></p>
+                 <div class="overflow-x-auto card p-2 md:p-6">
+                     <table class="w-full text-left text-sm">
+                         <thead class="bg-slate-800/50 text-slate-200">
+                             <tr>
+                                 <th class="p-3 font-semibold" data-i18n-key="analysis.table.header1"></th>
+                                 <th class="p-3 font-semibold" data-i18n-key="strategy.sdxl"></th>
+                                 <th class="p-3 font-semibold" data-i18n-key="strategy.pony"></th>
+                                 <th class="p-3 font-semibold" data-i18n-key="strategy.hybrid"></th>
+                             </tr>
+                         </thead>
+                         <tbody class="divide-y divide-slate-700">
+                             <tr class="hover:bg-slate-800/30">
+                                 <td class="p-3 font-medium text-slate-200" data-i18n-key="analysis.table.row1.title"></td>
+                                 <td class="p-3" data-i18n-key="analysis.table.row1.col1"></td>
+                                 <td class="p-3" data-i18n-key="analysis.table.row1.col2"></td>
+                                 <td class="p-3" data-i18n-key="analysis.table.row1.col3"></td>
+                             </tr>
+                             <tr class="hover:bg-slate-800/30">
+                                 <td class="p-3 font-medium text-slate-200" data-i18n-key="analysis.table.row2.title"></td>
+                                 <td class="p-3" data-i18n-key="analysis.table.row2.col1"></td>
+                                 <td class="p-3" data-i18n-key="analysis.table.row2.col2"></td>
+                                 <td class="p-3" data-i18n-key="analysis.table.row2.col3"></td>
+                             </tr>
+                             <tr class="hover:bg-slate-800/30">
+                                 <td class="p-3 font-medium text-slate-200" data-i18n-key="analysis.table.row3.title"></td>
+                                 <td class="p-3" data-i18n-key="analysis.table.row3.col1"></td>
+                                 <td class="p-3" data-i18n-key="analysis.table.row3.col2"></td>
+                                 <td class="p-3" data-i18n-key="analysis.table.row3.col3"></td>
+                             </tr>
+                             <tr class="hover:bg-slate-800/30">
+                                 <td class="p-3 font-medium text-slate-200" data-i18n-key="analysis.table.row4.title"></td>
+                                 <td class="p-3" data-i18n-key="analysis.table.row4.col1"></td>
+                                 <td class="p-3" data-i18n-key="analysis.table.row4.col2"></td>
+                                 <td class="p-3" data-i18n-key="analysis.table.row4.col3"></td>
+                             </tr>
+                              <tr class="hover:bg-slate-800/30">
+                                 <td class="p-3 font-medium text-slate-200" data-i18n-key="analysis.table.row5.title"></td>
+                                 <td class="p-3" data-i18n-key="analysis.table.row5.col1"></td>
+                                 <td class="p-3" data-i18n-key="analysis.table.row5.col2"></td>
+                                 <td class="p-3" data-i18n-key="analysis.table.row5.col3"></td>
+                             </tr>
+                         </tbody>
+                     </table>
+                 </div>
+                 <div class="mt-8 p-6 info-panel">
+                     <h3 class="font-bold text-lg text-indigo-200 mb-2" data-i18n-key="analysis.recommendation.title"></h3>
+                     <p data-i18n-key="analysis.recommendation.p1"></p>
+                     <p class="mt-2 text-sm text-indigo-400" data-i18n-key="analysis.recommendation.p2"></p>
+                 </div>
+             </section>
 
-             <section id="analysis" class="mb-24 scroll-mt-20">...</section>
-             <section id="glossary" class="mb-24 scroll-mt-20">...</section>
+             <section id="glossary" class="mb-24 scroll-mt-20">
+                 <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="glossary.title"></h2>
+                 <p class="text-slate-400 mb-10 max-w-4xl" data-i18n-key="glossary.desc"></p>
+                 <div class="grid md:grid-cols-2 gap-6">
+                     <div class="card p-6"> <h3 class="font-bold text-lg text-slate-200 mb-2" data-i18n-key="glossary.term1.title"></h3> <p class="text-sm text-slate-400" data-i18n-key="glossary.term1.desc"></p> </div>
+                     <div class="card p-6"> <h3 class="font-bold text-lg text-slate-200 mb-2" data-i18n-key="glossary.term2.title"></h3> <p class="text-sm text-slate-400" data-i18n-key="glossary.term2.desc"></p> <ul class="text-sm text-slate-400 mt-2 list-disc list-inside space-y-1"> <li data-i18n-key="glossary.term2.li1"></li> <li data-i18n-key="glossary.term2.li2"></li> </ul> </div>
+                     <div class="card p-6"> <h3 class="font-bold text-lg text-slate-200 mb-2" data-i18n-key="glossary.term3.title"></h3> <p class="text-sm text-slate-400" data-i18n-key="glossary.term3.desc"></p> </div>
+                     <div class="card p-6"> <h3 class="font-bold text-lg text-slate-200 mb-2" data-i18n-key="glossary.term4.title"></h3> <p class="text-sm text-slate-400" data-i18n-key="glossary.term4.desc"></p> </div>
+                     <div class="card p-6"> <h3 class="font-bold text-lg text-slate-200 mb-2" data-i18n-key="glossary.term5.title"></h3> <p class="text-sm text-slate-400" data-i18n-key="glossary.term5.desc"></p> </div>
+                     <div class="card p-6"> <h3 class="font-bold text-lg text-slate-200 mb-2" data-i18n-key="glossary.term6.title"></h3> <p class="text-sm text-slate-400" data-i18n-key="glossary.term6.desc"></p> </div>
+                 </div>
+             </section>
         </main>
 
-        <footer class="bg-black/50 mt-24 border-t border-border-color">
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-sm text-muted-color">
+        <footer class="bg-slate-900/50 mt-24 border-t border-slate-700">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-sm text-slate-500">
                 <p data-i18n-key="footer.text"></p>
             </div>
         </footer>
@@ -228,215 +557,625 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Shader Background ---
+    // --- KONTROLA SHADERA WEBGL ---
+    let animationFrameId;
+    let isTabVisible = true;
+    let gl, program, positionAttributeLocation, resolutionUniformLocation, timeUniformLocation;
+
     function initShaderBackground() {
         const canvas = document.getElementById('shader-canvas');
         try {
-            const gl = canvas.getContext('webgl', { antialias: false, powerPreference: 'low-power' });
+            gl = canvas.getContext('webgl', { antialias: false, powerPreference: 'low-power' });
             if (!gl) { console.error("WebGL not supported"); return; }
-
+            
             const vertexShaderSource = `attribute vec2 a_position; void main() { gl_Position = vec4(a_position, 0.0, 1.0); }`;
+            
+            // NOWY FRAGMENT SHADER DLA EFEKTU "BIO-MECHANICAL HORROR"
             const fragmentShaderSource = `
                 precision highp float;
                 uniform vec2 u_resolution;
                 uniform float u_time;
 
-                float random(vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453); }
-                
-                float noise(vec2 st) {
-                    vec2 i = floor(st); vec2 f = fract(st);
-                    vec2 u = f*f*(3.0-2.0*f);
-                    return mix(mix(random(i), random(i + vec2(1.0,0.0)), u.x),
-                               mix(random(i + vec2(0.0,1.0)), random(i + vec2(1.0,1.0)), u.x), u.y);
-                }
-
-                float fbm(vec2 st) {
-                    float value = 0.0;
-                    float amp = 0.5;
-                    for (int i=0; i<5; i++) {
-                        value += amp * noise(st);
-                        st *= 2.0;
-                        amp *= 0.5;
-                    }
-                    return value;
+                float random(vec2 st) {
+                    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
                 }
 
                 void main() {
-                    vec2 st = gl_FragCoord.xy/u_resolution.xy;
-                    st.x *= u_resolution.x/u_resolution.y;
+                    vec2 st = gl_FragCoord.xy / u_resolution.xy;
+                    vec3 color = vec3(0.0);
+
+                    // 1. Subtelny, cyfrowy szum
+                    float noise = random(st + mod(u_time,10.0)) * 0.07;
+                    color += noise;
+
+                    // 2. Okazjonalne, szybkie "glitche"
+                    float glitch_trigger = random(vec2(floor(u_time * 8.0), 1.0));
+
+                    if (glitch_trigger > 0.96) { // Szansa na pojawienie się glitcha
+                        float glitch_y = random(vec2(floor(u_time * 8.0), 2.0));
+                        float glitch_height = 0.002 + random(vec2(floor(u_time * 8.0), 3.0)) * 0.004;
+
+                        if (abs(st.y - glitch_y) < glitch_height) {
+                            vec3 glitch_color = random(vec2(floor(u_time * 8.0), 4.0)) > 0.5 
+                                ? vec3(0.9, 0.1, 0.1) // Czerwony
+                                : vec3(0.1, 0.9, 0.1); // Zielony
+                            
+                            if (random(st + u_time) > 0.85) {
+                                color = glitch_color;
+                            }
+                        }
+                    }
                     
-                    float t = u_time * 0.1;
-                    
-                    vec2 q = vec2(fbm(st + t), fbm(st - t));
-                    vec2 r = vec2(fbm(st + q*2.0 + t), fbm(st - q*2.0 - t));
-
-                    float n = fbm(st*2.0 + q*1.5);
-                    float m = fbm(st*1.5 - r*2.0);
-
-                    vec3 color = vec3(n*0.2, m*0.1, fbm(st+r)*0.3);
-                    color = pow(color, vec3(1.2));
-
                     gl_FragColor = vec4(color, 1.0);
                 }`;
             
-            function createShader(type, source) { const shader = gl.createShader(type); gl.shaderSource(shader, source); gl.compileShader(shader); if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) { console.error('Shader error: ' + gl.getShaderInfoLog(shader)); gl.deleteShader(shader); return null; } return shader; }
-            const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderSource);
-            const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
-            const program = gl.createProgram(); gl.attachShader(program, vertexShader); gl.attachShader(program, fragmentShader); gl.linkProgram(program);
-            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) { console.error('Shader program error: ' + gl.getProgramInfoLog(program)); return; }
+             function createShader(type, source) { const shader = gl.createShader(type); gl.shaderSource(shader, source); gl.compileShader(shader); if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) { console.error('Shader error: ' + gl.getShaderInfoLog(shader)); gl.deleteShader(shader); return null; } return shader; }
+             const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderSource);
+             const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
+             program = gl.createProgram(); gl.attachShader(program, vertexShader); gl.attachShader(program, fragmentShader); gl.linkProgram(program);
+             if (!gl.getProgramParameter(program, gl.LINK_STATUS)) { console.error('Shader program error: ' + gl.getProgramInfoLog(program)); return; }
              
-            const positionAttributeLocation = gl.getAttribLocation(program, "a_position");
-            const resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
-            const timeUniformLocation = gl.getUniformLocation(program, "u_time");
+             positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+             resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
+             timeUniformLocation = gl.getUniformLocation(program, "u_time");
              
-            const positionBuffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, 1, 1, -1, -1, 1, -1]), gl.STATIC_DRAW);
-            gl.useProgram(program);
-            gl.enableVertexAttribArray(positionAttributeLocation);
-            gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+             const positionBuffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, 1, 1, -1, -1, 1, -1]), gl.STATIC_DRAW);
+             gl.useProgram(program);
+             gl.enableVertexAttribArray(positionAttributeLocation);
+             gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 
-            let lastTime = 0;
-            function render(time) {
-                if(time - lastTime < 33) { // Cap at ~30fps
-                     requestAnimationFrame(render);
-                     return;
-                }
-                lastTime = time;
-                time *= 0.001;
-                if (gl.canvas.width !== gl.canvas.clientWidth || gl.canvas.height !== gl.canvas.clientHeight) {
-                    gl.canvas.width = gl.canvas.clientWidth;
-                    gl.canvas.height = gl.canvas.clientHeight;
-                    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-                }
-                gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
-                gl.uniform1f(timeUniformLocation, time);
-                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-                requestAnimationFrame(render);
-            }
-            requestAnimationFrame(render);
+             requestAnimationFrame(render);
         } catch (e) { console.error("WebGL init error:", e); }
     }
+    
+    function render(time) {
+        if (!isTabVisible || !gl) {
+            animationFrameId = requestAnimationFrame(render);
+            return;
+        };
+        time *= 0.0005; 
+        if (gl.canvas.width !== gl.canvas.clientWidth || gl.canvas.height !== gl.canvas.clientHeight) {
+            gl.canvas.width = gl.canvas.clientWidth;
+            gl.canvas.height = gl.canvas.clientHeight;
+            gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        }
+        gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+        gl.uniform1f(timeUniformLocation, time);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        animationFrameId = requestAnimationFrame(render);
+    }
 
-    // --- I18N and Data Store ---
-    const i18nData = { /* The whole i18nData object remains here unchanged */ };
+    document.addEventListener('visibilitychange', () => {
+        isTabVisible = document.visibilityState === 'visible';
+    });
+
+    // --- I18N and Data Store (bez zmian) ---
+    const i18nData = {
+         pl: {
+             pageTitle: "Interaktywny przewodnik: Zaawansowane łączenie modeli",
+             guideTitle: "Przewodnik po Łączeniu Modeli",
+             "nav.blueprints": "Schematy", "nav.recipes": "Przepisy", "nav.analysis": "Analiza", "nav.glossary": "Glosariusz",
+             "header.title": "Zaawansowane Łączenie Modeli",
+             "header.subtitle": "Interaktywny przewodnik po trzech filozofiach łączenia w celu stworzenia modelu do zasobów gry w stylu retro anime, dark fantasy i sci-fi. Wybierz strategię, aby poznać jej komponenty i przepisy.",
+             "strategy.sdxl": "Strategia \"Przeszczepu SDXL\"", "strategy.pony": "Strategia \"Czystej Krwi PONY\"", "strategy.hybrid": "Strategia \"Hybrydowego Łatania\"",
+             "sdxl.blueprint.title": "Schemat: Strategia \"Przeszczepu SDXL\"",
+             "sdxl.blueprint.description": "Ta strategia wykorzystuje stabilny model-host w stylu anime i chirurgicznie wstrzykuje określone \"umiejętności\" od architektonicznie różnych dawców `SDXL 1.0` za pomocą algorytmu DARE-TIES. Celem jest połączenie czystego stylu retro anime (Priorytet 1) z estetyką dark fantasy/sci-fi (Priorytet 2) i malarskim stylem (Priorytet 3).",
+             "sdxl.blueprint.card1.role": "Model A (Host, Priorytet 1)", "sdxl.blueprint.card1.desc": "Zapewnia fundamentalne rusztowanie: doskonałą anatomię, kompozycję i żywy styl retro anime z czystymi liniami.",
+             "sdxl.blueprint.card2.role": "Model B (Pomostowy)", "sdxl.blueprint.card2.desc": "Działa jako pomost, łącząc czysty wygląd anime z półrealistycznym odczuciem, aby uczynić hosta bardziej podatnym na dawców.",
+             "sdxl.blueprint.card3.role": "Dawca Stylu Malarskiego (Priorytet 3)", "sdxl.blueprint.card3.desc": "Wstrzykuje malarską, heroiczną esencję fantasy w stylu Frazetty i Vallejo, zapewniając pożądane wykończenie tekstur.",
+             "sdxl.blueprint.card4.role": "Dawca Tematyczny (Priorytet 2)", "sdxl.blueprint.card4.desc": "Potężny dawca do wstrzykiwania mrocznych, surowych, horrorowych i fantastycznonaukowych treści tematycznych.",
+             "sdxl.recipes.title": "Przepis i Implementacja: Przeszczep SDXL",
+             "sdxl.recipes.step1.title": "Etap 1: Tworzenie Hosta (Łączenie z wagami bloków)",
+             "sdxl.recipes.step1.desc": "Najpierw tworzymy solidny model-hosta, łącząc Animij (Model A) i Graycolor (Model B). Wartość wagi (`weight`) odnosi się do wkładu Modelu B. Waga `1.0` to 100% Modelu B, a `0.0` to 100% Modelu A.",
+             "sdxl.recipes.step1.btnBalanced": "Przepis A: Zrównoważony", "sdxl.recipes.step1.btnHost": "Przepis B: Z dominacją Hosta", "sdxl.recipes.step1.btnDonor": "Przepis C: Podatny na Dawcę",
+             "sdxl.recipes.explanation.balanced": "<strong>Przepis A: Zrównoważony</strong><br>Zalecany przepis, starannie obliczony, aby zrównoważyć integralność Animij z wkładem Graycolor. Faworyzuje Animij we wczesnych blokach, płynnie przechodzi w kierunku Graycolor w środku, a następnie wraca do Animij w końcowych blokach, aby uzyskać czyste linie.",
+             "sdxl.recipes.explanation.host_dominant": "<strong>Przepis B: Z dominacją Hosta</strong><br>Daje większą wagę Animij we wszystkich blokach. Rezultatem będzie model o wyjątkowo silnej anatomii i spójności, ściśle przylegający do stylu retro anime. Wpływ dawców będzie bardziej subtelny.",
+             "sdxl.recipes.explanation.donor_receptive": "<strong>Przepis C: Podatny na Dawcę</strong><br>Daje większą wagę Graycolor. Tworzy to bardziej elastyczny stylistycznie host, który jest otwarty na dawców. Kompromisem jest potencjalny spadek stabilności kompozycyjnej.",
+             "sdxl.recipes.step2.title": "Etap 2: Wstrzykiwanie umiejętności (DARE-TIES)",
+             "sdxl.recipes.step2.desc": "W tym etapie używamy zaawansowanego węzła `Model Merger (Advanced/DARE)`. Ta metoda jest alternatywą dla łączenia blokowego i ignoruje wagi ustawione dla poszczególnych bloków. Kontrola nad procesem odbywa się poprzez parametry DARE i TIES. Ogólna waga modelu powinna być ustawiona na `1.0`, aby zmiany zostały w pełni zastosowane.",
+             "sdxl.recipes.step2a.title": "Krok 2a: Wstrzyknij styl malarski (Priorytet 3)",
+             "sdxl.recipes.step2a.trimDesc": "Użyj węzła `Magnitude Masker`, aby zachować 40% najważniejszych zmian.",
+             "sdxl.recipes.step2a.justification": "`threshold: 0.60` w trybie `quantile` zachowuje 40% najważniejszych wektorów zmian, precyzyjnie izolując esencję stylu malarskiego. `density: 0.45` dodatkowo przerzedza te wektory, zapobiegając nadpisaniu bazy anime. Tryb `sum` jest standardowym, zalecanym wyborem dla TIES.",
+             "pony.blueprint.title": "Schemat: Strategia \"Czystej Krwi PONY\"",
+             "pony.blueprint.description": "Ta strategia pozostaje w obrębie architektonicznie spójnej rodziny \"Pony\", zapewniając wysoką kompatybilność i stabilność. Używa `JANKU` dla solidnej anatomii i `NEW ERA V5` dla tematyki, łącząc je z malarskimi modelami `Graycolor` i `SinGlo`, aby stworzyć dopracowany, spójny i gotowy do wektoryzacji wynik.",
+             "pony.blueprint.card1.role": "Host / Baza Strukturalna", "pony.blueprint.card1.desc": "Wszechstronny model z rodziny `NoobAI`, który zapewni podstawową, solidną anatomię i podatne podłoże dla mrocznych motywów.",
+             "pony.blueprint.card2.role": "Baza Tematyczna", "pony.blueprint.card2.desc": "Model o silnym stylu, który zostanie połączony z lepszą anatomią JANKU, aby stworzyć bazę \"Dark Anime\".",
+             "pony.blueprint.card3.role": "Fundament Stylu Malarskiego", "pony.blueprint.card3.desc": "Model z rodziny `Illustrious`, który zapewnia półrealistyczną, malarską bazę dla ostatecznego wykończenia.",
+             "pony.blueprint.card4.role": "Dawca Detali Tekstur", "pony.blueprint.card4.desc": "Model z rodziny `Illustrious` o unikalnym, ostrym stylu, który doda złożoności tekstur.",
+             "pony.recipes.title": "Przepis i Implementacja: Czysta Krew PONY",
+             "pony.recipes.step1.title": "Wieloetapowe Łączenie Bloków",
+             "pony.recipes.step1.desc": "To podejście wykorzystuje sekwencję łączeń do budowania ostatecznego modelu warstwa po warstwie. Wybierz etap, aby zobaczyć jego przepis. Wykres zaktualizuje się, aby pokazać wagi bloków. Najedź kursorem na dowolny blok, aby uzyskać szczegółowe uzasadnienie.",
+             "pony.recipes.step1.btnStage1": "Etap 1: Baza \"Dark Anime\"", "pony.recipes.step1.btnStage2": "Etap 2: \"Most Malarski\"", "pony.recipes.step1.btnStage3": "Etap 3: Finałowa Fuzja",
+             "pony.recipes.explanation.stage1": "<strong>Cel:</strong> Połączenie lepszej anatomii z JANKU (Model A) z mrocznym, stylizowanym tematem NEW ERA (Model B). <br><strong>Logika:</strong> Niskie wagi dla Modelu B we wczesnych blokach (IN00-04) zachowują anatomię z JANKU. Wagi rosną w środku (IN05-M00), aby w pełni zintegrować styl tematyczny NEW ERA, a następnie stopniowo maleją w blokach wyjściowych (OUT), aby zachować subtelne detale strukturalne z JANKU.",
+             "pony.recipes.explanation.stage2": "<strong>Cel:</strong> Stworzenie warstwy malarskiej poprzez połączenie półrealistycznej bazy Graycolor (Model A) z unikalnymi detalami tekstur SinGlo (Model B). <br><strong>Logika:</strong> Umiarkowane wagi dla Modelu B w środkowych i późnych blokach (IN08-OUT08) pozwalają na wprowadzenie charakterystycznych tekstur SinGlo bez przytłaczania bardziej stonowanej, malarskiej bazy Graycolor.",
+             "pony.recipes.explanation.stage3": "<strong>Cel:</strong> Ostateczna fuzja, która nakłada \"Most Malarski\" (Model B) na bazę \"Dark Anime\" (Model A). <br><strong>Logika:</strong> Wagi są bardzo niskie na początku (IN00-IN06), aby chronić kompozycję i anatomię bazy anime. Stopniowo rosną, aby wprowadzić styl malarski w koncepcji (M00) i detalach (OUT), ale pozostają poniżej 0.5, aby zapewnić, że malarska estetyka działa jako warstwa wykończeniowa, a nie przytłaczająca transformacja.",
+             "pony.assembly.title": "Montaż: Wersja \"Czystej Krwi PONY\"",
+             "pony.assembly.desc": "Nawet w obrębie rodziny Pony, gałęzie `NoobAI` i `Illustrious` mają różne \"słowniki\". Sekwencyjne łączenie CLIP jest nadal zalecane dla maksymalnej kontroli i zrozumienia promptów.",
+             "pony.assembly.clip.title": "Tworzenie Spójnego CLIP",
+             "pony.assembly.clip.desc": "To sekwencyjne łączenie zapewnia, że ostateczny CLIP rozumie prompty związane zarówno z bazą `NoobAI`, jak i warstwą stylu `Illustrious`.",
+             "pony.assembly.vae.desc": "Chociaż wszystkie modele pochodzą z rodziny Pony, użycie VAE z ostatecznego Głównego Hosta (`JANKU`) jest najbezpieczniejszym wyborem dla dokładności kolorów.",
+             "pony.assembly.vae.justification": "Zapewnia to, że ostateczny obraz jest dekodowany przez VAE dopasowany do bazy strukturalnej.",
+             "hybrid.blueprint.title": "Schemat: Strategia \"Hybrydowego Łatania\"",
+             "hybrid.blueprint.description": "Ta zaawansowana strategia tworzy bazę z rodziny Pony, a następnie używa DARE-TIES do \"łatania\" jej słabości (np. anatomii) modelem SDXL. To złożone, ale potężne podejście łączy stabilność Pony z siłą SDXL.",
+             "hybrid.blueprint.card1.role": "Baza Strukturalna Pony", "hybrid.blueprint.card1.desc": "Tworzy fundamenty anatomiczne bazy Pony.",
+             "hybrid.blueprint.card2.role": "Baza Tematyczna Pony", "hybrid.blueprint.card2.desc": "Wnosi do bazy Pony estetykę retro anime.",
+             "hybrid.blueprint.card3.role": "Baza Malarska Pony", "hybrid.blueprint.card3.desc": "Wprowadza jakość malarską.",
+             "hybrid.blueprint.card4.role": "Dawca Tekstur Pony", "hybrid.blueprint.card4.desc": "Dodaje ostre detale tekstur.",
+             "hybrid.blueprint.card5.role": "Łatka Anatomiczna", "hybrid.blueprint.card5.desc": "Model SDXL używany do chirurgicznego korygowania wad w bazie Pony.",
+             "hybrid.recipes.title": "Przepis i Implementacja: Hybrydowe Łatanie",
+             "hybrid.recipes.step1.title": "Czteroetapowy Przepis Hybrydowy",
+             "hybrid.recipes.step1.desc": "Ten przepis obejmuje łączenie bloków, chirurgiczną iniekcję DARE-TIES i ostateczną fuzję. Wybierz etap, aby zobaczyć jego przepis. Etap 3 to proces DARE-TIES i zamiast wykresu pokaże parametry iniekcji.",
+             "hybrid.recipes.step1.btnStage1": "Etap 1: Baza Dark Anime", "hybrid.recipes.step1.btnStage2": "Etap 2: Most Malarski", "hybrid.recipes.step1.btnStage3": "Etap 3: Łatka Anatomiczna", "hybrid.recipes.step1.btnStage4": "Etap 4: Finałowa Fuzja",
+             "hybrid.recipes.explanation.stage1": "<strong>Cel:</strong> Połączenie lepszej anatomii z JANKU (Model A) z mrocznym, stylizowanym tematem NEW ERA (Model B), tworząc solidną bazę Pony. <br><strong>Logika:</strong> Identyczna jak w Etapie 1 strategii 'Czystej Krwi Pony', aby stworzyć tę samą solidną bazę anime.",
+             "hybrid.recipes.explanation.stage2": "<strong>Cel:</strong> Stworzenie warstwy malarskiej poprzez połączenie półrealistycznej bazy Graycolor (Model A) z unikalnymi detalami tekstur SinGlo (Model B). <br><strong>Logika:</strong> Identyczna jak w Etapie 2 strategii 'Czystej Krwi Pony', aby stworzyć tę samą warstwę stylu.",
+             "hybrid.recipes.explanation.stage3": `<strong>Etap 3: Łatka Anatomiczna (DARE-TIES)</strong><br>Krok chirurgiczny. Używamy DARE-TIES do wstrzyknięcia wiedzy anatomicznej z <strong>Boomer Art</strong> do naszej bazy 'Dark Anime', aby naprawić anatomię bez naruszania stylu hosta. Poniżej przedstawiono dokładny dwuetapowy proces z użyciem węzłów z ComfyUI-DareMerge.
+                                 <div class="dare-panel mt-4">
+                                     <h4 class="font-bold text-lg text-slate-200 mb-4 text-center">Przeszczep Anatomiczny</h4>
+                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                                         <div>
+                                             <h5 class="text-sm font-semibold text-indigo-300 mb-2">Krok 1: Przycinanie (TIES Trim)</h5>
+                                             <p class="text-xs text-slate-400 mb-4">Użyj węzła \`Magnitude Masker\`, aby zachować 20% najważniejszych zmian anatomicznych.</p>
+                                             <p class="text-xs"><strong class="text-slate-300">model_a:</strong> 'Baza Dark Anime'</p>
+                                             <p class="text-xs"><strong class="text-slate-300">model_b:</strong> sd_xl_base_1.0</p>
+                                             <p class="text-xs"><strong class="text-slate-300">threshold:</strong> 0.80</p>
+                                             <p class="text-xs"><strong class="text-slate-300">threshold_type:</strong> quantile</p>
+                                         </div>
+                                         <div>
+                                             <h5 class="text-sm font-semibold text-red-300 mb-2">Krok 2: Łączenie (DARE Merge)</h5>
+                                             <p class="text-xs text-slate-400 mb-4">Użyj węzła \`Model Merger (DARE)\` z utworzoną maską.</p>
+                                             <p class="text-xs"><strong class="text-slate-300">model1:</strong> 'Baza Dark Anime'</p>
+                                             <p class="text-xs"><strong class="text-slate-300">model2:</strong> Boomer Art Model</p>
+                                             <p class="text-xs"><strong class="text-slate-300">base_model:</strong> sd_xl_base_1.0</p>
+                                             <p class="text-xs"><strong class="text-slate-300">density:</strong> 0.20</p>
+                                             <p class="text-xs"><strong class="text-slate-300">ties_mode:</strong> sum</p>
+                                         </div>
+                                     </div>
+                                     <div class="mt-6 pt-4 border-t border-slate-700">
+                                         <h5 class="text-sm font-semibold text-slate-300 mb-2">Uzasadnienie</h5>
+                                         <p class="text-xs text-slate-400">Bardzo agresywne przycinanie (\`threshold: 0.80\`) izoluje tylko 20% najsilniejszych wektorów zmian, które najprawdopodobniej odpowiadają fundamentalnej wiedzy anatomicznej. Niska \`gęstość\` (0.20) zapewnia, że ta 'łatka' jest stosowana bardzo precyzyjnie i nie zakłóca stylu bazy Pony.</p>
+                                     </div>
+                                 </div>`,
+             "hybrid.recipes.explanation.stage4": "<strong>Cel:</strong> Zastosowanie 'Mostu Malarskiego' jako warstwy wykończeniowej na 'Bazie z łatką', aby osiągnąć ostateczny wygląd. <br><strong>Logika:</strong> Wagi są utrzymywane bardzo nisko, aby styl malarski był subtelnym wykończeniem, a nie dominującą cechą. Chroni to zarówno bazę anime, jak i precyzyjną 'łatkę' anatomiczną wstrzykniętą w poprzednim etapie.",
+             "hybrid.assembly.title": "Montaż: Wersja Hybrydowa",
+             "hybrid.assembly.desc": "Łączenie CLIP jest tu najbardziej złożone, wymagając sekwencyjnego, dwuetapowego połączenia w celu włączenia słownictwa wszystkich modeli.",
+             "hybrid.assembly.clip.title": "Tworzenie \"Trójjęzycznego\" CLIP",
+             "hybrid.assembly.clip.desc": "Aby zapewnić kompatybilność, wykonujemy sekwencyjne, ważone łączenie. Najpierw tworzymy bazę Pony, a następnie łączymy ją z SDXL.",
+             "hybrid.assembly.clip.step1Title": "Etap 1: Tworzenie bazowego CLIP Pony",
+             "hybrid.assembly.clip.step2Title": "Etap 2: Łączenie z SDXL",
+             "hybrid.assembly.clip.final": "Finałowy Trójjęzyczny CLIP",
+             "hybrid.assembly.clip.noteTitle": "Uwaga: Łatanie niezgodności CLIP",
+             "hybrid.assembly.clip.noteDesc": "CLIP modelu \"Boomer Art\" (SDXL) jest architektonicznie niezgodny z CLIP-ami Pony. Zaawansowane techniki jak DARE-TIES z maskowaniem nie mają tu zastosowania, gdyż węzły do łączenia CLIP nie posiadają wejścia na maskę. Zamiast tego, 'łatanie' niezgodności osiąga się poprzez **proste łączenie wagowe** (np. w węźle `CLIPMergeSimple`), nadając bardzo niską wagę niezgodnemu CLIP-owi z SDXL (np. 0.15-0.20). To pozwala na 'wstrzyknięcie' odrobiny jego słownictwa bez niszczenia głównej bazy Pony.",
+             "hybrid.assembly.vae.desc": "VAE z głównego hosta strukturalnego, `JANKU V4.0`, pozostaje najbezpieczniejszym wyborem do utrzymania spójności kolorów pomimo złożonych łączeń.",
+             "hybrid.assembly.vae.justification": "Ponieważ ostateczny model jest w przeważającej mierze oparty na Pony, użycie VAE Pony jest kluczowe, aby zapobiec artefaktom.",
+             "analysis.title": "Analiza Porównawcza i Rekomendacja",
+             "analysis.desc": "Wybór strategii łączenia wiąże się z kompromisem między stabilnością, zasięgiem stylistycznym a złożonością. Ta sekcja podsumowuje kluczowe różnice, aby pomóc Ci zdecydować, która wersja najlepiej odpowiada Twoim potrzebom.",
+             "analysis.table.header1": "Czynnik",
+             "analysis.table.row1.title": "Główna Filozofia", "analysis.table.row1.col1": "Chirurgiczne Wstrzykiwanie Umiejętności (DARE-TIES)", "analysis.table.row1.col2": "Harmonia Architektoniczna (Łączenie Bloków)", "analysis.table.row1.col3": "Łączenie Bloków + Chirurgiczne Łatanie (DARE-TIES)",
+             "analysis.table.row2.title": "Stabilność", "analysis.table.row2.col1": "Dobra, ale wyższe ryzyko artefaktów z powodu łączenia międzyarchitektonicznego.", "analysis.table.row2.col2": "Doskonała. Łączenie kompatybilnych modeli jest bardziej stabilne.", "analysis.table.row2.col3": "Bardzo Dobra. Głównie stabilna, ale wstrzyknięcie SDXL wprowadza mały czynnik ryzyka.",
+             "analysis.table.row3.title": "Zasięg Stylistyczny", "analysis.table.row3.col1": "Najszerszy. Może włączać style z zupełnie różnych rodzin.", "analysis.table.row3.col2": "Skoncentrowany. Doskonale łączy style w ekosystemie Pony, dając wyrafinowany wynik.", "analysis.table.row3.col3": "Unikalny. Tworzy nowatorską mieszankę przez \"łatanie\" bazy Pony cechami SDXL.",
+             "analysis.table.row4.title": "Złożoność", "analysis.table.row4.col1": "Wysoka. Wymaga konfiguracji DARE-TIES.", "analysis.table.row4.col2": "Średnia. Proste wieloetapowe łączenie bloków.", "analysis.table.row4.col3": "Bardzo Wysoka. Łączy obie techniki w czteroetapowym procesie.",
+             "analysis.table.row5.title": "Najlepsze dla...", "analysis.table.row5.col1": "Osiągnięcia bardzo specyficznej, unikalnej mieszanki odmiennych estetyk (np. retro anime + styl Frazetty).", "analysis.table.row5.col2": "Tworzenia bardzo dopracowanego i stabilnego modelu do konsekwentnego generowania zasobów z czystymi liniami.", "analysis.table.row5.col3": "Eksperymentalnego łączenia w celu naprawy wad (np. słabej anatomii) w modelu bazowym przy użyciu dawcy z innej rodziny.",
+             "analysis.recommendation.title": "Ostateczna Rekomendacja",
+             "analysis.recommendation.p1": "Dla celu tworzenia **spójnych zasobów do gier** z **czystymi liniami do wektoryzacji**, wersja **\"Czystej Krwi PONY\" jest najlepszym i najbezpieczniejszym wyborem.**",
+             "analysis.recommendation.p2": "Jej harmonia architektoniczna zapewnia najwyższą stabilność i przewidywalność. **\"Hybrydowe Łatanie\"** to potężna alternatywa dla zaawansowanych użytkowników, ale jej złożoność czyni ją bardziej eksperymentalną. Wersja **\"Przeszczepu SDXL\"** jest najlepsza, gdy pożądanej estetyki nie można osiągnąć w ramach jednej rodziny.",
+             "glossary.title": "Glosariusz Terminów",
+             "glossary.desc": "Zrozumienie terminologii jest kluczem do udanego łączenia modeli. Oto definicje podstawowych pojęć omówionych w tym przewodniku.",
+             "glossary.term1.title": "Łączenie z wagami bloków", "glossary.term1.desc": "Technika, w której różne warstwy (bloki) dwóch sieci neuronowych są łączone z różnymi wagami. Wczesne warstwy (IN) kontrolują kompozycję i anatomię, środkowe (M) kontrolują koncepcje, a późne (OUT) kontrolują detale i styl. Jest to metoda odrębna od DARE-TIES.",
+             "glossary.term2.title": "DARE-TIES", "glossary.term2.desc": "Zaawansowany algorytm do chirurgicznego wstrzykiwania umiejętności, zaimplementowany w `ComfyUI-DareMerge`. Składa się z dwóch głównych mechanizmów:", "glossary.term2.li1": "<strong>DARE (`density`):</strong> Określa, jaki procent (`density`) wektorów zmian jest **zachowywany** podczas losowego przerzedzania. Jest to odwrotność `drop_rate` z publikacji (`density = 1 - drop_rate`). Wartość `0.2` oznacza zachowanie 20% i odrzucenie 80%.", "glossary.term2.li2": "<strong>TIES (`ties_mode`):</strong> Rozwiązuje konflikty między modelami. Kluczowym krokiem jest \"Przycinanie\" (Trim), które w `ComfyUI-DareMerge` realizuje się za pomocą węzła `Magnitude Masker` (np. z `threshold_type: quantile`), aby zachować tylko najważniejsze zmiany przed właściwym łączeniem.",
+             "glossary.term3.title": "UNet", "glossary.term3.desc": "Podstawowa architektura sieci neuronowej w modelach dyfuzyjnych, która generuje obraz. Składa się z bloków wejściowych (IN), środkowych (M) i wyjściowych (OUT).",
+             "glossary.term4.title": "CLIP", "glossary.term4.desc": "Komponent, który rozumie prompty tekstowe. Tłumaczy słowa na matematyczną reprezentację, której UNet używa do kierowania generowaniem obrazu. Łączenie CLIP-ów jest kluczowe, aby model rozumiał połączone \"słownictwo\" swoich rodziców.",
+             "glossary.term5.title": "VAE (Variational Autoencoder)", "glossary.term5.desc": "Mała sieć neuronowa, która tłumaczy dane wyjściowe UNet na rzeczywiste piksele. Dobry VAE zapewnia żywe kolory. Najbezpieczniej jest używać VAE z głównego modelu bazowego.",
+             "glossary.term6.title": "Rodzina Architektoniczna", "glossary.term6.desc": "Grupa modeli o zgodnych strukturach wewnętrznych (np. Pony, SDXL 1.0). Łączenie w obrębie tej samej rodziny jest generalnie bardziej stabilne niż łączenie między rodzinami, które często wymaga DARE-TIES do rozwiązania niezgodności.",
+             "dare.trim.title": "Krok 1: Przycinanie (TIES Trim)", "dare.merge.title": "Krok 2: Łączenie (DARE Merge)", "dare.merge.desc": "Użyj `Model Merger (DARE)` z utworzoną maską.", "dare.hostFromStep1": "Host z Etapu 1", "dare.justification": "Uzasadnienie",
+             "dare.fixed": "Ten etap to operacja DARE, która nie wykorzystuje wag bloków. Parametry są stałe.",
+             "clip.merge.noobai.title": "Połączenie `NoobAI` CLIPs", "clip.merge.noobai.weights": "(50% / 50%)", "clip.merge.noobai.result": "Połączenie `NoobAI`",
+             "clip.merge.illustrious.title": "Połączenie `Illustrious` CLIPs", "clip.merge.illustrious.weights": "(50% / 50%)", "clip.merge.illustrious.result": "Połączenie `Illustrious`",
+             "clip.merge.pony.title": "Finałowe Połączenie Pony", "clip.merge.pony.weights": "(70% NoobAI / 30% Illustrious)", "clip.merge.pony.final": "Finałowy Spójny CLIP",
+             "clip.merge.pony.result": "Baza Pony CLIP",
+             "clip.merge.hybrid.ponyweights": "(60% NoobAI / 40% Illustrious)", "clip.merge.hybrid.finalweights": "(85% Pony Base / 15% SDXL)",
+             "vae.title": "Wybór VAE dla Wierności", "vae.recommendation": "Główna Rekomendacja",
+             "footer.text": "Skonsolidowany Interaktywny Przewodnik po Zaawansowanym Łączeniu Modeli",
+             "chart.hoverPrompt": "Najedź kursorem na blok na wykresie, aby zobaczyć jego funkcję."
+         },
+         en: {
+             pageTitle: "Interactive Guide: Advanced Model Merging",
+             guideTitle: "Model Merging Guide",
+             "nav.blueprints": "Blueprints", "nav.recipes": "Recipes", "nav.analysis": "Analysis", "nav.glossary": "Glossary",
+             "header.title": "Advanced Model Merging",
+             "header.subtitle": "An interactive guide to three merging philosophies for creating a model for retro anime, dark fantasy, and sci-fi game assets. Choose a strategy to explore its components and recipes.",
+             "strategy.sdxl": "\"SDXL Grafting\" Strategy", "strategy.pony": "\"Pureblood PONY\" Strategy", "strategy.hybrid": "\"Hybrid Patching\" Strategy",
+             "sdxl.blueprint.title": "Blueprint: \"SDXL Grafting\" Strategy",
+             "sdxl.blueprint.description": "This strategy uses a stable anime-style host model and surgically injects specific \"skills\" from architecturally different `SDXL 1.0` donors using the DARE-TIES algorithm. The goal is to combine a clean retro anime style (Priority 1) with dark fantasy/sci-fi aesthetics (Priority 2) and a painterly style (Priority 3).",
+             "sdxl.blueprint.card1.role": "Model A (Host, Priority 1)", "sdxl.blueprint.card1.desc": "Provides the fundamental scaffolding: excellent anatomy, composition, and a vibrant retro anime style with clean lines.",
+             "sdxl.blueprint.card2.role": "Model B (Bridge)", "sdxl.blueprint.card2.desc": "Acts as a bridge, blending the clean anime look with a semi-realistic feel to make the host more receptive to donors.",
+             "sdxl.blueprint.card3.role": "Painterly Style Donor (Priority 3)", "sdxl.blueprint.card3.desc": "Injects a painterly, heroic fantasy essence in the style of Frazetta and Vallejo, providing the desired textural finish.",
+             "sdxl.blueprint.card4.role": "Thematic Donor (Priority 2)", "sdxl.blueprint.card4.desc": "A powerful donor for injecting dark, raw, horror, and sci-fi thematic content.",
+             "sdxl.recipes.title": "Recipe & Implementation: SDXL Grafting",
+             "sdxl.recipes.step1.title": "Step 1: Host Creation (Block Weight Merge)",
+             "sdxl.recipes.step1.desc": "First, we create a robust host model by merging Animij (Model A) and Graycolor (Model B). The `weight` value refers to Model B's contribution. A weight of `1.0` is 100% Model B, and `0.0` is 100% Model A.",
+             "sdxl.recipes.step1.btnBalanced": "Recipe A: Balanced", "sdxl.recipes.step1.btnHost": "Recipe B: Host-Dominant", "sdxl.recipes.step1.btnDonor": "Recipe C: Donor-Receptive",
+             "sdxl.recipes.explanation.balanced": "<strong>Recipe A: Balanced (Default)</strong><br>The recommended recipe, carefully calculated to balance the integrity of Animij with the contribution of Graycolor. It favors Animij in the early blocks, smoothly transitions towards Graycolor in the middle, and then returns to Animij in the final blocks for clean lines.",
+             "sdxl.recipes.explanation.host_dominant": "<strong>Recipe B: Host-Dominant</strong><br>Gives more weight to Animij across all blocks. The result will be a model with exceptionally strong anatomy and coherence, adhering closely to the retro anime style. The influence of donors will be more subtle.",
+             "sdxl.recipes.explanation.donor_receptive": "<strong>Recipe C: Donor-Receptive</strong><br>Gives more weight to Graycolor. This creates a more stylistically flexible host that is receptive to donors. The trade-off is a potential decrease in compositional stability.",
+             "sdxl.recipes.step2.title": "Step 2: Skill Injection (DARE-TIES)",
+             "sdxl.recipes.step2.desc": "In this step, we use the advanced `Model Merger (Advanced/DARE)` node. This method is an alternative to block merging and ignores the weights set for individual blocks. Control over the process is done via DARE and TIES parameters. The overall model weight should be set to `1.0` for the changes to be fully applied.",
+             "sdxl.recipes.step2a.title": "Step 2a: Inject Painterly Style (Priority 3)",
+             "sdxl.recipes.step2a.trimDesc": "Use the `Magnitude Masker` node to keep the top 40% of changes.",
+             "sdxl.recipes.step2a.justification": "`threshold: 0.60` in `quantile` mode preserves the top 40% of change vectors, precisely isolating the painterly style's essence. `density: 0.45` further thins these vectors, preventing the anime base from being overwritten. The `sum` mode is the standard, recommended choice for TIES.",
+             "pony.blueprint.title": "Blueprint: \"Pureblood PONY\" Strategy",
+             "pony.blueprint.description": "This strategy stays within the architecturally consistent \"Pony\" family, ensuring high compatibility and stability. It uses `JANKU` for solid anatomy and `NEW ERA V5` for thematics, merging them with the painterly `Graycolor` and `SinGlo` models to create a polished, coherent, and vector-ready result.",
+             "pony.blueprint.card1.role": "Host / Structural Base", "pony.blueprint.card1.desc": "A versatile model from the `NoobAI` family that provides a solid anatomical base and a receptive foundation for dark themes.",
+             "pony.blueprint.card2.role": "Thematic Base", "pony.blueprint.card2.desc": "A model with a strong style that will be merged with JANKU's better anatomy to create a \"Dark Anime\" base.",
+             "pony.blueprint.card3.role": "Painterly Style Foundation", "pony.blueprint.card3.desc": "A model from the `Illustrious` family that provides a semi-realistic, painterly base for the final finish.",
+             "pony.blueprint.card4.role": "Texture Detail Donor", "pony.blueprint.card4.desc": "A model from the `Illustrious` family with a unique, sharp style that will add textural complexity.",
+             "pony.recipes.title": "Recipe & Implementation: Pureblood PONY",
+             "pony.recipes.step1.title": "Multi-Stage Block Merging",
+             "pony.recipes.step1.desc": "This approach uses a sequence of merges to build the final model layer by layer. Select a stage to see its recipe. The chart will update to show the block weights. Hover over any block for a detailed justification.",
+             "pony.recipes.step1.btnStage1": "Stage 1: \"Dark Anime\" Base", "pony.recipes.step1.btnStage2": "Stage 2: \"Painterly Bridge\"", "pony.recipes.step1.btnStage3": "Stage 3: Final Fusion",
+             "pony.recipes.explanation.stage1": "<strong>Goal:</strong> To combine the superior anatomy of JANKU (Model A) with the dark, stylized theme of NEW ERA (Model B). <br><strong>Rationale:</strong> Low weights for Model B in the early blocks (IN00-04) preserve JANKU's anatomy. The weights increase in the middle (IN05-M00) to fully integrate NEW ERA's thematic style, then gradually decrease in the output blocks (OUT) to retain subtle structural details from JANKU.",
+             "pony.recipes.explanation.stage2": "<strong>Goal:</strong> To create a painterly layer by merging the semi-realistic base of Graycolor (Model A) with the unique texture details of SinGlo (Model B). <br><strong>Rationale:</strong> Moderate weights for Model B in the mid-to-late blocks (IN08-OUT08) allow SinGlo's distinctive textures to be introduced without overpowering the more subdued, painterly base of Graycolor.",
+             "pony.recipes.explanation.stage3": "<strong>Goal:</strong> The final fusion, which applies the 'Painterly Bridge' (Model B) on top of the 'Dark Anime' base (Model A). <br><strong>Rationale:</strong> Weights are kept very low at the beginning (IN00-IN06) to protect the anime base's composition and anatomy. They gradually increase to introduce the painterly style in the concept (M00) and details (OUT), but are kept below 0.5 to ensure the painterly aesthetic acts as a finishing layer, not an overwhelming transformation.",
+             "pony.assembly.title": "Assembly: \"Pureblood PONY\" Version",
+             "pony.assembly.desc": "Even within the Pony family, the `NoobAI` and `Illustrious` branches have different \"vocabularies.\" Sequential CLIP merging is still recommended for maximum control and prompt understanding.",
+             "pony.assembly.clip.title": "Creating a Coherent CLIP",
+             "pony.assembly.clip.desc": "This sequential merge ensures the final CLIP understands prompts related to both the `NoobAI` base and the `Illustrious` style layer.",
+             "pony.assembly.vae.desc": "Although all models are from the Pony family, using the VAE from the final Main Host (`JANKU`) is the safest choice for color accuracy.",
+             "pony.assembly.vae.justification": "This ensures the final image is decoded by a VAE matched to the structural base.",
+             "hybrid.blueprint.title": "Blueprint: \"Hybrid Patching\" Strategy",
+             "hybrid.blueprint.description": "This advanced strategy creates a base from the Pony family and then uses DARE-TIES to \"patch\" its weaknesses (e.g., anatomy) with an SDXL model. This complex but powerful approach combines Pony's stability with SDXL's strength.",
+             "hybrid.blueprint.card1.role": "Pony Structural Base", "hybrid.blueprint.card1.desc": "Creates the anatomical foundation of the Pony base.",
+             "hybrid.blueprint.card2.role": "Pony Thematic Base", "hybrid.blueprint.card2.desc": "Brings the retro anime aesthetic to the Pony base.",
+             "hybrid.blueprint.card3.role": "Pony Painterly Base", "hybrid.blueprint.card3.desc": "Introduces a painterly quality.",
+             "hybrid.blueprint.card4.role": "Pony Texture Donor", "hybrid.blueprint.card4.desc": "Adds sharp texture details.",
+             "hybrid.blueprint.card5.role": "Anatomical Patch", "hybrid.blueprint.card5.desc": "An SDXL model used to surgically correct flaws in the Pony base.",
+             "hybrid.recipes.title": "Recipe & Implementation: Hybrid Patching",
+             "hybrid.recipes.step1.title": "Four-Stage Hybrid Recipe",
+             "hybrid.recipes.step1.desc": "This recipe involves block merging, a surgical DARE-TIES injection, and a final fusion. Select a stage to see its recipe. Stage 3 is a DARE-TIES process and will show injection parameters instead of a chart.",
+             "hybrid.recipes.step1.btnStage1": "Stage 1: Dark Anime Base", "hybrid.recipes.step1.btnStage2": "Stage 2: Painterly Bridge", "hybrid.recipes.step1.btnStage3": "Stage 3: Anatomical Patch", "hybrid.recipes.step1.btnStage4": "Stage 4: Final Fusion",
+             "hybrid.recipes.explanation.stage1": "<strong>Goal:</strong> To combine the superior anatomy of JANKU (Model A) with the dark, stylized theme of NEW ERA (Model B), creating a solid Pony base. <br><strong>Rationale:</strong> Identical to Stage 1 of the 'Pureblood Pony' strategy to create the same robust anime base.",
+             "hybrid.recipes.explanation.stage2": "<strong>Goal:</strong> To create a painterly layer by merging the semi-realistic base of Graycolor (Model A) with the unique texture details of SinGlo (Model B). <br><strong>Rationale:</strong> Identical to Stage 2 of the 'Pureblood Pony' strategy to create the same style layer.",
+             "hybrid.recipes.explanation.stage3": `<strong>Stage 3: Anatomy Patch (DARE-TIES)</strong><br>A surgical step. We use DARE-TIES to inject anatomical knowledge from <strong>Boomer Art</strong> into our 'Dark Anime' base to fix anatomy without compromising the host's style. The exact two-step process using nodes from ComfyUI-DareMerge is shown below.
+                                 <div class="dare-panel mt-4">
+                                     <h4 class="font-bold text-lg text-slate-200 mb-4 text-center">Anatomy Graft</h4>
+                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                                         <div>
+                                             <h5 class="text-sm font-semibold text-indigo-300 mb-2">Step 1: Pruning (TIES Trim)</h5>
+                                             <p class="text-xs text-slate-400 mb-4">Use \`Magnitude Masker\` to keep the top 20% of the most significant anatomical changes.</p>
+                                             <p class="text-xs"><strong class="text-slate-300">model_a:</strong> 'Dark Anime Base'</p>
+                                             <p class="text-xs"><strong class="text-slate-300">model_b:</strong> sd_xl_base_1.0</p>
+                                             <p class="text-xs"><strong class="text-slate-300">threshold:</strong> 0.80</p>
+                                             <p class="text-xs"><strong class="text-slate-300">threshold_type:</strong> quantile</p>
+                                         </div>
+                                         <div>
+                                             <h5 class="text-sm font-semibold text-red-300 mb-2">Step 2: Merging (DARE Merge)</h5>
+                                             <p class="text-xs text-slate-400 mb-4">Use \`Model Merger (DARE)\` with the created mask.</p>
+                                             <p class="text-xs"><strong class="text-slate-300">model1:</strong> 'Dark Anime Base'</p>
+                                             <p class="text-xs"><strong class="text-slate-300">model2:</strong> Boomer Art Model</p>
+                                             <p class="text-xs"><strong class="text-slate-300">base_model:</strong> sd_xl_base_1.0</p>
+                                             <p class="text-xs"><strong class="text-slate-300">density:</strong> 0.20</p>
+                                             <p class="text-xs"><strong class="text-slate-300">ties_mode:</strong> sum</p>
+                                         </div>
+                                     </div>
+                                     <div class="mt-6 pt-4 border-t border-slate-700">
+                                         <h5 class="text-sm font-semibold text-slate-300 mb-2">Justification</h5>
+                                         <p class="text-xs text-slate-400">Very aggressive pruning (\`threshold: 0.80\`) isolates only the top 20% of the strongest change vectors, which are most likely to correspond to fundamental anatomical knowledge. A low \`density\` (0.20) ensures this "patch" is applied very precisely and does not disrupt the style of the Pony base.</p>
+                                     </div>
+                                 </div>`,
+             "hybrid.recipes.explanation.stage4": "<strong>Goal:</strong> To apply the 'Painterly Bridge' as a finishing layer onto the 'Patched Base' to achieve the final look. <br><strong>Rationale:</strong> The weights are kept very low to ensure the painterly style is a subtle finish, not a dominant feature. This protects both the anime base and the precise anatomical 'patch' injected in the previous stage.",
+             "hybrid.assembly.title": "Assembly: Hybrid Version",
+             "hybrid.assembly.desc": "CLIP merging is most complex here, requiring a sequential, two-step merge to incorporate the vocabulary of all models.",
+             "hybrid.assembly.clip.title": "Creating a \"Trilingual\" CLIP",
+             "hybrid.assembly.clip.desc": "To ensure compatibility, we perform a sequential, weighted merge. First, we create the Pony base, then merge it with SDXL.",
+             "hybrid.assembly.clip.step1Title": "Step 1: Create Pony Base CLIP",
+             "hybrid.assembly.clip.step2Title": "Step 2: Merge with SDXL",
+             "hybrid.assembly.clip.final": "Final Trilingual CLIP",
+             "hybrid.assembly.clip.noteTitle": "Note: Patching CLIP Incompatibility",
+             "hybrid.assembly.clip.noteDesc": "The \"Boomer Art\" model's CLIP (SDXL) is architecturally incompatible with Pony CLIPs. Advanced techniques like DARE-TIES with masking do not apply here, as CLIP merging nodes do not have a mask input. Instead, 'patching' the incompatibility is achieved through a **simple weighted merge** (e.g., in the `CLIPMergeSimple` node), giving a very low weight to the incompatible SDXL CLIP (e.g., 0.15-0.20). This allows for 'injecting' a small amount of its vocabulary without destroying the main Pony base.",
+             "hybrid.assembly.vae.desc": "The VAE from the main structural host, `JANKU V4.0`, remains the safest choice for maintaining color consistency despite the complex merges.",
+             "hybrid.assembly.vae.justification": "Since the final model is predominantly Pony-based, using a Pony VAE is crucial to prevent artifacts.",
+             "analysis.title": "Comparative Analysis and Recommendation",
+             "analysis.desc": "Choosing a merging strategy involves a trade-off between stability, stylistic range, and complexity. This section summarizes the key differences to help you decide which version best suits your needs.",
+             "analysis.table.header1": "Factor",
+             "analysis.table.row1.title": "Core Philosophy", "analysis.table.row1.col1": "Surgical Skill Injection (DARE-TIES)", "analysis.table.row1.col2": "Architectural Harmony (Block Weight Merge)", "analysis.table.row1.col3": "Block Merging + Surgical Patching (DARE-TIES)",
+             "analysis.table.row2.title": "Stability", "analysis.table.row2.col1": "Good, but higher risk of artifacts due to cross-architecture merging.", "analysis.table.row2.col2": "Excellent. Merging compatible models is more stable.", "analysis.table.row2.col3": "Very Good. Mostly stable, but the SDXL injection introduces a small risk factor.",
+             "analysis.table.row3.title": "Stylistic Range", "analysis.table.row3.col1": "Widest. Can incorporate styles from completely different families.", "analysis.table.row3.col2": "Focused. Perfectly blends styles within the Pony ecosystem for a refined result.", "analysis.table.row3.col3": "Unique. Creates a novel blend by \"patching\" a Pony base with SDXL traits.",
+             "analysis.table.row4.title": "Complexity", "analysis.table.row4.col1": "High. Requires DARE-TIES setup.", "analysis.table.row4.col2": "Medium. Straightforward multi-stage block merging.", "analysis.table.row4.col3": "Very High. Combines both techniques in a four-stage process.",
+             "analysis.table.row5.title": "Best for...", "analysis.table.row5.col1": "Achieving a very specific, unique blend of disparate aesthetics (e.g., retro anime + Frazetta style).", "analysis.table.row5.col2": "Creating a highly polished and stable model for consistent asset generation with clean lines.", "analysis.table.row5.col3": "Experimental merging to fix flaws (e.g., poor anatomy) in a base model using a donor from another family.",
+             "analysis.recommendation.title": "Final Recommendation",
+             "analysis.recommendation.p1": "For the goal of creating **consistent game assets** with **clean lines for vectorization**, the **\"Pureblood PONY\" version is the best and safest choice.**",
+             "analysis.recommendation.p2": "Its architectural harmony ensures the highest stability and predictability. **\"Hybrid Patching\"** is a powerful alternative for advanced users, but its complexity makes it more experimental. The **\"SDXL Grafting\"** version is best when the desired aesthetic cannot be achieved within a single family.",
+             "glossary.title": "Glossary of Terms",
+             "glossary.desc": "Understanding the terminology is key to successful model merging. Here are definitions of the core concepts discussed in this guide.",
+             "glossary.term1.title": "Block Weight Merging", "glossary.term1.desc": "A technique where different layers (blocks) of two neural networks are merged with different weights. Early layers (IN) control composition and anatomy, the middle layer (M) controls concepts, and late layers (OUT) control details and style. This is a distinct method from DARE-TIES.",
+             "glossary.term2.title": "DARE-TIES", "glossary.term2.desc": "An advanced algorithm for surgical skill injection, implemented in `ComfyUI-DareMerge`. It consists of two main mechanisms:", "glossary.term2.li1": "<strong>DARE (`density`):</strong> Determines what percentage (`density`) of change vectors are **kept** during random pruning. It is the inverse of the paper's `drop_rate` (`density = 1 - drop_rate`). A value of `0.2` means 20% are kept and 80% are discarded.", "glossary.term2.li2": "<strong>TIES (`ties_mode`):</strong> Resolves conflicts between models. A key step is \"Trimming,\" which in `ComfyUI-DareMerge` is done using the `Magnitude Masker` node (e.g., with `threshold_type: quantile`) to keep only the most significant changes before the actual merge.",
+             "glossary.term3.title": "UNet", "glossary.term3.desc": "The core neural network architecture in diffusion models that generates the image. It consists of input (IN), middle (M), and output (OUT) blocks.",
+             "glossary.term4.title": "CLIP", "glossary.term4.desc": "The component that understands text prompts. It translates words into a mathematical representation that the UNet uses to guide image generation. Merging CLIPs is crucial for the model to understand the combined \"vocabulary\" of its parents.",
+             "glossary.term5.title": "VAE (Variational Autoencoder)", "glossary.term5.desc": "A small neural network that translates the UNet's output into actual pixels. A good VAE ensures vibrant colors. It's safest to use the VAE from the main base model.",
+             "glossary.term6.title": "Architectural Family", "glossary.term6.desc": "A group of models with compatible internal structures (e.g., Pony, SDXL 1.0). Merging within the same family is generally more stable than merging between families, which often requires DARE-TIES to resolve incompatibilities.",
+             "dare.trim.title": "Step 1: Trimming (TIES Trim)", "dare.merge.title": "Step 2: Merging (DARE Merge)", "dare.merge.desc": "Use `Model Merger (DARE)` with the created mask.", "dare.hostFromStep1": "Host from Step 1", "dare.justification": "Justification",
+             "dare.fixed": "This stage is a DARE operation, which does not use block weights. Parameters are fixed.",
+             "clip.merge.noobai.title": "`NoobAI` CLIPs Merge", "clip.merge.noobai.weights": "(50% / 50%)", "clip.merge.noobai.result": "`NoobAI` Merge",
+             "clip.merge.illustrious.title": "`Illustrious` CLIPs Merge", "clip.merge.illustrious.weights": "(50% / 50%)", "clip.merge.illustrious.result": "`Illustrious` Merge",
+             "clip.merge.pony.title": "Final Pony Merge", "clip.merge.pony.weights": "(70% NoobAI / 30% Illustrious)", "clip.merge.pony.final": "Final Coherent CLIP",
+             "clip.merge.pony.result": "Pony Base CLIP",
+             "clip.merge.hybrid.ponyweights": "(60% NoobAI / 40% Illustrious)", "clip.merge.hybrid.finalweights": "(85% Pony Base / 15% SDXL)",
+             "vae.title": "Choosing a VAE for Fidelity", "vae.recommendation": "Top Recommendation",
+             "footer.text": "Consolidated Interactive Guide to Advanced Model Merging",
+             "chart.hoverPrompt": "Hover over a block on the chart to see its function."
+         }
+     };
     let currentLanguage = 'pl';
-    function setLanguage(lang) { /* Unchanged from previous version */ }
 
-    // --- Charting Logic ---
+    function setLanguage(lang) {
+        currentLanguage = lang;
+        document.documentElement.lang = lang;
+        document.querySelectorAll('[data-i18n-key]').forEach(el => {
+            const key = el.getAttribute('data-i18n-key');
+            el.innerHTML = i18nData[lang][key] || i18nData['en'][key] || `[${key}]`;
+        });
+        
+        document.getElementById('lang-pl').classList.toggle('active', lang === 'pl');
+        document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+        
+        if (sdxlChartInstance) updateSdxlChart(document.querySelector('#sdxl-recipe-buttons .active').dataset.recipe);
+        if (ponyChartInstance) updatePonyChart(document.querySelector('#pony-recipe-buttons .active').dataset.recipe);
+        if (hybridChartInstance || document.querySelector('#hybrid-content').style.display !== 'none') {
+             updateHybridChart(document.querySelector('#hybrid-recipe-buttons .active').dataset.recipe);
+        }
+    }
+
+    // --- Logika wykresów (z lazy loading) ---
     const blockLabels = ['IN00', 'IN01', 'IN02', 'IN03', 'IN04', 'IN05', 'IN06', 'IN07', 'IN08', 'IN09', 'IN10', 'IN11', 'M00', 'OUT00', 'OUT01', 'OUT02', 'OUT03', 'OUT04', 'OUT05', 'OUT06', 'OUT07', 'OUT08', 'OUT09', 'OUT10', 'OUT11'];
     
-    // NEW: Per-block descriptions
     const blockDescriptions = {
-        pl: [
-            "IN00: Ustala najbardziej podstawową kompozycję i paletę kolorów.",
-            "IN01: Wpływa na ogólne kształty i podstawową anatomię postaci.",
-            "IN02: Kontynuuje definiowanie struktury, pozy i głównych elementów.",
-            "IN03: Zaczyna wprowadzać wczesne elementy stylistyczne do anatomii.",
-            "IN04: Kluczowy blok dla spójności anatomicznej; balansuje styl i strukturę.",
-            "IN05: Kształtuje główne cechy i elementy tematyczne (np. ubranie).",
-            "IN06: Dalsze mieszanie stylu z anatomią, konkretyzacja tematu.",
-            "IN07: Silny wpływ na styl, przy mniejszym wpływie na bazową kompozycję.",
-            "IN08: Wprowadza bardziej szczegółowe elementy stylistyczne i tekstury.",
-            "IN09: Kluczowy dla spójności stylu przed blokiem środkowym.",
-            "IN10: Finalizuje styl wejściowy przed interpretacją koncepcyjną.",
-            "IN11: Ostatni blok wejściowy, cementuje styl przed rdzeniem.",
-            "M00 (Rdzeń): Interpretuje główną koncepcję i temat promptu.",
-            "OUT00: Rozpoczyna rekonstrukcję obrazu z rdzenia, wpływa na wczesne detale.",
-            "OUT01: Dalsze definiowanie detali i wczesnych tekstur powierzchni.",
-            "OUT02: Kluczowy dla wczesnego oświetlenia i cieniowania.",
-            "OUT03: Równoważy detale i ogólny styl na wczesnym etapie renderowania.",
-            "OUT04: Wpływa na średniej wielkości detale i wykończenie powierzchni.",
-            "OUT05: Dalsze udoskonalanie tekstur, nadawanie materiałom właściwości.",
-            "OUT06: Odpowiada za drobne detale i czystość krawędzi (lineart).",
-            "OUT07: Wpływa na mikro-detale, takie jak wzory na tkaninach.",
-            "OUT08: Finalizuje wygląd linii, dodaje subtelne efekty (np. poświata).",
-            "OUT09: Polerowanie obrazu, usuwanie drobnych artefaktów.",
-            "OUT10: Ostatnie poprawki, wpływa na ostrość i czystość obrazu.",
-            "OUT11: Ostateczne wykończenie, zapewnia spójność kolorów i detali."
-        ],
-        en: [
-            "IN00: Establishes the most basic composition and color palette.",
-            "IN01: Influences overall shapes and fundamental character anatomy.",
-            "IN02: Continues to define structure, pose, and major elements.",
-            "IN03: Begins to introduce early stylistic elements into the anatomy.",
-            "IN04: Crucial block for anatomical coherence; balances style and structure.",
-            "IN05: Shapes the main features and thematic elements (e.g., clothing).",
-            "IN06: Further blending of style with anatomy, solidifying the theme.",
-            "IN07: Strong influence on style, with less impact on the base composition.",
-            "IN08: Introduces more detailed stylistic elements and textures.",
-            "IN09: Key for style coherence before the middle block.",
-            "IN10: Finalizes the input style before conceptual interpretation.",
-            "IN11: The last input block, cementing the style before the core.",
-            "M00 (Core): Interprets the main concept and theme of the prompt.",
-            "OUT00: Begins reconstructing the image from the core, affects early details.",
-            "OUT01: Further defines details and early surface textures.",
-            "OUT02: Crucial for early lighting and shading.",
-            "OUT03: Balances details and overall style in the early rendering stage.",
-            "OUT04: Affects medium-sized details and surface finishing.",
-            "OUT05: Further refines textures, giving materials their properties.",
-            "OUT06: Responsible for fine details and the cleanliness of edges (lineart).",
-            "OUT07: Influences micro-details, such as patterns on fabric.",
-            "OUT08: Finalizes the look of lines, adds subtle effects (e.g., glow).",
-            "OUT09: Polishes the image, removing minor artifacts.",
-            "OUT10: Adds final touches, affects sharpness and image clarity.",
-            "OUT11: Final finishing, ensures color and detail consistency."
-        ]
-    };
-
-    // Unchanged from previous: chartDataStore, lazyCharts, chartObserver
-    let sdxlChartInstance, ponyChartInstance, hybridChartInstance;
-    
-    // UPDATED: Hover callback to use per-block descriptions
-    const onBlockHover = (justificationEl) => (e, el) => {
-        if (el.length > 0) {
-            const blockIndex = el[0].index;
-            justificationEl.innerHTML = `<strong>[${blockLabels[blockIndex]}]</strong>: ${blockDescriptions[currentLanguage][blockIndex]}`;
-        } else {
-            justificationEl.innerHTML = i18nData[currentLanguage]['chart.hoverPrompt'];
+        pl: {
+            IN: "Bloki wejściowe (IN00-IN11): Odpowiadają za **kompozycję i anatomię**. Wczesne bloki (0-3) definiują ogólne kształty, późniejsze (8-11) wprowadzają elementy stylistyczne do struktury.",
+            M: "Blok środkowy (M00): **Rdzeń koncepcyjny**. Interpretuje główny temat i pomysł promptu, stanowiąc wąskie gardło między blokami wejściowymi a wyjściowymi.",
+            OUT: "Bloki wyjściowe (OUT00-OUT11): Odpowiadają za **detale i styl**. Wczesne bloki (0-3) rekonstruują obraz z rdzenia, a późniejsze (8-11) dodają drobne detale, tekstury i wykańczają styl."
+        },
+        en: {
+            IN: "Input Blocks (IN00-IN11): Responsible for **composition and anatomy**. Early blocks (0-3) define overall shapes, while later ones (8-11) introduce stylistic elements into the structure.",
+            M: "Middle Block (M00): The **conceptual core**. It interprets the main theme and idea of the prompt, acting as a bottleneck between input and output blocks.",
+            OUT: "Output Blocks (OUT00-OUT11): Responsible for **details and style**. Early blocks (0-3) reconstruct the image from the core, and later ones (8-11) add fine details, textures, and finalize the style."
         }
     };
+
+    let sdxlChartInstance, ponyChartInstance, hybridChartInstance;
+    const chartDataStore = {
+        sdxl: {
+            recipes: {
+                balanced: { weights: [0.10, 0.12, 0.15, 0.18, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.52, 0.55, 0.60, 0.58, 0.55, 0.52, 0.50, 0.47, 0.42, 0.35, 0.30, 0.25, 0.20, 0.15, 0.10] },
+                host_dominant: { weights: [0.05, 0.08, 0.10, 0.12, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.50, 0.45, 0.40, 0.35, 0.30, 0.25, 0.20, 0.15, 0.12, 0.10, 0.08, 0.05] },
+                donor_receptive: { weights: [0.15, 0.18, 0.20, 0.22, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.58, 0.60, 0.65, 0.62, 0.60, 0.58, 0.55, 0.50, 0.45, 0.40, 0.35, 0.30, 0.25, 0.20, 0.15] }
+            }
+        },
+        pony: {
+            recipes: {
+                stage1: { model1: {pl:'JANKU', en:'JANKU'}, model2: {pl:'NEW ERA V5', en:'NEW ERA V5'}, color1: 'var(--text-color)', color2: 'var(--accent-primary)', weights: [0.10,0.12,0.15,0.18,0.20,0.25,0.30,0.35,0.40,0.45,0.50,0.52,0.55,0.50,0.45,0.40,0.35,0.30,0.25,0.20,0.18,0.15,0.12,0.10,0.08]}, 
+                stage2: { model1: {pl:'Graycolor', en:'Graycolor'}, model2: {pl:'SinGlo', en:'SinGlo'}, color1: 'var(--text-color)', color2: 'var(--accent-tertiary)', weights: [0.15, 0.15, 0.20, 0.20, 0.25, 0.30, 0.30, 0.35, 0.35, 0.40, 0.40, 0.40, 0.45, 0.40, 0.40, 0.35, 0.35, 0.30, 0.30, 0.25, 0.25, 0.20, 0.20, 0.15, 0.15]}, 
+                stage3: { model1: {pl:'"Baza Dark Anime"', en:'"Dark Anime Base"'}, model2: {pl:'"Most Malarski"', en: '"Painterly Bridge"'}, color1: 'var(--accent-primary)', color2: 'var(--accent-tertiary)', weights: [0.10, 0.10, 0.12, 0.15, 0.18, 0.20, 0.22, 0.25, 0.28, 0.30, 0.32, 0.35, 0.40, 0.38, 0.35, 0.32, 0.30, 0.28, 0.25, 0.22, 0.20, 0.18, 0.15, 0.12, 0.10]} 
+            }
+        },
+        hybrid: {
+            recipes: {
+                stage1: { model1: {pl:'JANKU', en:'JANKU'}, model2: {pl:'NEW ERA V5', en:'NEW ERA V5'}, color1: 'var(--text-color)', color2: 'var(--accent-primary)', weights: [0.10,0.12,0.15,0.18,0.20,0.25,0.30,0.35,0.40,0.45,0.50,0.52,0.55,0.50,0.45,0.40,0.35,0.30,0.25,0.20,0.18,0.15,0.12,0.10,0.08]},
+                stage2: { model1: {pl:'Graycolor', en:'Graycolor'}, model2: {pl:'SinGlo', en:'SinGlo'}, color1: 'var(--text-color)', color2: 'var(--accent-tertiary)', weights: [0.15, 0.15, 0.20, 0.20, 0.25, 0.30, 0.30, 0.35, 0.35, 0.40, 0.40, 0.40, 0.45, 0.40, 0.40, 0.35, 0.35, 0.30, 0.30, 0.25, 0.25, 0.20, 0.20, 0.15, 0.15]},
+                stage3: { is_dare: true },
+                stage4: { model1: {pl:'"Baza z łatką"', en:'"Patched Base"'}, model2: {pl:'"Most Malarski"', en:'"Painterly Bridge"'}, color1: 'var(--accent-primary)', color2: 'var(--accent-tertiary)', weights: [0.08,0.10,0.12,0.15,0.18,0.20,0.22,0.25,0.28,0.30,0.32,0.35,0.40,0.38,0.35,0.32,0.30,0.28,0.25,0.22,0.20,0.18,0.15,0.12,0.08]}
+            }
+        }
+    };
+
+    const lazyCharts = document.querySelectorAll('.lazy-chart');
+    const chartObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const chartContainerId = entry.target.id;
+                if (chartContainerId === 'sdxlChartContainer' && !sdxlChartInstance) initializeSdxlChart();
+                if (chartContainerId === 'ponyChartContainer' && !ponyChartInstance) initializePonyChart();
+                if (chartContainerId === 'hybridChartContainer' && !hybridChartInstance) initializeHybridChart();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { rootMargin: "100px" });
+
+    lazyCharts.forEach(chart => chartObserver.observe(chart));
+
+    initShaderBackground();
     
+    document.getElementById('strategy-selector').addEventListener('click', (e) => {
+        if (e.target.matches('.version-btn')) {
+            switchVersion(e.target.id.replace('select-', ''));
+        }
+    });
+
+    function createRecipeClickHandler(updateFunction) {
+        return (e) => {
+            if (e.target.matches('.recipe-btn')) {
+                const recipeKey = e.target.dataset.recipe;
+                e.currentTarget.querySelector('.active').classList.remove('active');
+                e.target.classList.add('active');
+                updateFunction(recipeKey);
+            }
+        };
+    }
+
+    document.getElementById('sdxl-recipe-buttons').addEventListener('click', createRecipeClickHandler(updateSdxlChart));
+    document.getElementById('pony-recipe-buttons').addEventListener('click', createRecipeClickHandler(updatePonyChart));
+    document.getElementById('hybrid-recipe-buttons').addEventListener('click', createRecipeClickHandler(updateHybridChart));
+    
+    document.getElementById('lang-pl').addEventListener('click', () => setLanguage('pl'));
+    document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
+    
+    function switchVersion(version) {
+        ['sdxl', 'pony', 'hybrid'].forEach(v => {
+            document.getElementById(`${v}-content`).style.display = v === version ? 'block' : 'none';
+            document.getElementById(`select-${v}`).classList.toggle('active', v === version);
+        });
+         document.getElementById('nav-blueprints').href = `#${version}-blueprints`;
+         document.getElementById('nav-recipes').href = `#${version}-recipes`;
+        
+         if (version === 'sdxl' && !sdxlChartInstance) initializeSdxlChart();
+         if (version === 'pony' && !ponyChartInstance) initializePonyChart();
+         if (version === 'hybrid' && !hybridChartInstance) initializeHybridChart();
+    }
+    
+    // NOWA, PRZEPROJEKTOWANA FUNKCJA TWORZENIA WYKRESU
     function createChart(ctx, onHoverCallback) {
         return new Chart(ctx, {
             type: 'bar',
             options: {
-                responsive: true, maintainAspectRatio: false,
-                animation: { duration: 800 },
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 0 }, // Wyłączenie animacji dla stylu retro
                 plugins: {
-                    tooltip: { 
-                        mode: 'index', intersect: false, 
-                        callbacks: { 
-                            label: (c) => {
+                    tooltip: {
+                        enabled: true,
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                        borderColor: 'var(--accent-secondary)',
+                        borderWidth: 1,
+                        titleColor: 'var(--text-color)',
+                        bodyColor: 'var(--text-color)',
+                        titleFont: { family: "'DotGothic16', sans-serif" },
+                        bodyFont: { family: "'VT323', monospace", size: 14 },
+                        callbacks: {
+                             label: (c) => {
                                 const modelALabel = c.chart.data.datasets[0].label;
                                 const modelBLabel = c.chart.data.datasets[1].label;
                                 const modelBWeight = c.chart.data.datasets[1].data[c.dataIndex];
                                 const modelAWeight = 1 - modelBWeight;
                                 
                                 if (c.datasetIndex === 0) {
-                                     return `${modelALabel}: ${(modelAWeight * 100).toFixed(0)}%`;
+                                    return `${modelALabel}: ${(modelAWeight * 100).toFixed(0)}%`;
                                 }
                                 return `${modelBLabel}: ${(modelBWeight * 100).toFixed(0)}%`;
                             }
-                        },
-                        backgroundColor: 'rgba(13, 12, 29, 0.8)', titleFont: { weight: 'bold', family: "'Orbitron', sans-serif" }, bodyFont: { size: 12, family: "'Roboto Mono', monospace"}, borderColor: 'var(--border-color)', borderWidth: 1,
+                        }
                     },
-                    legend: { position: 'top', labels: { color: 'var(--text-color)', font: { family: "'Orbitron', sans-serif" } } }
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: 'var(--text-color)',
+                            font: { family: "'VT323', monospace", size: 14 }
+                        }
+                    }
                 },
                 scales: {
-                    x: { stacked: true, grid: { display: false }, ticks: { color: 'var(--text-muted-color)', font: { family: "'Roboto Mono', monospace" } } },
-                    y: { stacked: true, beginAtZero: true, max: 1.0, grid: { color: 'rgba(0, 240, 255, 0.1)' }, ticks: { color: 'var(--text-muted-color)', font: { family: "'Roboto Mono', monospace" }, callback: (v) => (v * 100) + '%' } }
+                    x: {
+                        stacked: true,
+                        grid: { color: 'rgba(220, 220, 220, 0.1)' },
+                        ticks: { color: 'var(--text-color)', font: { family: "'VT323', monospace" } }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        max: 1.0,
+                        grid: { color: 'rgba(220, 220, 220, 0.2)' },
+                        ticks: {
+                            color: 'var(--text-color)',
+                            font: { family: "'VT323', monospace" },
+                            callback: (v) => (v * 100) + '%'
+                        }
+                    }
                 },
                 onHover: onHoverCallback
             }
         });
     }
 
-    // --- All init and update chart functions (initializeSdxlChart, updateSdxlChart, etc.) are unchanged ---
-    // --- They will now use the new onBlockHover callback and styles from createChart automatically ---
+    const onBlockHover = (justificationEl) => (e, el) => {
+        if (el.length > 0) {
+            const blockName = blockLabels[el[0].index];
+            let blockType = 'M';
+            if (blockName.startsWith('IN')) blockType = 'IN';
+            if (blockName.startsWith('OUT')) blockType = 'OUT';
+            
+            justificationEl.innerHTML = `<strong>[${blockName}]</strong>: ${blockDescriptions[currentLanguage][blockType]}`;
+        } else {
+            justificationEl.innerHTML = i18nData[currentLanguage]['chart.hoverPrompt'];
+        }
+    };
     
-    // --- Initial state ---
-    initShaderBackground();
-    // Fill in the rest of the page structure from your previous version here.
-    // The script part from the previous response should be copied here, starting from `setLanguage('pl');`
+    function initializeSdxlChart() {
+        const ctx = document.getElementById('sdxlChart').getContext('2d');
+        const justificationEl = document.getElementById('sdxl-justification');
+        sdxlChartInstance = createChart(ctx, onBlockHover(justificationEl));
+        updateSdxlChart(document.querySelector('#sdxl-recipe-buttons .active').dataset.recipe);
+    }
+
+    function updateSdxlChart(recipeKey) {
+        if (!sdxlChartInstance) return;
+        const recipe = chartDataStore.sdxl.recipes[recipeKey];
+        document.getElementById('sdxl-recipe-explanation').innerHTML = i18nData[currentLanguage][`sdxl.recipes.explanation.${recipeKey}`] || '';
+        sdxlChartInstance.data = {
+            labels: blockLabels,
+            datasets: [
+                { label: 'Animij (A)', data: recipe.weights.map(w => 1 - w), backgroundColor: 'var(--text-color)' }, // Kolor kości
+                { label: 'Graycolor (B)', data: recipe.weights, backgroundColor: 'var(--accent-primary)' } // Czerwień
+            ]
+        };
+        sdxlChartInstance.update('none');
+    }
+
+    function initializePonyChart() {
+        const ctx = document.getElementById('ponyChart').getContext('2d');
+        const justificationEl = document.getElementById('pony-justification');
+        ponyChartInstance = createChart(ctx, onBlockHover(justificationEl));
+        updatePonyChart(document.querySelector('#pony-recipe-buttons .active').dataset.recipe);
+    }
+
+    function updatePonyChart(recipeKey) {
+        if (!ponyChartInstance) return;
+        const recipe = chartDataStore.pony.recipes[recipeKey];
+        document.getElementById('pony-recipe-explanation').innerHTML = i18nData[currentLanguage][`pony.recipes.explanation.${recipeKey}`] || '';
+        ponyChartInstance.data = {
+            labels: blockLabels,
+            datasets: [
+                { label: `${recipe.model1[currentLanguage] || recipe.model1['en']} (A)`, data: recipe.weights.map(w => 1 - w), backgroundColor: recipe.color1 },
+                { label: `${recipe.model2[currentLanguage] || recipe.model2['en']} (B)`, data: recipe.weights, backgroundColor: recipe.color2 }
+            ]
+        };
+        ponyChartInstance.update('none');
+    }
+
+    function initializeHybridChart() {
+        const ctx = document.getElementById('hybridChart').getContext('2d');
+        const justificationEl = document.getElementById('hybrid-justification');
+        hybridChartInstance = createChart(ctx, onBlockHover(justificationEl));
+        updateHybridChart(document.querySelector('#hybrid-recipe-buttons .active').dataset.recipe);
+    }
+    
+    function updateHybridChart(recipeKey) {
+        const recipe = chartDataStore.hybrid.recipes[recipeKey];
+        const explanationEl = document.getElementById('hybrid-recipe-explanation');
+        const chartContainer = document.getElementById('hybridChartContainer');
+        const justificationEl = document.getElementById('hybrid-justification');
+        
+        explanationEl.innerHTML = i18nData[currentLanguage][`hybrid.recipes.explanation.${recipeKey}`] || '';
+        
+        if (recipe.is_dare) {
+            explanationEl.style.display = 'block';
+            chartContainer.style.display = 'none';
+            justificationEl.style.display = 'none';
+        } else {
+            explanationEl.style.display = 'block';
+            chartContainer.style.display = 'block';
+            justificationEl.style.display = 'block';
+            if (!hybridChartInstance) return;
+            hybridChartInstance.data = {
+                labels: blockLabels,
+                datasets: [
+                    { label: `${recipe.model1[currentLanguage] || recipe.model1['en']} (A)`, data: recipe.weights.map(w => 1 - w), backgroundColor: recipe.color1 },
+                    { label: `${recipe.model2[currentLanguage] || recipe.model2['en']} (B)`, data: recipe.weights, backgroundColor: recipe.color2 }
+                ]
+            };
+            hybridChartInstance.update('none');
+        }
+    }
+
+    // Stan początkowy
     setLanguage('pl');
     switchVersion('sdxl');
 });
