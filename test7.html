@@ -5,55 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n-key="pageTitle">Interactive Guide: Advanced Model Merging</title>
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style type="text/tailwindcss">
-        @layer base {
-            html {
-                @apply bg-slate-900;
-            }
-            body {
-                @apply bg-slate-900 text-slate-300 font-sans;
-            }
-            h1, h2, h3, h4, h5, h6 {
-                @apply text-slate-100 font-bold;
-            }
-            h1 { @apply text-4xl md:text-5xl font-extrabold; }
-            h2 { @apply text-3xl font-bold; }
-            h3 { @apply text-xl font-semibold; }
-            h4 { @apply text-lg font-semibold; }
-            a {
-                @apply text-indigo-400 hover:text-indigo-300 transition-colors duration-200;
-            }
-        }
-        @layer components {
-            .card {
-                @apply bg-slate-900/60 backdrop-blur-lg border border-slate-700 rounded-xl shadow-lg transition-all duration-300 ease-out;
-            }
-            .card:hover {
-                @apply transform -translate-y-1 scale-[1.02] border-indigo-500 shadow-2xl shadow-indigo-500/10;
-            }
-            .version-btn, .recipe-btn {
-                @apply px-5 py-2.5 text-sm font-medium rounded-lg border transition-all duration-200 ease-out;
-                @apply border-slate-600 bg-slate-800/50 text-slate-300;
-                @apply hover:bg-indigo-700 hover:border-indigo-600 hover:text-white;
-            }
-            .version-btn.active, .recipe-btn.active {
-                @apply bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-500/20 ring-2 ring-indigo-500 ring-offset-2 ring-offset-slate-900;
-                @apply transform scale-105;
-            }
-            .dare-panel {
-                @apply bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-lg p-6 shadow-inner shadow-black/20;
-            }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* bg-slate-900 */
+        }
+
+        /* WebGL Background Shader Canvas */
         #shader-canvas {
             position: fixed;
             top: 0;
@@ -61,211 +26,161 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 0.4;
-            background-color: #0f172a; /* bg-slate-900 */
+            opacity: 0.4; /* Subtle background effect */
+        }
+
+        /* Glassmorphism Card Style */
+        .card {
+            background-color: rgba(30, 41, 59, 0.6); /* bg-slate-800 with transparency */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 0.75rem; /* rounded-lg */
+            border: 1px solid #334155; /* border-slate-700 */
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .card:hover {
+            box-shadow: 0 0 25px -5px rgba(79, 70, 229, 0.3); /* shadow-indigo-500/30 */
+            border-color: #4f46e5; /* border-indigo-600 */
+            transform: translateY(-4px) scale(1.02);
+        }
+
+        /* Active state for buttons */
+        .btn.active {
+            background-color: #4f46e5; /* bg-indigo-600 */
+            color: #e2e8f0; /* text-slate-200 */
+            box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.3);
+        }
+        
+        /* Smooth fade-in animation for content sections */
+        @keyframes contentFadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .content-section {
+            display: none; /* Initially hidden, managed by JS */
+        }
+        .content-section.visible {
+            display: block;
+            animation: contentFadeIn 0.5s ease-out forwards;
         }
     </style>
 </head>
-<body class="antialiased">
+<body class="bg-slate-900 text-slate-300 antialiased">
     <canvas id="shader-canvas"></canvas>
 
-    <header class="sticky top-0 z-40 w-full border-b border-slate-700/50 bg-slate-900/75 backdrop-blur-lg">
+    <header class="sticky top-0 z-50 w-full bg-slate-900/75 backdrop-blur-sm border-b border-slate-500/30">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
-                    <span class="font-bold text-lg text-slate-100" data-i18n-key="guideTitle"></span>
+                    <span class="font-bold text-lg text-slate-100" data-i18n-key="header.guideTitle"></span>
                 </div>
                 <div class="flex items-center space-x-8">
-                    <div id="main-nav" class="hidden md:flex items-center space-x-4 text-sm font-medium">
-                        <a id="nav-blueprints" href="#sdxl-blueprints" data-i18n-key="nav.blueprints"></a>
-                        <a id="nav-recipes" href="#sdxl-recipes" data-i18n-key="nav.recipes"></a>
-                        <a href="#analysis" data-i18n-key="nav.analysis"></a>
-                        <a href="#glossary" data-i18n-key="nav.glossary"></a>
+                    <div id="main-nav" class="hidden md:flex items-baseline space-x-4">
+                        <a id="nav-blueprints" href="#sdxl-blueprints" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors" data-i18n-key="nav.blueprints"></a>
+                        <a id="nav-recipes" href="#sdxl-recipes" class="px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors" data-i18n-key="nav.recipes"></a>
+                    </div>
+                    <div class="flex items-center">
+                        <button id="lang-pl" class="btn px-3 py-1 text-sm font-medium text-slate-300 hover:bg-slate-700 rounded-l-md transition-colors">PL</button>
+                        <button id="lang-en" class="btn px-3 py-1 text-sm font-medium text-slate-300 hover:bg-slate-700 rounded-r-md transition-colors">EN</button>
                     </div>
                 </div>
             </div>
         </nav>
     </header>
 
-    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        
-        <section class="text-center mb-20">
-            <h1 class="bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-500 bg-clip-text text-transparent" data-i18n-key="header.title"></h1>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <section class="text-center mb-16">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-100" data-i18n-key="header.title"></h1>
             <p class="mt-4 text-lg text-slate-400 max-w-3xl mx-auto" data-i18n-key="header.subtitle"></p>
         </section>
 
-        <div id="strategy-selector" class="flex justify-center flex-wrap gap-4 mb-20">
-            <button id="select-sdxl" class="version-btn active" data-i18n-key="strategy.sdxl"></button>
-            <button id="select-pony" class="version-btn" data-i18n-key="strategy.pony"></button>
-            <button id="select-hybrid" class="version-btn" data-i18n-key="strategy.hybrid"></button>
+        <div id="strategy-selector" class="flex justify-center flex-wrap gap-4 mb-16">
+            <button id="select-sdxl" class="btn px-6 py-3 text-base font-semibold rounded-md transition-all duration-300" data-i18n-key="strategy.sdxl"></button>
+            <button id="select-pony" class="btn px-6 py-3 text-base font-semibold rounded-md transition-all duration-300" data-i18n-key="strategy.pony"></button>
+            <button id="select-hybrid" class="btn px-6 py-3 text-base font-semibold rounded-md transition-all duration-300" data-i18n-key="strategy.hybrid"></button>
         </div>
 
-        <div id="sdxl-content" class="content-section space-y-24">
-            <section id="sdxl-blueprints" class="scroll-mt-24">
-                <h2 class="mb-4" data-i18n-key="sdxl.blueprint.title"></h2>
-                <p class="mb-10 max-w-4xl text-slate-400" data-i18n-key="sdxl.blueprint.description"></p>
+        <div id="sdxl-content" class="content-section">
+            <section id="sdxl-blueprints" class="mb-24 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="sdxl.blueprint.title"></h2>
+                <p class="text-slate-400 mb-10 max-w-4xl" data-i18n-key="sdxl.blueprint.description"></p>
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="card p-6 flex flex-col"><h3 class="text-indigo-400">Animij [Illustrious] V5.0</h3><p class="text-sm font-medium text-slate-400 mb-2" data-i18n-key="sdxl.blueprint.card1.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="sdxl.blueprint.card1.desc"></p></div>
-                    <div class="card p-6 flex flex-col"><h3 class="text-indigo-400">Graycolor SemiRealIllustMix</h3><p class="text-sm font-medium text-slate-400 mb-2" data-i18n-key="sdxl.blueprint.card2.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="sdxl.blueprint.card2.desc"></p></div>
-                    <div class="card p-6 flex flex-col"><h3 class="text-amber-400">Boomer Art Model v2.0</h3><p class="text-sm font-medium text-slate-400 mb-2" data-i18n-key="sdxl.blueprint.card3.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="sdxl.blueprint.card3.desc"></p></div>
-                    <div class="card p-6 flex flex-col"><h3 class="text-red-400">D34D.CH4NN3L.SDXL</h3><p class="text-sm font-medium text-slate-400 mb-2" data-i18n-key="sdxl.blueprint.card4.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="sdxl.blueprint.card4.desc"></p></div>
+                    <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">Animij [Illustrious] V5.0</h3><p class="text-sm font-medium text-indigo-400 mb-2" data-i18n-key="sdxl.blueprint.card1.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="sdxl.blueprint.card1.desc"></p></div>
+                    <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">Graycolor SemiRealIllustMix</h3><p class="text-sm font-medium text-indigo-400 mb-2" data-i18n-key="sdxl.blueprint.card2.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="sdxl.blueprint.card2.desc"></p></div>
+                    <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-amber-400 mb-2" data-i18n-key="sdxl.blueprint.card3.role"></h3><p class="text-sm text-slate-400 flex-grow" data-i18n-key="sdxl.blueprint.card3.desc"></p></div>
+                    <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-red-400 mb-2" data-i18n-key="sdxl.blueprint.card4.role"></h3><p class="text-sm text-slate-400 flex-grow" data-i18n-key="sdxl.blueprint.card4.desc"></p></div>
                 </div>
             </section>
-            <section id="sdxl-recipes" class="scroll-mt-24 space-y-12">
-                <h2 data-i18n-key="sdxl.recipes.title"></h2>
-                <div class="card p-6 md:p-8">
-                    <h3 data-i18n-key="sdxl.recipes.step1.title"></h3>
-                    <p class="text-sm text-slate-400 mt-2 mb-6" data-i18n-key="sdxl.recipes.step1.desc"></p>
-                    <div class="flex justify-center flex-wrap gap-4 mb-6" id="sdxl-recipe-buttons">
-                        <button data-recipe="balanced" class="recipe-btn active" data-i18n-key="sdxl.recipes.step1.btnBalanced"></button>
-                        <button data-recipe="host_dominant" class="recipe-btn" data-i18n-key="sdxl.recipes.step1.btnHost"></button>
-                        <button data-recipe="donor_receptive" class="recipe-btn" data-i18n-key="sdxl.recipes.step1.btnDonor"></button>
+            <section id="sdxl-recipes" class="mb-24 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="sdxl.recipes.title"></h2>
+                 <div class="card p-6 md:p-8">
+                    <p class="text-slate-400 mb-6" data-i18n-key="sdxl.recipes.desc"></p>
+                    <div class="flex justify-center flex-wrap gap-4 mb-8" id="sdxl-recipe-buttons">
+                        <button data-recipe="balanced" class="btn px-4 py-2 text-sm font-medium rounded-md transition-colors" data-i18n-key="sdxl.recipes.btnBalanced"></button>
+                        <button data-recipe="host_dominant" class="btn px-4 py-2 text-sm font-medium rounded-md transition-colors" data-i18n-key="sdxl.recipes.btnHost"></button>
+                        <button data-recipe="donor_receptive" class="btn px-4 py-2 text-sm font-medium rounded-md transition-colors" data-i18n-key="sdxl.recipes.btnDonor"></button>
                     </div>
-                    <div id="sdxl-recipe-explanation" class="mb-6 p-4 bg-slate-800/50 border border-slate-700 rounded-md text-sm text-slate-400"></div>
-                    <div class="h-[450px]"><canvas id="sdxlChart"></canvas></div>
-                    <div id="sdxl-justification" class="mt-4 p-4 text-center text-sm min-h-[60px] bg-slate-800/50 rounded-md" data-i18n-key="chart.hoverPrompt"></div>
-                </div>
-                <div class="card p-6 md:p-8">
-                    <h3 data-i18n-key="sdxl.recipes.step2.title"></h3>
-                    <p class="text-sm text-slate-400 mt-2 mb-6" data-i18n-key="sdxl.recipes.step2.desc"></p>
-                    <div class="dare-panel">
-                        <h4 class="text-center mb-4" data-i18n-key="sdxl.recipes.step2a.title"></h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                           </div>
-                    </div>
+                    <div id="sdxl-recipe-explanation" class="mb-8 p-4 bg-slate-800/50 border border-slate-700 rounded-lg text-sm"></div>
+                    <div class="chart-container lazy-chart relative w-full max-w-4xl mx-auto h-96" id="sdxlChartContainer"><canvas id="sdxlChart"></canvas></div>
+                    <div id="sdxl-justification" class="mt-6 p-4 bg-slate-800 rounded-lg text-sm min-h-[60px] text-center" data-i18n-key="chart.hoverPrompt"></div>
                 </div>
             </section>
         </div>
 
-        <div id="pony-content" class="content-section space-y-24">
-            <section id="pony-blueprints" class="scroll-mt-24">
-                <h2 class="mb-4" data-i18n-key="pony.blueprint.title"></h2>
-                <p class="mb-10 max-w-4xl text-slate-400" data-i18n-key="pony.blueprint.description"></p>
+        <div id="pony-content" class="content-section">
+             <section id="pony-blueprints" class="mb-24 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="pony.blueprint.title"></h2>
+                <p class="text-slate-400 mb-10 max-w-4xl" data-i18n-key="pony.blueprint.description"></p>
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="card p-6 flex flex-col"><h3 class="text-indigo-400">JANKU V4.0</h3><p class="text-sm font-medium text-slate-400 mb-2" data-i18n-key="pony.blueprint.card1.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="pony.blueprint.card1.desc"></p></div>
-                    <div class="card p-6 flex flex-col"><h3 class="text-indigo-400">NEW ERA V5.0</h3><p class="text-sm font-medium text-slate-400 mb-2" data-i18n-key="pony.blueprint.card2.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="pony.blueprint.card2.desc"></p></div>
-                    <div class="card p-6 flex flex-col"><h3 class="text-amber-400">Graycolor SemiRealIllustMix</h3><p class="text-sm font-medium text-slate-400 mb-2" data-i18n-key="pony.blueprint.card3.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="pony.blueprint.card3.desc"></p></div>
-                    <div class="card p-6 flex flex-col"><h3 class="text-amber-400">SinGlo V2.0</h3><p class="text-sm font-medium text-slate-400 mb-2" data-i18n-key="pony.blueprint.card4.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="pony.blueprint.card4.desc"></p></div>
+                    <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">JANKU V4.0</h3><p class="text-sm font-medium text-indigo-400 mb-2" data-i18n-key="pony.blueprint.card1.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="pony.blueprint.card1.desc"></p></div>
+                    <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">NEW ERA V5.0</h3><p class="text-sm font-medium text-indigo-400 mb-2" data-i18n-key="pony.blueprint.card2.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="pony.blueprint.card2.desc"></p></div>
                 </div>
             </section>
-            <section id="pony-recipes" class="scroll-mt-24 space-y-12">
-                <h2 data-i18n-key="pony.recipes.title"></h2>
+            <section id="pony-recipes" class="mb-24 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="pony.recipes.title"></h2>
                 <div class="card p-6 md:p-8">
-                    <h3 data-i18n-key="pony.recipes.step1.title"></h3>
-                    <p class="text-sm text-slate-400 mt-2 mb-6" data-i18n-key="pony.recipes.step1.desc"></p>
-                    <div class="flex justify-center flex-wrap gap-4 mb-6" id="pony-recipe-buttons">
-                        <button data-recipe="stage1" class="recipe-btn active" data-i18n-key="pony.recipes.step1.btnStage1"></button>
-                        <button data-recipe="stage2" class="recipe-btn" data-i18n-key="pony.recipes.step1.btnStage2"></button>
-                        <button data-recipe="stage3" class="recipe-btn" data-i18n-key="pony.recipes.step1.btnStage3"></button>
+                    <p class="text-slate-400 mb-6" data-i18n-key="pony.recipes.desc"></p>
+                    <div class="flex justify-center flex-wrap gap-4 mb-8" id="pony-recipe-buttons">
+                         <button data-recipe="balanced" class="btn px-4 py-2 text-sm font-medium rounded-md transition-colors" data-i18n-key="pony.recipes.btnBalanced"></button>
+                         <button data-recipe="style_focused" class="btn px-4 py-2 text-sm font-medium rounded-md transition-colors" data-i18n-key="pony.recipes.btnStyle"></button>
+                         <button data-recipe="anatomy_focused" class="btn px-4 py-2 text-sm font-medium rounded-md transition-colors" data-i18n-key="pony.recipes.btnAnatomy"></button>
                     </div>
-                    <div id="pony-recipe-explanation" class="mb-6 p-4 bg-slate-800/50 border border-slate-700 rounded-md text-sm text-slate-400"></div>
-                    <div class="h-[450px]"><canvas id="ponyChart"></canvas></div>
-                    <div id="pony-justification" class="mt-4 p-4 text-center text-sm min-h-[60px] bg-slate-800/50 rounded-md" data-i18n-key="chart.hoverPrompt"></div>
-                </div>
-                <div class="card p-6 md:p-8">
-                    <h3 data-i18n-key="pony.assembly.title"></h3>
-                    <p class="text-sm text-slate-400 mt-2 mb-6" data-i18n-key="pony.assembly.desc"></p>
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <div>
-                            <h4 data-i18n-key="pony.assembly.clip.title"></h4>
-                            <p class="text-sm text-slate-400 mt-2 mb-4" data-i18n-key="pony.assembly.clip.desc"></p>
-                            <div class="space-y-2 text-center text-xs font-medium">
-                                <div class="p-3 border border-slate-700 rounded-lg bg-slate-800/30">
-                                    <p class="mb-2 text-indigo-400" data-i18n-key="clip.merge.noobai.title"></p>
-                                    <div class="flex justify-around items-center"><div class="p-2">JANKU CLIP</div><div class="text-indigo-400">+</div><div class="p-2">NEW ERA CLIP</div></div>
-                                    <div class="mt-1">↓ <span class="font-normal text-slate-400" data-i18n-key="clip.merge.noobai.weights"></span></div>
-                                </div>
-                                <div class="p-3 border border-slate-700 rounded-lg bg-slate-800/30">
-                                    <p class="mb-2 text-amber-400" data-i18n-key="clip.merge.illustrious.title"></p>
-                                    <div class="flex justify-around items-center"><div class="p-2">Graycolor CLIP</div><div class="text-amber-400">+</div><div class="p-2">SinGlo CLIP</div></div>
-                                    <div class="mt-1">↓ <span class="font-normal text-slate-400" data-i18n-key="clip.merge.illustrious.weights"></span></div>
-                                </div>
-                                <div class="p-3 border border-slate-600 rounded-lg bg-slate-800/50">
-                                    <p class="mb-2" data-i18n-key="clip.merge.pony.title"></p>
-                                    <div class="flex justify-around items-center"><div class="p-2 text-indigo-400" data-i18n-key="clip.merge.noobai.result"></div><div class="text-xl">+</div><div class="p-2 text-amber-400" data-i18n-key="clip.merge.illustrious.result"></div></div>
-                                    <div class="mt-1">↓ <span class="font-normal text-slate-400" data-i18n-key="clip.merge.pony.weights"></span></div>
-                                    <div class="p-3 bg-indigo-500/20 text-indigo-300 rounded-md mx-auto mt-2 inline-block" data-i18n-key="clip.merge.pony.final"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <h4 data-i18n-key="vae.title"></h4>
-                            <p class="text-sm text-slate-400 mt-2 mb-6" data-i18n-key="pony.assembly.vae.desc"></p>
-                            <div class="border-2 border-dashed border-slate-600 p-4 text-center rounded-lg">
-                                <p class="font-semibold text-slate-100" data-i18n-key="vae.recommendation"></p>
-                                <p class="text-indigo-400 font-mono mt-1">Use the VAE built into `JANKU V4.0`.</p>
-                                <p class="text-xs mt-2 text-slate-500" data-i18n-key="pony.assembly.vae.justification"></p>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="pony-recipe-explanation" class="mb-8 p-4 bg-slate-800/50 border border-slate-700 rounded-lg text-sm"></div>
+                    <div class="chart-container lazy-chart relative w-full max-w-4xl mx-auto h-96" id="ponyChartContainer"><canvas id="ponyChart"></canvas></div>
+                    <div id="pony-justification" class="mt-6 p-4 bg-slate-800 rounded-lg text-sm min-h-[60px] text-center" data-i18n-key="chart.hoverPrompt"></div>
                 </div>
             </section>
         </div>
         
-        <div id="hybrid-content" class="content-section space-y-24">
-             <section id="hybrid-blueprints" class="scroll-mt-24">
-                <h2 class="mb-4" data-i18n-key="hybrid.blueprint.title"></h2>
-                <p class="mb-10 max-w-4xl text-slate-400" data-i18n-key="hybrid.blueprint.description"></p>
-                <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
-                    <div class="card p-6 flex flex-col"><h3 class="text-indigo-400">JANKU V4.0</h3><p class="text-sm font-medium text-slate-400 mb-2" data-i18n-key="hybrid.blueprint.card1.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="hybrid.blueprint.card1.desc"></p></div>
-                    <div class="card p-6 flex flex-col"><h3 class="text-indigo-400">NEW ERA V5.0</h3><p class="text-sm font-medium text-slate-400 mb-2" data-i18n-key="hybrid.blueprint.card2.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="hybrid.blueprint.card2.desc"></p></div>
-                    <div class="card p-6 flex flex-col"><h3 class="text-amber-400">Graycolor</h3><p class="text-sm font-medium text-slate-400 mb-2" data-i18n-key="hybrid.blueprint.card3.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="hybrid.blueprint.card3.desc"></p></div>
-                    <div class="card p-6 flex flex-col"><h3 class="text-amber-400">SinGlo V2.0</h3><p class="text-sm font-medium text-slate-400 mb-2" data-i18n-key="hybrid.blueprint.card4.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="hybrid.blueprint.card4.desc"></p></div>
-                    <div class="card p-6 flex flex-col"><h3 class="text-red-400">Boomer Art (SDXL)</h3><p class="text-sm font-medium text-slate-400 mb-2" data-i18n-key="hybrid.blueprint.card5.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="hybrid.blueprint.card5.desc"></p></div>
+        <div id="hybrid-content" class="content-section">
+            <section id="hybrid-blueprints" class="mb-24 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="hybrid.blueprint.title"></h2>
+                <p class="text-slate-400 mb-10 max-w-4xl" data-i18n-key="hybrid.blueprint.description"></p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">Pony-based Model (e.g., JANKU)</h3><p class="text-sm font-medium text-indigo-400 mb-2" data-i18n-key="hybrid.blueprint.card1.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="hybrid.blueprint.card1.desc"></p></div>
+                    <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">SDXL-based Model (e.g., Dynavision)</h3><p class="text-sm font-medium text-indigo-400 mb-2" data-i18n-key="hybrid.blueprint.card2.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="hybrid.blueprint.card2.desc"></p></div>
+                    <div class="card p-6 flex flex-col"><h3 class="font-bold text-lg text-slate-100">Another SDXL Model (e.g., a Realism Model)</h3><p class="text-sm font-medium text-amber-400 mb-2" data-i18n-key="hybrid.blueprint.card3.role"></p><p class="text-sm text-slate-400 flex-grow" data-i18n-key="hybrid.blueprint.card3.desc"></p></div>
                 </div>
             </section>
-            <section id="hybrid-recipes" class="scroll-mt-24 space-y-12">
-                <h2 data-i18n-key="hybrid.recipes.title"></h2>
-                <div class="card p-6 md:p-8">
-                    <h3 data-i18n-key="hybrid.recipes.step1.title"></h3>
-                    <p class="text-sm text-slate-400 mt-2 mb-6" data-i18n-key="hybrid.recipes.step1.desc"></p>
-                    <div class="flex justify-center flex-wrap gap-4 mb-6" id="hybrid-recipe-buttons">
-                        <button data-recipe="stage1" class="recipe-btn active" data-i18n-key="hybrid.recipes.step1.btnStage1"></button>
-                        <button data-recipe="stage2" class="recipe-btn" data-i18n-key="hybrid.recipes.step1.btnStage2"></button>
-                        <button data-recipe="stage3" class="recipe-btn" data-i18n-key="hybrid.recipes.step1.btnStage3"></button>
-                        <button data-recipe="stage4" class="recipe-btn" data-i18n-key="hybrid.recipes.step1.btnStage4"></button>
+            <section id="hybrid-recipes" class="mb-24 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-100 mb-2" data-i18n-key="hybrid.recipes.title"></h2>
+                 <div class="card p-6 md:p-8">
+                    <p class="text-slate-400 mb-6" data-i18n-key="hybrid.recipes.desc"></p>
+                    <div class="flex justify-center flex-wrap gap-4 mb-8" id="hybrid-recipe-buttons">
+                        <button data-recipe="stage1" class="btn px-4 py-2 text-sm font-medium rounded-md transition-colors" data-i18n-key="hybrid.recipes.btnStage1"></button>
+                        <button data-recipe="stage2" class="btn px-4 py-2 text-sm font-medium rounded-md transition-colors" data-i18n-key="hybrid.recipes.btnStage2"></button>
                     </div>
-                    <div id="hybrid-recipe-explanation" class="p-4 bg-slate-800/50 border border-slate-700 rounded-md text-sm text-slate-400"></div>
-                    <div id="hybrid-dare-panel" class="hidden mt-6"></div>
-                    <div id="hybrid-chart-container" class="h-[450px] mt-6"><canvas id="hybridChart"></canvas></div>
-                    <div id="hybrid-justification" class="mt-4 p-4 text-center text-sm min-h-[60px] bg-slate-800/50 rounded-md" data-i18n-key="chart.hoverPrompt"></div>
+                    <div id="hybrid-recipe-explanation" class="mb-8 p-4 bg-slate-800/50 border border-slate-700 rounded-lg text-sm"></div>
+                    <div class="chart-container lazy-chart relative w-full max-w-4xl mx-auto h-96" id="hybridChartContainer"><canvas id="hybridChart"></canvas></div>
+                    <div id="hybrid-justification" class="mt-6 p-4 bg-slate-800 rounded-lg text-sm min-h-[60px] text-center" data-i18n-key="chart.hoverPrompt"></div>
                 </div>
             </section>
         </div>
-
-        <div class="space-y-24">
-            <section id="analysis" class="scroll-mt-24">
-                <h2 class="mb-4" data-i18n-key="analysis.title"></h2>
-                <p class="mb-10 max-w-4xl text-slate-400" data-i18n-key="analysis.desc"></p>
-                <div class="card overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-800">
-                                <tr>
-                                    <th class="p-4 font-semibold" data-i18n-key="analysis.table.header1"></th>
-                                    <th class="p-4 font-semibold" data-i18n-key="strategy.sdxl"></th>
-                                    <th class="p-4 font-semibold" data-i18n-key="strategy.pony"></th>
-                                    <th class="p-4 font-semibold" data-i18n-key="strategy.hybrid"></th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-700">
-                                </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <section id="glossary" class="scroll-mt-24">
-                 <h2 class="mb-4" data-i18n-key="glossary.title"></h2>
-                 <p class="mb-10 max-w-4xl text-slate-400" data-i18n-key="glossary.desc"></p>
-                 <div class="grid md:grid-cols-2 gap-6">
-                     </div>
-            </section>
-        </div>
-
     </main>
 
-    <footer class="border-t border-slate-800">
+    <footer class="border-t border-slate-500/30">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-sm text-slate-500">
             <p data-i18n-key="footer.text"></p>
         </div>
@@ -274,257 +189,403 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. WEBGL BACKGROUND ---
-    let gl, program, positionAttr, resolutionUniform, timeUniform;
-    
+    // --- 1. WEBGL SHADER BACKGROUND ---
+    let animationFrameId;
+    let isTabVisible = true;
+
     function initShaderBackground() {
         const canvas = document.getElementById('shader-canvas');
-        try {
-            gl = canvas.getContext('webgl', { antialias: false, powerPreference: 'low-power' });
-            if (!gl) throw new Error("WebGL not supported");
+        const gl = canvas.getContext('webgl', { antialias: false, powerPreference: 'low-power' });
+        if (!gl) { console.error("WebGL not supported or disabled."); return; }
 
-            const vertexShaderSource = `attribute vec2 a_position; void main() { gl_Position = vec4(a_position, 0.0, 1.0); }`;
-            const fragmentShaderSource = `
-                precision highp float;
-                uniform vec2 u_resolution;
-                uniform float u_time;
+        const vertexShaderSource = `attribute vec2 a_position; void main() { gl_Position = vec4(a_position, 0.0, 1.0); }`;
+        const fragmentShaderSource = `
+            precision lowp float;
+            uniform vec2 u_resolution;
+            uniform float u_time;
+            float random(vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453); }
+            float noise(vec2 st) {
+                vec2 i = floor(st); vec2 f = fract(st);
+                vec2 u = f*f*(3.0-2.0*f);
+                return mix(mix(random(i), random(i + vec2(1.0,0.0)), u.x),
+                        mix(random(i + vec2(0.0,1.0)), random(i + vec2(1.0,1.0)), u.x), u.y);
+            }
+            void main() {
+                vec2 st = gl_FragCoord.xy/u_resolution.xy * 2.0;
+                st.x *= u_resolution.x/u_resolution.y;
+                float n = noise(st * 4.0 + u_time * 0.1);
+                gl_FragColor = vec4(vec3(n * 0.1, n * 0.15, n * 0.25), 1.0);
+            }`;
 
-                float random(vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
+        const createShader = (type, source) => {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                console.error('Shader compilation error: ' + gl.getShaderInfoLog(shader));
+                gl.deleteShader(shader); return null;
+            }
+            return shader;
+        };
 
-                float noise(vec2 st) {
-                    vec2 i = floor(st);
-                    vec2 f = fract(st);
-                    float a = random(i);
-                    float b = random(i + vec2(1.0, 0.0));
-                    float c = random(i + vec2(0.0, 1.0));
-                    float d = random(i + vec2(1.0, 1.0));
-                    vec2 u = f * f * (3.0 - 2.0 * f);
-                    return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
-                }
+        const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderSource);
+        const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
+        const program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            console.error('Shader program error: ' + gl.getProgramInfoLog(program)); return;
+        }
 
-                float fbm(vec2 st) {
-                    float value = 0.0;
-                    float amplitude = 0.5;
-                    for (int i = 0; i < 6; i++) {
-                        value += amplitude * noise(st);
-                        st *= 2.0;
-                        amplitude *= 0.5;
-                    }
-                    return value;
-                }
+        const positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+        const resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
+        const timeUniformLocation = gl.getUniformLocation(program, "u_time");
+        
+        const positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, 1, 1, -1, -1, 1, -1]), gl.STATIC_DRAW);
 
-                void main() {
-                    vec2 st = gl_FragCoord.xy / u_resolution.xy;
-                    st.x *= u_resolution.x / u_resolution.y;
-
-                    vec2 q = vec2(fbm(st + 0.00 * u_time), fbm(st + vec2(1.0)));
-                    vec2 r = vec2(fbm(st + 1.0 * q + vec2(1.7, 9.2) + 0.15 * u_time), fbm(st + 1.0 * q + vec2(8.3, 2.8) + 0.126 * u_time));
-                    float f = fbm(st + r);
-
-                    vec3 color = mix(vec3(0.1, 0.0, 0.2), vec3(0.4, 0.2, 0.8), clamp((f * f) * 4.0, 0.0, 1.0));
-                    color = mix(color, vec3(0.9, 0.9, 1.0), clamp(length(q), 0.0, 1.0));
-                    color = mix(color, vec3(0.8, 0.9, 0.2), clamp(length(r.x), 0.0, 1.0));
-                    
-                    gl_FragColor = vec4((f * f * f + .6 * f * f + .5 * f) * color, 1.0);
-                }
-            `;
-
-            function createShader(type, source) {
-                const shader = gl.createShader(type);
-                gl.shaderSource(shader, source);
-                gl.compileShader(shader);
-                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                    console.error('Shader compilation error: ' + gl.getShaderInfoLog(shader));
-                    gl.deleteShader(shader);
-                    return null;
-                }
-                return shader;
+        const render = (time) => {
+            if (!isTabVisible) { animationFrameId = requestAnimationFrame(render); return; }
+            time *= 0.0005;
+            
+            if (gl.canvas.width !== gl.canvas.clientWidth || gl.canvas.height !== gl.canvas.clientHeight) {
+                gl.canvas.width = gl.canvas.clientWidth;
+                gl.canvas.height = gl.canvas.clientHeight;
+                gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
             }
 
-            const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderSource);
-            const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
-            program = gl.createProgram();
-            gl.attachShader(program, vertexShader);
-            gl.attachShader(program, fragmentShader);
-            gl.linkProgram(program);
+            gl.useProgram(program);
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+            gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+            gl.uniform1f(timeUniformLocation, time);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+            animationFrameId = requestAnimationFrame(render);
+        };
 
-            positionAttr = gl.getAttribLocation(program, "a_position");
-            resolutionUniform = gl.getUniformLocation(program, "u_resolution");
-            timeUniform = gl.getUniformLocation(program, "u_time");
-
-            const buffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, 1, 1, -1, -1, 1, -1]), gl.STATIC_DRAW);
-            
-            requestAnimationFrame(render);
-        } catch (e) {
-            console.error("WebGL initialization failed:", e);
-            canvas.style.display = 'none';
-        }
+        render(0);
     }
+    document.addEventListener('visibilitychange', () => { isTabVisible = document.visibilityState === 'visible'; });
 
-    function render(time) {
-        if (!gl) return;
-        time *= 0.0001;
-        if (gl.canvas.width !== gl.canvas.clientWidth || gl.canvas.height !== gl.canvas.clientHeight) {
-            gl.canvas.width = gl.canvas.clientWidth;
-            gl.canvas.height = gl.canvas.clientHeight;
-            gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    // --- 2. INTERNATIONALIZATION (I18N) ---
+    const i18nData = {
+        pl: {
+            pageTitle: "Interaktywny przewodnik: Zaawansowane łączenie modeli",
+            "header.guideTitle": "Przewodnik po Łączeniu",
+            "nav.blueprints": "Schematy", "nav.recipes": "Przepisy",
+            "header.title": "Zaawansowane Łączenie Modeli AI",
+            "header.subtitle": "Interaktywny przewodnik po technikach łączenia modeli dyfuzyjnych w celu uzyskania nowatorskich stylów. Wybierz architekturę bazową, aby poznać jej komponenty i przepisy.",
+            "strategy.sdxl": "SDXL", "strategy.pony": "PONY", "strategy.hybrid": "HYBRYDA",
+            "sdxl.blueprint.title": "Schemat Architektury SDXL",
+            "sdxl.blueprint.description": "Łączenie modeli opartych na SDXL często polega na mieszaniu modeli o ugruntowanej pozycji, aby połączyć ich mocne strony — na przykład styl artystyczny jednego modelu z możliwościami fotorealistycznymi drugiego.",
+            "sdxl.blueprint.card1.role": "Model A (Host/Baza)", "sdxl.blueprint.card1.desc": "Zapewnia fundamentalną strukturę, spójność i podstawowy styl. Często jest to wszechstronny model, taki jak Animij.",
+            "sdxl.blueprint.card2.role": "Model B (Dawca Stylu)", "sdxl.blueprint.card2.desc": "Wprowadza specyficzną estetykę, taką jak styl malarski, ilustracyjny lub filmowy. Np. Graycolor.",
+            "sdxl.blueprint.card3.role": "Model C (Dawca Koncepcyjny)", "sdxl.blueprint.card3.desc": "Używany do wprowadzania określonych tematów lub elementów, np. dark fantasy, sci-fi lub stylistyka konkretnego artysty (np. Boomer Art Model).",
+            "sdxl.blueprint.card4.role": "Model D (Dawca Nastroju)", "sdxl.blueprint.card4.desc": "Dodaje specyficzny nastrój, oświetlenie lub paletę kolorów. Np. D34D.CH4NN3L.SDXL dla estetyki horroru.",
+            "sdxl.recipes.title": "Przepisy na Łączenie SDXL",
+            "sdxl.recipes.desc": "Przepisy na łączenie SDXL metodą wag blokowych (Block Weighted Merge) pozwalają precyzyjnie kontrolować, które części każdego modelu mają największy wpływ na końcowy rezultat.",
+            "sdxl.recipes.btnBalanced": "Zrównoważony", "sdxl.recipes.btnHost": "Z Dominacją Hosta", "sdxl.recipes.btnDonor": "Podatny na Dawcę",
+            "sdxl.recipes.explanation.balanced": "<strong>Przepis Zrównoważony:</strong> Starannie dobrana krzywa, która zachowuje kompozycję i anatomię Modelu A (Host), płynnie wprowadza styl Modelu B (Dawca) w środkowych blokach, a na końcu wraca do Hosta, by zachować spójność detali.",
+            "sdxl.recipes.explanation.host_dominant": "<strong>Przepis z Dominacją Hosta:</strong> Model A (Host) ma przewagę we wszystkich blokach. Skutkuje to modelem, który jest bardzo wierny oryginalnej strukturze Hosta, z subtelnymi wpływami stylu od Dawcy. Idealne do drobnych korekt stylistycznych.",
+            "sdxl.recipes.explanation.donor_receptive": "<strong>Przepis Podatny na Dawcę:</strong> Model B (Dawca) ma większy wpływ, zwłaszcza w środkowych i końcowych blokach. Tworzy to model, który silnie przejmuje estetykę Dawcy, ryzykując jednak pewną utratę stabilności kompozycyjnej Hosta.",
+            "pony.blueprint.title": "Schemat Architektury PONY",
+            "pony.blueprint.description": "Modele PONY (np. z serii Illustrious, NoobAI) są znane z wysokiej jakości generowania w stylu anime/ilustracji i dużej responsywności na prompty. Łączenie w obrębie rodziny PONY jest zwykle bardzo stabilne.",
+            "pony.blueprint.card1.role": "Model A (Baza Anatomiczna)", "pony.blueprint.card1.desc": "Model z doskonałą anatomią i kompozycją, taki jak JANKU, stanowi solidny fundament.",
+            "pony.blueprint.card2.role": "Model B (Baza Stylistyczna)", "pony.blueprint.card2.desc": "Wprowadza pożądany styl, np. bardziej malarski, komiksowy lub szczegółowy, jak NEW ERA.",
+            "pony.recipes.title": "Przepisy na Łączenie PONY",
+            "pony.recipes.desc": "Łączenie dwóch modeli PONY to świetny sposób na uzyskanie wyrafinowanego stylu przy zachowaniu doskonałej anatomii i spójności. Celem jest połączenie JANKU (anatomia) z NEW ERA (styl).",
+            "pony.recipes.btnBalanced": "Zrównoważony", "pony.recipes.btnStyle": "Skupiony na Stylu", "pony.recipes.btnAnatomy": "Skupiony na Anatomii",
+            "pony.recipes.explanation.balanced": "<strong>Przepis Zrównoważony:</strong> Wczesne bloki faworyzują JANKU, aby ustalić solidną kompozycję. Wpływ NEW ERA rośnie w środku, aby zdefiniować styl, a końcowe bloki ponownie balansują w stronę JANKU dla czystych detali.",
+            "pony.recipes.explanation.style_focused": "<strong>Przepis Skupiony na Stylu:</strong> NEW ERA ma znacznie większy wpływ, zwłaszcza w blokach środkowych i wyjściowych. Skutkuje to modelem, który mocno odzwierciedla estetykę NEW ERA, co może być pożądane przy tworzeniu bardzo stylizowanych obrazów.",
+            "pony.recipes.explanation.anatomy_focused": "<strong>Przepis Skupiony na Anatomii:</strong> JANKU dominuje na całej długości UNet. Styl NEW ERA jest tylko subtelnym dodatkiem. Idealne, jeśli celem jest jedynie delikatne 'doprawienie' bazowego modelu.",
+            "hybrid.blueprint.title": "Schemat Architektury Hybrydowej",
+            "hybrid.blueprint.description": "Łączenie hybrydowe (PONY + SDXL) jest trudne, ale może przynieść unikalne rezultaty, łącząc responsywność PONY z różnorodnością koncepcyjną SDXL. Kluczem jest ostrożne mieszanie, aby uniknąć artefaktów.",
+            "hybrid.blueprint.card1.role": "Model PONY (Baza)", "hybrid.blueprint.card1.desc": "Zapewnia solidną podstawę, świetną responsywność na prompt i wysokiej jakości styl bazowy (np. JANKU).",
+            "hybrid.blueprint.card2.role": "Model SDXL (Dawca Koncepcji)", "hybrid.blueprint.card2.desc": "Wprowadza szeroki zakres koncepcyjny lub styl, którego brakuje w ekosystemie PONY, np. Dynavision dla dynamicznych scen.",
+            "hybrid.blueprint.card3.role": "Model SDXL (Dawca Realizmu/Detali)", "hybrid.blueprint.card3.desc": "Używany do dodawania tekstur, oświetlenia lub detali fotorealistycznych, które są domeną modeli SDXL.",
+            "hybrid.recipes.title": "Przepisy na Łączenie Hybrydowe",
+            "hybrid.recipes.desc": "To podejście jest wieloetapowe. Najpierw łączymy dwa modele SDXL, aby stworzyć silnego 'Dawcę', a następnie łączymy go z modelem PONY. Ten proces minimalizuje niestabilność.",
+            "hybrid.recipes.btnStage1": "Etap 1: Stwórz Dawcę SDXL", "hybrid.recipes.btnStage2": "Etap 2: Połącz z PONY",
+            "hybrid.recipes.explanation.stage1": "<strong>Etap 1: Stwórz Dawcę SDXL:</strong> Łączymy dwa modele SDXL (np. Dynavision i Realism Model). Celem jest stworzenie zrównoważonego dawcy, który łączy siłę koncepcyjną jednego z jakością detali drugiego. Model Realistyczny dominuje w blokach wyjściowych, aby zapewnić wysokiej jakości tekstury.",
+            "hybrid.recipes.explanation.stage2": "<strong>Etap 2: Połącz z PONY:</strong> Łączymy naszego 'Dawcę SDXL' z modelem PONY (JANKU). PONY dominuje w kluczowych blokach IN i OUT, aby zachować swoją doskonałą anatomię, spójność i responsywność na prompt. Dawca SDXL ma największy wpływ w środkowym bloku (M00), wprowadzając swoją unikalną koncepcję bez niszczenia struktury PONY.",
+            "footer.text": "© 2025 Przewodnik po Łączeniu Modeli AI. Wszelkie prawa zastrzeżone.",
+            "chart.hoverPrompt": "Najedź kursorem na blok na wykresie, aby zobaczyć jego funkcję."
+        },
+        en: {
+            pageTitle: "Interactive Guide: Advanced Model Merging",
+            "header.guideTitle": "Merging Guide",
+            "nav.blueprints": "Blueprints", "nav.recipes": "Recipes",
+            "header.title": "Advanced AI Model Merging",
+            "header.subtitle": "An interactive guide to diffusion model merging techniques for achieving novel artistic styles. Select a base architecture to explore its components and recipes.",
+            "strategy.sdxl": "SDXL", "strategy.pony": "PONY", "strategy.hybrid": "HYBRID",
+            "sdxl.blueprint.title": "SDXL Architecture Blueprint",
+            "sdxl.blueprint.description": "Merging SDXL-based models often involves blending established models to combine their strengths—such as one model's artistic style with another's photorealistic capabilities.",
+            "sdxl.blueprint.card1.role": "Model A (Host/Base)", "sdxl.blueprint.card1.desc": "Provides the fundamental structure, coherence, and base style. Often a versatile all-rounder model like Animij.",
+            "sdxl.blueprint.card2.role": "Model B (Style Donor)", "sdxl.blueprint.card2.desc": "Injects a specific aesthetic, such as a painterly, illustrative, or cinematic style. E.g., Graycolor.",
+            "sdxl.blueprint.card3.role": "Model C (Concept Donor)", "sdxl.blueprint.card3.desc": "Used to introduce specific themes or elements, like dark fantasy, sci-fi, or a particular artist's style (e.g., Boomer Art Model).",
+            "sdxl.blueprint.card4.role": "Model D (Mood Donor)", "sdxl.blueprint.card4.desc": "Adds a specific mood, lighting, or color palette. E.g., D34D.CH4NN3L.SDXL for a horror aesthetic.",
+            "sdxl.recipes.title": "SDXL Merging Recipes",
+            "sdxl.recipes.desc": "Block Weighted Merge recipes for SDXL allow for precise control over which parts of each model contribute most to the final result.",
+            "sdxl.recipes.btnBalanced": "Balanced", "sdxl.recipes.btnHost": "Host-Dominant", "sdxl.recipes.btnDonor": "Donor-Receptive",
+            "sdxl.recipes.explanation.balanced": "<strong>Balanced Recipe:</strong> A carefully calculated curve that preserves the composition and anatomy of Model A (Host), smoothly introduces the style of Model B (Donor) in the middle blocks, and then returns to the Host for detail coherence.",
+            "sdxl.recipes.explanation.host_dominant": "<strong>Host-Dominant Recipe:</strong> Model A (Host) is favored across all blocks. This results in a model that is very faithful to the Host's original structure, with subtle style influences from the Donor. Ideal for minor stylistic adjustments.",
+            "sdxl.recipes.explanation.donor_receptive": "<strong>Donor-Receptive Recipe:</strong> Model B (Donor) has a stronger influence, especially in the mid-to-late blocks. This creates a model that heavily adopts the Donor's aesthetic, at the risk of some compositional stability from the Host.",
+            "pony.blueprint.title": "PONY Architecture Blueprint",
+            "pony.blueprint.description": "PONY models (e.g., from the Illustrious, NoobAI series) are known for high-quality anime/illustrative output and great prompt fidelity. Merging within the PONY family is typically very stable.",
+            "pony.blueprint.card1.role": "Model A (Anatomy Base)", "pony.blueprint.card1.desc": "A model with excellent anatomy and composition, such as JANKU, serves as a solid foundation.",
+            "pony.blueprint.card2.role": "Model B (Style Base)", "pony.blueprint.card2.desc": "Introduces the desired style, such as a more painterly, comic-book, or detailed look, like NEW ERA.",
+            "pony.recipes.title": "PONY Merging Recipes",
+            "pony.recipes.desc": "Merging two PONY models is a great way to achieve a sophisticated style while maintaining excellent anatomy and coherence. The goal here is to merge JANKU (anatomy) with NEW ERA (style).",
+            "pony.recipes.btnBalanced": "Balanced", "pony.recipes.btnStyle": "Style-Focused", "pony.recipes.btnAnatomy": "Anatomy-Focused",
+            "pony.recipes.explanation.balanced": "<strong>Balanced Recipe:</strong> The early blocks favor JANKU to establish a solid composition. NEW ERA's influence rises in the middle to define the style, and the final blocks balance back towards JANKU for clean details.",
+            "pony.recipes.explanation.style_focused": "<strong>Style-Focused Recipe:</strong> NEW ERA has a much stronger influence, especially in the mid and out blocks. This results in a model that heavily reflects the NEW ERA aesthetic, which can be desirable for highly stylized images.",
+            "pony.recipes.explanation.anatomy_focused": "<strong>Anatomy-Focused Recipe:</strong> JANKU is dominant throughout the UNet. The NEW ERA style is only a subtle addition. Perfect if the goal is to just 'spice up' the base model slightly.",
+            "hybrid.blueprint.title": "Hybrid Architecture Blueprint",
+            "hybrid.blueprint.description": "Hybrid merging (PONY + SDXL) is challenging but can yield unique results, combining the prompt fidelity of PONY with the conceptual range of SDXL. The key is to blend carefully to avoid artifacts.",
+            "hybrid.blueprint.card1.role": "PONY Model (Base)", "hybrid.blueprint.card1.desc": "Provides a solid foundation, great prompt adherence, and a high-quality base style (e.g., JANKU).",
+            "hybrid.blueprint.card2.role": "SDXL Model (Concept Donor)", "hybrid.blueprint.card2.desc": "Injects a broad conceptual range or a style not found in the PONY ecosystem, like Dynavision for dynamic scenes.",
+            "hybrid.blueprint.card3.role": "SDXL Model (Realism/Detail Donor)", "hybrid.blueprint.card3.desc": "Used to add textures, lighting, or photorealistic details that are a strength of SDXL models.",
+            "hybrid.recipes.title": "Hybrid Merging Recipes",
+            "hybrid.recipes.desc": "This is a multi-stage process. First, we merge two SDXL models to create a strong 'Donor', and then we merge that result with a PONY model. This minimizes instability.",
+            "hybrid.recipes.btnStage1": "Stage 1: Create SDXL Donor", "hybrid.recipes.btnStage2": "Stage 2: Merge with PONY",
+            "hybrid.recipes.explanation.stage1": "<strong>Stage 1: Create SDXL Donor:</strong> We merge two SDXL models (e.g., Dynavision and a Realism Model). The goal is a balanced donor that combines the conceptual strength of one with the detail quality of the other. The Realism model is weighted higher in the OUT blocks for high-quality textures.",
+            "hybrid.recipes.explanation.stage2": "<strong>Stage 2: Merge with PONY:</strong> We merge our 'SDXL Donor' into the PONY model (JANKU). The PONY model is heavily dominant in the key IN and OUT blocks to preserve its excellent anatomy, coherence, and prompt fidelity. The SDXL Donor has its biggest impact in the middle block (M00), injecting its unique concept without destroying the PONY structure.",
+            "footer.text": "© 2025 AI Model Merging Guide. All rights reserved.",
+            "chart.hoverPrompt": "Hover over a chart block to see its function."
         }
-        gl.useProgram(program);
-        gl.enableVertexAttribArray(positionAttr);
-        gl.vertexAttribPointer(positionAttr, 2, gl.FLOAT, false, 0, 0);
-        gl.uniform2f(resolutionUniform, gl.canvas.width, gl.canvas.height);
-        gl.uniform1f(timeUniform, time);
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-        requestAnimationFrame(render);
-    }
-    
-    // --- 2. INTERNATIONALIZATION (i18n) & DATA ---
-    // (Content data is large and kept as-is from the source file for brevity, as per transformation goal)
-    const i18nData = { /* The large i18n data object from the source would be here */ };
-    let currentLanguage = 'en'; // Default to English
+    };
+    let currentLanguage = 'en';
 
     function setLanguage(lang) {
         currentLanguage = lang;
         document.documentElement.lang = lang;
-        // The rest of the i18n update logic from source file would be here...
-        // For this example, we'll assume content is static
+        document.querySelectorAll('[data-i18n-key]').forEach(el => {
+            const key = el.getAttribute('data-i18n-key');
+            el.innerHTML = i18nData[lang][key] || i18nData['en'][key] || `[${key}]`;
+        });
+        
+        document.getElementById('lang-pl').classList.toggle('active', lang === 'pl');
+        document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+        
+        // Refresh charts to update labels and explanations
+        if (sdxlChartInstance) updateSdxlChart(document.querySelector('#sdxl-recipe-buttons .active').dataset.recipe);
+        if (ponyChartInstance) updatePonyChart(document.querySelector('#pony-recipe-buttons .active').dataset.recipe);
+        if (hybridChartInstance) updateHybridChart(document.querySelector('#hybrid-recipe-buttons .active').dataset.recipe);
     }
 
+
     // --- 3. CHART & INTERACTIVITY LOGIC ---
-    let sdxlChartInstance, ponyChartInstance, hybridChartInstance;
     const blockLabels = ['IN00', 'IN01', 'IN02', 'IN03', 'IN04', 'IN05', 'IN06', 'IN07', 'IN08', 'IN09', 'IN10', 'IN11', 'M00', 'OUT00', 'OUT01', 'OUT02', 'OUT03', 'OUT04', 'OUT05', 'OUT06', 'OUT07', 'OUT08', 'OUT09', 'OUT10', 'OUT11'];
     
-    // Chart data is kept as-is from source file
-    const chartDataStore = { /* The chart data object from the source would be here */ };
-    const blockDescriptions = { /* The block description object from the source would be here */ };
+    // Data store for all chart information
+    const chartDataStore = {
+        sdxl: {
+            modelA: { pl: 'Animij (Host)', en: 'Animij (Host)' },
+            modelB: { pl: 'Graycolor (Dawca)', en: 'Graycolor (Donor)' },
+            colorA: '#4f46e5', colorB: '#a5b4fc',
+            recipes: {
+                balanced: { weights: [0.2,0.2,0.25,0.25,0.3,0.35,0.4,0.45,0.5,0.5,0.5,0.5,0.55,0.5,0.45,0.4,0.4,0.35,0.3,0.25,0.2,0.2,0.15,0.15,0.1] },
+                host_dominant: { weights: [0.1,0.1,0.1,0.1,0.15,0.15,0.2,0.2,0.2,0.25,0.25,0.25,0.3,0.25,0.25,0.2,0.2,0.15,0.15,0.1,0.1,0.1,0.05,0.05,0.05] },
+                donor_receptive: { weights: [0.3,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.6,0.6,0.6,0.55,0.65,0.6,0.55,0.5,0.5,0.5,0.45,0.4,0.4,0.35,0.3,0.25,0.2] }
+            }
+        },
+        pony: {
+            modelA: { pl: 'JANKU (Anatomia)', en: 'JANKU (Anatomy)' },
+            modelB: { pl: 'NEW ERA (Styl)', en: 'NEW ERA (Style)' },
+            colorA: '#d946ef', colorB: '#f472b6',
+            recipes: {
+                balanced: { weights: [0.1,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.5,0.5,0.5,0.45,0.4,0.35,0.3,0.25,0.2,0.15,0.15,0.1,0.1,0.05,0.05] },
+                style_focused: { weights: [0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.65,0.6,0.7,0.65,0.6,0.6,0.55,0.5,0.45,0.4,0.35,0.3,0.3,0.25,0.2] },
+                anatomy_focused: { weights: [0.05,0.05,0.05,0.1,0.1,0.1,0.15,0.15,0.2,0.2,0.2,0.2,0.25,0.2,0.2,0.15,0.15,0.1,0.1,0.1,0.05,0.05,0.05,0.05,0.05] }
+            }
+        },
+        hybrid: {
+            recipes: {
+                stage1: {
+                    modelA: { pl: 'Dynavision', en: 'Dynavision' }, modelB: { pl: 'Realism Model', en: 'Realism Model' },
+                    colorA: '#db2777', colorB: '#e11d48',
+                    weights: [0.3,0.3,0.3,0.35,0.35,0.4,0.4,0.4,0.4,0.45,0.45,0.45,0.5,0.5,0.55,0.55,0.55,0.6,0.6,0.6,0.65,0.65,0.65,0.7,0.7]
+                },
+                stage2: {
+                    modelA: { pl: 'JANKU (PONY)', en: 'JANKU (PONY)' }, modelB: { pl: 'Dawca SDXL', en: 'SDXL Donor' },
+                    colorA: '#4f46e5', colorB: '#be185d',
+                    weights: [0.1,0.1,0.1,0.1,0.1,0.15,0.15,0.2,0.2,0.25,0.25,0.3,0.4,0.3,0.25,0.25,0.2,0.2,0.15,0.15,0.1,0.1,0.1,0.1,0.1]
+                }
+            }
+        }
+    };
 
-    // Function to create styled charts for the dark theme
-    function createChart(ctx, onHoverCallback) {
+    const blockDescriptions = {
+        pl: { IN00: "Wpływa na ogólną kompozycję i podstawowe kształty.", M00: "Serce koncepcyjne, kluczowe dla interpretacji tematu.", OUT11: "Finalizuje drobne detale i tekstury." },
+        en: { IN00: "Influences overall composition and basic shapes.", M00: "The conceptual heart, crucial for theme interpretation.", OUT11: "Finalizes fine details and textures." }
+    };
+    const getBlockDesc = (blockName) => {
+        const key = blockName.startsWith('IN0') ? 'IN00' : blockName.startsWith('OUT1') ? 'OUT11' : blockName;
+        return blockDescriptions[currentLanguage][key] || `Function of ${blockName}`;
+    };
+
+    let sdxlChartInstance, ponyChartInstance, hybridChartInstance;
+
+    // --- Core Functions: Switching, Chart Creation, Updating ---
+    function switchVersion(version) {
+        ['sdxl', 'pony', 'hybrid'].forEach(v => {
+            const contentEl = document.getElementById(`${v}-content`);
+            contentEl.classList.toggle('visible', v === version);
+            document.getElementById(`select-${v}`).classList.toggle('active', v === version);
+        });
+        document.getElementById('nav-blueprints').href = `#${version}-blueprints`;
+        document.getElementById('nav-recipes').href = `#${version}-recipes`;
+        
+        // Trigger lazy chart init if needed
+        const chartContainer = document.querySelector(`#${version}-content .lazy-chart`);
+        if (chartContainer) {
+            const chartId = chartContainer.id;
+            if (chartId === 'sdxlChartContainer' && !sdxlChartInstance) initializeSdxlChart();
+            if (chartId === 'ponyChartContainer' && !ponyChartInstance) initializePonyChart();
+            if (chartId === 'hybridChartContainer' && !hybridChartInstance) initializeHybridChart();
+        }
+    }
+
+    function createChart(ctx, justificationEl) {
         return new Chart(ctx, {
             type: 'bar',
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: { duration: 400 },
+                responsive: true, maintainAspectRatio: false,
                 plugins: {
-                    legend: { labels: { color: '#cbd5e1', font: { family: 'Inter' } } },
                     tooltip: {
-                        backgroundColor: 'rgba(15, 23, 42, 0.8)',
-                        borderColor: '#4f46e5',
-                        borderWidth: 1,
-                        titleColor: '#e2e8f0',
-                        bodyColor: '#cbd5e1',
-                        padding: 10,
-                        callbacks: { /* Tooltip label callback from source */ }
-                    }
+                        mode: 'index', intersect: false,
+                        backgroundColor: 'rgba(15, 23, 42, 0.8)', borderColor: '#4f46e5', borderWidth: 1,
+                        callbacks: {
+                            label: (c) => {
+                                const modelA = c.chart.data.datasets[0];
+                                const modelB = c.chart.data.datasets[1];
+                                const bWeight = modelB.data[c.dataIndex];
+                                const aWeight = 1 - bWeight;
+                                return c.datasetIndex === 0 
+                                    ? `${modelA.label}: ${Math.round(aWeight * 100)}%`
+                                    : `${modelB.label}: ${Math.round(bWeight * 100)}%`;
+                            }
+                        }
+                    },
+                    legend: { position: 'top', labels: { color: '#cbd5e1' } }
                 },
                 scales: {
                     x: { stacked: true, grid: { color: 'rgba(51, 65, 85, 0.5)' }, ticks: { color: '#94a3b8' } },
-                    y: { stacked: true, beginAtZero: true, max: 1.0, grid: { color: 'rgba(51, 65, 85, 0.5)' }, ticks: { color: '#94a3b8', callback: v => (v * 100) + '%' } }
+                    y: { stacked: true, beginAtZero: true, max: 1.0, grid: { color: 'rgba(51, 65, 85, 0.5)' }, ticks: { color: '#94a3b8', callback: (v) => v * 100 + '%' } }
                 },
-                onHover: onHoverCallback
+                onHover: (e, el) => {
+                    justificationEl.textContent = el.length > 0 ? getBlockDesc(blockLabels[el[0].index]) : i18nData[currentLanguage]['chart.hoverPrompt'];
+                }
             }
         });
     }
 
-    const onBlockHover = (justificationEl) => (e, el) => {
-        // Justification display logic from source
+    // Chart-specific initializers and updaters
+    const initializeSdxlChart = () => {
+        const ctx = document.getElementById('sdxlChart').getContext('2d');
+        sdxlChartInstance = createChart(ctx, document.getElementById('sdxl-justification'));
+        updateSdxlChart(document.querySelector('#sdxl-recipe-buttons .active').dataset.recipe);
+    };
+    const updateSdxlChart = (recipeKey) => {
+        if (!sdxlChartInstance) return;
+        const data = chartDataStore.sdxl;
+        const recipe = data.recipes[recipeKey];
+        document.getElementById('sdxl-recipe-explanation').innerHTML = i18nData[currentLanguage][`sdxl.recipes.explanation.${recipeKey}`];
+        sdxlChartInstance.data = {
+            labels: blockLabels,
+            datasets: [
+                { label: data.modelA[currentLanguage], data: recipe.weights.map(w => 1 - w), backgroundColor: data.colorA },
+                { label: data.modelB[currentLanguage], data: recipe.weights, backgroundColor: data.colorB }
+            ]
+        };
+        sdxlChartInstance.update('none');
     };
 
-    // --- Chart Initializers & Updaters ---
-    function initializeSdxlChart() {
-        const ctx = document.getElementById('sdxlChart').getContext('2d');
-        const justificationEl = document.getElementById('sdxl-justification');
-        sdxlChartInstance = createChart(ctx, onBlockHover(justificationEl));
-        updateSdxlChart('balanced');
-    }
-    function updateSdxlChart(recipeKey) { /* Chart update logic from source */ }
-
-    function initializePonyChart() {
+    const initializePonyChart = () => {
         const ctx = document.getElementById('ponyChart').getContext('2d');
-        const justificationEl = document.getElementById('pony-justification');
-        ponyChartInstance = createChart(ctx, onBlockHover(justificationEl));
-        updatePonyChart('stage1');
-    }
-    function updatePonyChart(recipeKey) { /* Chart update logic from source */ }
+        ponyChartInstance = createChart(ctx, document.getElementById('pony-justification'));
+        updatePonyChart(document.querySelector('#pony-recipe-buttons .active').dataset.recipe);
+    };
+    const updatePonyChart = (recipeKey) => {
+        if (!ponyChartInstance) return;
+        const data = chartDataStore.pony;
+        const recipe = data.recipes[recipeKey];
+        document.getElementById('pony-recipe-explanation').innerHTML = i18nData[currentLanguage][`pony.recipes.explanation.${recipeKey}`];
+        ponyChartInstance.data = {
+            labels: blockLabels,
+            datasets: [
+                { label: data.modelA[currentLanguage], data: recipe.weights.map(w => 1 - w), backgroundColor: data.colorA },
+                { label: data.modelB[currentLanguage], data: recipe.weights, backgroundColor: data.colorB }
+            ]
+        };
+        ponyChartInstance.update('none');
+    };
     
-    function initializeHybridChart() {
+    const initializeHybridChart = () => {
         const ctx = document.getElementById('hybridChart').getContext('2d');
-        const justificationEl = document.getElementById('hybrid-justification');
-        hybridChartInstance = createChart(ctx, onBlockHover(justificationEl));
-        updateHybridChart('stage1');
-    }
-    
-    function updateHybridChart(recipeKey) {
+        hybridChartInstance = createChart(ctx, document.getElementById('hybrid-justification'));
+        updateHybridChart(document.querySelector('#hybrid-recipe-buttons .active').dataset.recipe);
+    };
+    const updateHybridChart = (recipeKey) => {
+        if (!hybridChartInstance) return;
         const recipe = chartDataStore.hybrid.recipes[recipeKey];
-        const chartContainer = document.getElementById('hybrid-chart-container');
-        const darePanel = document.getElementById('hybrid-dare-panel');
-        const justificationEl = document.getElementById('hybrid-justification');
-        
-        // This is the key functional change
-        if (recipeKey === 'stage3') {
-            chartContainer.style.display = 'none';
-            justificationEl.style.display = 'none';
-            darePanel.style.display = 'block';
-            darePanel.innerHTML = i18nData[currentLanguage]['hybrid.recipes.explanation.stage3'];
-        } else {
-            chartContainer.style.display = 'block';
-            justificationEl.style.display = 'block';
-            darePanel.style.display = 'none';
-            if (!hybridChartInstance) return;
-            // The rest of the chart update logic from source
-        }
-    }
-
-    // --- Core Page Interactivity ---
-    function switchVersion(version) {
-        ['sdxl', 'pony', 'hybrid'].forEach(v => {
-            document.getElementById(`${v}-content`).style.display = v === version ? 'block' : 'none';
-            document.getElementById(`select-${v}`).classList.toggle('active', v === version);
-        });
-        
-        // This is the key functional change
-        document.getElementById('nav-blueprints').href = `#${version}-blueprints`;
-        document.getElementById('nav-recipes').href = `#${version}-recipes`;
-
-        if (version === 'sdxl' && !sdxlChartInstance) initializeSdxlChart();
-        if (version === 'pony' && !ponyChartInstance) initializePonyChart();
-        if (version === 'hybrid' && !hybridChartInstance) initializeHybridChart();
-    }
+        document.getElementById('hybrid-recipe-explanation').innerHTML = i18nData[currentLanguage][`hybrid.recipes.explanation.${recipeKey}`];
+        hybridChartInstance.data = {
+            labels: blockLabels,
+            datasets: [
+                { label: recipe.modelA[currentLanguage], data: recipe.weights.map(w => 1 - w), backgroundColor: recipe.colorA },
+                { label: recipe.modelB[currentLanguage], data: recipe.weights, backgroundColor: recipe.colorB }
+            ]
+        };
+        hybridChartInstance.update('none');
+    };
 
     // --- Event Listeners ---
+    // Lazy loading for charts
+    const chartObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const chartId = entry.target.id;
+                if (chartId === 'sdxlChartContainer' && !sdxlChartInstance) initializeSdxlChart();
+                if (chartId === 'ponyChartContainer' && !ponyChartInstance) initializePonyChart();
+                if (chartId === 'hybridChartContainer' && !hybridChartInstance) initializeHybridChart();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { rootMargin: "100px" });
+    document.querySelectorAll('.lazy-chart').forEach(chart => chartObserver.observe(chart));
+
+    // Strategy, Recipe, and Language switchers (with event delegation)
     document.getElementById('strategy-selector').addEventListener('click', (e) => {
-        if (e.target.matches('.version-btn')) {
-            switchVersion(e.target.id.replace('select-', ''));
-        }
+        if (e.target.matches('.btn')) switchVersion(e.target.id.replace('select-', ''));
     });
 
-    function createRecipeClickHandler(updateFn, chartType) {
-        return (e) => {
-            if (e.target.matches('.recipe-btn')) {
-                const recipeKey = e.target.dataset.recipe;
-                e.currentTarget.querySelector('.active')?.classList.remove('active');
-                e.target.classList.add('active');
-                updateFn(recipeKey);
-            }
-        };
-    }
+    const createRecipeHandler = (updateFn) => (e) => {
+        if (e.target.matches('.btn')) {
+            e.currentTarget.querySelector('.active')?.classList.remove('active');
+            e.target.classList.add('active');
+            updateFn(e.target.dataset.recipe);
+        }
+    };
+    document.getElementById('sdxl-recipe-buttons').addEventListener('click', createRecipeHandler(updateSdxlChart));
+    document.getElementById('pony-recipe-buttons').addEventListener('click', createRecipeHandler(updatePonyChart));
+    document.getElementById('hybrid-recipe-buttons').addEventListener('click', createRecipeHandler(updateHybridChart));
 
-    document.getElementById('sdxl-recipe-buttons').addEventListener('click', createRecipeClickHandler(updateSdxlChart));
-    document.getElementById('pony-recipe-buttons').addEventListener('click', createRecipeClickHandler(updatePonyChart));
-    document.getElementById('hybrid-recipe-buttons').addEventListener('click', createRecipeClickHandler(updateHybridChart));
+    document.getElementById('lang-pl').addEventListener('click', () => setLanguage('pl'));
+    document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
 
     // --- Initial State ---
     initShaderBackground();
-    // setLanguage('en'); // Set initial language
-    switchVersion('sdxl'); // Show first section
+    setLanguage('en');
+    switchVersion('sdxl'); // Start on SDXL page
+    document.getElementById('select-sdxl').classList.add('active');
+    document.querySelector('#sdxl-recipe-buttons [data-recipe="balanced"]').classList.add('active');
+    document.querySelector('#pony-recipe-buttons [data-recipe="balanced"]').classList.add('active');
+    document.querySelector('#hybrid-recipe-buttons [data-recipe="stage1"]').classList.add('active');
 });
-
-// NOTE: For brevity, the large i18n and chart data objects from the original
-// file have been replaced with comments. The script logic is preserved and adapted.
 </script>
-
 </body>
 </html>
