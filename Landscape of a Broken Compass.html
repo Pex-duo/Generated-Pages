@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krajobraz Złamanego Kompasu: Interaktywna Analiza</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Sober Neutrals -->
+    <!-- Application Structure Plan: Aplikacja została zaprojektowana jako jednolita, przewijana strona z klarownymi, tematycznymi sekcjami, aby ułatwić zrozumienie złożonej analizy. Zamiast liniowej struktury raportu, zastosowano podejście modułowe: 1. Wprowadzenie z tezą główną. 2. Interaktywna "Diagnoza Rdzeniowa" z podziałem na siły zewnętrzne i wewnętrzne, co pozwala użytkownikowi na nieliniową eksplorację. 3. "Anatomia Rozpadu" z wizualizacją danych statystycznych dla wzmocnienia argumentów. 4. "Profil Partnera" jako synteza wniosków. 5. "Werdykt" jako mocne, refleksyjne zakończenie. Ta struktura ma na celu przekształcenie gęstego tekstu w przyswajalne, angażujące doświadczenie, prowadząc użytkownika od ogólnej diagnozy do szczegółowych dowodów i ostatecznych wniosków. -->
+    <!-- Visualization & Content Choices: 1. Główne tezy (Diagnoza): Interaktywne karty (HTML/Tailwind) z efektem hover/click, aby stopniowo ujawniać informacje bez przytłaczania użytkownika. Cel: Organizacja, Informacja. 2. Statystyki rozwodowe: Wykres kołowy (Chart.js) dla inicjatorów rozwodów i interaktywny wykres słupkowy (Chart.js) dla przyczyn. Kliknięcie słupka ujawnia głębszą interpretację z raportu. Cel: Porównanie, Relacje. 3. Profil Partnera: Struktura HTML/CSS, która wizualnie rozkłada cechy, aby ułatwić ich przyswojenie. Cel: Organizacja, Informacja. 4. Wnioski: Czysty, sformatowany tekst dla maksymalnej czytelności i powagi. Cel: Informacja. Wybory te celowo unikają SVG/Mermaid, opierając się na Canvas i HTML/CSS, aby zapewnić interaktywność i zgodność z wymaganiami, jednocześnie utrzymując spójny, somatyczny ton wizualny. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+        h1, h2, h3 {
+            font-family: 'Roboto Slab', serif;
+        }
+        .section-title {
+            border-left: 4px solid #607D8B;
+            padding-left: 1rem;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-stone-100 text-stone-800">
+
+    <nav class="sticky top-0 bg-stone-100/80 backdrop-blur-sm z-50 shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <h1 class="text-xl font-bold text-stone-700" data-key="nav_title">Krajobraz Złamanego Kompasu</h1>
+                <div class="flex items-center space-x-4">
+                    <div id="lang-switcher" class="flex items-center text-sm">
+                        <button id="lang-pl" class="px-3 py-1 rounded-md font-bold bg-stone-300 text-stone-800">PL</button>
+                        <button id="lang-en" class="px-3 py-1 rounded-md text-stone-500">EN</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 md:py-16">
+        
+        <header class="text-center mb-16 md:mb-24">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4" data-key="header_title">Krajobraz Złamanego Kompasu</h1>
+            <p class="text-lg md:text-xl text-stone-600 max-w-3xl mx-auto" data-key="header_subtitle">Sądowa ekspertyza niepowodzenia współczesnych relacji międzyludzkich.</p>
+        </header>
+
+        <section id="introduction" class="mb-16 md:mb-24">
+            <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+                <h2 class="text-3xl font-bold mb-4 section-title" data-key="intro_title">Teza Wstępna</h2>
+                <p class="text-lg text-stone-700 mb-4" data-key="intro_p1">
+                    Współczesne społeczeństwo, ukształtowane przez siły polaryzacji, rewolucji ról płciowych i upolitycznienia sfery prywatnej, stało się systemowo nieprzystosowane do tworzenia i podtrzymywania zdrowych, opartych na współpracy związków.
+                </p>
+                <p class="text-stone-600" data-key="intro_p2">
+                    Poniższa analiza dekonstruuje ten kryzys, przechodząc od sił makrospołecznych do ich wpływu na psychikę jednostki i ostatecznie, do mierzalnych wskaźników rozpadu relacji. To nie jest wyraz pesymizmu, lecz kliniczna diagnoza otaczającej nas rzeczywistości.
+                </p>
+            </div>
+        </section>
+
+        <section id="diagnosis" class="mb-16 md:mb-24">
+            <h2 class="text-4xl font-bold text-center mb-12" data-key="diag_title">Diagnoza Rdzeniowa: Siły Rozkładu</h2>
+            
+            <div class="mb-12">
+                <h3 class="text-2xl font-semibold text-center mb-8 text-stone-700" data-key="diag_subtitle_external">I. Spękany Fundament Społeczny (Siły Zewnętrzne)</h3>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="card bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-xl font-bold mb-2" data-key="ext_force_1_title">Polaryzacja Polityczna</h4>
+                        <p class="text-stone-600" data-key="ext_force_1_desc">Ideologia jako warunek wstępny intymności. Poglądy polityczne stały się filtrem moralnym, drastycznie zawężając pulę partnerów i czyniąc kompromis niemożliwym.</p>
+                    </div>
+                    <div class="card bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-xl font-bold mb-2" data-key="ext_force_2_title">Upolitycznienie Sfery Prywatnej</h4>
+                        <p class="text-stone-600" data-key="ext_force_2_desc">Dom jako pole bitwy. Hasło "osobiste jest polityczne" przekształciło intymność w nieustanną negocjację władzy, niszcząc zaufanie i spontaniczność.</p>
+                    </div>
+                    <div class="card bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-xl font-bold mb-2" data-key="ext_force_3_title">Wielkie Pomieszanie Ról</h4>
+                        <p class="text-stone-600" data-key="ext_force_3_desc">Feminizacja i chaos oczekiwań. Konflikt między tradycyjnymi a nowoczesnymi rolami płciowymi tworzy nierozwiązywalny paradoks i frustrację po obu stronach.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-2xl font-semibold text-center mb-8 text-stone-700" data-key="diag_subtitle_internal">II. Wewnętrzne Zawalenie (Siły Wewnętrzne)</h3>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="card bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-xl font-bold mb-2" data-key="int_force_1_title">Epidemia Umysłu</h4>
+                        <p class="text-stone-600" data-key="int_force_1_desc">Kryzys zdrowia psychicznego jako norma. Populacja zmagająca się z depresją i lękiem jest niezdolna do zapewnienia empatii i stabilności w związku.</p>
+                    </div>
+                    <div class="card bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-xl font-bold mb-2" data-key="int_force_2_title">Paradoks Intymności</h4>
+                        <p class="text-stone-600" data-key="int_force_2_desc">Trywializacja seksualności. Aplikacje randkowe i pornografia sprowadziły seks do wymiennego towaru, odartego z emocjonalnej więzi.</p>
+                    </div>
+                    <div class="card bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-xl font-bold mb-2" data-key="int_force_3_title">Otchłań Własnego "Ja"</h4>
+                        <p class="text-stone-600" data-key="int_force_3_desc">Egzystencjalny nihilizm. Poczucie, że życie jest bezsensowne, czyni ogromny wysiłek budowania relacji daremnym i absurdalnym.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="data" class="mb-16 md:mb-24 bg-white p-8 rounded-lg shadow-lg">
+            <h2 class="text-4xl font-bold text-center mb-12" data-key="data_title">Anatomia Rozpadu: Dowody</h2>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-center">
+                    <h3 class="text-2xl font-semibold mb-4" data-key="data_chart1_title">Kto inicjuje rozstanie?</h3>
+                    <p class="text-stone-600 mb-6" data-key="data_chart1_desc">Dane dla Polski i świata są jednoznaczne. Niezadowolenie z obecnego kształtu relacji jest mierzalne.</p>
+                    <div class="chart-container h-64 md:h-80">
+                        <canvas id="divorceInitiatorChart"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold mb-4 text-center" data-key="data_chart2_title">Oficjalne przyczyny rozwodów w Polsce</h3>
+                    <p class="text-stone-600 mb-6 text-center" data-key="data_chart2_desc">Oficjalne statystyki maskują głębsze, systemowe problemy. Kliknij na słupek, aby zobaczyć ukrytą diagnozę.</p>
+                    <div class="chart-container h-80 md:h-96">
+                        <canvas id="divorceReasonsChart"></canvas>
+                    </div>
+                    <div id="reason-interpretation" class="mt-4 p-4 bg-stone-100 rounded-md text-center text-stone-700 min-h-[50px]">
+                        <p data-key="data_chart2_instruction">Kliknij na słupek, aby zobaczyć interpretację.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="profile" class="mb-16 md:mb-24">
+            <h2 class="text-4xl font-bold text-center mb-12" data-key="profile_title">Ustalenie Kliniczne: Profil Współczesnego Partnera</h2>
+            <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+                <p class="text-center text-stone-600 mb-8" data-key="profile_desc">Produkt swojego czasu: zindywidualizowany, skupiony na sobie, świadomy swoich praw, ale często niezdolny do transcendentnego aktu poświęcenia i zaufania, który leży u podstaw trwałej miłości.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-4 border-l-4 border-red-300 bg-red-50">
+                        <h4 class="font-bold text-lg" data-key="profile_trait1_title">Systemowa Niekompatybilność</h4>
+                        <p class="text-stone-700" data-key="profile_trait1_desc">"Oprogramowanie" nowoczesnych oczekiwań (zwłaszcza kobiecych) jest niekompatybilne z "hardware'em" wielu współczesnych mężczyzn, co prowadzi do systemowego błędu krytycznego.</p>
+                    </div>
+                    <div class="p-4 border-l-4 border-blue-300 bg-blue-50">
+                        <h4 class="font-bold text-lg" data-key="profile_trait2_title">Redefinicja "Współpracy"</h4>
+                        <p class="text-stone-700" data-key="profile_trait2_desc">Współpraca przestała być organicznym dążeniem do wspólnego celu, a stała się transakcyjną, warunkową negocjacją, którą można w każdej chwili zerwać.</p>
+                    </div>
+                    <div class="p-4 border-l-4 border-yellow-300 bg-yellow-50">
+                        <h4 class="font-bold text-lg" data-key="profile_trait3_title">Paradoks Egalitarno-Tradycyjny</h4>
+                        <p class="text-stone-700" data-key="profile_trait3_desc">Oczekiwanie od partnera jednoczesnego spełniania sprzecznych ról: bycia nowoczesnym i wrażliwym, a zarazem tradycyjnym i opiekuńczym finansowo.</p>
+                    </div>
+                    <div class="p-4 border-l-4 border-green-300 bg-green-50">
+                        <h4 class="font-bold text-lg" data-key="profile_trait4_title">Prewencyjne Odrzucenie Intymności</h4>
+                        <p class="text-stone-700" data-key="profile_trait4_desc">W obliczu wysokiego ryzyka porażki, unikanie bliskości i wrażliwości staje się logiczną strategią obronną, która napędza ten sam kryzys, którego się obawiamy.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer id="verdict" class="bg-stone-800 text-stone-200 p-8 md:p-12 rounded-lg shadow-2xl">
+            <h2 class="text-4xl font-bold text-center mb-8 text-white" data-key="verdict_title">Epilog: Podmiotowość w Epoce Absurdu</h2>
+            <div class="max-w-4xl mx-auto">
+                <p class="text-lg text-center text-stone-300 mb-6" data-key="verdict_p1">
+                    Diagnoza jest jednoznaczna: tradycyjny model trwałego partnerstwa znajduje się w stanie systemowego rozkładu. Poczucie bezsensu nie jest błędem percepcji, lecz racjonalną reakcją. Odrzucenie "toksycznego pozytywizmu" jest pierwszym krokiem ku odnalezieniu drogi naprzód.
+                </p>
+                <p class="text-center text-stone-300 mb-8" data-key="verdict_p2">
+                    W obliczu załamania starych porządków, jedyną realną władzą, jaka nam pozostaje, jest władza nad samym sobą i świadome kształtowanie własnego losu.
+                </p>
+                <div class="border-t border-stone-600 pt-8">
+                    <h3 class="text-2xl font-semibold text-center mb-6 text-white" data-key="verdict_crd_title">Metodologia: Świadome Projektowanie Relacji</h3>
+                    <div class="flex flex-col md:flex-row justify-center gap-8 text-center">
+                        <div class="flex-1">
+                            <div class="text-4xl mb-2">1.</div>
+                            <h4 class="text-xl font-bold mb-2" data-key="verdict_step1_title">Radykalna Autorefleksja</h4>
+                            <p class="text-stone-400" data-key="verdict_step1_desc">Zrozumienie własnych wartości, potrzeb i granic, zanim wejdzie się w interakcję z drugą osobą.</p>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-4xl mb-2">2.</div>
+                            <h4 class="text-xl font-bold mb-2" data-key="verdict_step2_title">Radykalna Szczerość</h4>
+                            <p class="text-stone-400" data-key="verdict_step2_desc">Odważne komunikowanie swojej "instrukcji obsługi" na najwcześniejszym etapie znajomości.</p>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-4xl mb-2">3.</div>
+                            <h4 class="text-xl font-bold mb-2" data-key="verdict_step3_title">Współtworzenie Umów</h4>
+                            <p class="text-stone-400" data-key="verdict_step3_desc">Świadome projektowanie zasad związku zamiast odgrywania narzuconych, sprzecznych ról.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        const translations = {
+            pl: {
+                nav_title: "Krajobraz Złamanego Kompasu",
+                header_title: "Krajobraz Złamanego Kompasu",
+                header_subtitle: "Sądowa ekspertyza niepowodzenia współczesnych relacji międzyludzkich.",
+                intro_title: "Teza Wstępna",
+                intro_p1: "Współczesne społeczeństwo, ukształtowane przez siły polaryzacji, rewolucji ról płciowych i upolitycznienia sfery prywatnej, stało się systemowo nieprzystosowane do tworzenia i podtrzymywania zdrowych, opartych na współpracy związków.",
+                intro_p2: "Poniższa analiza dekonstruuje ten kryzys, przechodząc od sił makrospołecznych do ich wpływu na psychikę jednostki i ostatecznie, do mierzalnych wskaźników rozpadu relacji. To nie jest wyraz pesymizmu, lecz kliniczna diagnoza otaczającej nas rzeczywistości.",
+                diag_title: "Diagnoza Rdzeniowa: Siły Rozkładu",
+                diag_subtitle_external: "I. Spękany Fundament Społeczny (Siły Zewnętrzne)",
+                ext_force_1_title: "Polaryzacja Polityczna",
+                ext_force_1_desc: "Ideologia jako warunek wstępny intymności. Poglądy polityczne stały się filtrem moralnym, drastycznie zawężając pulę partnerów i czyniąc kompromis niemożliwym.",
+                ext_force_2_title: "Upolitycznienie Sfery Prywatnej",
+                ext_force_2_desc: "Dom jako pole bitwy. Hasło 'osobiste jest polityczne' przekształciło intymność w nieustanną negocjację władzy, niszcząc zaufanie i spontaniczność.",
+                ext_force_3_title: "Wielkie Pomieszanie Ról",
+                ext_force_3_desc: "Feminizacja i chaos oczekiwań. Konflikt między tradycyjnymi a nowoczesnymi rolami płciowymi tworzy nierozwiązywalny paradoks i frustrację po obu stronach.",
+                diag_subtitle_internal: "II. Wewnętrzne Zawalenie (Siły Wewnętrzne)",
+                int_force_1_title: "Epidemia Umysłu",
+                int_force_1_desc: "Kryzys zdrowia psychicznego jako norma. Populacja zmagająca się z depresją i lękiem jest niezdolna do zapewnienia empatii i stabilności w związku.",
+                int_force_2_title: "Paradoks Intymności",
+                int_force_2_desc: "Trywializacja seksualności. Aplikacje randkowe i pornografia sprowadziły seks do wymiennego towaru, odartego z emocjonalnej więzi.",
+                int_force_3_title: "Otchłań Własnego 'Ja'",
+                int_force_3_desc: "Egzystencjalny nihilizm. Poczucie, że życie jest bezsensowne, czyni ogromny wysiłek budowania relacji daremnym i absurdalnym.",
+                data_title: "Anatomia Rozpadu: Dowody",
+                data_chart1_title: "Kto inicjuje rozstanie?",
+                data_chart1_desc: "Dane dla Polski i świata są jednoznaczne. Niezadowolenie z obecnego kształtu relacji jest mierzalne.",
+                data_chart1_label_women: "Kobiety",
+                data_chart1_label_men: "Mężczyźni",
+                data_chart2_title: "Oficjalne przyczyny rozwodów w Polsce",
+                data_chart2_desc: "Oficjalne statystyki maskują głębsze, systemowe problemy. Kliknij na słupek, aby zobaczyć ukrytą diagnozę.",
+                data_chart2_instruction: "Kliknij na słupek, aby zobaczyć interpretację.",
+                data_chart2_reason1: "Niezgodność charakterów",
+                data_chart2_reason2: "Zdrada",
+                data_chart2_reason3: "Alkoholizm",
+                data_chart2_reason4: "Problemy finansowe",
+                data_chart2_interp1: "Ukryta przyczyna: Nierozwiązywalny konflikt ról płciowych i wartości politycznych.",
+                data_chart2_interp2: "Ukryta przyczyna: Symptom wcześniejszej erozji więzi, napędzanej przez trywializację seksu i apatię.",
+                data_chart2_interp3: "Ukryta przyczyna: Mechanizm radzenia sobie z lękiem, depresją i poczuciem bezsensu.",
+                data_chart2_interp4: "Ukryta przyczyna: Pieniądze jako narzędzie walki o władzę w związku, gdzie modele ekonomiczne się załamały.",
+                profile_title: "Ustalenie Kliniczne: Profil Współczesnego Partnera",
+                profile_desc: "Produkt swojego czasu: zindywidualizowany, skupiony na sobie, świadomy swoich praw, ale często niezdolny do transcendentnego aktu poświęcenia i zaufania, który leży u podstaw trwałej miłości.",
+                profile_trait1_title: "Systemowa Niekompatybilność",
+                profile_trait1_desc: "'Oprogramowanie' nowoczesnych oczekiwań (zwłaszcza kobiecych) jest niekompatybilne z 'hardware'em' wielu współczesnych mężczyzn, co prowadzi do systemowego błędu krytycznego.",
+                profile_trait2_title: "Redefinicja 'Współpracy'",
+                profile_trait2_desc: "Współpraca przestała być organicznym dążeniem do wspólnego celu, a stała się transakcyjną, warunkową negocjacją, którą można w każdej chwili zerwać.",
+                profile_trait3_title: "Paradoks Egalitarno-Tradycyjny",
+                profile_trait3_desc: "Oczekiwanie od partnera jednoczesnego spełniania sprzecznych ról: bycia nowoczesnym i wrażliwym, a zarazem tradycyjnym i opiekuńczym finansowo.",
+                profile_trait4_title: "Prewencyjne Odrzucenie Intymności",
+                profile_trait4_desc: "W obliczu wysokiego ryzyka porażki, unikanie bliskości i wrażliwości staje się logiczną strategią obronną, która napędza ten sam kryzys, którego się obawiamy.",
+                verdict_title: "Epilog: Podmiotowość w Epoce Absurdu",
+                verdict_p1: "Diagnoza jest jednoznaczna: tradycyjny model trwałego partnerstwa znajduje się w stanie systemowego rozkładu. Poczucie bezsensu nie jest błędem percepcji, lecz racjonalną reakcją. Odrzucenie 'toksycznego pozytywizmu' jest pierwszym krokiem ku odnalezieniu drogi naprzód.",
+                verdict_p2: "W obliczu załamania starych porządków, jedyną realną władzą, jaka nam pozostaje, jest władza nad samym sobą i świadome kształtowanie własnego losu.",
+                verdict_crd_title: "Metodologia: Świadome Projektowanie Relacji",
+                verdict_step1_title: "Radykalna Autorefleksja",
+                verdict_step1_desc: "Zrozumienie własnych wartości, potrzeb i granic, zanim wejdzie się w interakcję z drugą osobą.",
+                verdict_step2_title: "Radykalna Szczerość",
+                verdict_step2_desc: "Odważne komunikowanie swojej 'instrukcji obsługi' na najwcześniejszym etapie znajomości.",
+                verdict_step3_title: "Współtworzenie Umów",
+                verdict_step3_desc: "Świadome projektowanie zasad związku zamiast odgrywania narzuconych, sprzecznych ról."
+            },
+            en: {
+                nav_title: "Landscape of a Broken Compass",
+                header_title: "Landscape of a Broken Compass",
+                header_subtitle: "A forensic expert analysis of the failure of contemporary relationships.",
+                intro_title: "Opening Thesis",
+                intro_p1: "Contemporary society, shaped by the forces of polarization, a revolution in gender roles, and the politicization of the private sphere, has become systemically unfit for creating and sustaining healthy, cooperative relationships.",
+                intro_p2: "The following analysis deconstructs this crisis, moving from macro-social forces to their impact on the individual psyche, and finally, to measurable indicators of relationship decay. This is not an expression of pessimism, but a clinical diagnosis of our surrounding reality.",
+                diag_title: "Core Diagnosis: The Forces of Decay",
+                diag_subtitle_external: "I. The Cracked Social Foundation (External Forces)",
+                ext_force_1_title: "Political Polarization",
+                ext_force_1_desc: "Ideology as a prerequisite for intimacy. Political views have become a moral filter, drastically narrowing the pool of partners and making compromise impossible.",
+                ext_force_2_title: "Politicization of the Private Sphere",
+                ext_force_2_desc: "The home as a battlefield. The slogan 'the personal is political' has turned intimacy into a constant negotiation of power, destroying trust and spontaneity.",
+                ext_force_3_title: "The Great Role Confusion",
+                ext_force_3_desc: "Feminization and a chaos of expectations. The conflict between traditional and modern gender roles creates an unsolvable paradox and frustration on both sides.",
+                diag_subtitle_internal: "II. The Internal Collapse (Internal Forces)",
+                int_force_1_title: "The Mind Epidemic",
+                int_force_1_desc: "The mental health crisis as the norm. A population struggling with depression and anxiety is incapable of providing the empathy and stability a relationship requires.",
+                int_force_2_title: "The Intimacy Paradox",
+                int_force_2_desc: "The trivialization of sexuality. Dating apps and pornography have reduced sex to an interchangeable commodity, devoid of emotional connection.",
+                int_force_3_title: "The Abyss of Self",
+                int_force_3_desc: "Existential nihilism. The feeling that life is meaningless makes the immense effort of building a relationship seem futile and absurd.",
+                data_title: "Anatomy of Decay: The Evidence",
+                data_chart1_title: "Who initiates the breakup?",
+                data_chart1_desc: "Data for Poland and the world is unequivocal. Dissatisfaction with the current state of relationships is measurable.",
+                data_chart1_label_women: "Women",
+                data_chart1_label_men: "Men",
+                data_chart2_title: "Official Reasons for Divorce in Poland",
+                data_chart2_desc: "Official statistics mask deeper, systemic problems. Click a bar to see the hidden diagnosis.",
+                data_chart2_instruction: "Click a bar to see the interpretation.",
+                data_chart2_reason1: "Incompatibility of character",
+                data_chart2_reason2: "Infidelity",
+                data_chart2_reason3: "Alcoholism",
+                data_chart2_reason4: "Financial problems",
+                data_chart2_interp1: "Hidden cause: Unsolvable conflict of gender roles and political values.",
+                data_chart2_interp2: "Hidden cause: A symptom of a prior erosion of the bond, fueled by the trivialization of sex and apathy.",
+                data_chart2_interp3: "Hidden cause: A coping mechanism for anxiety, depression, and a sense of meaninglessness.",
+                data_chart2_interp4: "Hidden cause: Money as a tool in a power struggle in a relationship where economic models have collapsed.",
+                profile_title: "Clinical Finding: Profile of the Contemporary Partner",
+                profile_desc: "A product of its time: individualized, self-focused, aware of their rights, but often incapable of the transcendent act of sacrifice and trust that underlies lasting love.",
+                profile_trait1_title: "Systemic Incompatibility",
+                profile_trait1_desc: "The 'software' of modern expectations (especially female) is incompatible with the 'hardware' of many contemporary men, leading to a critical system error.",
+                profile_trait2_title: "Redefinition of 'Cooperation'",
+                profile_trait2_desc: "Cooperation is no longer an organic pursuit of a common goal, but a transactional, conditional negotiation that can be terminated at any time.",
+                profile_trait3_title: "The Egalitarian-Traditional Paradox",
+                profile_trait3_desc: "Expecting a partner to simultaneously fulfill contradictory roles: to be modern and sensitive, yet also traditional and financially protective.",
+                profile_trait4_title: "Preemptive Rejection of Intimacy",
+                profile_trait4_desc: "Faced with a high risk of failure, avoiding closeness and vulnerability becomes a logical defense strategy that fuels the very crisis we fear.",
+                verdict_title: "Epilogue: Agency in the Age of Absurdity",
+                verdict_p1: "The diagnosis is clear: the traditional model of a lasting partnership is in a state of systemic decay. The sense of meaninglessness is not a perceptual error, but a rational response. Rejecting 'toxic positivity' is the first step forward.",
+                verdict_p2: "In the face of the collapse of old orders, the only real power we have left is power over ourselves and the conscious shaping of our own destiny.",
+                verdict_crd_title: "Methodology: Conscious Relationship Design",
+                verdict_step1_title: "Radical Self-Reflection",
+                verdict_step1_desc: "Understanding one's own values, needs, and boundaries before interacting with another person.",
+                verdict_step2_title: "Radical Honesty",
+                verdict_step2_desc: "Bravely communicating one's 'user manual' at the earliest stage of an acquaintance.",
+                verdict_step3_title: "Co-creating Agreements",
+                verdict_step3_desc: "Consciously designing the rules of the relationship instead of playing out imposed, contradictory roles."
+            }
+        };
+
+        let currentLang = 'pl';
+        let divorceInitiatorChart, divorceReasonsChart;
+        const interpretationEl = document.getElementById('reason-interpretation');
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+
+            document.getElementById('lang-pl').classList.toggle('bg-stone-300', lang === 'pl');
+            document.getElementById('lang-pl').classList.toggle('text-stone-800', lang === 'pl');
+            document.getElementById('lang-pl').classList.toggle('text-stone-500', lang !== 'pl');
+            
+            document.getElementById('lang-en').classList.toggle('bg-stone-300', lang === 'en');
+            document.getElementById('lang-en').classList.toggle('text-stone-800', lang === 'en');
+            document.getElementById('lang-en').classList.toggle('text-stone-500', lang !== 'en');
+
+            updateCharts();
+            interpretationEl.innerHTML = `<p data-key="data_chart2_instruction">${translations[lang].data_chart2_instruction}</p>`;
+        }
+
+        function updateCharts() {
+            const langData = translations[currentLang];
+
+            if (divorceInitiatorChart) {
+                divorceInitiatorChart.data.labels = [langData.data_chart1_label_women, langData.data_chart1_label_men];
+                divorceInitiatorChart.update();
+            } else {
+                createDivorceInitiatorChart();
+            }
+
+            if (divorceReasonsChart) {
+                divorceReasonsChart.data.labels = [
+                    langData.data_chart2_reason1,
+                    langData.data_chart2_reason2,
+                    langData.data_chart2_reason3,
+                    langData.data_chart2_reason4
+                ];
+                divorceReasonsChart.update();
+            } else {
+                createDivorceReasonsChart();
+            }
+        }
+
+        function createDivorceInitiatorChart() {
+            const ctx = document.getElementById('divorceInitiatorChart').getContext('2d');
+            divorceInitiatorChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: [translations[currentLang].data_chart1_label_women, translations[currentLang].data_chart1_label_men],
+                    datasets: [{
+                        label: '%',
+                        data: [66, 34],
+                        backgroundColor: ['#A96666', '#607D8B'],
+                        borderColor: '#f7f7f7',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#333',
+                                font: {
+                                    family: "'Lato', sans-serif"
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createDivorceReasonsChart() {
+            const ctx = document.getElementById('divorceReasonsChart').getContext('2d');
+            const interpretations = [
+                translations[currentLang].data_chart2_interp1,
+                translations[currentLang].data_chart2_interp2,
+                translations[currentLang].data_chart2_interp3,
+                translations[currentLang].data_chart2_interp4,
+            ];
+
+            divorceReasonsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        translations[currentLang].data_chart2_reason1,
+                        translations[currentLang].data_chart2_reason2,
+                        translations[currentLang].data_chart2_reason3,
+                        translations[currentLang].data_chart2_reason4
+                    ],
+                    datasets: [{
+                        label: '%',
+                        data: [46.3, 20.6, 14.1, 7.3],
+                        backgroundColor: '#607D8B',
+                        borderColor: '#455A64',
+                        borderWidth: 1,
+                        hoverBackgroundColor: '#A96666'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    onClick: (evt, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            interpretationEl.innerHTML = `<p>${interpretations[index]}</p>`;
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    return `${context.raw}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#e2e8f0'
+                            },
+                            ticks: {
+                                color: '#333'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#333',
+                                autoSkip: false,
+                                callback: function(value) {
+                                    const label = this.getLabelForValue(value);
+                                    if (label.length > 20) {
+                                        return label.slice(0, 20) + '...';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('lang-pl').addEventListener('click', () => setLanguage('pl'));
+            document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
+            setLanguage('pl');
+        });
+
+    </script>
+</body>
+</html>
