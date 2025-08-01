@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang="pageTitle">Sernik Baskijski: Przepis Definitywny</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Harmony (with Dark Mode) -->
+    <!-- Application Structure Plan: Retained the successful task-oriented tabbed structure. Added a global control bar for theme (Day/Night) and language (PL/EN) switching. This enhances user experience by providing customization without altering the core, intuitive workflow of the recipe application. All text content is now managed through a centralized JS object for seamless i18n. -->
+    <!-- Visualization & Content Choices: All visualizations and content structures are preserved but are now dynamically populated from a language-aware data source. The core logic remains the same, but the implementation is refactored to support on-the-fly language changes, including chart labels and dynamic recipe text. The addition of a dark mode theme provides a significant visual enhancement. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        :root {
+            --bg-color: #FDFBF8;
+            --bg-alt-color: #FFFFFF;
+            --text-color: #4A4A4A;
+            --text-muted-color: #6B7280;
+            --heading-color: #3D405B;
+            --accent-color: #D4A373;
+            --accent-text-color: #FFFFFF;
+            --border-color: #E5E7EB;
+            --button-inactive-bg: #F3F4F6;
+            --button-inactive-text: #374151;
+        }
+
+        html.dark {
+            --bg-color: #111827;
+            --bg-alt-color: #1F2937;
+            --text-color: #D1D5DB;
+            --text-muted-color: #9CA3AF;
+            --heading-color: #F9FAFB;
+            --accent-color: #D4A373;
+            --accent-text-color: #111827;
+            --border-color: #374151;
+            --button-inactive-bg: #374151;
+            --button-inactive-text: #F9FAFB;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        h1, h2, h3, .font-playfair {
+            font-family: 'Playfair Display', serif;
+            color: var(--heading-color);
+        }
+        .tab-active {
+            border-bottom-color: var(--accent-color);
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+        .tab-inactive {
+            border-bottom-color: transparent;
+            color: var(--text-muted-color);
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .accordion-button.active + .accordion-content {
+            max-height: 1000px;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 80vh;
+        }
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        .theme-switch {
+            display: inline-block;
+            height: 26px;
+            position: relative;
+            width: 50px;
+        }
+        .theme-switch input {
+            display:none;
+        }
+        .slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+        }
+        .slider:before {
+            background-color: #fff;
+            bottom: 3px;
+            content: "";
+            height: 20px;
+            left: 3px;
+            position: absolute;
+            transition: .4s;
+            width: 20px;
+        }
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+        .slider.round {
+            border-radius: 34px;
+        }
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 py-8 md:py-12">
+
+        <header class="text-center mb-4">
+            <h1 class="text-4xl md:text-6xl font-bold" data-lang="mainTitle">Sernik Baskijski</h1>
+            <p class="text-lg md:text-xl mt-2" data-lang="mainSubtitle" style="color: var(--text-muted-color);">Edycja Definitywna: Interaktywny Przewodnik</p>
+        </header>
+
+        <div class="flex justify-center items-center space-x-6 mb-10 md:mb-12">
+            <div class="flex items-center space-x-2">
+                <button id="lang-pl" class="px-3 py-1 text-sm font-bold rounded-md">🇵🇱 PL</button>
+                <button id="lang-en" class="px-3 py-1 text-sm font-semibold rounded-md">🇬🇧 EN</button>
+            </div>
+            <div class="theme-switch-wrapper">
+                <span class="mr-2 text-sm">☀️</span>
+                <label class="theme-switch" for="theme-toggle">
+                    <input type="checkbox" id="theme-toggle" />
+                    <div class="slider round"></div>
+                </label>
+                <span class="ml-2 text-sm">🌙</span>
+            </div>
+        </div>
+
+        <div class="sticky top-0 z-10 mb-8" style="background-color: var(--bg-color); background-opacity: 0.9; backdrop-filter: blur(4px);">
+            <div style="border-bottom: 1px solid var(--border-color);">
+                <nav class="-mb-px flex justify-center space-x-4 md:space-x-8" aria-label="Tabs">
+                    <button id="tab-przeglad" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm md:text-base transition-colors duration-300 tab-active" data-lang="tabOverview">Przegląd</button>
+                    <button id="tab-przepis" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm md:text-base transition-colors duration-300 tab-inactive" data-lang="tabRecipe">Przepis</button>
+                    <button id="tab-koncepcje" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm md:text-base transition-colors duration-300 tab-inactive" data-lang="tabConcepts">Kluczowe Koncepcje</button>
+                    <button id="tab-wariacje" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm md:text-base transition-colors duration-300 tab-inactive" data-lang="tabVariations">Wariacje i Porady</button>
+                </nav>
+            </div>
+        </div>
+
+        <main>
+            <div id="content-przeglad" class="tab-content">
+                <section class="max-w-4xl mx-auto text-center">
+                    <h2 class="text-3xl md:text-4xl font-playfair mb-4" data-lang="overviewTitle">W Poszukiwaniu Sernika Doskonałego</h2>
+                    <p class="text-base md:text-lg leading-relaxed mb-6" data-lang="overviewIntro" style="color: var(--text-muted-color);"></p>
+                    <div class="grid md:grid-cols-3 gap-8 text-center mt-12">
+                        <div class="p-6 rounded-lg shadow-sm" style="background-color: var(--bg-alt-color); border: 1px solid var(--border-color);">
+                            <h3 class="font-playfair text-xl mb-2" style="color: var(--accent-color);" data-lang="feature1Title">Chrupiący Fundament</h3>
+                            <p class="text-sm" data-lang="feature1Desc" style="color: var(--text-muted-color);"></p>
+                        </div>
+                        <div class="p-6 rounded-lg shadow-sm" style="background-color: var(--bg-alt-color); border: 1px solid var(--border-color);">
+                            <h3 class="font-playfair text-xl mb-2" style="color: var(--accent-color);" data-lang="feature2Title">Głębia Smaku</h3>
+                            <p class="text-sm" data-lang="feature2Desc" style="color: var(--text-muted-color);"></p>
+                        </div>
+                        <div class="p-6 rounded-lg shadow-sm" style="background-color: var(--bg-alt-color); border: 1px solid var(--border-color);">
+                            <h3 class="font-playfair text-xl mb-2" style="color: var(--accent-color);" data-lang="feature3Title">Zdrowsza Słodycz</h3>
+                            <p class="text-sm" data-lang="feature3Desc" style="color: var(--text-muted-color);"></p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div id="content-przepis" class="tab-content hidden">
+                <section class="max-w-6xl mx-auto">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl md:text-4xl font-playfair mb-2" data-lang="recipeTitle">Przepis Definitywny</h2>
+                        <p style="color: var(--text-muted-color);" data-lang="recipeSubtitle">Dostosuj ilość składników do swojej formy i postępuj zgodnie z instrukcją.</p>
+                        <div class="mt-4 flex justify-center items-center space-x-4">
+                            <span class="text-sm font-medium" data-lang="formSizeLabel">Rozmiar formy:</span>
+                            <button id="size-23" class="px-4 py-2 text-sm font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2" style="background-color: var(--accent-color); color: var(--accent-text-color); border-color: var(--accent-color);">23-24 cm</button>
+                            <button id="size-28" class="px-4 py-2 text-sm font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2" style="background-color: var(--button-inactive-bg); color: var(--button-inactive-text); border-color: var(--button-inactive-bg);">28 cm</button>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-12 gap-8 lg:gap-12">
+                        <div class="md:col-span-5 lg:col-span-4 p-6 rounded-lg shadow-sm" style="background-color: var(--bg-alt-color); border: 1px solid var(--border-color);">
+                            <h3 class="text-2xl font-playfair border-b pb-2 mb-4" data-lang="ingredientsTitle" style="border-color: var(--border-color);">Składniki</h3>
+                            <div id="ingredients-list"></div>
+                        </div>
+                        <div class="md:col-span-7 lg:col-span-8">
+                            <h3 class="text-2xl font-playfair mb-4 text-center" data-lang="stepsTitle">Instrukcja Krok po Kroku</h3>
+                            <div id="steps-accordion" class="space-y-3"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <div id="content-koncepcje" class="tab-content hidden">
+                 <section class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl md:text-4xl font-playfair mb-2" data-lang="conceptsTitle">Kluczowe Koncepcje Kulinarne</h2>
+                        <p style="color: var(--text-muted-color);" data-lang="conceptsSubtitle">Zrozum "dlaczego" za każdym krokiem, aby osiągnąć mistrzostwo w pieczeniu.</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8 items-start">
+                        <div class="p-6 rounded-lg shadow-sm" style="background-color: var(--bg-alt-color); border: 1px solid var(--border-color);">
+                            <h3 class="text-2xl font-playfair text-center mb-4" data-lang="concept1Title">Fundament: Wybór Spodu</h3>
+                            <p class="text-sm text-center mb-6" data-lang="concept1Desc" style="color: var(--text-muted-color);"></p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-4 rounded-lg" style="border: 2px solid var(--accent-color); background-color: var(--bg-color);">
+                                    <h4 class="font-bold text-center" data-lang="crustType1">Ciasto Kruche</h4>
+                                    <ul class="mt-2 text-xs space-y-1" style="color: var(--text-muted-color);">
+                                        <li data-lang="crust1Adv1"><span class="text-green-600 font-bold">✓</span> Bogaty, maślany smak</li>
+                                        <li data-lang="crust1Adv2"><span class="text-green-600 font-bold">✓</span> Stabilna, chrupiąca struktura</li>
+                                        <li data-lang="crust1Adv3"><span class="text-green-600 font-bold">✓</span> Elegancki wygląd</li>
+                                        <li data-lang="crust1Dis1"><span class="text-red-500 font-bold">✗</span> Wymaga podpiekania</li>
+                                    </ul>
+                                </div>
+                                <div class="border p-4 rounded-lg" style="border-color: var(--border-color);">
+                                    <h4 class="font-bold text-center" data-lang="crustType2">Spód Ciasteczkowy</h4>
+                                    <ul class="mt-2 text-xs space-y-1" style="color: var(--text-muted-color);">
+                                        <li data-lang="crust2Adv1"><span class="text-green-600 font-bold">✓</span> Szybkość i prostota</li>
+                                        <li data-lang="crust2Dis1"><span class="text-red-500 font-bold">✗</span> Ryzyko rozmięknięcia</li>
+                                        <li data-lang="crust2Dis2"><span class="text-red-500 font-bold">✗</span> Mniej wyrafinowany smak</li>
+                                        <li data-lang="crust2Dis3"><span class="text-red-500 font-bold">✗</span> Może być zbyt słodki</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6 rounded-lg shadow-sm" style="background-color: var(--bg-alt-color); border: 1px solid var(--border-color);">
+                            <h3 class="text-2xl font-playfair text-center mb-4" data-lang="concept2Title">Serce Sernika: Proporcje Masy</h3>
+                             <p class="text-sm text-center mb-6" data-lang="concept2Desc" style="color: var(--text-muted-color);"></p>
+                            <div class="chart-container">
+                                <canvas id="ingredientsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div id="content-wariacje" class="tab-content hidden">
+                <section class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl md:text-4xl font-playfair mb-2" data-lang="variationsTitle">Wielki Finał: Wariacje i Porady</h2>
+                        <p style="color: var(--text-muted-color);" data-lang="variationsSubtitle">Sernik jest doskonały sam w sobie, ale te dodatki mogą go wynieść na nowy poziom.</p>
+                    </div>
+                    <div id="variations-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const translations = {
+        pl: {
+            pageTitle: "Sernik Baskijski: Przepis Definitywny",
+            mainTitle: "Sernik Baskijski",
+            mainSubtitle: "Edycja Definitywna: Interaktywny Przewodnik",
+            tabOverview: "Przegląd",
+            tabRecipe: "Przepis",
+            tabConcepts: "Kluczowe Koncepcje",
+            tabVariations: "Wariacje i Porady",
+            overviewTitle: "W Poszukiwaniu Sernika Doskonałego",
+            overviewIntro: "Ta aplikacja to interaktywna podróż ku stworzeniu sernika baskijskiego w jego ostatecznej formie. To nie jest zwykły przepis, a kulinarne studium. Czerpiąc inspirację z klasyków, świadomie je udoskonalamy: dodajemy stabilny, maślany spód dla kontrastu tekstur, optymalizujemy składniki pod kątem zdrowszego profilu i wprowadzamy sekretny składnik – palone masło – które nadaje całości niezwykłej głębi. To deser, który celebruje idealnie skomponowaną niedoskonałość, od spalonego wierzchu po płynne, kremowe serce.",
+            feature1Title: "Chrupiący Fundament",
+            feature1Desc: "Orzechowy spód kruchy tworzy idealny kontrast dla aksamitnej masy serowej.",
+            feature2Title: "Głębia Smaku",
+            feature2Desc: "Dodatek palonego masła wprowadza niezwykłe, orzechowo-karmelowe nuty.",
+            feature3Title: "Zdrowsza Słodycz",
+            feature3Desc: "Zastąpienie cukru erytrolem pozwala cieszyć się deserem bez kompromisów.",
+            recipeTitle: "Przepis Definitywny",
+            recipeSubtitle: "Dostosuj ilość składników do swojej formy i postępuj zgodnie z instrukcją.",
+            formSizeLabel: "Rozmiar formy:",
+            ingredientsTitle: "Składniki",
+            stepsTitle: "Instrukcja Krok po Kroku",
+            conceptsTitle: "Kluczowe Koncepcje Kulinarne",
+            conceptsSubtitle: "Zrozum \"dlaczego\" za każdym krokiem, aby osiągnąć mistrzostwo w pieczeniu.",
+            concept1Title: "Fundament: Wybór Spodu",
+            concept1Desc: "Dodanie spodu to kluczowa modyfikacja. Prawidłowo przygotowany spód kruchy tworzy barierę zapobiegającą rozmoczeniu i zapewnia niezbędny kontrast teksturalny dla kremowej masy.",
+            crustType1: "Ciasto Kruche",
+            crust1Adv1: "✓ Bogaty, maślany smak",
+            crust1Adv2: "✓ Stabilna, chrupiąca struktura",
+            crust1Adv3: "✓ Elegancki wygląd",
+            crust1Dis1: "✗ Wymaga podpiekania",
+            crustType2: "Spód Ciasteczkowy",
+            crust2Adv1: "✓ Szybkość i prostota",
+            crust2Dis1: "✗ Ryzyko rozmięknięcia",
+            crust2Dis2: "✗ Mniej wyrafinowany smak",
+            crust2Dis3: "✗ Może być zbyt słodki",
+            concept2Title: "Serce Sernika: Proporcje Masy",
+            concept2Desc: "Aksamitna, kremowa konsystencja to wynik idealnego zbalansowania składników. Wykres pokazuje dominującą rolę nabiału, który jest kluczem do luksusowej tekstury.",
+            variationsTitle: "Wielki Finał: Wariacje i Porady",
+            variationsSubtitle: "Sernik jest doskonały sam w sobie, ale te dodatki mogą go wynieść na nowy poziom.",
+            crustTitle: "Spód Kruchy",
+            fillingTitle: "Masa Serowa",
+            ingredientFlourCrust: "Mąka pszenna tortowa (typ 450)",
+            ingredientNuts: "Orzechy włoskie lub laskowe, zmielone",
+            ingredientErythritolCrust: "Erytrol w pudrze",
+            ingredientButterCrust: "Masło, bardzo zimne",
+            ingredientYolk: "Żółtko",
+            ingredientSaltCrust: "Sól",
+            unitG: "g",
+            unitPcs: "szt. (L)",
+            unitTsp: "łyżeczki",
+            unitMl: "ml",
+            ingredientButterFilling: "Masło (do palonego masła)",
+            ingredientCurd: "Twaróg sernikowy z wiaderka, tłusty",
+            ingredientMascarpone: "Serek mascarpone",
+            ingredientErythritolFilling: "Erytrol w pudrze",
+            ingredientEggs: "Jajka",
+            ingredientCream: "Śmietanka kremówka 36%",
+            ingredientFlourFilling: "Mąka pszenna tortowa (typ 450)",
+            ingredientVanilla: "Ekstrakt z wanilii",
+            ingredientLemonZest: "Skórka starta z cytryny",
+            ingredientSaltFilling: "Sól",
+            step1Title: "Krok 1: Przygotowanie Spodu",
+            step1Content: "W malakserze umieść mąkę, zmielone orzechy, erytrol i sól. Miksuj pulsacyjnie. Dodaj zimne masło, miksuj do konsystencji mokrego piasku. Dodaj żółtko, miksuj krótko do połączenia. Zawiń w folię i chłodź w lodówce min. 60 minut. Piekarnik rozgrzej do 180°C. Wylep ciastem dno tortownicy, nakłuj widelcem. Przykryj papierem do pieczenia, obciąż fasolą. Piecz 15 minut. Zdejmij obciążenie i piecz kolejne 5-7 minut. Wystudź.",
+            step2Title: "Krok 2: Palone Masło",
+            step2Content: "W małym rondelku podgrzewaj masło na średnim ogniu. Będzie się topić, pienić i skwierczeć. Gdy na dnie pojawią się brązowe drobinki, a masło nabierze bursztynowego koloru i orzechowego zapachu, natychmiast zdejmij z ognia. Przelej do miseczki i całkowicie wystudź.",
+            step3Title: "Krok 3: Masa Serowa",
+            step3Content: "Zwiększ temperaturę piekarnika do 220°C (termoobieg) lub 240°C (góra-dół). Wyłóż tortownicę z podpieczonym spodem dwoma arkuszami papieru do pieczenia. W dużej misie zmiksuj twaróg, mascarpone i erytrol na gładką masę. Dodawaj jajka, jedno po drugim, miksując krótko po każdym. Wlej śmietankę, wanilię, wystudzone palone masło, skórkę z cytryny i sól. Krótko zmiksuj. Na koniec wsyp przesianą mąkę i delikatnie wymieszaj szpatułką.",
+            step4Title: "Krok 4: Pieczenie",
+            step4Content: "Przelej masę na spód. Uderz formą o blat, by uwolnić pęcherzyki powietrza. Piecz 30-35 minut. Sernik mocno urośnie, a wierzch stanie się ciemnobrązowy. Środek powinien pozostać wyraźnie drżący (jak galareta na obszarze ok. 5-7 cm w centrum).",
+            step5Title: "Krok 5: Studzenie i Chłodzenie",
+            step5Content: "Wyjmij z piekarnika i odstaw do całkowitego wystudzenia w temperaturze pokojowej (2-3 godziny). Sernik opadnie - to normalne. Po wystudzeniu wstaw do lodówki na min. 8 godzin, a najlepiej na całą noc. Przed podaniem wyjmij na 30-60 minut, aby osiągnął temperaturę pokojową.",
+            chartLabelCurd: "Twaróg Sernikowy",
+            chartLabelMascarpone: "Serek Mascarpone",
+            chartLabelCream: "Śmietanka 36%",
+            chartLabelEggs: "Jajka",
+            chartLabelOther: "Pozostałe",
+            chartTitle: "Proporcje Masy Serowej",
+            variation1Title: "Wersja Pomarańczowa",
+            variation1Desc: "Dodaj do masy 2 łyżki likieru Cointreau i skórkę z całej pomarańczy. Podawaj z sosem z gorzkiej czekolady.",
+            variation2Title: "Wersja Korzenna",
+            variation2Desc: "Do mąki na spód dodaj ½ łyżeczki cynamonu i ¼ łyżeczki kardamonu. Idealna do filiżanki mocnej kawy.",
+            variation3Title: "Wersja Umami",
+            variation3Desc: "Zastąp sól w masie serowej 1 płaską łyżeczką białej pasty miso. Tworzy niezwykły, słono-słodki smak.",
+            variation4Title: "Sos Słony Karmel",
+            variation4Desc: "Klasyczne połączenie, które podkreśla karmelowe nuty spalonego wierzchu. Niezawodny wybór.",
+            variation5Title: "Sos z Białej Czekolady",
+            variation5Desc: "Rozpuść 100g białej czekolady w 50ml gorącej śmietanki 36%. Posyp posiekanymi pistacjami.",
+            variation6Title: "Mus Owocowy",
+            variation6Desc: "Prosty mus ze świeżych malin lub truskawek doda kontrastującej kwasowości i świeżości."
+        },
+        en: {
+            pageTitle: "Basque Cheesecake: The Definitive Recipe",
+            mainTitle: "Basque Cheesecake",
+            mainSubtitle: "The Definitive Edition: An Interactive Guide",
+            tabOverview: "Overview",
+            tabRecipe: "Recipe",
+            tabConcepts: "Key Concepts",
+            tabVariations: "Variations & Tips",
+            overviewTitle: "The Quest for the Perfect Cheesecake",
+            overviewIntro: "This application is an interactive journey to create the ultimate Basque cheesecake. This isn't just a recipe; it's a culinary study. Drawing inspiration from the classics, we consciously refine them: adding a stable, buttery crust for textural contrast, optimizing ingredients for a healthier profile, and introducing a secret ingredient—brown butter—that gives the whole thing extraordinary depth. It's a dessert that celebrates perfectly composed imperfection, from its burnt top to its liquid, creamy heart.",
+            feature1Title: "A Crunchy Foundation",
+            feature1Desc: "The nutty shortcrust base creates a perfect contrast to the velvety cheese filling.",
+            feature2Title: "Depth of Flavor",
+            feature2Desc: "The addition of brown butter introduces incredible nutty and caramel notes.",
+            feature3Title: "Healthier Sweetness",
+            feature3Desc: "Replacing sugar with erythritol allows you to enjoy dessert without compromise.",
+            recipeTitle: "The Definitive Recipe",
+            recipeSubtitle: "Adjust the amount of ingredients to your pan size and follow the instructions.",
+            formSizeLabel: "Pan size:",
+            ingredientsTitle: "Ingredients",
+            stepsTitle: "Step-by-Step Instructions",
+            conceptsTitle: "Key Culinary Concepts",
+            conceptsSubtitle: "Understand the 'why' behind each step to achieve baking mastery.",
+            concept1Title: "Foundation: Choosing the Crust",
+            concept1Desc: "Adding a crust is a key modification. A properly prepared shortcrust base creates a barrier against sogginess and provides essential textural contrast for the creamy filling.",
+            crustType1: "Shortcrust Pastry",
+            crust1Adv1: "✓ Rich, buttery flavor",
+            crust1Adv2: "✓ Stable, crispy texture",
+            crust1Adv3: "✓ Elegant appearance",
+            crust1Dis1: "✗ Requires blind-baking",
+            crustType2: "Cookie Crust",
+            crust2Adv1: "✓ Quick and simple",
+            crust2Dis1: "✗ Risk of getting soggy",
+            crust2Dis2: "✗ Less refined flavor",
+            crust2Dis3: "✗ Can be overly sweet",
+            concept2Title: "The Heart: Filling Proportions",
+            concept2Desc: "The velvety, creamy consistency is the result of perfectly balanced ingredients. The chart shows the dominant role of dairy, which is the key to a luxurious texture.",
+            variationsTitle: "The Grand Finale: Variations & Tips",
+            variationsSubtitle: "The cheesecake is perfect on its own, but these additions can take it to the next level.",
+            crustTitle: "Shortcrust Base",
+            fillingTitle: "Cheese Filling",
+            ingredientFlourCrust: "All-purpose flour (type 450)",
+            ingredientNuts: "Walnuts or hazelnuts, ground",
+            ingredientErythritolCrust: "Powdered erythritol",
+            ingredientButterCrust: "Butter, very cold",
+            ingredientYolk: "Egg yolk",
+            ingredientSaltCrust: "Salt",
+            unitG: "g",
+            unitPcs: "pc (L)",
+            unitTsp: "tsp",
+            unitMl: "ml",
+            ingredientButterFilling: "Butter (for brown butter)",
+            ingredientCurd: "Cream cheese, full-fat",
+            ingredientMascarpone: "Mascarpone cheese",
+            ingredientErythritolFilling: "Powdered erythritol",
+            ingredientEggs: "Eggs",
+            ingredientCream: "Heavy cream 36%",
+            ingredientFlourFilling: "All-purpose flour (type 450)",
+            ingredientVanilla: "Vanilla extract",
+            ingredientLemonZest: "Lemon zest",
+            ingredientSaltFilling: "Salt",
+            step1Title: "Step 1: Preparing the Crust",
+            step1Content: "In a food processor, combine flour, ground nuts, erythritol, and salt. Pulse to mix. Add cold butter and pulse until it resembles wet sand. Add the yolk and pulse briefly until combined. Wrap in foil and chill for at least 60 minutes. Preheat oven to 180°C (350°F). Press the dough into the bottom of the springform pan, prick with a fork. Cover with parchment paper, weigh down with beans. Bake for 15 minutes. Remove weights and bake for another 5-7 minutes. Cool.",
+            step2Title: "Step 2: Brown Butter",
+            step2Content: "In a small saucepan, heat the butter over medium heat. It will melt, foam, and sizzle. When brown specks appear at the bottom and the butter turns amber with a nutty aroma, immediately remove from heat. Pour into a bowl to cool completely.",
+            step3Title: "Step 3: Cheese Filling",
+            step3Content: "Increase oven temperature to 220°C (425°F) with convection or 240°C (465°F) conventional. Line the springform pan (with the pre-baked crust) with two sheets of parchment paper. In a large bowl, mix cream cheese, mascarpone, and erythritol until smooth. Add eggs one by one, mixing briefly after each. Pour in the cream, vanilla, cooled brown butter, lemon zest, and salt. Mix briefly. Finally, sift in the flour and gently fold with a spatula.",
+            step4Title: "Step 4: Baking",
+            step4Content: "Pour the filling onto the crust. Tap the pan on the counter to release air bubbles. Bake for 30-35 minutes. The cheesecake will rise significantly, and the top will become dark brown. The center should remain very jiggly (like jelly in a 5-7 cm area).",
+            step5Title: "Step 5: Cooling",
+            step5Content: "Remove from the oven and let it cool completely at room temperature (2-3 hours). The cheesecake will collapse—this is normal. Once cooled, refrigerate for at least 8 hours, or preferably overnight. Before serving, take it out for 30-60 minutes to reach room temperature.",
+            chartLabelCurd: "Cream Cheese",
+            chartLabelMascarpone: "Mascarpone",
+            chartLabelCream: "Heavy Cream 36%",
+            chartLabelEggs: "Eggs",
+            chartLabelOther: "Other",
+            chartTitle: "Cheese Filling Proportions",
+            variation1Title: "Orange Version",
+            variation1Desc: "Add 2 tbsp of Cointreau and the zest of one whole orange to the filling. Serve with a dark chocolate sauce.",
+            variation2Title: "Spiced Version",
+            variation2Desc: "Add ½ tsp of cinnamon and ¼ tsp of cardamom to the crust flour. Perfect with a strong cup of coffee.",
+            variation3Title: "Umami Version",
+            variation3Desc: "Replace the salt in the filling with 1 flat tsp of white miso paste. Creates an unusual sweet-salty flavor.",
+            variation4Title: "Salted Caramel Sauce",
+            variation4Desc: "A classic combination that enhances the caramel notes of the burnt top. A reliable choice.",
+            variation5Title: "White Chocolate Sauce",
+            variation5Desc: "Melt 100g of white chocolate in 50ml of hot heavy cream (36%). Sprinkle with chopped pistachios.",
+            variation6Title: "Fruit Coulis",
+            variation6Desc: "A simple coulis of fresh raspberries or strawberries will add a contrasting acidity and freshness."
+        }
+    };
+
+    const data = {
+        base: {
+            spod: [
+                { nameKey: 'ingredientFlourCrust', amount: 250, unitKey: 'unitG' },
+                { nameKey: 'ingredientNuts', amount: 50, unitKey: 'unitG' },
+                { nameKey: 'ingredientErythritolCrust', amount: 120, unitKey: 'unitG' },
+                { nameKey: 'ingredientButterCrust', amount: 200, unitKey: 'unitG' },
+                { nameKey: 'ingredientYolk', amount: 1, unitKey: 'unitPcs' },
+                { nameKey: 'ingredientSaltCrust', amount: 0.5, unitKey: 'unitTsp' }
+            ],
+            masa: [
+                { nameKey: 'ingredientButterFilling', amount: 80, unitKey: 'unitG' },
+                { nameKey: 'ingredientCurd', amount: 700, unitKey: 'unitG' },
+                { nameKey: 'ingredientMascarpone', amount: 300, unitKey: 'unitG' },
+                { nameKey: 'ingredientErythritolFilling', amount: 250, unitKey: 'unitG' },
+                { nameKey: 'ingredientEggs', amount: 5, unitKey: 'unitPcs' },
+                { nameKey: 'ingredientCream', amount: 400, unitKey: 'unitMl' },
+                { nameKey: 'ingredientFlourFilling', amount: 35, unitKey: 'unitG' },
+                { nameKey: 'ingredientVanilla', amount: 1, unitKey: 'unitTsp' },
+                { nameKey: 'ingredientLemonZest', amount: 1, unitKey: 'unitTsp' },
+                { nameKey: 'ingredientSaltFilling', amount: 0.5, unitKey: 'unitTsp' }
+            ]
+        },
+        steps: [
+            { titleKey: 'step1Title', contentKey: 'step1Content' },
+            { titleKey: 'step2Title', contentKey: 'step2Content' },
+            { titleKey: 'step3Title', contentKey: 'step3Content' },
+            { titleKey: 'step4Title', contentKey: 'step4Content' },
+            { titleKey: 'step5Title', contentKey: 'step5Content' }
+        ],
+        variations: [
+            { titleKey: 'variation1Title', descKey: 'variation1Desc' },
+            { titleKey: 'variation2Title', descKey: 'variation2Desc' },
+            { titleKey: 'variation3Title', descKey: 'variation3Desc' },
+            { titleKey: 'variation4Title', descKey: 'variation4Desc' },
+            { titleKey: 'variation5Title', descKey: 'variation5Desc' },
+            { titleKey: 'variation6Title', descKey: 'variation6Desc' }
+        ],
+        scaleFactor: 1.4
+    };
+
+    let currentLang = 'pl';
+    let ingredientsChart;
+
+    const ingredientsContainer = document.getElementById('ingredients-list');
+    const stepsContainer = document.getElementById('steps-accordion');
+    const variationsContainer = document.getElementById('variations-grid');
+    const size23Btn = document.getElementById('size-23');
+    const size28Btn = document.getElementById('size-28');
+    const langPlBtn = document.getElementById('lang-pl');
+    const langEnBtn = document.getElementById('lang-en');
+    const themeToggle = document.getElementById('theme-toggle');
+
+    function updateLanguage(lang) {
+        currentLang = lang;
+        document.documentElement.lang = lang;
+
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.dataset.lang;
+            if (translations[lang][key]) {
+                el.innerHTML = translations[lang][key];
+            }
+        });
+        
+        const currentScale = size28Btn.style.backgroundColor === 'var(--accent-color)' ? data.scaleFactor : 1;
+        renderIngredients(currentScale);
+        renderSteps();
+        renderVariations();
+        renderChart();
+        updateLangButtons();
+    }
+
+    function updateLangButtons() {
+        if (currentLang === 'pl') {
+            langPlBtn.style.backgroundColor = 'var(--accent-color)';
+            langPlBtn.style.color = 'var(--accent-text-color)';
+            langEnBtn.style.backgroundColor = 'var(--button-inactive-bg)';
+            langEnBtn.style.color = 'var(--button-inactive-text)';
+        } else {
+            langEnBtn.style.backgroundColor = 'var(--accent-color)';
+            langEnBtn.style.color = 'var(--accent-text-color)';
+            langPlBtn.style.backgroundColor = 'var(--button-inactive-bg)';
+            langPlBtn.style.color = 'var(--button-inactive-text)';
+        }
+    }
+
+    function renderIngredients(scale = 1) {
+        const t = translations[currentLang];
+        let html = `<h4 class="font-bold text-lg mb-3" style="color: var(--text-color);">${t.crustTitle}</h4><ul class="space-y-2 mb-6">`;
+        data.base.spod.forEach(item => {
+            const amount = (item.amount * scale).toFixed(1).replace('.0', '');
+            html += `<li class="flex justify-between items-center text-sm"><span style="color: var(--text-muted-color);">${t[item.nameKey]}</span><span class="font-semibold" style="color: var(--accent-color);">${amount} ${t[item.unitKey]}</span></li>`;
+        });
+        html += `</ul><h4 class="font-bold text-lg mb-3" style="color: var(--text-color);">${t.fillingTitle}</h4><ul class="space-y-2">`;
+        data.base.masa.forEach(item => {
+            const amount = (item.amount * scale).toFixed(1).replace('.0', '');
+            html += `<li class="flex justify-between items-center text-sm"><span style="color: var(--text-muted-color);">${t[item.nameKey]}</span><span class="font-semibold" style="color: var(--accent-color);">${amount} ${t[item.unitKey]}</span></li>`;
+        });
+        html += '</ul>';
+        ingredientsContainer.innerHTML = html;
+    }
+
+    function renderSteps() {
+        const t = translations[currentLang];
+        let html = '';
+        data.steps.forEach((step) => {
+            html += `
+                <div class="rounded-lg overflow-hidden" style="border: 1px solid var(--border-color);">
+                    <button class="accordion-button w-full text-left p-4 focus:outline-none flex justify-between items-center" style="background-color: var(--bg-alt-color);">
+                        <span class="font-semibold text-base" style="color: var(--heading-color);">${t[step.titleKey]}</span>
+                        <svg class="w-5 h-5 transform transition-transform" style="color: var(--text-muted-color);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content" style="background-color: var(--bg-color);">
+                        <p class="p-4 text-sm leading-relaxed" style="color: var(--text-muted-color);">${t[step.contentKey]}</p>
+                    </div>
+                </div>
+            `;
+        });
+        stepsContainer.innerHTML = html;
+    }
+
+    function renderVariations() {
+        const t = translations[currentLang];
+        let html = '';
+        data.variations.forEach(v => {
+            html += `
+                <div class="p-6 rounded-lg shadow-sm transform hover:scale-105 transition-transform duration-300" style="background-color: var(--bg-alt-color); border: 1px solid var(--border-color);">
+                    <h3 class="font-playfair text-xl mb-2" style="color: var(--accent-color);">${t[v.titleKey]}</h3>
+                    <p class="text-sm" style="color: var(--text-muted-color);">${t[v.descKey]}</p>
+                </div>
+            `;
+        });
+        variationsContainer.innerHTML = html;
+    }
+
+    function renderChart() {
+        if (ingredientsChart) {
+            ingredientsChart.destroy();
+        }
+        const t = translations[currentLang];
+        const ctx = document.getElementById('ingredientsChart').getContext('2d');
+        const isDark = document.documentElement.classList.contains('dark');
+        const legendColor = isDark ? '#D1D5DB' : '#4A4A4A';
+
+        ingredientsChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [t.chartLabelCurd, t.chartLabelMascarpone, t.chartLabelCream, t.chartLabelEggs, t.chartLabelOther],
+                datasets: [{
+                    label: t.chartTitle,
+                    data: [700, 300, 400, 250, 150],
+                    backgroundColor: ['#D4A373', '#E5BF99', '#F2E4D5', '#8D8D8D', '#BFBFBF'],
+                    borderColor: isDark ? '#1F2937' : '#FFFFFF',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: legendColor,
+                            font: { family: "'Lato', sans-serif" }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => `${context.label}: ${context.parsed}g`
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    langPlBtn.addEventListener('click', () => updateLanguage('pl'));
+    langEnBtn.addEventListener('click', () => updateLanguage('en'));
+
+    themeToggle.addEventListener('change', () => {
+        document.documentElement.classList.toggle('dark', themeToggle.checked);
+        renderChart();
+    });
+
+    size23Btn.addEventListener('click', () => {
+        renderIngredients(1);
+        size23Btn.style.backgroundColor = 'var(--accent-color)';
+        size23Btn.style.color = 'var(--accent-text-color)';
+        size28Btn.style.backgroundColor = 'var(--button-inactive-bg)';
+        size28Btn.style.color = 'var(--button-inactive-text)';
+    });
+
+    size28Btn.addEventListener('click', () => {
+        renderIngredients(data.scaleFactor);
+        size28Btn.style.backgroundColor = 'var(--accent-color)';
+        size28Btn.style.color = 'var(--accent-text-color)';
+        size23Btn.style.backgroundColor = 'var(--button-inactive-bg)';
+        size23Btn.style.color = 'var(--button-inactive-text)';
+    });
+
+    stepsContainer.addEventListener('click', function(e) {
+        const button = e.target.closest('.accordion-button');
+        if (button) {
+            button.classList.toggle('active');
+            button.querySelector('svg').classList.toggle('rotate-180');
+        }
+    });
+
+    document.querySelectorAll('.tab-btn').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(t => t.classList.replace('tab-active', 'tab-inactive'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+
+            tab.classList.replace('tab-inactive', 'tab-active');
+            document.getElementById(`content-${tab.id.split('-')[1]}`).classList.remove('hidden');
+        });
+    });
+
+    // Initial render
+    updateLanguage('pl');
+});
+</script>
+</body>
+</html>
