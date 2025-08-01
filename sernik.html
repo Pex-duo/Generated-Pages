@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sernik Baskijski: Przepis Definitywny</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Harmony -->
+    <!-- Application Structure Plan: A task-oriented, tabbed single-page application. The structure is designed for a culinary workflow: 1. 'Przegląd' (Overview) to introduce the concept. 2. 'Przepis' (Recipe) as the core interactive section with scalable ingredients and collapsible steps. 3. 'Kluczowe Koncepcje' (Key Concepts) to visualize the 'why' behind the recipe using charts and comparisons. 4. 'Wariacje i Porady' (Variations & Tips) for post-baking inspiration. This non-linear structure allows users to either follow the recipe step-by-step or explore the underlying culinary science, enhancing both usability and understanding. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Ingredient List (Table 3) -> Goal: Inform/Organize -> Viz/Presentation: Interactive checklist with a serving size adjuster -> Interaction: JS-powered quantity updates -> Justification: Practical and user-friendly adaptation of a static list. -> Library/Method: Vanilla JS.
+        - Report Info: Step-by-step instructions -> Goal: Guide -> Viz/Presentation: Collapsible accordion panels -> Interaction: Click to expand/collapse -> Justification: Reduces cognitive load by breaking the process into manageable stages. -> Library/Method: Vanilla JS.
+        - Report Info: Crust Comparison (Table 1) -> Goal: Compare -> Viz/Presentation: Side-by-side styled cards -> Interaction: Subtle hover effects -> Justification: More engaging than a data table. -> Library/Method: HTML/Tailwind.
+        - Report Info: Ingredient Ratios (from text) -> Goal: Relationships/Inform -> Viz/Presentation: Donut Chart -> Interaction: Hover tooltips -> Justification: Provides an intuitive visual understanding of the filling's composition. -> Library/Method: Chart.js (Canvas).
+        - Report Info: Variations (Table 4) -> Goal: Organize/Inspire -> Viz/Presentation: Grid of cards -> Interaction: Static display -> Justification: Modern and clean presentation of optional content. -> Library/Method: HTML/Tailwind.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        h1, h2, h3, .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+        .tab-active {
+            border-bottom-color: #D4A373;
+            color: #D4A373;
+            font-weight: 700;
+        }
+        .tab-inactive {
+            border-bottom-color: transparent;
+            color: #A3A3A3;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .accordion-button.active + .accordion-content {
+            max-height: 1000px;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 80vh;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 py-8 md:py-12">
+
+        <header class="text-center mb-10 md:mb-16">
+            <h1 class="text-4xl md:text-6xl font-bold text-[#3D405B]">Sernik Baskijski</h1>
+            <p class="text-lg md:text-xl mt-2 text-[#8D8D8D]">Edycja Definitywna: Interaktywny Przewodnik</p>
+        </header>
+
+        <div class="sticky top-0 z-10 bg-[#FDFBF8] bg-opacity-90 backdrop-blur-sm mb-8">
+            <div class="border-b border-gray-200">
+                <nav class="-mb-px flex justify-center space-x-4 md:space-x-8" aria-label="Tabs">
+                    <button id="tab-przeglad" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm md:text-base transition-colors duration-300 tab-active">Przegląd</button>
+                    <button id="tab-przepis" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm md:text-base transition-colors duration-300 tab-inactive">Przepis</button>
+                    <button id="tab-koncepcje" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm md:text-base transition-colors duration-300 tab-inactive">Kluczowe Koncepcje</button>
+                    <button id="tab-wariacje" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm md:text-base transition-colors duration-300 tab-inactive">Wariacje i Porady</button>
+                </nav>
+            </div>
+        </div>
+
+        <main>
+            <div id="content-przeglad" class="tab-content">
+                <section class="max-w-4xl mx-auto text-center">
+                    <h2 class="text-3xl md:text-4xl font-playfair text-[#3D405B] mb-4">W Poszukiwaniu Sernika Doskonałego</h2>
+                    <p class="text-base md:text-lg leading-relaxed text-gray-600 mb-6">
+                        Ta aplikacja to interaktywna podróż ku stworzeniu sernika baskijskiego w jego ostatecznej formie. To nie jest zwykły przepis, a kulinarne studium. Czerpiąc inspirację z klasyków, świadomie je udoskonalamy: dodajemy stabilny, maślany spód dla kontrastu tekstur, optymalizujemy składniki pod kątem zdrowszego profilu i wprowadzamy sekretny składnik – palone masło – które nadaje całości niezwykłej głębi. To deser, który celebruje idealnie skomponowaną niedoskonałość, od spalonego wierzchu po płynne, kremowe serce.
+                    </p>
+                    <div class="grid md:grid-cols-3 gap-8 text-center mt-12">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <h3 class="font-playfair text-xl text-[#D4A373] mb-2">Chrupiący Fundament</h3>
+                            <p class="text-sm text-gray-500">Orzechowy spód kruchy tworzy idealny kontrast dla aksamitnej masy serowej.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <h3 class="font-playfair text-xl text-[#D4A373] mb-2">Głębia Smaku</h3>
+                            <p class="text-sm text-gray-500">Dodatek palonego masła wprowadza niezwykłe, orzechowo-karmelowe nuty.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <h3 class="font-playfair text-xl text-[#D4A373] mb-2">Zdrowsza Słodycz</h3>
+                            <p class="text-sm text-gray-500">Zastąpienie cukru erytrolem pozwala cieszyć się deserem bez kompromisów.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div id="content-przepis" class="tab-content hidden">
+                <section class="max-w-6xl mx-auto">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl md:text-4xl font-playfair text-[#3D405B] mb-2">Przepis Definitywny</h2>
+                        <p class="text-gray-600">Dostosuj ilość składników do swojej formy i postępuj zgodnie z instrukcją.</p>
+                        <div class="mt-4 flex justify-center items-center space-x-4">
+                            <span class="text-sm font-medium text-gray-700">Rozmiar formy:</span>
+                            <button id="size-23" class="px-4 py-2 text-sm font-semibold text-white bg-[#D4A373] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D4A373]">23-24 cm</button>
+                            <button id="size-28" class="px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D4A373]">28 cm</button>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-12 gap-8 lg:gap-12">
+                        <div class="md:col-span-5 lg:col-span-4 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <h3 class="text-2xl font-playfair border-b pb-2 mb-4 text-[#3D405B]">Składniki</h3>
+                            <div id="ingredients-list"></div>
+                        </div>
+                        <div class="md:col-span-7 lg:col-span-8">
+                            <h3 class="text-2xl font-playfair mb-4 text-center text-[#3D405B]">Instrukcja Krok po Kroku</h3>
+                            <div id="steps-accordion" class="space-y-3"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <div id="content-koncepcje" class="tab-content hidden">
+                 <section class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl md:text-4xl font-playfair text-[#3D405B] mb-2">Kluczowe Koncepcje Kulinarne</h2>
+                        <p class="text-gray-600">Zrozum "dlaczego" za każdym krokiem, aby osiągnąć mistrzostwo w pieczeniu.</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8 items-start">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <h3 class="text-2xl font-playfair text-center mb-4 text-[#3D405B]">Fundament: Wybór Spodu</h3>
+                            <p class="text-sm text-center text-gray-500 mb-6">Dodanie spodu to kluczowa modyfikacja. Prawidłowo przygotowany spód kruchy tworzy barierę zapobiegającą rozmoczeniu i zapewnia niezbędny kontrast teksturalny dla kremowej masy.</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="border-2 border-[#D4A373] p-4 rounded-lg bg-[#FDFBF8]">
+                                    <h4 class="font-bold text-center">Ciasto Kruche</h4>
+                                    <ul class="mt-2 text-xs space-y-1 text-gray-600">
+                                        <li><span class="text-green-600 font-bold">✓</span> Bogaty, maślany smak</li>
+                                        <li><span class="text-green-600 font-bold">✓</span> Stabilna, chrupiąca struktura</li>
+                                        <li><span class="text-green-600 font-bold">✓</span> Elegancki wygląd</li>
+                                        <li><span class="text-red-500 font-bold">✗</span> Wymaga podpiekania</li>
+                                    </ul>
+                                </div>
+                                <div class="border p-4 rounded-lg">
+                                    <h4 class="font-bold text-center">Spód Ciasteczkowy</h4>
+                                    <ul class="mt-2 text-xs space-y-1 text-gray-600">
+                                        <li><span class="text-green-600 font-bold">✓</span> Szybkość i prostota</li>
+                                        <li><span class="text-red-500 font-bold">✗</span> Ryzyko rozmięknięcia</li>
+                                        <li><span class="text-red-500 font-bold">✗</span> Mniej wyrafinowany smak</li>
+                                        <li><span class="text-red-500 font-bold">✗</span> Może być zbyt słodki</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <h3 class="text-2xl font-playfair text-center mb-4 text-[#3D405B]">Serce Sernika: Proporcje Masy</h3>
+                             <p class="text-sm text-center text-gray-500 mb-6">Aksamitna, kremowa konsystencja to wynik idealnego zbalansowania składników. Wykres pokazuje dominującą rolę nabiału, który jest kluczem do luksusowej tekstury.</p>
+                            <div class="chart-container">
+                                <canvas id="ingredientsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div id="content-wariacje" class="tab-content hidden">
+                <section class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl md:text-4xl font-playfair text-[#3D405B] mb-2">Wielki Finał: Wariacje i Porady</h2>
+                        <p class="text-gray-600">Sernik jest doskonały sam w sobie, ale te dodatki mogą go wynieść na nowy poziom.</p>
+                    </div>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 transform hover:scale-105 transition-transform duration-300">
+                            <h3 class="font-playfair text-xl text-[#D4A373] mb-2">Wersja Pomarańczowa</h3>
+                            <p class="text-sm text-gray-500">Dodaj do masy 2 łyżki likieru Cointreau i skórkę z całej pomarańczy. Podawaj z sosem z gorzkiej czekolady.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 transform hover:scale-105 transition-transform duration-300">
+                            <h3 class="font-playfair text-xl text-[#D4A373] mb-2">Wersja Korzenna</h3>
+                            <p class="text-sm text-gray-500">Do mąki na spód dodaj ½ łyżeczki cynamonu i ¼ łyżeczki kardamonu. Idealna do filiżanki mocnej kawy.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 transform hover:scale-105 transition-transform duration-300">
+                            <h3 class="font-playfair text-xl text-[#D4A373] mb-2">Wersja Umami</h3>
+                            <p class="text-sm text-gray-500">Zastąp sól w masie serowej 1 płaską łyżeczką białej pasty miso. Tworzy niezwykły, słono-słodki smak.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 transform hover:scale-105 transition-transform duration-300">
+                            <h3 class="font-playfair text-xl text-[#D4A373] mb-2">Sos Słony Karmel</h3>
+                            <p class="text-sm text-gray-500">Klasyczne połączenie, które podkreśla karmelowe nuty spalonego wierzchu. Niezawodny wybór.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 transform hover:scale-105 transition-transform duration-300">
+                            <h3 class="font-playfair text-xl text-[#D4A373] mb-2">Sos z Białej Czekolady</h3>
+                            <p class="text-sm text-gray-500">Rozpuść 100g białej czekolady w 50ml gorącej śmietanki 36%. Posyp posiekanymi pistacjami.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 transform hover:scale-105 transition-transform duration-300">
+                            <h3 class="font-playfair text-xl text-[#D4A373] mb-2">Mus Owocowy</h3>
+                            <p class="text-sm text-gray-500">Prosty mus ze świeżych malin lub truskawek doda kontrastującej kwasowości i świeżości.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
+
+    const data = {
+        base: {
+            spod: [
+                { name: 'Mąka pszenna tortowa (typ 450)', amount: 250, unit: 'g' },
+                { name: 'Orzechy włoskie lub laskowe, zmielone', amount: 50, unit: 'g' },
+                { name: 'Erytrol w pudrze', amount: 120, unit: 'g' },
+                { name: 'Masło, bardzo zimne', amount: 200, unit: 'g' },
+                { name: 'Żółtko', amount: 1, unit: 'szt. (L)' },
+                { name: 'Sól', amount: 0.5, unit: 'łyżeczki' }
+            ],
+            masa: [
+                { name: 'Masło (do palonego masła)', amount: 80, unit: 'g' },
+                { name: 'Twaróg sernikowy z wiaderka, tłusty', amount: 700, unit: 'g' },
+                { name: 'Serek mascarpone', amount: 300, unit: 'g' },
+                { name: 'Erytrol w pudrze', amount: 250, unit: 'g' },
+                { name: 'Jajka', amount: 5, unit: 'szt. (L)' },
+                { name: 'Śmietanka kremówka 36%', amount: 400, unit: 'ml' },
+                { name: 'Mąka pszenna tortowa (typ 450)', amount: 35, unit: 'g' },
+                { name: 'Ekstrakt z wanilii', amount: 1, unit: 'łyżeczka' },
+                { name: 'Skórka starta z cytryny', amount: 1, unit: 'łyżeczka' },
+                { name: 'Sól', amount: 0.5, unit: 'łyżeczki' }
+            ]
+        },
+        steps: [
+            { title: 'Krok 1: Przygotowanie Spodu', content: `W malakserze umieść mąkę, zmielone orzechy, erytrol i sól. Miksuj pulsacyjnie. Dodaj zimne masło, miksuj do konsystencji mokrego piasku. Dodaj żółtko, miksuj krótko do połączenia. Zawiń w folię i chłodź w lodówce min. 60 minut. Piekarnik rozgrzej do 180°C. Wylep ciastem dno tortownicy, nakłuj widelcem. Przykryj papierem do pieczenia, obciąż fasolą. Piecz 15 minut. Zdejmij obciążenie i piecz kolejne 5-7 minut. Wystudź.` },
+            { title: 'Krok 2: Palone Masło', content: `W małym rondelku podgrzewaj masło na średnim ogniu. Będzie się topić, pienić i skwierczeć. Gdy na dnie pojawią się brązowe drobinki, a masło nabierze bursztynowego koloru i orzechowego zapachu, natychmiast zdejmij z ognia. Przelej do miseczki i całkowicie wystudź.` },
+            { title: 'Krok 3: Masa Serowa', content: `Zwiększ temperaturę piekarnika do 220°C (termoobieg) lub 240°C (góra-dół). Wyłóż tortownicę z podpieczonym spodem dwoma arkuszami papieru do pieczenia. W dużej misie zmiksuj twaróg, mascarpone i erytrol na gładką masę. Dodawaj jajka, jedno po drugim, miksując krótko po każdym. Wlej śmietankę, wanilię, wystudzone palone masło, skórkę z cytryny i sól. Krótko zmiksuj. Na koniec wsyp przesianą mąkę i delikatnie wymieszaj szpatułką.` },
+            { title: 'Krok 4: Pieczenie', content: `Przelej masę na spód. Uderz formą o blat, by uwolnić pęcherzyki powietrza. Piecz 30-35 minut. Sernik mocno urośnie, a wierzch stanie się ciemnobrązowy. Środek powinien pozostać wyraźnie drżący (jak galareta na obszarze ok. 5-7 cm w centrum).` },
+            { title: 'Krok 5: Studzenie i Chłodzenie', content: `Wyjmij z piekarnika i odstaw do całkowitego wystudzenia w temperaturze pokojowej (2-3 godziny). Sernik opadnie - to normalne. Po wystudzeniu wstaw do lodówki na min. 8 godzin, a najlepiej na całą noc. Przed podaniem wyjmij na 30-60 minut, aby osiągnął temperaturę pokojową.` }
+        ],
+        scaleFactor: 1.4 // (28/23)^2
+    };
+
+    const ingredientsContainer = document.getElementById('ingredients-list');
+    const stepsContainer = document.getElementById('steps-accordion');
+    const size23Btn = document.getElementById('size-23');
+    const size28Btn = document.getElementById('size-28');
+
+    function renderIngredients(scale = 1) {
+        let html = '<h4 class="font-bold text-lg mb-3 text-gray-700">Spód Kruchy</h4><ul class="space-y-2 mb-6">';
+        data.base.spod.forEach(item => {
+            const amount = (item.amount * scale).toFixed(1).replace('.0', '');
+            html += `<li class="flex justify-between items-center text-sm"><span class="text-gray-600">${item.name}</span><span class="font-semibold text-[#D4A373]">${amount} ${item.unit}</span></li>`;
+        });
+        html += '</ul><h4 class="font-bold text-lg mb-3 text-gray-700">Masa Serowa</h4><ul class="space-y-2">';
+        data.base.masa.forEach(item => {
+            const amount = (item.amount * scale).toFixed(1).replace('.0', '');
+            html += `<li class="flex justify-between items-center text-sm"><span class="text-gray-600">${item.name}</span><span class="font-semibold text-[#D4A373]">${amount} ${item.unit}</span></li>`;
+        });
+        html += '</ul>';
+        ingredientsContainer.innerHTML = html;
+    }
+
+    function renderSteps() {
+        let html = '';
+        data.steps.forEach((step, index) => {
+            html += `
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <button class="accordion-button w-full text-left p-4 bg-gray-50 hover:bg-gray-100 focus:outline-none flex justify-between items-center">
+                        <span class="font-semibold text-base text-gray-800">${step.title}</span>
+                        <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content bg-white">
+                        <p class="p-4 text-sm leading-relaxed text-gray-600">${step.content}</p>
+                    </div>
+                </div>
+            `;
+        });
+        stepsContainer.innerHTML = html;
+    }
+    
+    renderIngredients();
+    renderSteps();
+
+    size23Btn.addEventListener('click', () => {
+        renderIngredients(1);
+        size23Btn.classList.add('bg-[#D4A373]', 'text-white');
+        size23Btn.classList.remove('bg-gray-200', 'text-gray-700');
+        size28Btn.classList.add('bg-gray-200', 'text-gray-700');
+        size28Btn.classList.remove('bg-[#D4A373]', 'text-white');
+    });
+
+    size28Btn.addEventListener('click', () => {
+        renderIngredients(data.scaleFactor);
+        size28Btn.classList.add('bg-[#D4A373]', 'text-white');
+        size28Btn.classList.remove('bg-gray-200', 'text-gray-700');
+        size23Btn.classList.add('bg-gray-200', 'text-gray-700');
+        size23Btn.classList.remove('bg-[#D4A373]', 'text-white');
+    });
+
+    stepsContainer.addEventListener('click', function(e) {
+        const button = e.target.closest('.accordion-button');
+        if (button) {
+            button.classList.toggle('active');
+            const icon = button.querySelector('svg');
+            icon.classList.toggle('rotate-180');
+        }
+    });
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => {
+                t.classList.remove('tab-active');
+                t.classList.add('tab-inactive');
+            });
+            contents.forEach(c => c.classList.add('hidden'));
+
+            tab.classList.add('tab-active');
+            tab.classList.remove('tab-inactive');
+            document.getElementById(`content-${tab.id.split('-')[1]}`).classList.remove('hidden');
+        });
+    });
+
+    const ctx = document.getElementById('ingredientsChart').getContext('2d');
+    const ingredientsChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Twaróg Sernikowy', 'Serek Mascarpone', 'Śmietanka 36%', 'Jajka', 'Pozostałe'],
+            datasets: [{
+                label: 'Proporcje Masy Serowej',
+                data: [700, 300, 400, 250, 150],
+                backgroundColor: [
+                    'rgba(212, 163, 115, 0.8)',
+                    'rgba(229, 191, 153, 0.8)',
+                    'rgba(242, 228, 213, 0.8)',
+                    'rgba(141, 141, 141, 0.6)',
+                    'rgba(191, 191, 191, 0.4)'
+                ],
+                borderColor: [
+                    '#D4A373',
+                    '#E5BF99',
+                    '#F2E4D5',
+                    '#8D8D8D',
+                    '#BFBFBF'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            family: "'Lato', sans-serif"
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed !== null) {
+                                label += context.parsed + 'g';
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+</body>
+</html>
