@@ -6,12 +6,14 @@
     <title data-lang="pageTitle">Sernik Baskijski: Przepis Definitywny</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Warm Harmony (with Dark Mode) -->
-    <!-- Application Structure Plan: Retained the successful task-oriented tabbed structure. Added a global control bar for theme (Day/Night) and language (PL/EN) switching. This enhances user experience by providing customization without altering the core, intuitive workflow of the recipe application. All text content is now managed through a centralized JS object for seamless i18n. -->
-    <!-- Visualization & Content Choices: All visualizations and content structures are preserved but are now dynamically populated from a language-aware data source. The core logic remains the same, but the implementation is refactored to support on-the-fly language changes, including chart labels and dynamic recipe text. The addition of a dark mode theme provides a significant visual enhancement. -->
+    <!-- Application Structure Plan: Retained the successful task-oriented tabbed structure. Added a global control bar for theme (Day/Night) and language (PL/EN) switching. This enhances user experience by providing customization without altering the core, intuitive workflow of the recipe application. All text content is now managed through a centralized JS object for seamless i18n. Added PDF generation functionality. -->
+    <!-- Visualization & Content Choices: All visualizations and content structures are preserved but are now dynamically populated from a language-aware data source. The core logic remains the same, but the implementation is refactored to support on-the-fly language changes, including chart labels and dynamic recipe text. The addition of a dark mode theme provides a significant visual enhancement. PDF generation uses html2canvas and jsPDF for a clean, printable output. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         :root {
@@ -121,9 +123,25 @@
         .slider.round:before {
             border-radius: 50%;
         }
+        #pdf-content-wrapper {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+        }
     </style>
 </head>
 <body class="antialiased">
+
+    <div id="pdf-content-wrapper"></div>
+    <div id="loader" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl text-center">
+            <svg class="animate-spin h-8 w-8 text-gray-600 dark:text-gray-300 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-gray-800 dark:text-gray-200" data-lang="pdfGenerating">Generowanie PDF...</p>
+        </div>
+    </div>
 
     <div class="container mx-auto px-4 py-8 md:py-12">
 
@@ -189,6 +207,10 @@
                             <span class="text-sm font-medium" data-lang="formSizeLabel">Rozmiar formy:</span>
                             <button id="size-23" class="px-4 py-2 text-sm font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2" style="background-color: var(--accent-color); color: var(--accent-text-color); border-color: var(--accent-color);">23-24 cm</button>
                             <button id="size-28" class="px-4 py-2 text-sm font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2" style="background-color: var(--button-inactive-bg); color: var(--button-inactive-text); border-color: var(--button-inactive-bg);">28 cm</button>
+                            <button id="generate-pdf" class="ml-4 px-3 py-2 text-sm font-semibold rounded-md shadow-sm flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-offset-2" style="background-color: var(--accent-color); color: var(--accent-text-color); border-color: var(--accent-color);">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm4 14a1 1 0 100-2 1 1 0 000 2zM8 7a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd" /></svg>
+                                <span data-lang="generatePdf">Generuj PDF</span>
+                            </button>
                         </div>
                     </div>
 
@@ -353,7 +375,9 @@ document.addEventListener('DOMContentLoaded', function () {
             variation5Title: "Sos z Białej Czekolady",
             variation5Desc: "Rozpuść 100g białej czekolady w 50ml gorącej śmietanki 36%. Posyp posiekanymi pistacjami.",
             variation6Title: "Mus Owocowy",
-            variation6Desc: "Prosty mus ze świeżych malin lub truskawek doda kontrastującej kwasowości i świeżości."
+            variation6Desc: "Prosty mus ze świeżych malin lub truskawek doda kontrastującej kwasowości i świeżości.",
+            generatePdf: "Generuj PDF",
+            pdfGenerating: "Generowanie PDF..."
         },
         en: {
             pageTitle: "Basque Cheesecake: The Definitive Recipe",
@@ -443,7 +467,9 @@ document.addEventListener('DOMContentLoaded', function () {
             variation5Title: "White Chocolate Sauce",
             variation5Desc: "Melt 100g of white chocolate in 50ml of hot heavy cream (36%). Sprinkle with chopped pistachios.",
             variation6Title: "Fruit Coulis",
-            variation6Desc: "A simple coulis of fresh raspberries or strawberries will add a contrasting acidity and freshness."
+            variation6Desc: "A simple coulis of fresh raspberries or strawberries will add a contrasting acidity and freshness.",
+            generatePdf: "Generate PDF",
+            pdfGenerating: "Generating PDF..."
         }
     };
 
@@ -499,6 +525,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const langPlBtn = document.getElementById('lang-pl');
     const langEnBtn = document.getElementById('lang-en');
     const themeToggle = document.getElementById('theme-toggle');
+    const pdfBtn = document.getElementById('generate-pdf');
+    const loader = document.getElementById('loader');
 
     function updateLanguage(lang) {
         currentLang = lang;
@@ -624,6 +652,73 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function generatePdf() {
+        loader.classList.remove('hidden');
+        const { jsPDF } = window.jspdf;
+        const pdfContentWrapper = document.getElementById('pdf-content-wrapper');
+        const t = translations[currentLang];
+        const scale = size28Btn.style.backgroundColor === 'var(--accent-color)' ? data.scaleFactor : 1;
+
+        let ingredientsHtml = `<h3 style="font-family: 'Playfair Display', serif; font-size: 14pt; color: #3D405B; border-bottom: 1px solid #D4A373; padding-bottom: 4px; margin-bottom: 12px;">${t.ingredientsTitle}</h3>`;
+        ingredientsHtml += `<h4 style="font-size: 12pt; font-weight: bold; margin-top: 12px; margin-bottom: 6px;">${t.crustTitle}</h4><ul style="list-style-type: none; padding-left: 0;">`;
+        data.base.spod.forEach(item => {
+            const amount = (item.amount * scale).toFixed(1).replace('.0', '');
+            ingredientsHtml += `<li style="font-size: 10pt; margin-bottom: 4px; display: flex; justify-content: space-between;"><span>${t[item.nameKey]}</span><span style="font-weight: bold;">${amount} ${t[item.unitKey]}</span></li>`;
+        });
+        ingredientsHtml += `</ul><h4 style="font-size: 12pt; font-weight: bold; margin-top: 12px; margin-bottom: 6px;">${t.fillingTitle}</h4><ul style="list-style-type: none; padding-left: 0;">`;
+        data.base.masa.forEach(item => {
+            const amount = (item.amount * scale).toFixed(1).replace('.0', '');
+            ingredientsHtml += `<li style="font-size: 10pt; margin-bottom: 4px; display: flex; justify-content: space-between;"><span>${t[item.nameKey]}</span><span style="font-weight: bold;">${amount} ${t[item.unitKey]}</span></li>`;
+        });
+        ingredientsHtml += '</ul>';
+
+        let stepsHtml = `<h3 style="font-family: 'Playfair Display', serif; font-size: 14pt; color: #3D405B; border-bottom: 1px solid #D4A373; padding-bottom: 4px; margin-bottom: 12px;">${t.stepsTitle}</h3>`;
+        data.steps.forEach(step => {
+            stepsHtml += `<div style="margin-bottom: 12px; page-break-inside: avoid;">
+                <h4 style="font-size: 12pt; font-weight: bold; margin-bottom: 4px;">${t[step.titleKey]}</h4>
+                <p style="font-size: 10pt; line-height: 1.4;">${t[step.contentKey]}</p>
+            </div>`;
+        });
+
+        pdfContentWrapper.innerHTML = `
+            <div id="pdf-content" style="font-family: 'Lato', sans-serif; width: 190mm; padding: 10mm; background-color: #FFF; color: #4A4A4A;">
+                <h1 style="font-family: 'Playfair Display', serif; font-size: 26pt; text-align: center; margin-bottom: 4px; color: #3D405B;">${t.mainTitle}</h1>
+                <p style="font-size: 11pt; text-align: center; color: #6B7280; margin-bottom: 20px;">${t.mainSubtitle}</p>
+                <div style="display: flex; flex-direction: row; gap: 15mm;">
+                    <div style="width: 35%;">
+                        ${ingredientsHtml}
+                    </div>
+                    <div style="width: 65%; border-left: 1px solid #E5E7EB; padding-left: 15mm;">
+                        ${stepsHtml}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        const pdfContent = document.getElementById('pdf-content');
+        html2canvas(pdfContent, { scale: 3 }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const doc = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+            
+            const pdfWidth = doc.internal.pageSize.getWidth();
+            const pdfHeight = doc.internal.pageSize.getHeight();
+            doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            
+            doc.save('Sernik-Baskijski-Przepis.pdf');
+            loader.classList.add('hidden');
+            pdfContentWrapper.innerHTML = '';
+        }).catch(err => {
+            console.error("Error generating PDF:", err);
+            loader.classList.add('hidden');
+            pdfContentWrapper.innerHTML = '';
+        });
+    }
+
+
     langPlBtn.addEventListener('click', () => updateLanguage('pl'));
     langEnBtn.addEventListener('click', () => updateLanguage('en'));
 
@@ -665,6 +760,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById(`content-${tab.id.split('-')[1]}`).classList.remove('hidden');
         });
     });
+
+    pdfBtn.addEventListener('click', generatePdf);
 
     // Initial render
     updateLanguage('pl');
