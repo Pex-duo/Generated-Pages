@@ -15,8 +15,8 @@
         html.light body { background-color: #F9FAFB; color: #1F2937; }
         .section-card { background-color: rgba(31, 41, 55, 0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(55, 65, 81, 0.7); transition: all 0.3s; }
         html.light .section-card { background-color: rgba(255, 255, 255, 0.7); border: 1px solid #E5E7EB; }
-        .chapter-card { background-color: #1F2937; border: 1px solid #374151; transition: all 0.3s; }
-        html.light .chapter-card { background-color: #ffffff; border: 1px solid #e5e7eb; }
+        .chapter-card { background-color: #111827; border: 1px solid #374151; transition: all 0.3s; }
+        html.light .chapter-card { background-color: #ffffff; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
         .data-highlight { background-color: rgba(56, 189, 248, 0.1); border-left: 4px solid #38BDF8; }
         html.light .data-highlight { background-color: rgba(2, 132, 199, 0.05); border-left: 4px solid #0284C7;}
         .accent-text { color: #38BDF8; }
@@ -33,13 +33,12 @@
         .bg-grid-pattern { background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 40px 40px; }
         html.light .bg-grid-pattern { background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px); }
         .styled-table { width: 100%; border-collapse: collapse; }
-        .styled-table th, .styled-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #374151; }
+        .styled-table th, .styled-table td { padding: 8px 12px; font-size: 0.8rem; text-align: left; border-bottom: 1px solid #374151; }
         html.light .styled-table th, html.light .styled-table td { border-bottom: 1px solid #e5e7eb; }
         .styled-table th { background-color: #374151; font-weight: 600; }
         html.light .styled-table th { background-color: #f3f4f6; }
-        .styled-table tbody tr { transition: background-color 0.2s; }
-        .styled-table tbody tr:hover { background-color: #374151; }
-        html.light .styled-table tbody tr:hover { background-color: #f9fafb; }
+        blockquote { border-left: 4px solid #4B5563; padding-left: 1rem; font-style: italic; color: #9CA3AF; }
+        html.light blockquote { border-left-color: #D1D5DB; color: #4B5563; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-300">
@@ -76,7 +75,7 @@
 
         <section id="hero" class="text-center py-20 min-h-screen flex flex-col justify-center items-center bg-grid-pattern">
             <div class="fade-in">
-                 <h2 class="text-xl font-semibold accent-text" data-lang="en">An Evidence-Based Dossier</h2><h2 class="text-xl font-semibold accent-text hidden" data-lang="pl">Dossier oparte na dowodach</h2>
+                 <h2 class="text-xl font-semibold accent-text" data-lang="en">An Evidence-Based Dossier</h2><h2 class="text-xl font-semibold accent-text hidden" data-lang="pl">Dossier Oparte na Dowodach</h2>
                 <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mt-2">
                     <span class="block" data-lang="en">The Autonomy Protocol</span><span class="block hidden" data-lang="pl">Protokół Autonomii</span>
                 </h1>
@@ -98,8 +97,8 @@
                     <span data-lang="en">Empirical Foundations of the "Broken Compass"</span><span data-lang="pl" class="hidden">Empiryczne Fundamenty "Złamanego Kompasu"</span>
                 </h2>
                 <p class="mt-4 max-w-3xl mx-auto text-gray-400">
-                    <span data-lang="en">The premise that the contemporary landscape of relationships is systemically dysfunctional is not subjective. It is a factual reality substantiated by measurable societal trends.</span>
-                    <span data-lang="pl" class="hidden">Przesłanka, że współczesny krajobraz relacji jest systemowo dysfunkcjonalny, nie jest subiektywna. To faktyczna rzeczywistość potwierdzona przez mierzalne trendy społeczne.</span>
+                    [cite_start]<span data-lang="en">The premise that the contemporary landscape of relationships is systemically dysfunctional is not subjective[cite: 800]. [cite_start]It is a factual reality substantiated by measurable societal trends[cite: 254].</span>
+                    [cite_start]<span data-lang="pl" class="hidden">Przesłanka, że współczesny krajobraz relacji jest systemowo dysfunkcjonalny, nie jest subiektywna[cite: 800]. [cite_start]To faktyczna rzeczywistość potwierdzona przez mierzalne trendy społeczne[cite: 254].</span>
                 </p>
             </div>
 
@@ -107,8 +106,8 @@
                 <article class="grid md:grid-cols-5 gap-8 items-center fade-in">
                     <div class="md:col-span-3">
                         <h3 class="text-2xl font-bold accent-text" data-lang="en">The Politicization of Intimacy</h3><h3 class="text-2xl font-bold accent-text hidden" data-lang="pl">Upolitycznienie Intymności</h3>
-                        <p class="mt-4 text-gray-400" data-lang="en">The private sphere has become politicized. [cite_start]This is not mere policy disagreement but "affective polarization"—a visceral dislike and distrust of the opposing political camp[cite: 2]. [cite_start]This is intensely visible in Poland, a nation with deep political divisions[cite: 3]. [cite_start]Political affiliation now serves as a proxy for core moral worldviews, as it is linked to deep-seated values regarding equality, fairness, and authority[cite: 6]. [cite_start]In Poland, this alignment is a powerful force, with 73% of couples sharing voting preferences[cite: 10]. [cite_start]A growing gender-generation gap, with young women leaning significantly more left-wing than young men, further complicates the landscape[cite: 9].</p>
-                        <p class="mt-4 text-gray-400 hidden" data-lang="pl">Sfera prywatna uległa upolitycznieniu. [cite_start]Nie jest to zwykła niezgoda co do polityki, ale "polaryzacja afektywna" — głęboka niechęć i nieufność do przeciwnego obozu politycznego[cite: 2]. [cite_start]Jest to szczególnie widoczne w Polsce, kraju o głębokich podziałach politycznych[cite: 3]. [cite_start]Przynależność polityczna stała się wyznacznikiem podstawowych światopoglądów moralnych, ponieważ jest powiązana z głęboko zakorzenionymi wartościami dotyczącymi równości, sprawiedliwości i autorytetu[cite: 6]. [cite_start]W Polsce ta zbieżność jest potężną siłą – 73% par ma te same preferencje wyborcze[cite: 10]. [cite_start]Rosnąca luka płciowo-pokoleniowa, w której młode kobiety są znacznie bardziej lewicowe niż młodzi mężczyźni, dodatkowo komplikuje ten krajobraz[cite: 9].</p>
+                        [cite_start]<p class="mt-4 text-gray-400" data-lang="en">The private sphere has become politicized, transforming partner selection into an ideological purity test[cite: 256]. [cite_start]This is driven by "affective polarization"—not just disagreement, but a visceral dislike and hostility toward the opposing political camp[cite: 257]. [cite_start]Political affiliation now serves as a proxy for core moral worldviews, as it is linked to deep-seated values regarding equality, authority, and tradition[cite: 260]. [cite_start]In Poland, this is a powerful force, with **73% of couples sharing voting preferences**[cite: 263]. [cite_start]A growing gender-generation gap, with young Polish women (15-29) identifying as significantly more left-wing than their male peers, further complicates the landscape[cite: 262].</p>
+                        [cite_start]<p class="mt-4 text-gray-400 hidden" data-lang="pl">Sfera prywatna uległa upolitycznieniu, przekształcając dobór partnera w ideologiczny test czystości[cite: 256]. [cite_start]Napędza to "polaryzacja afektywna" — nie tylko niezgoda, ale głęboka niechęć i wrogość wobec przeciwnego obozu politycznego[cite: 257]. [cite_start]Przynależność polityczna służy obecnie jako wyznacznik podstawowych światopoglądów moralnych, ponieważ jest powiązana z głęboko zakorzenionymi wartościami dotyczącymi równości, autorytetu i tradycji[cite: 260]. [cite_start]W Polsce jest to potężna siła – **73% par ma te same preferencje wyborcze**[cite: 263]. [cite_start]Rosnąca luka płciowo-pokoleniowa, w której młode Polki (15-29 lat) identyfikują się jako znacznie bardziej lewicowe niż ich rówieśnicy, dodatkowo komplikuje ten krajobraz[cite: 262].</p>
                     </div>
                     <div class="md:col-span-2 section-card p-4 rounded-lg">
                          <div class="h-64"><canvas id="politicalGapChart"></canvas></div>
@@ -121,16 +120,16 @@
                     </div>
                     <div class="md:col-span-3 md:order-2">
                         <h3 class="text-2xl font-bold accent-text" data-lang="en">The Chaos of Gender Roles</h3><h3 class="text-2xl font-bold accent-text hidden" data-lang="pl">Chaos Ról Płciowych</h3>
-                        [cite_start]<p class="mt-4 text-gray-400" data-lang="en">The "egalitarian-traditional paradox" is supported by stark statistical realities[cite: 1]. [cite_start]In Poland, a massive educational mismatch has occurred: 56% of women aged 25-34 hold a university degree, compared to only 37% of men[cite: 15]. [cite_start]Women are now 63% of all university graduates[cite: 16]. [cite_start]This collides with the reality that women initiate ~66-70% of divorces[cite: 11]. [cite_start]While men's and women's total workload (paid + unpaid) is nearly identical [cite: 14][cite_start], the conflict arises from the structural tension between women's advanced position in the public sphere and the persistence of traditional expectations in the private sphere[cite: 1, 628].</p>
-                        [cite_start]<p class="mt-4 text-gray-400 hidden" data-lang="pl">"Paradoks egalitarno-tradycyjny" jest poparty twardymi realiami statystycznymi[cite: 1]. [cite_start]W Polsce nastąpiło ogromne niedopasowanie edukacyjne: 56% kobiet w wieku 25-34 lata posiada dyplom uniwersytecki, w porównaniu do zaledwie 37% mężczyzn[cite: 15]. [cite_start]Kobiety stanowią obecnie 63% wszystkich absolwentów uniwersytetów[cite: 16]. [cite_start]Zderza się to z faktem, że kobiety inicjują ~66-70% rozwodów[cite: 11]. [cite_start]Chociaż całkowity czas pracy (płatnej i niepłatnej) jest niemal identyczny dla obu płci [cite: 14][cite_start], konflikt wynika z napięcia strukturalnego między zaawansowaną pozycją kobiet w sferze publicznej a utrzymywaniem się tradycyjnych oczekiwań w sferze prywatnej[cite: 1, 628].</p>
+                        [cite_start]<p class="mt-4 text-gray-400" data-lang="en">The "egalitarian-traditional paradox" is supported by stark statistical realities[cite: 266]. [cite_start]A massive educational mismatch has occurred in Poland: **56% of women aged 25-34 hold a university degree, compared to only 37% of men**[cite: 276]. [cite_start]Women now account for 63% of all university graduates[cite: 276]. [cite_start]This structural reality collides with the fact that women initiate approximately **two-thirds of all divorces**[cite: 268]. [cite_start]While total workload (paid + unpaid) is nearly identical for both genders, the conflict arises from the structural tension between women's advanced position in the public sphere and the persistence of traditional expectations in the private sphere[cite: 273, 278].</p>
+                        [cite_start]<p class="mt-4 text-gray-400 hidden" data-lang="pl">"Paradoks egalitarno-tradycyjny" jest poparty twardymi realiami statystycznymi[cite: 266]. [cite_start]W Polsce nastąpiło ogromne niedopasowanie edukacyjne: **56% kobiet w wieku 25-34 lata posiada dyplom uniwersytecki, w porównaniu do zaledwie 37% mężczyzn**[cite: 276]. [cite_start]Kobiety stanowią obecnie 63% wszystkich absolwentów uniwersytetów[cite: 276]. [cite_start]Ta strukturalna rzeczywistość zderza się z faktem, że kobiety inicjują około **dwóch trzecich wszystkich rozwodów**[cite: 268]. [cite_start]Chociaż całkowity czas pracy (płatnej i niepłatnej) jest niemal identyczny dla obu płci, konflikt wynika z napięcia strukturalnego między zaawansowaną pozycją kobiet w sferze publicznej a utrzymywaniem się tradycyjnych oczekiwań w sferze prywatnej[cite: 273, 278].</p>
                     </div>
                 </article>
 
                 <article class="grid md:grid-cols-5 gap-8 items-center fade-in">
                     <div class="md:col-span-3">
-                        <h3 class="text-2xl font-bold accent-text" data-lang="en">The Mental Health Crisis</h3><h3 class="text-2xl font-bold accent-text hidden" data-lang="pl">Kryzys Zdrowia Psychicznego</h3>
-                        <p class="mt-4 text-gray-400" data-lang="en">There is a dual crisis. [cite_start]Globally, depression is ~50% more common in women than men[cite: 23]. [cite_start]In Poland, women constitute over 75% of patients treated for recurring depressive disorders[cite: 20]. Conversely, young men face a crisis of social connection. [cite_start]In Poland, 55% of men up to age 24 and 53% of men aged 25-34 report high levels of loneliness[cite: 27, 636]. [cite_start]This occurs as single-person households are becoming a dominant global structure, projected to be 35% of all households by 2050[cite: 29]. [cite_start]This normalizes autonomy, making the protocol an alignment with an emerging social reality, not a fringe reaction[cite: 30, 640].</p>
-                        <p class="mt-4 text-gray-400 hidden" data-lang="pl">Mamy do czynienia z podwójnym kryzysem. [cite_start]Globalnie depresja jest o ~50% częstsza u kobiet niż u mężczyzn[cite: 23]. [cite_start]W Polsce kobiety stanowią ponad 75% pacjentów leczonych z powodu nawracających zaburzeń depresyjnych[cite: 20]. Z drugiej strony, młodzi mężczyźni doświadczają kryzysu więzi społecznych. [cite_start]W Polsce 55% mężczyzn do 24. roku życia i 53% w wieku 25-34 lata zgłasza wysoki poziom samotności[cite: 27, 636]. [cite_start]Dzieje się to w czasie, gdy jednoosobowe gospodarstwa domowe stają się dominującą globalną strukturą, mając stanowić 35% wszystkich gospodarstw do 2050 roku[cite: 29]. [cite_start]Normalizuje to autonomię, czyniąc protokół dostosowaniem do nowej rzeczywistości społecznej, a nie marginalną reakcją[cite: 30, 640].</p>
+                        <h3 class="text-2xl font-bold accent-text" data-lang="en">The Dual Crisis: Mental Health & Social Connection</h3><h3 class="text-2xl font-bold accent-text hidden" data-lang="pl">Podwójny Kryzys: Zdrowie Psychiczne i Więzi Społeczne</h3>
+                        <p class="mt-4 text-gray-400" data-lang="en">A dual crisis is unfolding. [cite_start]Globally, depression is ~50% more common in women than men[cite: 283]. [cite_start]In Poland, women constitute over **75% of patients treated for recurring depressive disorders**[cite: 283]. Conversely, young men face a severe crisis of social connection. [cite_start]In Poland, **55% of men up to age 24** and **53% of men aged 25-34** report high levels of loneliness[cite: 286, 287]. [cite_start]This occurs as single-person households become a dominant global structure, projected to be 35% of all households by 2050[cite: 290]. [cite_start]This normalizes autonomy, making the protocol an alignment with an emerging social reality, not a fringe reaction[cite: 30, 290].</p>
+                        <p class="mt-4 text-gray-400 hidden" data-lang="pl">Rozwija się podwójny kryzys. [cite_start]Globalnie depresja jest o ~50% częstsza u kobiet niż u mężczyzn[cite: 283]. [cite_start]W Polsce kobiety stanowią ponad **75% pacjentów leczonych z powodu nawracających zaburzeń depresyjnych**[cite: 283]. Z drugiej strony, młodzi mężczyźni doświadczają poważnego kryzysu więzi społecznych. [cite_start]W Polsce **55% mężczyzn do 24. roku życia** i **53% mężczyzn w wieku 25-34 lata** zgłasza wysoki poziom samotności[cite: 286, 287]. [cite_start]Dzieje się to w czasie, gdy jednoosobowe gospodarstwa domowe stają się dominującą globalną strukturą, mając stanowić 35% wszystkich gospodarstw do 2050 roku[cite: 290]. [cite_start]Normalizuje to autonomię, czyniąc protokół dostosowaniem do nowej rzeczywistości społecznej, a nie marginalną reakcją[cite: 30, 290].</p>
                     </div>
                     <div class="md:col-span-2 section-card p-4 rounded-lg">
                         <div class="h-64"><canvas id="lonelinessChart"></canvas></div>
@@ -148,26 +147,37 @@
         <section id="protocol" class="py-20">
             <div class="text-center mb-12 fade-in">
                 <h2 class="text-3xl md:text-4xl font-bold">
-                    <span data-lang="en">The Autonomy Protocol: A Blueprint</span><span data-lang="pl" class="hidden">Protokół Autonomii: Plan</span>
+                    <span data-lang="en">The Autonomy Protocol: Blueprint</span><span data-lang="pl" class="hidden">Protokół Autonomii: Plan</span>
                 </h2>
                  <p class="mt-4 max-w-3xl mx-auto text-gray-400">
                     <span data-lang="en">A detailed, evidence-based system for constructing a life of internal strength and self-generated meaning.</span>
                     <span data-lang="pl" class="hidden">Szczegółowy, oparty na dowodach system budowy życia opartego na wewnętrznej sile i samodzielnie generowanym sensie.</span>
                 </p>
             </div>
-
-            <div class="space-y-8">
+            
+            <div class="space-y-12">
                 <div class="fade-in">
-                     <h3 class="text-2xl font-bold mb-4" data-lang="en">Part I: Physical Fortification</h3><h3 class="text-2xl font-bold mb-4 hidden" data-lang="pl">Część I: Fizyczna Fortyfikacja</h3>
+                     <h3 class="text-2xl font-bold mb-6" data-lang="en">Part I: Physical Fortification</h3><h3 class="text-2xl font-bold mb-6 hidden" data-lang="pl">Część I: Fizyczna Fortyfikacja</h3>
                      <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8">
-                        <article id="ch1" class="chapter-card rounded-lg p-6">
-                            <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 1: The Biochemistry of Training</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 1: Biochemia Treningu</h4>
-                            <p class="mt-2 text-sm text-gray-400" data-lang="en">This is a psychophysiological regulation system. [cite_start]<b>Strength Training</b> provides the anabolic effect, stimulating testosterone and lowering cortisol[cite: 33, 34]. [cite_start]<b>Combat Sports</b> forge resilience through stress inoculation, teaching the mind to remain calm under duress while providing a channel for sublimation[cite: 38, 1]. [cite_start]<b>Calibrated Endurance</b> (moderate cardio or HIIT) stimulates mood-boosting endorphins without the catabolic cortisol spike of excessive exercise[cite: 1, 653].</p>
-                            <p class="mt-2 text-sm text-gray-400 hidden" data-lang="pl">To system regulacji psychofizjologicznej. [cite_start]<b>Trening Siłowy</b> zapewnia efekt anaboliczny, stymulując testosteron i obniżając kortyzol[cite: 33, 34]. [cite_start]<b>Sporty Walki</b> budują odporność poprzez "szczepienie" na stres, ucząc umysł zachowania spokoju pod presją i zapewniając kanał do sublimacji[cite: 38, 1]. [cite_start]<b>Kalibrowany Trening Wytrzymałościowy</b> (umiarkowane kardio lub HIIT) stymuluje poprawiające nastrój endorfiny bez katabolicznego skoku kortyzolu, charakterystycznego dla nadmiernego wysiłku[cite: 1, 653].</p>
-                             <div class="mt-4">
-                                <h5 class="font-bold text-sm mb-2" data-lang="en">Training Triad Summary</h5><h5 class="font-bold text-sm mb-2 hidden" data-lang="pl">Podsumowanie Triady Treningowej</h5>
+                        <article id="ch1" class="chapter-card rounded-lg p-6 space-y-4">
+                            <header>
+                                <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 1: The Biochemistry of Training</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 1: Biochemia Treningu</h4>
+                                <p class="text-sm text-gray-400" data-lang="en">A system for psychophysiological regulation designed to establish physiological sovereignty.</p><p class="text-sm text-gray-400 hidden" data-lang="pl">System regulacji psychofizjologicznej zaprojektowany w celu ustanowienia fizjologicznej suwerenności.</p>
+                            </header>
+                            <div>
+                                <h5 class="font-bold" data-lang="en">Strength Training's Anabolic Effect</h5><h5 class="font-bold hidden" data-lang="pl">Efekt Anaboliczny Treningu Siłowego</h5>
+                                [cite_start]<p class="mt-1 text-sm text-gray-400" data-lang="en">Intensive, regular strength training is a primary non-pharmacological method to stimulate testosterone production[cite: 33]. [cite_start]Higher volume and intensity correlate to a more significant hormonal response[cite: 34]. [cite_start]It also improves insulin sensitivity and can decrease levels of the catabolic stress hormone, cortisol[cite: 33, 297].</p>
+                                [cite_start]<p class="mt-1 text-sm text-gray-400 hidden" data-lang="pl">Intensywny, regularny trening siłowy jest główną niefarmakologiczną metodą stymulacji produkcji testosteronu[cite: 33]. [cite_start]Większa objętość i intensywność korelują z silniejszą odpowiedzią hormonalną[cite: 34]. [cite_start]Poprawia również wrażliwość na insulinę i może obniżać poziom katabolicznego hormonu stresu, kortyzolu[cite: 33, 297].</p>
+                            </div>
+                             <div>
+                                <h5 class="font-bold" data-lang="en">Combat Sports as a Crucible for Resilience</h5><h5 class="font-bold hidden" data-lang="pl">Sporty Walki jako Kuźnia Odporności</h5>
+                                [cite_start]<p class="mt-1 text-sm text-gray-400" data-lang="en">These disciplines provide a controlled environment for stress inoculation, teaching the mind to remain calm under acute physiological duress[cite: 300]. [cite_start]They enhance concentration, self-discipline, and patience, and serve as an excellent channel for the sublimation of natural aggression[cite: 38, 300].</p>
+                                [cite_start]<p class="mt-1 text-sm text-gray-400 hidden" data-lang="pl">Dyscypliny te zapewniają kontrolowane środowisko do "szczepienia" na stres, ucząc umysł zachowania spokoju w warunkach ostrego obciążenia fizjologicznego[cite: 300]. [cite_start]Wzmacniają koncentrację, samodyscyplinę i cierpliwość oraz służą jako doskonały kanał do sublimacji naturalnej agresji[cite: 38, 300].</p>
+                            </div>
+                            <div class="pt-4 border-t border-gray-700">
+                                <h5 class="font-bold text-sm mb-2" data-lang="en">Data & Evidence Summary</h5><h5 class="font-bold text-sm mb-2 hidden" data-lang="pl">Podsumowanie Danych i Dowodów</h5>
                                 <div class="overflow-x-auto">
-                                    <table class="styled-table text-xs">
+                                    <table class="styled-table">
                                         <thead>
                                             <tr>
                                                 <th data-lang="en">Modality</th><th data-lang="pl" class="hidden">Modalność</th>
@@ -178,89 +188,158 @@
                                         <tbody>
                                             <tr>
                                                 <td data-lang="en">Strength</td><td data-lang="pl" class="hidden">Siłowy</td>
-                                                <td data-lang="en">↑ Testosterone, ↓ Cortisol</td><td data-lang="pl" class="hidden">↑ Testosteron, ↓ Kortyzol</td>
-                                                <td data-lang="en">Confidence, mood stability</td><td data-lang="pl" class="hidden">Pewność siebie, stabilność nastroju</td>
+                                                [cite_start]<td data-lang="en">↑ Testosterone, ↓ Cortisol [cite: 33][cite_start]</td><td data-lang="pl" class="hidden">↑ Testosteron, ↓ Kortyzol [cite: 33]</td>
+                                                [cite_start]<td data-lang="en">Confidence, mood stability [cite: 1, 297][cite_start]</td><td data-lang="pl" class="hidden">Pewność siebie, stabilność nastroju [cite: 1, 297]</td>
                                             </tr>
                                             <tr>
                                                 <td data-lang="en">Combat</td><td data-lang="pl" class="hidden">Walki</td>
-                                                <td data-lang="en">Stress hormone regulation</td><td data-lang="pl" class="hidden">Regulacja hormonów stresu</td>
-                                                <td data-lang="en">Discipline, resilience</td><td data-lang="pl" class="hidden">Dyscyplina, odporność</td>
+                                                [cite_start]<td data-lang="en">Stress hormone regulation [cite: 37, 470][cite_start]</td><td data-lang="pl" class="hidden">Regulacja hormonów stresu [cite: 37, 470]</td>
+                                                [cite_start]<td data-lang="en">Discipline, resilience, sublimation [cite: 38, 300][cite_start]</td><td data-lang="pl" class="hidden">Dyscyplina, odporność, sublimacja [cite: 38, 300]</td>
                                             </tr>
                                             <tr>
                                                 <td data-lang="en">Cardio (Calibrated)</td><td data-lang="pl" class="hidden">Kardio (Kalibrowane)</td>
-                                                <td data-lang="en">↑ Endorphins</td><td data-lang="pl" class="hidden">↑ Endorfiny</td>
-                                                <td data-lang="en">Stress reduction, mood lift</td><td data-lang="pl" class="hidden">Redukcja stresu, poprawa nastroju</td>
+                                                [cite_start]<td data-lang="en">↑ Endorphins [cite: 40, 303][cite_start]</td><td data-lang="pl" class="hidden">↑ Endorfiny [cite: 40, 303]</td>
+                                                [cite_start]<td data-lang="en">Stress reduction, mood lift [cite: 303][cite_start]</td><td data-lang="pl" class="hidden">Redukcja stresu, poprawa nastroju [cite: 303]</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </article>
-                        <article id="ch2" class="chapter-card rounded-lg p-6">
-                            <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 2: The Biochemistry of the Autonomy Diet</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 2: Biochemia Diety Autonomii</h4>
-                            <p class="mt-2 text-sm text-gray-400" data-lang="en">This diet is a tool for biochemical management. It focuses on removing harmful inputs while providing essential building blocks for a stable endocrine system. [cite_start]<b>For Vitality:</b> Prioritize micronutrients scientifically validated to support male hormonal health, such as Zinc, Selenium, and Vitamin D, along with healthy fats which are direct precursors to steroid hormones[cite: 42, 45, 47, 1]. <b>For Regulation:</b> Consciously limit or eliminate endocrine disruptors. [cite_start]Chronic alcohol consumption disrupts the entire HPG axis and increases estrogen conversion[cite: 50]. [cite_start]Simple sugars lead to insulin spikes that suppress testosterone production[cite: 54, 55].</p>
-                            <p class="mt-2 text-sm text-gray-400 hidden" data-lang="pl">Ta dieta jest narzędziem do zarządzania biochemią. Skupia się na usuwaniu szkodliwych czynników i dostarczaniu niezbędnych budulców dla stabilnego układu hormonalnego. [cite_start]<b>Dla Witalności:</b> Priorytetowo traktuj mikroelementy o naukowo potwierdzonym wpływie na męskie zdrowie hormonalne, takie jak Cynk, Selen i Witamina D, a także zdrowe tłuszcze, które są bezpośrednimi prekursorami hormonów steroidowych[cite: 42, 45, 47, 1]. <b>Dla Regulacji:</b> Świadomie ograniczaj lub eliminuj substancje zaburzające gospodarkę hormonalną. [cite_start]Przewlekłe spożycie alkoholu zaburza całą oś HPG i zwiększa konwersję do estrogenu[cite: 50]. [cite_start]Cukry proste prowadzą do skoków insuliny, które hamują produkcję testosteronu[cite: 54, 55].</p>
-                             <div class="mt-4 data-highlight p-3 rounded">
-                                <p class="text-sm font-semibold" data-lang="en">Key Insight:</p><p class="text-sm font-semibold hidden" data-lang="pl">Kluczowy Wniosek:</p>
-                                [cite_start]<p class="text-xs text-gray-300" data-lang="en">Zinc supplementation can significantly increase testosterone in deficient men[cite: 42]. [cite_start]Chronic alcohol use has a direct toxic effect on the testosterone-producing Leydig cells[cite: 50].</p>
-                                [cite_start]<p class="text-xs text-gray-300 hidden" data-lang="pl">Suplementacja cynku może znacznie zwiększyć poziom testosteronu u mężczyzn z niedoborami[cite: 42]. [cite_start]Przewlekłe spożywanie alkoholu ma bezpośredni toksyczny wpływ na komórki Leydiga produkujące testosteron[cite: 50].</p>
+                        <article id="ch2" class="chapter-card rounded-lg p-6 space-y-4">
+                            <header>
+                                <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 2: The Biochemistry of the Autonomy Diet</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 2: Biochemia Diety Autonomii</h4>
+                                <p class="text-sm text-gray-400" data-lang="en">A precise tool for biochemical management, not deprivation. The goal is hormonal health; libido regulation is a secondary consequence.</p><p class="text-sm text-gray-400 hidden" data-lang="pl">Precyzyjne narzędzie do zarządzania biochemią, nie wyrzeczeń. Celem jest zdrowie hormonalne; regulacja libido jest wtórną konsekwencją.</p>
+                            </header>
+                             <div>
+                                <h5 class="font-bold" data-lang="en">Micronutrients for Vitality</h5><h5 class="font-bold hidden" data-lang="pl">Mikroelementy dla Witalności</h5>
+                                <ul class="mt-1 text-sm text-gray-400 list-disc list-inside space-y-1">
+                                    [cite_start]<li><b><span data-lang="en">Zinc:</span><span data-lang="pl" class="hidden">Cynk:</span></b> <span data-lang="en">Essential for testosterone production; supplementation can significantly increase levels in deficient men [cite: 42, 314][cite_start].</span><span data-lang="pl" class="hidden">Niezbędny do produkcji testosteronu; suplementacja może znacznie podnieść jego poziom u mężczyzn z niedoborami[cite: 42, 314].</span></li>
+                                    [cite_start]<li><b><span data-lang="en">Selenium:</span><span data-lang="pl" class="hidden">Selen:</span></b> <span data-lang="en">Vital for steroidogenesis and spermatogenesis, protecting testosterone-producing cells from oxidative damage [cite: 45][cite_start].</span><span data-lang="pl" class="hidden">Niezbędny do steroidogenezy i spermatogenezy, chroni komórki produkujące testosteron przed uszkodzeniem oksydacyjnym[cite: 45].</span></li>
+                                    [cite_start]<li><b><span data-lang="en">Vitamin D:</span><span data-lang="pl" class="hidden">Witamina D:</span></b> <span data-lang="en">Functions as a prohormone, with studies indicating a positive correlation with testosterone levels [cite: 318, 481][cite_start].</span><span data-lang="pl" class="hidden">Działa jako prohormon, a badania wskazują na pozytywną korelację z poziomem testosteronu[cite: 318, 481].</span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-bold" data-lang="en">Substances for Hormonal Regulation</h5><h5 class="font-bold hidden" data-lang="pl">Substancje do Regulacji Hormonalnej</h5>
+                                <p class="mt-1 text-sm text-gray-400" data-lang="en">Consciously limit or eliminate endocrine disruptors. [cite_start]Chronic **alcohol** use disrupts the entire hypothalamic-pituitary-gonadal (HPG) axis, is toxic to Leydig cells, and increases conversion of testosterone to estrogen[cite: 50, 324]. [cite_start]High intake of **simple sugars** leads to insulin spikes which can suppress the HPG axis, interrupting the signal to produce testosterone[cite: 54, 326].</p>
+                                <p class="mt-1 text-sm text-gray-400 hidden" data-lang="pl">Świadomie ogranicz lub wyeliminuj substancje zaburzające gospodarkę hormonalną. [cite_start]Przewlekłe spożywanie **alkoholu** zaburza całą oś podwzgórze-przysadka-gonady (HPG), jest toksyczne dla komórek Leydiga i zwiększa konwersję testosteronu do estrogenu[cite: 50, 324]. [cite_start]Wysokie spożycie **cukrów prostych** prowadzi do skoków insuliny, które mogą hamować oś HPG, przerywając sygnał do produkcji testosteronu[cite: 54, 326].</p>
                             </div>
                         </article>
                      </div>
                 </div>
 
                 <div class="fade-in">
-                     <h3 class="text-2xl font-bold mb-4" data-lang="en">Part II: Mental Sovereignty</h3><h3 class="text-2xl font-bold mb-4 hidden" data-lang="pl">Część II: Mentalna Suwerenność</h3>
+                     <h3 class="text-2xl font-bold mb-6" data-lang="en">Part II: Mental Sovereignty</h3><h3 class="text-2xl font-bold mb-6 hidden" data-lang="pl">Część II: Mentalna Suwerenność</h3>
                      <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
-                        <article id="ch3" class="chapter-card rounded-lg p-6">
-                            <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 3: Stoicism & CBT</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 3: Stoicyzm i CBT</h4>
-                            [cite_start]<p class="mt-2 text-sm text-gray-400" data-lang="en">Stoicism is the direct philosophical precursor to Cognitive Behavioral Therapy (CBT), one of today's most effective therapies[cite: 58, 59]. [cite_start]Its core principle, "It's not things that upset us but our judgements about them," is the foundation of CBT's cognitive model[cite: 60]. [cite_start]The Stoic "dichotomy of control" is a cornerstone of modern resilience training, focusing energy only on what is actionable[cite: 1]. [cite_start]Practicing Stoicism is a form of self-directed, preventative cognitive therapy[cite: 693].</p>
-                            [cite_start]<p class="mt-2 text-sm text-gray-400 hidden" data-lang="pl">Stoicyzm jest bezpośrednim filozoficznym prekursorem Terapii Poznawczo-Behawioralnej (CBT), jednej z najskuteczniejszych współczesnych terapii[cite: 58, 59]. [cite_start]Jej główna zasada, "Niepokoją nas nie rzeczy, lecz nasze sądy o rzeczach", jest fundamentem modelu poznawczego CBT[cite: 60]. [cite_start]Stoicka "dychotomia kontroli" jest kamieniem węgielnym nowoczesnego treningu odporności, skupiając energię tylko na tym, co jest w naszej mocy[cite: 1]. [cite_start]Praktykowanie stoicyzmu jest formą samodzielnej, prewencyjnej terapii poznawczej[cite: 693].</p>
+                        <article id="ch3" class="chapter-card rounded-lg p-6 space-y-4">
+                            <header>
+                                <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 3: Stoicism as Preventative Cognitive Therapy</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 3: Stoicyzm jako Prewencyjna Terapia Poznawcza</h4>
+                            </header>
+                            [cite_start]<p class="text-sm text-gray-400" data-lang="en">Stoicism is the direct philosophical precursor to Cognitive Behavioral Therapy (CBT), one of today's most effective and empirically validated therapies[cite: 58, 334]. Its core tenets are the foundation of modern resilience training.</p>
+                            [cite_start]<p class="text-sm text-gray-400 hidden" data-lang="pl">Stoicyzm jest bezpośrednim filozoficznym prekursorem Terapii Poznawczo-Behawioralnej (CBT), jednej z najskuteczniejszych i empirycznie potwierdzonych współczesnych terapii[cite: 58, 334]. Jego podstawowe zasady są fundamentem nowoczesnego treningu odporności psychicznej.</p>
+                            <blockquote>
+                                <p data-lang="en">"It's not things that upset us but our judgements about them." [cite_start]— Epictetus [cite: 60]</p>
+                                <p data-lang="pl" class="hidden">"Niepokoją nas nie rzeczy, lecz nasze sądy o rzeczach." [cite_start]— Epiktet [cite: 60]</p>
+                            </blockquote>
+                             [cite_start]<p class="text-sm text-gray-400" data-lang="en">While CBT is typically a therapeutic intervention, Stoicism applies these same cognitive principles prophylactically, aiming to build a cognitive framework so robust it prevents the development of chronic frustration and anxiety[cite: 341].</p>
+                            [cite_start]<p class="text-sm text-gray-400 hidden" data-lang="pl">Podczas gdy CBT jest zazwyczaj interwencją terapeutyczną, stoicyzm stosuje te same zasady poznawcze profilaktycznie, dążąc do zbudowania tak solidnej struktury poznawczej, aby zapobiegać rozwojowi chronicznej frustracji i lęku[cite: 341].</p>
                         </article>
-                        <article id="ch4" class="chapter-card rounded-lg p-6">
-                            <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 4: The Neuroscience of Mindfulness</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 4: Neuronauka Uważności</h4>
-                            [cite_start]<p class="mt-2 text-sm text-gray-400" data-lang="en">Meditation is a documented neurological intervention. fMRI research shows it increases gray matter in the prefrontal cortex (executive function) and decreases it in the amygdala (fear center)[cite: 63, 698]. [cite_start]It also reduces activity in the Default Mode Network (mind-wandering, rumination)[cite: 699]. [cite_start]A meta-analysis confirmed meditation significantly reduces behavioral impulsivity[cite: 65]. [cite_start]This practice creates a "pause" between stimulus and response, which is the foundation of self-control[cite: 701].</p>
-                            <p class="mt-2 text-sm text-gray-400 hidden" data-lang="pl">Medytacja jest udokumentowaną interwencją neurologiczną. [cite_start]Badania fMRI wykazują, że zwiększa ona gęstość istoty szarej w korze przedczołowej (funkcje wykonawcze) i zmniejsza ją w ciele migdałowatym (ośrodek strachu)[cite: 63, 698]. [cite_start]Zmniejsza również aktywność w sieci stanu spoczynkowego (wędrowanie myśli, ruminacje)[cite: 699]. [cite_start]Metaanaliza potwierdziła, że medytacja znacznie zmniejsza impulsywność behawioralną[cite: 65]. [cite_start]Praktyka ta tworzy "pauzę" między bodźcem a reakcją, co jest podstawą samokontroli[cite: 701].</p>
+                        <article id="ch4" class="chapter-card rounded-lg p-6 space-y-4">
+                            <header>
+                                <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 4: The Neuroscience of Mindfulness</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 4: Neuronauka Uważności</h4>
+                            </header>
+                            [cite_start]<p class="text-sm text-gray-400" data-lang="en">Meditation is a documented neurological intervention that induces neuroplasticity (tangible brain changes)[cite: 63]. It strengthens the prefrontal cortex (the "Stoic sage") and quiets the amygdala (the "impulsive reactor").</p>
+                            [cite_start]<p class="text-sm text-gray-400 hidden" data-lang="pl">Medytacja jest udokumentowaną interwencją neurologiczną, która wywołuje neuroplastyczność (namacalne zmiany w mózgu)[cite: 63]. Wzmacnia korę przedczołową ("stoickiego mędrca") i wycisza ciało migdałowate ("impulsywnego reaktora").</p>
+                            <div class="pt-4 border-t border-gray-700">
+                                <h5 class="font-bold text-sm mb-2" data-lang="en">Data & Evidence</h5><h5 class="font-bold text-sm mb-2 hidden" data-lang="pl">Dane i Dowody</h5>
+                                <ul class="text-sm text-gray-400 list-disc list-inside space-y-1">
+                                    [cite_start]<li><span data-lang="en">Increases gray matter in regions for **emotional regulation** [cite: 63][cite_start].</span><span data-lang="pl" class="hidden">Zwiększa ilość istoty szarej w rejonach odpowiedzialnych za **regulację emocji**[cite: 63].</span></li>
+                                    [cite_start]<li><span data-lang="en">Decreases gray matter volume of the **amygdala** (fear/threat center) [cite: 348, 63][cite_start].</span><span data-lang="pl" class="hidden">Zmniejsza objętość istoty szarej w **ciele migdałowatym** (centrum strachu/zagrożenia)[cite: 348, 63].</span></li>
+                                    [cite_start]<li><span data-lang="en">Meta-analysis confirms it significantly **reduces behavioral impulsivity** [cite: 65][cite_start].</span><span data-lang="pl" class="hidden">Metaanaliza potwierdza, że znacznie **redukuje impulsywność behawioralną**[cite: 65].</span></li>
+                                </ul>
+                            </div>
                         </article>
-                        <article id="ch5" class="chapter-card rounded-lg p-6">
-                            <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 5: Sublimation as an Engine</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 5: Sublimacja jako Silnik</h4>
-                            [cite_start]<p class="mt-2 text-sm text-gray-400" data-lang="en">Sublimation is a mature adaptive mechanism for channeling, not repressing, unwanted impulses (libido, aggression) into valuable outlets[cite: 67]. [cite_start]Experimental data supports this: one study found that individuals induced to feel unacceptable desires produced more creative artwork[cite: 69]. Within this protocol, withdrawing from the romantic marketplace frees up significant psychic energy. [cite_start]Sublimation is the mechanism that transmutes this energy, making the "Pursuit of Mastery" the designated outlet for building self-generated value[cite: 718].</p>
-                            [cite_start]<p class="mt-2 text-sm text-gray-400 hidden" data-lang="pl">Sublimacja jest dojrzałym mechanizmem adaptacyjnym, który polega na kanalizowaniu, a nie tłumieniu, niechcianych impulsów (libido, agresji) w wartościowe działania[cite: 67]. [cite_start]Potwierdzają to dane eksperymentalne: jedno z badań wykazało, że osoby, u których wywołano nieakceptowalne pragnienia, tworzyły bardziej kreatywne dzieła sztuki[cite: 69]. W ramach tego protokołu, wycofanie się z rynku romantycznego uwalnia znaczną energię psychiczną. [cite_start]Sublimacja jest mechanizmem, który transmutuje tę energię, czyniąc "Pogoń za Mistrzostwem" wyznaczonym ujściem dla budowania samodzielnie generowanej wartości[cite: 718].</p>
+                        <article id="ch5" class="chapter-card rounded-lg p-6 space-y-4">
+                            <header>
+                                <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 5: Sublimation as a Creative Engine</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 5: Sublimacja jako Silnik Twórczy</h4>
+                            </header>
+                            [cite_start]<p class="text-sm text-gray-400" data-lang="en">Sublimation is a mature adaptive mechanism for channeling, not repressing, unwanted impulses (libido, aggression) into valuable outlets like art, sports, or career ambition[cite: 67, 359].</p>
+                            [cite_start]<p class="text-sm text-gray-400 hidden" data-lang="pl">Sublimacja jest dojrzałym mechanizmem adaptacyjnym polegającym na kanalizowaniu, a nie tłumieniu, niechcianych impulsów (libido, agresji) w wartościowe działania, takie jak sztuka, sport czy ambicje zawodowe[cite: 67, 359].</p>
+                            <div class="pt-4 border-t border-gray-700">
+                                <h5 class="font-bold text-sm mb-2" data-lang="en">Data & Evidence</h5><h5 class="font-bold text-sm mb-2 hidden" data-lang="pl">Dane i Dowody</h5>
+                                <div class="data-highlight p-3 rounded">
+                                    [cite_start]<p class="text-xs text-gray-300" data-lang="en">An archival analysis of the Terman study found that individuals reporting anxieties about taboo sexual desires had **significantly greater lifetime creative accomplishments** and were more likely to choose creative professions[cite: 69].</p>
+                                    [cite_start]<p class="text-xs text-gray-300 hidden" data-lang="pl">Analiza archiwalna badania Termana wykazała, że osoby zgłaszające lęki związane z pragnieniami seksualnymi tabu miały **znacznie większe życiowe osiągnięcia twórcze** i częściej wybierały zawody kreatywne[cite: 69].</p>
+                                </div>
+                            </div>
                         </article>
                      </div>
                 </div>
 
                 <div class="fade-in">
-                     <h3 class="text-2xl font-bold mb-4" data-lang="en">Part III: Architecture of a Meaningful Life</h3><h3 class="text-2xl font-bold mb-4 hidden" data-lang="pl">Część III: Architektura Sensownego Życia</h3>
+                     <h3 class="text-2xl font-bold mb-6" data-lang="en">Part III: Architecture of a Meaningful Life</h3><h3 class="text-2xl font-bold mb-6 hidden" data-lang="pl">Część III: Architektura Sensownego Życia</h3>
                      <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8">
-                        <article id="ch6" class="chapter-card rounded-lg p-6">
-                             <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 6: Self-Awareness via Journaling</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 6: Samoświadomość przez Dziennik</h4>
-                            <p class="mt-2 text-sm text-gray-400" data-lang="en">Structured journaling is a proven tool. [cite_start]It reduces stress and anxiety by helping process emotional patterns[cite: 70]. Critically, it is a tool for achievement. [cite_start]People who write down their goals have a 42% higher achievement rate[cite: 72]. [cite_start]Maintaining a work journal can improve job performance by nearly 23%[cite: 728]. [cite_start]This practice is a form of self-regulated learning, turning your "personal constitution" into a dynamic, daily practice of self-governance[cite: 729, 732].</p>
-                            <p class="mt-2 text-sm text-gray-400 hidden" data-lang="pl">Ustrukturyzowane prowadzenie dziennika jest sprawdzonym narzędziem. [cite_start]Redukuje stres i lęk, pomagając przetwarzać wzorce emocjonalne[cite: 70]. Co najważniejsze, jest to narzędzie do osiągania celów. [cite_start]Ludzie, którzy zapisują swoje cele, mają o 42% wyższy wskaźnik ich realizacji[cite: 72]. [cite_start]Prowadzenie dziennika pracy może poprawić wydajność zawodową o prawie 23%[cite: 728]. [cite_start]Ta praktyka jest formą samoregulowanego uczenia się, przekształcając Twoją "osobistą konstytucję" w dynamiczną, codzienną praktykę samozarządzania[cite: 729, 732].</p>
+                        <article id="ch6" class="chapter-card rounded-lg p-6 space-y-4">
+                            <header>
+                                <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 6: Self-Awareness & Goal Achievement</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 6: Samoświadomość i Osiąganie Celów</h4>
+                            </header>
+                            <p class="text-sm text-gray-400" data-lang="en">Structured journaling is a tool for self-regulated learning. [cite_start]It transforms your "personal constitution" into a dynamic, daily practice of self-governance[cite: 382].</p>
+                            <p class="text-sm text-gray-400 hidden" data-lang="pl">Ustrukturyzowane prowadzenie dziennika to narzędzie do samoregulowanego uczenia się. [cite_start]Przekształca ono Twoją "osobistą konstytucję" w dynamiczną, codzienną praktykę samozarządzania[cite: 382].</p>
+                             <div class="pt-4 border-t border-gray-700">
+                                <h5 class="font-bold text-sm mb-2" data-lang="en">Data & Evidence</h5><h5 class="font-bold text-sm mb-2 hidden" data-lang="pl">Dane i Dowody</h5>
+                                 <div class="space-y-2">
+                                     <div class="data-highlight p-3 rounded">
+                                        <p class="font-bold text-lg accent-text">42%</p>
+                                        [cite_start]<p class="text-xs text-gray-300" data-lang="en">Higher achievement rate for individuals who commit their goals to paper [cite: 72, 377][cite_start].</p><p class="text-xs text-gray-300 hidden" data-lang="pl">Wyższy wskaźnik realizacji celów u osób, które zapisują swoje cele[cite: 72, 377].</p>
+                                    </div>
+                                    <div class="data-highlight p-3 rounded">
+                                        <p class="font-bold text-lg accent-text">23%</p>
+                                        [cite_start]<p class="text-xs text-gray-300" data-lang="en">Approximate improvement in job performance from maintaining a work journal [cite: 378, 72][cite_start].</p><p class="text-xs text-gray-300 hidden" data-lang="pl">Przybliżona poprawa wydajności w pracy dzięki prowadzeniu dziennika zawodowego[cite: 378, 72].</p>
+                                    </div>
+                                 </div>
+                            </div>
                         </article>
-                         <article id="ch7" class="chapter-card rounded-lg p-6">
-                            <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 7: The Psychology of Mastery & Flow</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 7: Psychologia Mistrzostwa i Flow</h4>
-                            [cite_start]<p class="mt-2 text-sm text-gray-400" data-lang="en">The "Pursuit of Mastery" is based on the theory of "flow"—a state of optimal experience from total immersion in a challenging activity[cite: 74]. [cite_start]This state is achieved when there is a balance between challenge and skill[cite: 76]. Pursuing mastery is therefore a reliable method for generating this state of deep, intrinsic fulfillment. [cite_start]Data confirms this: having a hobby is consistently associated with fewer depressive symptoms, higher life satisfaction, and a 29% reduction in all-cause mortality risk[cite: 78, 79].</p>
-                            [cite_start]<p class="mt-2 text-sm text-gray-400 hidden" data-lang="pl">"Pogoń za Mistrzostwem" opiera się na teorii "flow" — stanie optymalnego doświadczenia wynikającego z całkowitego zanurzenia się w wymagającej aktywności[cite: 74]. [cite_start]Stan ten osiągany jest, gdy istnieje równowaga między wyzwaniem a umiejętnościami[cite: 76]. Dążenie do mistrzostwa jest zatem niezawodną metodą generowania tego stanu głębokiego, wewnętrznego spełnienia. [cite_start]Potwierdzają to dane: posiadanie hobby jest konsekwentnie związane z mniejszą liczbą objawów depresyjnych, wyższą satysfakcją z życia i 29% redukcją ryzyka zgonu z jakiejkolwiek przyczyny[cite: 78, 79].</p>
+                         <article id="ch7" class="chapter-card rounded-lg p-6 space-y-4">
+                            <header>
+                                <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 7: The Psychology of Mastery & Flow</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 7: Psychologia Mistrzostwa i Flow</h4>
+                            </header>
+                            [cite_start]<p class="text-sm text-gray-400" data-lang="en">The "Pursuit of Mastery" leverages the psychological theory of "flow"—a state of optimal experience characterized by total immersion in an activity[cite: 74]. [cite_start]This state is achieved when there is a "challenge-skills balance"[cite: 76]. [cite_start]Pursuing mastery is therefore a reliable method for generating this powerful, self-sustaining engine for well-being, replacing the need for external validation with an internally generated source of fulfillment[cite: 388, 391].</p>
+                            [cite_start]<p class="text-sm text-gray-400 hidden" data-lang="pl">"Pogoń za Mistrzostwem" wykorzystuje psychologiczną teorię "flow" — stan optymalnego doświadczenia charakteryzujący się całkowitym zanurzeniem w działaniu[cite: 74]. [cite_start]Stan ten osiągany jest, gdy zachowana jest "równowaga między wyzwaniem a umiejętnościami"[cite: 76]. [cite_start]Dążenie do mistrzostwa jest zatem niezawodną metodą generowania tego potężnego, samopodtrzymującego się silnika dobrostanu, zastępując potrzebę zewnętrznej walidacji wewnętrznie generowanym źródłem spełnienia[cite: 388, 391].</p>
                         </article>
-                         <article id="ch8" class="chapter-card rounded-lg p-6">
-                            <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 8: The Critical Importance of Platonic Bonds</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 8: Krytyczne Znaczenie Więzi Platonicznych</h4>
-                            <p class="mt-2 text-sm text-gray-400" data-lang="en">This protocol is an opportunity to build a resilient network of deep, platonic friendships, which is critical given the growing crisis in male social connection. [cite_start]The percentage of men in the US with no close friends increased fivefold, from 3% to 15%, between 1990 and 2021[cite: 84]. [cite_start]This is a public health crisis, as loneliness is linked to a 26% increased risk of premature death[cite: 87]. [cite_start]Building a "tribe" is a direct counter-strategy, redefining strength not as isolation, but as the courage to cultivate a reliable support network[cite: 748].</p>
-                            <p class="mt-2 text-sm text-gray-400 hidden" data-lang="pl">Ten protokół to okazja do zbudowania odpornej sieci głębokich, platonicznych przyjaźni, co jest kluczowe w obliczu narastającego kryzysu męskich więzi społecznych. [cite_start]Odsetek mężczyzn w USA bez bliskich przyjaciół wzrósł pięciokrotnie, z 3% do 15%, w latach 1990-2021[cite: 84]. [cite_start]Jest to kryzys zdrowia publicznego, ponieważ samotność wiąże się z 26% wzrostem ryzyka przedwczesnej śmierci[cite: 87]. [cite_start]Budowanie "plemienia" jest bezpośrednią kontrstrategią, redefiniując siłę nie jako izolację, ale jako odwagę do kultywowania niezawodnej sieci wsparcia[cite: 748].</p>
+                         <article id="ch8" class="chapter-card rounded-lg p-6 space-y-4">
+                            <header>
+                                <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 8: The Critical Importance of Platonic Bonds</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 8: Krytyczne Znaczenie Więzi Platonicznych</h4>
+                            </header>
+                            <p class="text-sm text-gray-400" data-lang="en">This is not a sentence to loneliness but an opportunity to build a more resilient network of deep, platonic friendships. This is critical, as data reveals a growing crisis in male social connection. Redefining strength not as isolation, but as the courage to cultivate a reliable support network, is a direct counter-strategy to a major public health crisis.</p>
+                            <p class="text-sm text-gray-400 hidden" data-lang="pl">To nie jest wyrok samotności, lecz okazja do zbudowania bardziej odpornej sieci głębokich, platonicznych przyjaźni. Jest to kluczowe, biorąc pod uwagę narastający kryzys męskich więzi społecznych. Redefiniowanie siły nie jako izolacji, ale jako odwagi do kultywowania niezawodnej sieci wsparcia, jest bezpośrednią kontrstrategią wobec poważnego kryzysu zdrowia publicznego.</p>
+                             <div class="pt-4 border-t border-gray-700">
+                                <h5 class="font-bold text-sm mb-2" data-lang="en">Data & Evidence</h5><h5 class="font-bold text-sm mb-2 hidden" data-lang="pl">Dane i Dowody</h5>
+                                <div class="h-48"><canvas id="maleFriendshipChart"></canvas></div>
+                                [cite_start]<p class="text-xs text-center mt-2 text-gray-500" data-lang="en">Loneliness is correlated with a **26% increased risk of premature death** [cite: 87][cite_start].</p><p class="text-xs text-center mt-2 text-gray-500 hidden" data-lang="pl">Samotność jest skorelowana z **26% wzrostem ryzyka przedwczesnej śmierci**[cite: 87].</p>
+                            </div>
                         </article>
-                         <article id="ch9" class="chapter-card rounded-lg p-6">
-                            <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 9: The Well-Being Dividend of Service</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 9: Dywidenda Dobrostanu ze Służby</h4>
-                            <p class="mt-2 text-sm text-gray-400" data-lang="en">The highest tier is transcendence: service to something larger than oneself. This is a powerful antidote to nihilism. [cite_start]A vast body of research confirms a strong, positive link between altruism and personal well-being, a phenomenon observed in 120 out of 136 countries[cite: 91, 95]. [cite_start]In Poland, 28.4% of the population engaged in volunteering in 2022[cite: 96]. [cite_start]This final step completes the journey from self-improvement to contribution, actively creating meaning in a world perceived as absurd[cite: 760].</p>
-                            <p class="mt-2 text-sm text-gray-400 hidden" data-lang="pl">Najwyższym poziomem jest transcendencja: służba czemuś większemu niż my sami. To potężne antidotum na nihilizm. [cite_start]Ogromne zbiory badań potwierdzają silny, pozytywny związek między altruizmem a osobistym dobrostanem, zjawisko obserwowane w 120 ze 136 badanych krajów[cite: 91, 95]. [cite_start]W Polsce w 2022 roku 28,4% populacji angażowało się w wolontariat[cite: 96]. [cite_start]Ten ostatni krok dopełnia podróż od samodoskonalenia do wkładu w społeczeństwo, aktywnie tworząc sens w świecie postrzeganym jako absurdalny[cite: 760].</p>
+                         <article id="ch9" class="chapter-card rounded-lg p-6 space-y-4">
+                            <header>
+                                <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 9: The Well-Being Dividend of Service</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 9: Dywidenda Dobrostanu ze Służby</h4>
+                            </header>
+                            <p class="text-sm text-gray-400" data-lang="en">The final tier is transcendence: service to something larger than oneself. [cite_start]Active contribution is a powerful, evidence-based antidote to nihilism[cite: 402]. This final step completes the journey from self-improvement to contribution, breaking an inward focus and directing newfound strength outward. [cite_start]It is the ultimate answer to meaninglessness: not discovering a pre-ordained meaning, but actively creating it[cite: 409].</p>
+                            <p class="text-sm text-gray-400 hidden" data-lang="pl">Ostatnim poziomem jest transcendencja: służba czemuś większemu niż my sami. [cite_start]Aktywny wkład jest potężnym, opartym na dowodach antidotum na nihilizm[cite: 402]. Ten ostatni krok dopełnia podróż od samodoskonalenia do wkładu w społeczeństwo, przełamując skupienie na sobie i kierując nowo zdobytą siłę na zewnątrz. [cite_start]To ostateczna odpowiedź na bezsens: nie odkrywanie z góry narzuconego sensu, ale aktywne jego tworzenie[cite: 409].</p>
+                             <div class="pt-4 border-t border-gray-700">
+                                <h5 class="font-bold text-sm mb-2" data-lang="en">Data & Evidence</h5><h5 class="font-bold text-sm mb-2 hidden" data-lang="pl">Dane i Dowody</h5>
+                                <div class="data-highlight p-3 rounded">
+                                    [cite_start]<p class="text-xs text-gray-300" data-lang="en">A meta-analysis confirms that prosocial behavior **reliably improves well-being** by enhancing positive feelings and strengthening social relationships[cite: 94]. [cite_start]This link is a human universal, observed in **120 out of 136 countries** studied[cite: 95].</p>
+                                    [cite_start]<p class="text-xs text-gray-300 hidden" data-lang="pl">Metaanaliza potwierdza, że zachowania prospołeczne **niezawodnie poprawiają dobrostan** poprzez wzmacnianie pozytywnych uczuć i więzi społecznych[cite: 94]. [cite_start]Związek ten jest uniwersalny dla człowieka, zaobserwowano go w **120 ze 136 badanych krajów**[cite: 95].</p>
+                                </div>
+                            </div>
                         </article>
                      </div>
                 </div>
 
                 <div class="mt-12 fade-in">
                     <div class="p-8 section-card rounded-lg">
-                        <h3 class="text-2xl font-bold" data-lang="en">Conclusion: Forging the Compass Within</h3><h3 class="text-2xl font-bold hidden" data-lang="pl">Zakończenie: Wykuwanie Kompasu Wewnątrz</h3>
-                         <p class="mt-4 text-gray-400" data-lang="en">This report validates the Autonomy Protocol as a rational, evidence-based response to a dysfunctional relational landscape. The path outlined is not one of ease but of discipline. Its ultimate outcome is the attainment of authentic strength and freedom—an unwavering sense of self-worth, a clearly defined purpose, and a resilient support network built on one's own terms. The individual who navigates this protocol will operate from a position of strength, not need. [cite_start]They will no longer seek a compass in the external world, for they will have forged one within themselves[cite: 781].</p>
-                         <p class="mt-4 text-gray-400 hidden" data-lang="pl">Ten raport waliduje Protokół Autonomii jako racjonalną, opartą na dowodach odpowiedź na dysfunkcyjny krajobraz relacyjny. Nakreślona ścieżka nie jest łatwa, lecz wymaga dyscypliny. Jej ostatecznym rezultatem jest osiągnięcie autentycznej siły i wolności — niezachwianego poczucia własnej wartości, jasno określonego celu i odpornej sieci wsparcia zbudowanej na własnych warunkach. Jednostka, która przejdzie ten protokół, będzie działać z pozycji siły, a nie potrzeby. [cite_start]Nie będzie już szukać kompasu w świecie zewnętrznym, ponieważ wykuje go w sobie[cite: 781].</p>
+                        <h3 class="text-2xl font-bold" data-lang="en">Final Conclusion: Forging the Compass Within</h3><h3 class="text-2xl font-bold hidden" data-lang="pl">Ostateczny Wniosek: Wykuwanie Kompasu Wewnątrz</h3>
+                         [cite_start]<p class="mt-4 text-gray-400" data-lang="en">This report validates the Autonomy Protocol as a rational, evidence-based response to a dysfunctional relational landscape[cite: 413]. [cite_start]The path outlined is not one of ease but of discipline, courage, and consequence[cite: 426]. Its ultimate outcome is the attainment of authentic strength and freedom. [cite_start]An individual who successfully navigates this protocol will have forged an unwavering sense of self-worth, a clearly defined purpose, and a resilient support network built on their own terms[cite: 428]. [cite_start]They will operate from a position of strength, not of need[cite: 429]. [cite_start]They will no longer seek a compass in the external world, for they will have forged one within themselves[cite: 431].</p>
+                         [cite_start]<p class="mt-4 text-gray-400 hidden" data-lang="pl">Ten raport waliduje Protokół Autonomii jako racjonalną, opartą na dowodach odpowiedź na dysfunkcyjny krajobraz relacyjny[cite: 413]. [cite_start]Nakreślona ścieżka nie jest łatwa, lecz wymaga dyscypliny, odwagi i konsekwencji[cite: 426]. Jej ostatecznym rezultatem jest osiągnięcie autentycznej siły i wolności. [cite_start]Jednostka, która z powodzeniem przejdzie ten protokół, wykuje niezachwiane poczucie własnej wartości, jasno określony cel i odporną sieć wsparcia zbudowaną na własnych warunkach[cite: 428]. [cite_start]Będzie działać z pozycji siły, a nie potrzeby[cite: 429]. [cite_start]Nie będzie już szukać kompasu w świecie zewnętrznym, ponieważ wykuje go w sobie[cite: 431].</p>
                     </div>
                 </div>
             </div>
@@ -282,7 +361,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    let politicalGapChart, educationMismatchChart, lonelinessChart;
+    let politicalGapChart, educationMismatchChart, lonelinessChart, maleFriendshipChart;
 
     const themeToggle = document.getElementById('theme-toggle');
     const htmlEl = document.documentElement;
@@ -339,6 +418,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (politicalGapChart) politicalGapChart.destroy();
         if (educationMismatchChart) educationMismatchChart.destroy();
         if (lonelinessChart) lonelinessChart.destroy();
+        if (maleFriendshipChart) maleFriendshipChart.destroy();
         setTimeout(createCharts, 50);
     }
 
@@ -353,6 +433,11 @@ document.addEventListener('DOMContentLoaded', function () {
             rose: '#F43F5E',
             amber: '#F59E0B'
         };
+        const commonOptions = {
+             responsive: true, maintainAspectRatio: false,
+             plugins: { legend: { display: false } },
+             scales: { y: { grid: { color: chartColors.grid }, ticks: { color: chartColors.ticks } }, x: { grid: { color: chartColors.grid }, ticks: { color: chartColors.ticks } } }
+        };
 
         const politicalCtx = document.getElementById('politicalGapChart')?.getContext('2d');
         if (politicalCtx) {
@@ -360,17 +445,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 type: 'bar',
                 data: {
                     labels: [lang === 'pl' ? 'Młode Kobiety' : 'Young Women', lang === 'pl' ? 'Młodzi Mężczyźni' : 'Young Men'],
-                    datasets: [{
-                        label: lang === 'pl' ? 'Identyfikacja polityczna (0=Lewica, 10=Prawica)' : 'Political ID (0=Left, 10=Right)',
-                        data: [4.49, 5.53],
-                        backgroundColor: [chartColors.rose, chartColors.sky]
-                    }]
+                    datasets: [{ label: 'Score', data: [4.49, 5.53], backgroundColor: [chartColors.rose, chartColors.sky] }]
                 },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: { y: { beginAtZero: true, max: 10, grid: { color: chartColors.grid }, ticks: { color: chartColors.ticks } } },
-                    plugins: { legend: { display: false }, title: { display: true, text: lang === 'pl' ? 'Luka Polityczna (Polska, 15-29 lat)' : 'Political Gap (Poland, 15-29y)', color: chartColors.text } }
-                }
+                options: { ...commonOptions, plugins: { ...commonOptions.plugins, title: { display: true, text: lang === 'pl' ? 'Luka Polityczna (Polska, 15-29 lat, 0=Lewica, 10=Prawica)' : 'Political Gap (Poland, 15-29y, 0=Left, 10=Right)', color: chartColors.text } }, scales: { y: { ...commonOptions.scales.y, beginAtZero: true, max: 10 } } }
             });
         }
 
@@ -380,16 +457,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 type: 'doughnut',
                 data: {
                     labels: [lang === 'pl' ? 'Kobiety' : 'Women', lang === 'pl' ? 'Mężczyźni' : 'Men'],
-                    datasets: [{
-                        label: lang==='pl' ? '% z wyższym wykształceniem' : '% with Higher Education',
-                        data: [56, 37],
-                        backgroundColor: [chartColors.sky, chartColors.amber]
-                    }]
+                    datasets: [{ data: [56, 37], backgroundColor: [chartColors.sky, chartColors.amber], borderColor: isDarkMode ? '#1F2937' : '#FFFFFF' }]
                 },
-                options: {
-                    responsive: true, maintainAspectRatio: false, cutout: '60%',
-                    plugins: { legend: { position: 'bottom', labels: { color: chartColors.ticks } }, title: { display: true, text: lang === 'pl' ? 'Niedopasowanie Edukacyjne (Polska, 25-34 lata)' : 'Educational Mismatch (Poland, 25-34y)', color: chartColors.text } }
-                }
+                options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom', labels: { color: chartColors.ticks } }, title: { display: true, text: lang === 'pl' ? '% z Wyższym Wykształceniem (Polska, 25-34 lata)' : '% with Higher Education (Poland, 25-34y)', color: chartColors.text } } }
             });
         }
 
@@ -399,17 +469,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 type: 'bar',
                  data: {
                     labels: [lang === 'pl' ? 'Mężczyźni <24' : 'Men <24', lang === 'pl' ? 'Mężczyźni 25-34' : 'Men 25-34'],
-                    datasets: [{
-                        label: lang === 'pl' ? '% zgłaszających wysoki poziom samotności' : '% Reporting High Loneliness',
-                        data: [55, 53],
-                        backgroundColor: [chartColors.sky, chartColors.amber]
-                    }]
+                    datasets: [{ label: '%', data: [55, 53], backgroundColor: [chartColors.sky, chartColors.amber] }]
                 },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: { y: { beginAtZero: true, max: 60, grid: { color: chartColors.grid }, ticks: { color: chartColors.ticks, callback: v => v + '%' } } },
-                    plugins: { legend: { display: false }, title: { display: true, text: lang === 'pl' ? 'Kryzys Samotności Młodych Mężczyzn (Polska)' : 'Young Male Loneliness Crisis (Poland)', color: chartColors.text } }
-                }
+                options: { ...commonOptions, plugins: { ...commonOptions.plugins, title: { display: true, text: lang === 'pl' ? 'Wysoki Poziom Samotności (Młodzi Mężczyźni, PL)' : 'High Loneliness Levels (Young Men, PL)', color: chartColors.text } }, scales: { y: { ...commonOptions.scales.y, beginAtZero: true, max: 60, ticks: { ...commonOptions.scales.y.ticks, callback: v => v + '%' } } } }
+            });
+        }
+        
+        const friendshipCtx = document.getElementById('maleFriendshipChart')?.getContext('2d');
+        if(friendshipCtx) {
+            maleFriendshipChart = new Chart(friendshipCtx, {
+                type: 'bar',
+                 data: {
+                    labels: ['1990', '2021'],
+                    datasets: [{ label: '%', data: [3, 15], backgroundColor: [chartColors.sky, chartColors.rose] }]
+                },
+                options: { ...commonOptions, plugins: { ...commonOptions.plugins, title: { display: true, text: lang === 'pl' ? '% Mężczyzn bez bliskich przyjaciół (USA)' : '% of Men with No Close Friends (US)', color: chartColors.text } }, scales: { y: { ...commonOptions.scales.y, beginAtZero: true, max: 20, ticks: { ...commonOptions.scales.y.ticks, callback: v => v + '%' } } } }
             });
         }
     }
