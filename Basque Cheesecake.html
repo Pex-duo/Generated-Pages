@@ -277,7 +277,7 @@
                         <h2 class="text-3xl md:text-4xl font-playfair mb-2" data-lang="variationsTitle">Wielki Finał: Wariacje i Porady</h2>
                         <p style="color: var(--text-muted-color);" data-lang="variationsSubtitle">Sernik jest doskonały sam w sobie, ale te dodatki mogą go wynieść na nowy poziom.</p>
                     </div>
-                    <div id="variations-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div id="variations-accordion" class="space-y-4">
                     </div>
                 </section>
             </div>
@@ -364,18 +364,39 @@ document.addEventListener('DOMContentLoaded', function () {
             chartLabelEggs: "Jajka",
             chartLabelOther: "Pozostałe",
             chartTitle: "Proporcje Masy Serowej",
-            variation1Title: "Wersja Pomarańczowa",
-            variation1Desc: "Dodaj do masy 2 łyżki likieru Cointreau i skórkę z całej pomarańczy. Podawaj z sosem z gorzkiej czekolady.",
-            variation2Title: "Wersja Korzenna",
-            variation2Desc: "Do mąki na spód dodaj ½ łyżeczki cynamonu i ¼ łyżeczki kardamonu. Idealna do filiżanki mocnej kawy.",
-            variation3Title: "Wersja Umami",
-            variation3Desc: "Zastąp sól w masie serowej 1 płaską łyżeczką białej pasty miso. Tworzy niezwykły, słono-słodki smak.",
-            variation4Title: "Sos Słony Karmel",
-            variation4Desc: "Klasyczne połączenie, które podkreśla karmelowe nuty spalonego wierzchu. Niezawodny wybór.",
-            variation5Title: "Sos z Białej Czekolady",
-            variation5Desc: "Rozpuść 100g białej czekolady w 50ml gorącej śmietanki 36%. Posyp posiekanymi pistacjami.",
-            variation6Title: "Mus Owocowy",
-            variation6Desc: "Prosty mus ze świeżych malin lub truskawek doda kontrastującej kwasowości i świeżości.",
+            variationModificationTitle: "Składniki / Modyfikacja:",
+            variationInstructionTitle: "Instrukcja przygotowania:",
+            variationEffectTitle: "Efekt i sugestia podania:",
+            variationOrangeTitle: "Wersja Pomarańczowa z Cointreau",
+            variationOrangeDesc: "Ta wariacja wprowadza ciepłą, cytrusową nutę, która wspaniale komponuje się z bogactwem sernika.",
+            variationOrangeMod: "Dodaj <strong>2 łyżki (30 ml) likieru Cointreau</strong> lub Grand Marnier.<br>Dodaj <strong>drobno startą skórkę z 1 dużej, niewoskowanej pomarańczy</strong>.",
+            variationOrangeInstr: "W <strong>Części 3 (Przygotowanie masy serowej), w kroku 5</strong>, dodaj likier pomarańczowy oraz startą skórkę pomarańczową w tym samym momencie, co ekstrakt z wanilii i skórkę z cytryny. Delikatnie wymieszaj do połączenia.",
+            variationOrangeEffect: "Ciepły, intensywnie cytrusowy aromat likieru doskonale przełamuje tłustość masy serowej. Ta wersja idealnie komponuje się z sosem z gorzkiej czekolady. Aby go przygotować, rozpuść 100 g czekolady o zawartości kakao min. 70% w 100 ml gorącej śmietanki 36%.",
+            variationSpiceTitle: "Wersja Korzenna",
+            variationSpiceDesc: "Idealna na chłodniejsze dni, ta wersja otula rozgrzewającym aromatem przypraw korzennych, które subtelnie wzbogacają orzechowy spód.",
+            variationSpiceMod: "Do suchych składników na spód dodaj:<br><strong>½ łyżeczki cynamonu</strong><br><strong>¼ łyżeczki kardamonu</strong><br><strong>Szczyptę (⅛ łyżeczki) świeżo startej gałki muszkatołowej</strong>",
+            variationSpiceInstr: "W <strong>Części 1 (Przygotowanie i podpiekanie spodu), w kroku 1</strong>, przesiej przyprawy razem z mąką, zmielonymi orzechami, erytrolem i solą przed dodaniem masła. Dalej postępuj zgodnie z przepisem.",
+            variationSpiceEffect: "Spód zyskuje głęboki, rozgrzewający smak, przypominający chai latte lub piernik. Sernik w tej wersji nie potrzebuje dodatkowych sosów – jego złożony aromat najlepiej podkreśli filiżanka mocnej, czarnej kawy lub aromatycznej herbaty.",
+            variationUmamiTitle: "Wersja Umami z Miso",
+            variationUmamiDesc: "Dla odważnych poszukiwaczy smaku. Dodatek białej pasty miso tworzy niezwykle głęboki, słono-słodki profil, który podbija karmelowe nuty sernika do niespotykanego poziomu.",
+            variationUmamiMod: "Zastąp <strong>½ łyżeczki soli</strong> w masie serowej <strong>jedną płaską łyżeczką (ok. 5-6 g) białej pasty miso (shiro miso)</strong>.",
+            variationUmamiInstr: "W <strong>Części 3 (Przygotowanie masy serowej), w kroku 5</strong>, przed dodaniem pasty miso do głównej masy, rozmieszaj ją dokładnie w 2 łyżkach śmietanki kremówki (pobranej z odmierzonej ilości 400 ml). Zapewni to gładkie połączenie bez grudek. Dodaj mieszankę do masy serowej razem z resztą śmietanki.",
+            variationUmamiEffect: "To najbardziej wyrafinowana i zaskakująca wersja. Smak jest złożony, z wyczuwalnymi nutami słonego karmelu i subtelnym posmakiem umami. Ze względu na jego intensywność i unikalność, najlepiej podawać go bez żadnych dodatków, aby w pełni docenić jego charakter. Wystarczy bardzo cienki plasterek, by w pełni nasycić zmysły.",
+            variationCaramelTitle: "Sos Słony Karmel",
+            variationCaramelDesc: "Klasyczne i niezawodne połączenie, które podkreśla karmelowe nuty spalonego wierzchu.",
+            variationCaramelMod: "<strong>100 g cukru</strong> (lub ksylitolu dla wersji bezcukrowej)<br><strong>60 ml wody</strong><br><strong>50 g masła</strong><br><strong>120 ml śmietanki 36%</strong><br><strong>½ łyżeczki soli morskiej</strong>",
+            variationCaramelInstr: "W rondelku podgrzej cukier z wodą, nie mieszając, aż do uzyskania bursztynowego karmelu. Zdejmij z ognia, ostrożnie dodaj masło i mieszaj do rozpuszczenia. Powoli wlej gorącą śmietankę (uwaga, będzie pryskać!) i energicznie mieszaj. Na koniec dodaj sól.",
+            variationCaramelEffect: "Gęsty, bogaty sos o idealnym balansie słodyczy i soli. Polewaj nim schłodzone porcje sernika tuż przed podaniem.",
+            variationChocolateTitle: "Sos z Białej Czekolady i Pistacji",
+            variationChocolateDesc: "Elegancki i nowoczesny dodatek, który dodaje słodyczy i chrupkości.",
+            variationChocolateMod: "<strong>100 g białej czekolady</strong> wysokiej jakości<br><strong>50 ml śmietanki 36%</strong><br><strong>2 łyżki posiekanych pistacji</strong>",
+            variationChocolateInstr: "Śmietankę podgrzej niemal do wrzenia. Zdejmij z ognia i dodaj posiekaną białą czekoladę. Odczekaj minutę, a następnie mieszaj do uzyskania gładkiego, lśniącego sosu.",
+            variationChocolateEffect: "Aksamitny, słodki sos, który pięknie kontrastuje z lekko gorzkawym wierzchem sernika. Przed podaniem polej sosem kawałek ciasta i posyp świeżo posiekanymi pistacjami.",
+            variationCoulisTitle: "Mus Owocowy (Coulis)",
+            variationCoulisDesc: "Prosty mus ze świeżych malin lub truskawek doda kontrastującej kwasowości i świeżości.",
+            variationCoulisMod: "<strong>200 g świeżych lub mrożonych owoców</strong> (maliny, truskawki)<br><strong>1-2 łyżki erytrolu</strong> (lub do smaku)<br><strong>1 łyżka soku z cytryny</strong>",
+            variationCoulisInstr: "Owoce umieść w rondelku z erytrolem i sokiem z cytryny. Podgrzewaj na małym ogniu, aż owoce się rozpadną. Zblenduj na gładko, a następnie przetrzyj przez drobne sitko, aby pozbyć się pestek.",
+            variationCoulisEffect: "Intensywnie owocowy, lekko kwaśny sos, który stanowi idealne orzeźwienie dla bogatego sernika. Podawaj schłodzony obok porcji ciasta.",
             generatePdf: "Generuj PDF",
             pdfGenerating: "Generowanie PDF..."
         },
@@ -456,18 +477,39 @@ document.addEventListener('DOMContentLoaded', function () {
             chartLabelEggs: "Eggs",
             chartLabelOther: "Other",
             chartTitle: "Cheese Filling Proportions",
-            variation1Title: "Orange Version",
-            variation1Desc: "Add 2 tbsp of Cointreau and the zest of one whole orange to the filling. Serve with a dark chocolate sauce.",
-            variation2Title: "Spiced Version",
-            variation2Desc: "Add ½ tsp of cinnamon and ¼ tsp of cardamom to the crust flour. Perfect with a strong cup of coffee.",
-            variation3Title: "Umami Version",
-            variation3Desc: "Replace the salt in the filling with 1 flat tsp of white miso paste. Creates an unusual sweet-salty flavor.",
-            variation4Title: "Salted Caramel Sauce",
-            variation4Desc: "A classic combination that enhances the caramel notes of the burnt top. A reliable choice.",
-            variation5Title: "White Chocolate Sauce",
-            variation5Desc: "Melt 100g of white chocolate in 50ml of hot heavy cream (36%). Sprinkle with chopped pistachios.",
-            variation6Title: "Fruit Coulis",
-            variation6Desc: "A simple coulis of fresh raspberries or strawberries will add a contrasting acidity and freshness.",
+            variationModificationTitle: "Ingredients / Modification:",
+            variationInstructionTitle: "Preparation Instructions:",
+            variationEffectTitle: "Effect & Serving Suggestion:",
+            variationOrangeTitle: "Orange & Cointreau Version",
+            variationOrangeDesc: "This variation introduces a warm, citrusy note that pairs wonderfully with the richness of the cheesecake.",
+            variationOrangeMod: "Add <strong>2 tbsp (30 ml) of Cointreau</strong> or Grand Marnier.<br>Add the <strong>finely grated zest of 1 large, unwaxed orange</strong>.",
+            variationOrangeInstr: "In <strong>Part 3 (Preparing the cheese filling), step 5</strong>, add the orange liqueur and orange zest at the same time as the vanilla extract and lemon zest. Mix gently to combine.",
+            variationOrangeEffect: "The warm, intensely citrusy aroma of the liqueur perfectly cuts through the richness of the cheese filling. This version pairs ideally with a dark chocolate sauce. To prepare it, melt 100g of chocolate (min. 70% cocoa) in 100ml of hot heavy cream (36%).",
+            variationSpiceTitle: "Spiced Version",
+            variationSpiceDesc: "Perfect for colder days, this version envelops you with the warming aroma of spices that subtly enrich the nutty crust.",
+            variationSpiceMod: "To the dry ingredients for the crust, add:<br><strong>½ tsp cinnamon</strong><br><strong>¼ tsp cardamom</strong><br><strong>A pinch (⅛ tsp) of freshly grated nutmeg</strong>",
+            variationSpiceInstr: "In <strong>Part 1 (Preparing and blind-baking the crust), step 1</strong>, sift the spices together with the flour, ground nuts, erythritol, and salt before adding the butter. Then proceed with the recipe.",
+            variationSpiceEffect: "The crust gains a deep, warming flavor reminiscent of chai latte or gingerbread. This version of the cheesecake needs no additional sauces—its complex aroma is best highlighted by a cup of strong black coffee or aromatic tea.",
+            variationUmamiTitle: "Umami & Miso Version",
+            variationUmamiDesc: "For the adventurous flavor seeker. The addition of white miso paste creates an incredibly deep, sweet-and-salty profile that elevates the cheesecake's caramel notes to an unprecedented level.",
+            variationUmamiMod: "Replace the <strong>½ tsp of salt</strong> in the cheese filling with <strong>one level teaspoon (approx. 5-6 g) of white miso paste (shiro miso)</strong>.",
+            variationUmamiInstr: "In <strong>Part 3 (Preparing the cheese filling), step 5</strong>, before adding the miso paste to the main mixture, whisk it thoroughly in 2 tablespoons of heavy cream (taken from the measured 400 ml). This will ensure a smooth combination without lumps. Add the mixture to the cheese filling along with the rest of the cream.",
+            variationUmamiEffect: "This is the most sophisticated and surprising version. The flavor is complex, with discernible notes of salted caramel and a subtle umami aftertaste. Due to its intensity and uniqueness, it is best served without any additions to fully appreciate its character. A very thin slice is enough to fully satisfy the senses.",
+            variationCaramelTitle: "Salted Caramel Sauce",
+            variationCaramelDesc: "A classic and reliable combination that enhances the caramel notes of the burnt top.",
+            variationCaramelMod: "<strong>100 g sugar</strong> (or xylitol for a sugar-free version)<br><strong>60 ml water</strong><br><strong>50 g butter</strong><br><strong>120 ml heavy cream 36%</strong><br><strong>½ tsp sea salt</strong>",
+            variationCaramelInstr: "In a saucepan, heat the sugar and water without stirring until an amber caramel forms. Remove from heat, carefully add the butter, and stir until dissolved. Slowly pour in the hot cream (be careful, it will bubble up!) and whisk vigorously. Finally, add the salt.",
+            variationCaramelEffect: "A thick, rich sauce with a perfect balance of sweet and salty. Drizzle over chilled cheesecake slices just before serving.",
+            variationChocolateTitle: "White Chocolate & Pistachio Sauce",
+            variationChocolateDesc: "An elegant and modern addition that adds sweetness and crunch.",
+            variationChocolateMod: "<strong>100 g high-quality white chocolate</strong><br><strong>50 ml heavy cream 36%</strong><br><strong>2 tbsp chopped pistachios</strong>",
+            variationChocolateInstr: "Heat the cream until almost boiling. Remove from heat and add the chopped white chocolate. Wait a minute, then stir until you have a smooth, glossy sauce.",
+            variationChocolateEffect: "A velvety, sweet sauce that beautifully contrasts with the slightly bitter top of the cheesecake. Drizzle over a slice of cake and sprinkle with freshly chopped pistachios before serving.",
+            variationCoulisTitle: "Fruit Coulis",
+            variationCoulisDesc: "A simple coulis of fresh raspberries or strawberries will add a contrasting acidity and freshness.",
+            variationCoulisMod: "<strong>200 g fresh or frozen berries</strong> (raspberries, strawberries)<br><strong>1-2 tbsp erythritol</strong> (or to taste)<br><strong>1 tbsp lemon juice</strong>",
+            variationCoulisInstr: "Place the berries, erythritol, and lemon juice in a saucepan. Heat over low heat until the berries break down. Blend until smooth, then strain through a fine-mesh sieve to remove the seeds.",
+            variationCoulisEffect: "An intensely fruity, slightly tart sauce that provides a perfect refreshment to the rich cheesecake. Serve chilled alongside a slice of cake.",
             generatePdf: "Generate PDF",
             pdfGenerating: "Generating PDF..."
         }
@@ -504,12 +546,30 @@ document.addEventListener('DOMContentLoaded', function () {
             { titleKey: 'step5Title', contentKey: 'step5Content' }
         ],
         variations: [
-            { titleKey: 'variation1Title', descKey: 'variation1Desc' },
-            { titleKey: 'variation2Title', descKey: 'variation2Desc' },
-            { titleKey: 'variation3Title', descKey: 'variation3Desc' },
-            { titleKey: 'variation4Title', descKey: 'variation4Desc' },
-            { titleKey: 'variation5Title', descKey: 'variation5Desc' },
-            { titleKey: 'variation6Title', descKey: 'variation6Desc' }
+            {
+                titleKey: 'variationOrangeTitle', descKey: 'variationOrangeDesc',
+                modKey: 'variationOrangeMod', instrKey: 'variationOrangeInstr', effectKey: 'variationOrangeEffect'
+            },
+            {
+                titleKey: 'variationSpiceTitle', descKey: 'variationSpiceDesc',
+                modKey: 'variationSpiceMod', instrKey: 'variationSpiceInstr', effectKey: 'variationSpiceEffect'
+            },
+            {
+                titleKey: 'variationUmamiTitle', descKey: 'variationUmamiDesc',
+                modKey: 'variationUmamiMod', instrKey: 'variationUmamiInstr', effectKey: 'variationUmamiEffect'
+            },
+            {
+                titleKey: 'variationCaramelTitle', descKey: 'variationCaramelDesc',
+                modKey: 'variationCaramelMod', instrKey: 'variationCaramelInstr', effectKey: 'variationCaramelEffect'
+            },
+            {
+                titleKey: 'variationChocolateTitle', descKey: 'variationChocolateDesc',
+                modKey: 'variationChocolateMod', instrKey: 'variationChocolateInstr', effectKey: 'variationChocolateEffect'
+            },
+            {
+                titleKey: 'variationCoulisTitle', descKey: 'variationCoulisDesc',
+                modKey: 'variationCoulisMod', instrKey: 'variationCoulisInstr', effectKey: 'variationCoulisEffect'
+            }
         ],
         scaleFactor: 1.4
     };
@@ -519,7 +579,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const ingredientsContainer = document.getElementById('ingredients-list');
     const stepsContainer = document.getElementById('steps-accordion');
-    const variationsContainer = document.getElementById('variations-grid');
+    const variationsContainer = document.getElementById('variations-accordion');
     const size23Btn = document.getElementById('size-23');
     const size28Btn = document.getElementById('size-28');
     const langPlBtn = document.getElementById('lang-pl');
@@ -601,9 +661,28 @@ document.addEventListener('DOMContentLoaded', function () {
         let html = '';
         data.variations.forEach(v => {
             html += `
-                <div class="p-6 rounded-lg shadow-sm transform hover:scale-105 transition-transform duration-300" style="background-color: var(--bg-alt-color); border: 1px solid var(--border-color);">
-                    <h3 class="font-playfair text-xl mb-2" style="color: var(--accent-color);">${t[v.titleKey]}</h3>
-                    <p class="text-sm" style="color: var(--text-muted-color);">${t[v.descKey]}</p>
+                <div class="rounded-lg overflow-hidden" style="border: 1px solid var(--border-color);">
+                    <button class="accordion-button w-full text-left p-4 focus:outline-none flex justify-between items-center" style="background-color: var(--bg-alt-color);">
+                        <span class="font-playfair text-xl" style="color: var(--accent-color);">${t[v.titleKey]}</span>
+                        <svg class="w-5 h-5 transform transition-transform" style="color: var(--text-muted-color);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content" style="background-color: var(--bg-color);">
+                        <div class="p-4 space-y-4">
+                            <p class="text-sm italic" style="color: var(--text-muted-color);">${t[v.descKey]}</p>
+                            <div>
+                                <h4 class="font-bold text-sm mb-1" style="color: var(--text-color);">${t.variationModificationTitle}</h4>
+                                <p class="text-sm" style="color: var(--text-muted-color);">${t[v.modKey]}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm mb-1" style="color: var(--text-color);">${t.variationInstructionTitle}</h4>
+                                <p class="text-sm" style="color: var(--text-muted-color);">${t[v.instrKey]}</p>
+                            </div>
+                             <div>
+                                <h4 class="font-bold text-sm mb-1" style="color: var(--text-color);">${t.variationEffectTitle}</h4>
+                                <p class="text-sm" style="color: var(--text-muted-color);">${t[v.effectKey]}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `;
         });
@@ -741,6 +820,14 @@ document.addEventListener('DOMContentLoaded', function () {
         size28Btn.style.color = 'var(--accent-text-color)';
         size23Btn.style.backgroundColor = 'var(--button-inactive-bg)';
         size23Btn.style.color = 'var(--button-inactive-text)';
+    });
+
+    document.getElementById('variations-accordion').addEventListener('click', function(e) {
+        const button = e.target.closest('.accordion-button');
+        if (button) {
+            button.classList.toggle('active');
+            button.querySelector('svg').classList.toggle('rotate-180');
+        }
     });
 
     stepsContainer.addEventListener('click', function(e) {
