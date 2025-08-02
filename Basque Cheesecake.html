@@ -207,7 +207,7 @@
                             <span class="text-sm font-medium" data-lang="formSizeLabel">Rozmiar formy:</span>
                             <button id="size-23" class="px-4 py-2 text-sm font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2" style="background-color: var(--accent-color); color: var(--accent-text-color); border-color: var(--accent-color);">23-24 cm</button>
                             <button id="size-28" class="px-4 py-2 text-sm font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2" style="background-color: var(--button-inactive-bg); color: var(--button-inactive-text); border-color: var(--button-inactive-bg);">28 cm</button>
-                            <button id="generate-pdf" class="ml-4 px-3 py-2 text-sm font-semibold rounded-md shadow-sm flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-offset-2" style="background-color: var(--accent-color); color: var(--accent-text-color); border-color: var(--accent-color);">
+                            <button id="generate-recipe-pdf" class="ml-4 px-3 py-2 text-sm font-semibold rounded-md shadow-sm flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-offset-2" style="background-color: var(--accent-color); color: var(--accent-text-color); border-color: var(--accent-color);">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm4 14a1 1 0 100-2 1 1 0 000 2zM8 7a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd" /></svg>
                                 <span data-lang="generatePdf">Generuj PDF</span>
                             </button>
@@ -276,6 +276,10 @@
                     <div class="text-center mb-12">
                         <h2 class="text-3xl md:text-4xl font-playfair mb-2" data-lang="variationsTitle">Wielki Finał: Wariacje i Porady</h2>
                         <p style="color: var(--text-muted-color);" data-lang="variationsSubtitle">Sernik jest doskonały sam w sobie, ale te dodatki mogą go wynieść na nowy poziom.</p>
+                         <button id="generate-variations-pdf" class="mt-4 px-3 py-2 text-sm font-semibold rounded-md shadow-sm flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-offset-2 mx-auto" style="background-color: var(--accent-color); color: var(--accent-text-color); border-color: var(--accent-color);">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm4 14a1 1 0 100-2 1 1 0 000 2zM8 7a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd" /></svg>
+                            <span data-lang="generatePdf">Generuj PDF</span>
+                        </button>
                     </div>
                     <div id="variations-accordion" class="space-y-4">
                     </div>
@@ -548,27 +552,41 @@ document.addEventListener('DOMContentLoaded', function () {
         variations: [
             {
                 titleKey: 'variationOrangeTitle', descKey: 'variationOrangeDesc',
-                modKey: 'variationOrangeMod', instrKey: 'variationOrangeInstr', effectKey: 'variationOrangeEffect'
+                modKey: 'variationOrangeMod', instrKey: 'variationOrangeInstr', effectKey: 'variationOrangeEffect', ingredients: []
             },
             {
                 titleKey: 'variationSpiceTitle', descKey: 'variationSpiceDesc',
-                modKey: 'variationSpiceMod', instrKey: 'variationSpiceInstr', effectKey: 'variationSpiceEffect'
+                modKey: 'variationSpiceMod', instrKey: 'variationSpiceInstr', effectKey: 'variationSpiceEffect', ingredients: []
             },
             {
                 titleKey: 'variationUmamiTitle', descKey: 'variationUmamiDesc',
-                modKey: 'variationUmamiMod', instrKey: 'variationUmamiInstr', effectKey: 'variationUmamiEffect'
+                modKey: 'variationUmamiMod', instrKey: 'variationUmamiInstr', effectKey: 'variationUmamiEffect', ingredients: []
             },
             {
                 titleKey: 'variationCaramelTitle', descKey: 'variationCaramelDesc',
-                modKey: 'variationCaramelMod', instrKey: 'variationCaramelInstr', effectKey: 'variationCaramelEffect'
+                modKey: 'variationCaramelMod', instrKey: 'variationCaramelInstr', effectKey: 'variationCaramelEffect', ingredients: [
+                    { name: 'Cukier (lub ksylitol)', amount: 100, unit: 'g' },
+                    { name: 'Woda', amount: 60, unit: 'ml' },
+                    { name: 'Masło', amount: 50, unit: 'g' },
+                    { name: 'Śmietanka 36%', amount: 120, unit: 'ml' },
+                    { name: 'Sól morska', amount: 0.5, unit: 'łyżeczki' }
+                ]
             },
             {
                 titleKey: 'variationChocolateTitle', descKey: 'variationChocolateDesc',
-                modKey: 'variationChocolateMod', instrKey: 'variationChocolateInstr', effectKey: 'variationChocolateEffect'
+                modKey: 'variationChocolateMod', instrKey: 'variationChocolateInstr', effectKey: 'variationChocolateEffect', ingredients: [
+                     { name: 'Biała czekolada', amount: 100, unit: 'g' },
+                     { name: 'Śmietanka 36%', amount: 50, unit: 'ml' },
+                     { name: 'Posiekane pistacje', amount: 2, unit: 'łyżki' }
+                ]
             },
             {
                 titleKey: 'variationCoulisTitle', descKey: 'variationCoulisDesc',
-                modKey: 'variationCoulisMod', instrKey: 'variationCoulisInstr', effectKey: 'variationCoulisEffect'
+                modKey: 'variationCoulisMod', instrKey: 'variationCoulisInstr', effectKey: 'variationCoulisEffect', ingredients: [
+                    { name: 'Owoce (maliny, truskawki)', amount: 200, unit: 'g' },
+                    { name: 'Erytrol', amount: 2, unit: 'łyżki' },
+                    { name: 'Sok z cytryny', amount: 1, unit: 'łyżka' }
+                ]
             }
         ],
         scaleFactor: 1.4
@@ -576,6 +594,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let currentLang = 'pl';
     let ingredientsChart;
+    let currentSizeScale = 1;
 
     const ingredientsContainer = document.getElementById('ingredients-list');
     const stepsContainer = document.getElementById('steps-accordion');
@@ -585,7 +604,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const langPlBtn = document.getElementById('lang-pl');
     const langEnBtn = document.getElementById('lang-en');
     const themeToggle = document.getElementById('theme-toggle');
-    const pdfBtn = document.getElementById('generate-pdf');
+    const recipePdfBtn = document.getElementById('generate-recipe-pdf');
+    const variationsPdfBtn = document.getElementById('generate-variations-pdf');
     const loader = document.getElementById('loader');
 
     function updateLanguage(lang) {
@@ -599,8 +619,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
         
-        const currentScale = size28Btn.style.backgroundColor === 'var(--accent-color)' ? data.scaleFactor : 1;
-        renderIngredients(currentScale);
+        renderIngredients(currentSizeScale);
         renderSteps();
         renderVariations();
         renderChart();
@@ -660,6 +679,32 @@ document.addEventListener('DOMContentLoaded', function () {
         const t = translations[currentLang];
         let html = '';
         data.variations.forEach(v => {
+            let ingredientsTable = '';
+            if (v.ingredients && v.ingredients.length > 0) {
+                let ingredientsList = '';
+                v.ingredients.forEach(ing => {
+                    const amount23 = ing.amount.toFixed(1).replace('.0', '');
+                    const amount28 = (ing.amount * data.scaleFactor).toFixed(1).replace('.0', '');
+                    ingredientsList += `<tr style="border-bottom: 1px solid var(--border-color);"><td class="py-1 pr-2">${ing.name}</td><td class="py-1 px-2 text-center">${amount23} ${ing.unit}</td><td class="py-1 pl-2 text-center">${amount28} ${ing.unit}</td></tr>`;
+                });
+                ingredientsTable = `
+                    <div>
+                        <h4 class="font-bold text-sm mb-1" style="color: var(--text-color);">${t.variationModificationTitle}</h4>
+                        <table class="w-full text-sm" style="color: var(--text-muted-color);">
+                            <thead><tr class="text-left"><th class="pb-1">Składnik</th><th class="pb-1 text-center">23-24cm</th><th class="pb-1 text-center">28cm</th></tr></thead>
+                            <tbody>${ingredientsList}</tbody>
+                        </table>
+                    </div>
+                `;
+            } else {
+                 ingredientsTable = `
+                    <div>
+                        <h4 class="font-bold text-sm mb-1" style="color: var(--text-color);">${t.variationModificationTitle}</h4>
+                        <p class="text-sm" style="color: var(--text-muted-color);">${t[v.modKey]}</p>
+                    </div>
+                `;
+            }
+
             html += `
                 <div class="rounded-lg overflow-hidden" style="border: 1px solid var(--border-color);">
                     <button class="accordion-button w-full text-left p-4 focus:outline-none flex justify-between items-center" style="background-color: var(--bg-alt-color);">
@@ -669,10 +714,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="accordion-content" style="background-color: var(--bg-color);">
                         <div class="p-4 space-y-4">
                             <p class="text-sm italic" style="color: var(--text-muted-color);">${t[v.descKey]}</p>
-                            <div>
-                                <h4 class="font-bold text-sm mb-1" style="color: var(--text-color);">${t.variationModificationTitle}</h4>
-                                <p class="text-sm" style="color: var(--text-muted-color);">${t[v.modKey]}</p>
-                            </div>
+                            ${ingredientsTable}
                             <div>
                                 <h4 class="font-bold text-sm mb-1" style="color: var(--text-color);">${t.variationInstructionTitle}</h4>
                                 <p class="text-sm" style="color: var(--text-muted-color);">${t[v.instrKey]}</p>
@@ -731,25 +773,34 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function generatePdf() {
+    function generateRecipePdf() {
         loader.classList.remove('hidden');
         const { jsPDF } = window.jspdf;
         const pdfContentWrapper = document.getElementById('pdf-content-wrapper');
         const t = translations[currentLang];
-        const scale = size28Btn.style.backgroundColor === 'var(--accent-color)' ? data.scaleFactor : 1;
 
         let ingredientsHtml = `<h3 style="font-family: 'Playfair Display', serif; font-size: 14pt; color: #3D405B; border-bottom: 1px solid #D4A373; padding-bottom: 4px; margin-bottom: 12px;">${t.ingredientsTitle}</h3>`;
-        ingredientsHtml += `<h4 style="font-size: 12pt; font-weight: bold; margin-top: 12px; margin-bottom: 6px;">${t.crustTitle}</h4><ul style="list-style-type: none; padding-left: 0;">`;
+        
+        const tableHeader = `<thead style="text-align: left;"><tr><th style="padding-bottom: 5px;">Składnik</th><th style="padding-bottom: 5px;">23-24 cm</th><th style="padding-bottom: 5px;">28 cm</th></tr></thead>`;
+
+        let crustIngredients = '';
         data.base.spod.forEach(item => {
-            const amount = (item.amount * scale).toFixed(1).replace('.0', '');
-            ingredientsHtml += `<li style="font-size: 10pt; margin-bottom: 4px; display: flex; justify-content: space-between;"><span>${t[item.nameKey]}</span><span style="font-weight: bold;">${amount} ${t[item.unitKey]}</span></li>`;
+            const amount23 = (item.amount).toFixed(1).replace('.0', '');
+            const amount28 = (item.amount * data.scaleFactor).toFixed(1).replace('.0', '');
+            crustIngredients += `<tr><td style="padding: 4px 0;">${t[item.nameKey]}</td><td>${amount23} ${t[item.unitKey]}</td><td>${amount28} ${t[item.unitKey]}</td></tr>`;
         });
-        ingredientsHtml += `</ul><h4 style="font-size: 12pt; font-weight: bold; margin-top: 12px; margin-bottom: 6px;">${t.fillingTitle}</h4><ul style="list-style-type: none; padding-left: 0;">`;
+
+        let fillingIngredients = '';
         data.base.masa.forEach(item => {
-            const amount = (item.amount * scale).toFixed(1).replace('.0', '');
-            ingredientsHtml += `<li style="font-size: 10pt; margin-bottom: 4px; display: flex; justify-content: space-between;"><span>${t[item.nameKey]}</span><span style="font-weight: bold;">${amount} ${t[item.unitKey]}</span></li>`;
+            const amount23 = (item.amount).toFixed(1).replace('.0', '');
+            const amount28 = (item.amount * data.scaleFactor).toFixed(1).replace('.0', '');
+            fillingIngredients += `<tr><td style="padding: 4px 0;">${t[item.nameKey]}</td><td>${amount23} ${t[item.unitKey]}</td><td>${amount28} ${t[item.unitKey]}</td></tr>`;
         });
-        ingredientsHtml += '</ul>';
+
+        ingredientsHtml += `<h4 style="font-size: 12pt; font-weight: bold; margin-top: 12px; margin-bottom: 6px;">${t.crustTitle}</h4>
+                            <table style="width: 100%; font-size: 10pt; border-collapse: collapse;">${tableHeader}<tbody>${crustIngredients}</tbody></table>`;
+        ingredientsHtml += `<h4 style="font-size: 12pt; font-weight: bold; margin-top: 12px; margin-bottom: 6px;">${t.fillingTitle}</h4>
+                            <table style="width: 100%; font-size: 10pt; border-collapse: collapse;">${tableHeader}<tbody>${fillingIngredients}</tbody></table>`;
 
         let stepsHtml = `<h3 style="font-family: 'Playfair Display', serif; font-size: 14pt; color: #3D405B; border-bottom: 1px solid #D4A373; padding-bottom: 4px; margin-bottom: 12px;">${t.stepsTitle}</h3>`;
         data.steps.forEach(step => {
@@ -764,10 +815,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 <h1 style="font-family: 'Playfair Display', serif; font-size: 26pt; text-align: center; margin-bottom: 4px; color: #3D405B;">${t.mainTitle}</h1>
                 <p style="font-size: 11pt; text-align: center; color: #6B7280; margin-bottom: 20px;">${t.mainSubtitle}</p>
                 <div style="display: flex; flex-direction: row; gap: 15mm;">
-                    <div style="width: 35%;">
+                    <div style="width: 40%;">
                         ${ingredientsHtml}
                     </div>
-                    <div style="width: 65%; border-left: 1px solid #E5E7EB; padding-left: 15mm;">
+                    <div style="width: 60%; border-left: 1px solid #E5E7EB; padding-left: 15mm;">
                         ${stepsHtml}
                     </div>
                 </div>
@@ -777,21 +828,69 @@ document.addEventListener('DOMContentLoaded', function () {
         const pdfContent = document.getElementById('pdf-content');
         html2canvas(pdfContent, { scale: 3 }).then(canvas => {
             const imgData = canvas.toDataURL('image/png');
-            const doc = new jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: 'a4'
-            });
-            
+            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
             const pdfWidth = doc.internal.pageSize.getWidth();
             const pdfHeight = doc.internal.pageSize.getHeight();
             doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-            
             doc.save('Sernik-Baskijski-Przepis.pdf');
             loader.classList.add('hidden');
             pdfContentWrapper.innerHTML = '';
-        }).catch(err => {
-            console.error("Error generating PDF:", err);
+        });
+    }
+
+    function generateVariationsPdf() {
+        loader.classList.remove('hidden');
+        const { jsPDF } = window.jspdf;
+        const pdfContentWrapper = document.getElementById('pdf-content-wrapper');
+        const t = translations[currentLang];
+
+        let variationsHtml = '';
+        data.variations.forEach((v, index) => {
+            let ingredientsContent = '';
+            if (v.ingredients && v.ingredients.length > 0) {
+                 let ingredientsList = '';
+                 v.ingredients.forEach(ing => {
+                    const amount23 = ing.amount.toFixed(1).replace('.0', '');
+                    const amount28 = (ing.amount * data.scaleFactor).toFixed(1).replace('.0', '');
+                    ingredientsList += `<tr><td style="padding: 2px 8px 2px 0;">${ing.name}</td><td style="text-align: right; padding-right: 8px;">${amount23} ${ing.unit}</td><td style="text-align: right;">${amount28} ${ing.unit}</td></tr>`;
+                 });
+                 ingredientsContent = `<h5 style="font-weight: bold; margin-top: 8px; margin-bottom: 4px;">${t.variationModificationTitle}</h5>
+                                    <table style="font-size: 9pt; width: 100%;"><thead><tr><th></th><th style="text-align: right; padding-right: 8px;">23-24cm</th><th style="text-align: right;">28cm</th></tr></thead><tbody>${ingredientsList}</tbody></table>`;
+            } else {
+                ingredientsContent = `<h5 style="font-weight: bold; margin-top: 8px; margin-bottom: 4px;">${t.variationModificationTitle}</h5><p>${t[v.modKey]}</p>`;
+            }
+
+            variationsHtml += `
+                <div style="width: 48%; margin-bottom: 10mm; page-break-inside: avoid;">
+                    <h4 style="font-family: 'Playfair Display', serif; font-size: 14pt; color: #D4A373; margin-bottom: 4px;">${t[v.titleKey]}</h4>
+                    <p style="font-style: italic; margin-bottom: 8px;">${t[v.descKey]}</p>
+                    ${ingredientsContent}
+                    <h5 style="font-weight: bold; margin-top: 8px; margin-bottom: 4px;">${t.variationInstructionTitle}</h5>
+                    <p>${t[v.instrKey]}</p>
+                    <h5 style="font-weight: bold; margin-top: 8px; margin-bottom: 4px;">${t.variationEffectTitle}</h5>
+                    <p>${t[v.effectKey]}</p>
+                </div>
+            `;
+        });
+        
+        pdfContentWrapper.innerHTML = `
+            <div id="pdf-content" style="font-family: 'Lato', sans-serif; width: 190mm; padding: 10mm; background-color: #FFF; color: #4A4A4A; font-size: 9pt; line-height: 1.4;">
+                 <h1 style="font-family: 'Playfair Display', serif; font-size: 24pt; text-align: center; margin-bottom: 4px; color: #3D405B;">${t.variationsTitle}</h1>
+                 <p style="font-size: 11pt; text-align: center; color: #6B7280; margin-bottom: 15mm;">${t.variationsSubtitle}</p>
+                 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10mm 4%;">
+                    ${variationsHtml}
+                 </div>
+            </div>
+        `;
+
+        const pdfContent = document.getElementById('pdf-content');
+        html2canvas(pdfContent, { scale: 3 }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+            const pdfWidth = doc.internal.pageSize.getWidth();
+            const pdfHeight = doc.internal.pageSize.getHeight();
+            doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            doc.save('Sernik-Baskijski-Wariacje.pdf');
             loader.classList.add('hidden');
             pdfContentWrapper.innerHTML = '';
         });
@@ -807,7 +906,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     size23Btn.addEventListener('click', () => {
-        renderIngredients(1);
+        currentSizeScale = 1;
+        renderIngredients(currentSizeScale);
         size23Btn.style.backgroundColor = 'var(--accent-color)';
         size23Btn.style.color = 'var(--accent-text-color)';
         size28Btn.style.backgroundColor = 'var(--button-inactive-bg)';
@@ -815,7 +915,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     size28Btn.addEventListener('click', () => {
-        renderIngredients(data.scaleFactor);
+        currentSizeScale = data.scaleFactor;
+        renderIngredients(currentSizeScale);
         size28Btn.style.backgroundColor = 'var(--accent-color)';
         size28Btn.style.color = 'var(--accent-text-color)';
         size23Btn.style.backgroundColor = 'var(--button-inactive-bg)';
@@ -848,7 +949,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    pdfBtn.addEventListener('click', generatePdf);
+    recipePdfBtn.addEventListener('click', generateRecipePdf);
+    variationsPdfBtn.addEventListener('click', generateVariationsPdf);
 
     // Initial render
     updateLanguage('pl');
