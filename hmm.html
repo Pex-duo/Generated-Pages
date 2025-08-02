@@ -10,126 +10,45 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Custom styles for modern look and feel */
-        html {
-            scroll-behavior: smooth;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #111827; /* bg-gray-900 */
-            color: #D1D5DB; /* text-gray-300 */
-            transition: background-color 0.3s, color 0.3s;
-        }
-        html.light body {
-            background-color: #F9FAFB; /* bg-gray-50 */
-            color: #1F2937; /* text-gray-800 */
-        }
-        .section-card {
-            background-color: rgba(31, 41, 55, 0.5); /* bg-gray-800 with opacity */
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(55, 65, 81, 0.7); /* border-gray-700 */
-            transition: all 0.3s;
-        }
-        html.light .section-card {
-            background-color: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid #E5E7EB; /* border-gray-200 */
-        }
-        .stat-card {
-            border: 1px solid rgba(55, 65, 81, 0.5);
-            background: linear-gradient(145deg, rgba(31, 41, 55, 0.2), rgba(55, 65, 81, 0.2));
-            transition: all 0.3s;
-        }
-        html.light .stat-card {
-            border: 1px solid #E5E7EB;
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(243, 244, 246, 0.2));
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        .accent-text {
-            color: #38BDF8; /* text-sky-400 */
-        }
-        html.light .accent-text {
-            color: #0284C7; /* text-sky-600 */
-        }
-        .btn-primary {
-            background-color: #0EA5E9; /* bg-sky-500 */
-            color: white;
-            transition: background-color 0.3s;
-        }
-        .btn-primary:hover {
-            background-color: #0284C7; /* bg-sky-600 */
-        }
-        .btn-secondary {
-            background-color: #374151; /* bg-gray-700 */
-            color: #D1D5DB;
-            transition: background-color 0.3s;
-        }
-        html.light .btn-secondary {
-            background-color: #E5E7EB; /* bg-gray-200 */
-            color: #374151;
-        }
-        .btn-secondary:hover {
-            background-color: #4B5563; /* bg-gray-600 */
-        }
-        html.light .btn-secondary:hover {
-            background-color: #D1D5DB; /* bg-gray-300 */
-        }
-        .nav-link {
-            position: relative;
-            transition: color 0.3s;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #38BDF8;
-            transition: width 0.3s;
-        }
-        .nav-link:hover::after, .nav-link.active::after {
-            width: 100%;
-        }
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .bg-grid-pattern {
-            background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-        html.light .bg-grid-pattern {
-            background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
-        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: #111827; color: #D1D5DB; transition: background-color 0.3s, color 0.3s; }
+        html.light body { background-color: #F9FAFB; color: #1F2937; }
+        .section-card { background-color: rgba(31, 41, 55, 0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(55, 65, 81, 0.7); transition: all 0.3s; }
+        html.light .section-card { background-color: rgba(255, 255, 255, 0.7); border: 1px solid #E5E7EB; }
+        .stat-card { border: 1px solid rgba(55, 65, 81, 0.5); background: linear-gradient(145deg, rgba(31, 41, 55, 0.2), rgba(55, 65, 81, 0.2)); transition: all 0.3s; }
+        html.light .stat-card { border: 1px solid #E5E7EB; background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(243, 244, 246, 0.2)); }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .accent-text { color: #38BDF8; }
+        html.light .accent-text { color: #0284C7; }
+        .btn-primary { background-color: #0EA5E9; color: white; transition: background-color 0.3s; }
+        .btn-primary:hover { background-color: #0284C7; }
+        .btn-secondary { background-color: #374151; color: #D1D5DB; transition: background-color 0.3s; }
+        html.light .btn-secondary { background-color: #E5E7EB; color: #374151; }
+        .btn-secondary:hover { background-color: #4B5563; }
+        html.light .btn-secondary:hover { background-color: #D1D5DB; }
+        .nav-link { position: relative; transition: color 0.3s; }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 50%; transform: translateX(-50%); background-color: #38BDF8; transition: width 0.3s; }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        .bg-grid-pattern { background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 40px 40px; }
+        html.light .bg-grid-pattern { background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px); }
+        .toc-link { background-color: #1F2937; border: 1px solid #374151; transition: all 0.2s ease-in-out; }
+        .toc-link:hover { background-color: #374151; border-color: #4B5563; transform: translateY(-2px); }
+        html.light .toc-link { background-color: #F3F4F6; border-color: #E5E7EB; }
+        html.light .toc-link:hover { background-color: #E5E7EB; border-color: #D1D5DB; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-300">
 
-    <header class="sticky top-0 z-50 bg-gray-900/50 dark:bg-gray-900/50 backdrop-blur-lg border-b border-gray-800 dark:border-gray-800 transition-colors duration-300">
+    <header class="sticky top-0 z-50 bg-gray-900/80 backdrop-blur-lg border-b border-gray-800">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="#hero" class="text-2xl font-bold accent-text">
-                <span data-lang="en">A/P</span>
-                <span data-lang="pl" class="hidden">P/A</span>
+                <span data-lang="en">A/P</span><span data-lang="pl" class="hidden">P/A</span>
             </a>
             <div class="hidden md:flex items-center space-x-8">
-                <a href="#diagnosis" class="nav-link" data-lang="en">The Diagnosis</a>
-                <a href="#diagnosis" class="nav-link hidden" data-lang="pl">Diagnoza</a>
-                <a href="#protocol" class="nav-link" data-lang="en">The Protocol</a>
-                <a href="#protocol" class="nav-link hidden" data-lang="pl">Protokół</a>
-                <a href="#data" class="nav-link" data-lang="en">The Data</a>
-                <a href="#data" class="nav-link hidden" data-lang="pl">Dane</a>
+                <a href="#diagnosis" class="nav-link" data-lang="en">The Diagnosis</a><a href="#diagnosis" class="nav-link hidden" data-lang="pl">Diagnoza</a>
+                <a href="#protocol" class="nav-link" data-lang="en">The Protocol</a><a href="#protocol" class="nav-link hidden" data-lang="pl">Protokół</a>
             </div>
             <div class="flex items-center space-x-4">
                 <button id="theme-toggle" class="p-2 rounded-full btn-secondary">
@@ -137,13 +56,13 @@
                     <svg id="theme-icon-dark" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
                 </button>
                 <div class="relative">
-                    <button id="lang-toggle" class="p-2 rounded-full btn-secondary flex items-center">
+                    <button id="lang-toggle" class="p-2 rounded-full btn-secondary flex items-center text-sm">
                         <span id="current-lang">EN</span>
                         <svg class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                     </button>
-                    <div id="lang-menu" class="absolute right-0 mt-2 w-20 bg-gray-800 dark:bg-gray-800 border border-gray-700 dark:border-gray-700 rounded-md shadow-lg hidden">
-                        <a href="#" data-lang-set="en" class="block px-4 py-2 text-sm text-gray-300 dark:text-gray-300 hover:bg-gray-700 dark:hover:bg-gray-700">EN</a>
-                        <a href="#" data-lang-set="pl" class="block px-4 py-2 text-sm text-gray-300 dark:text-gray-300 hover:bg-gray-700 dark:hover:bg-gray-700">PL</a>
+                    <div id="lang-menu" class="absolute right-0 mt-2 w-20 bg-gray-800 border border-gray-700 rounded-md shadow-lg hidden">
+                        <a href="#" data-lang-set="en" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">EN</a>
+                        <a href="#" data-lang-set="pl" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">PL</a>
                     </div>
                 </div>
             </div>
@@ -155,17 +74,15 @@
         <section id="hero" class="text-center py-20 min-h-screen flex flex-col justify-center items-center bg-grid-pattern">
             <div class="fade-in">
                 <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
-                    <span class="block" data-lang="en">The Autonomy Protocol</span>
-                    <span class="block hidden" data-lang="pl">Protokół Autonomii</span>
+                    <span class="block" data-lang="en">The Autonomy Protocol</span><span class="block hidden" data-lang="pl">Protokół Autonomii</span>
                 </h1>
-                <p class="mt-4 text-lg md:text-xl text-gray-400 dark:text-gray-400 max-w-3xl mx-auto">
-                    <span data-lang="en">A strategic framework for building inner strength and independence in an age of relational chaos. This is not a guide to finding a partner. It's a guide to finding yourself.</span>
-                    <span data-lang="pl" class="hidden">Strategiczny plan budowy wewnętrznej siły i niezależności w epoce relacyjnego chaosu. To nie jest przewodnik po odnajdywaniu partnerki. To przewodnik po odnajdywaniu samego siebie.</span>
+                <p class="mt-4 text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
+                    <span data-lang="en">A strategic framework for building inner strength and independence in an age of relational chaos. This is not a guide to finding a partner. It's a guide to forging yourself.</span>
+                    <span data-lang="pl" class="hidden">Strategiczny plan budowy wewnętrznej siły i niezależności w epoce relacyjnego chaosu. To nie jest przewodnik po odnajdywaniu partnerki. To przewodnik po wykuwaniu samego siebie.</span>
                 </p>
-                <div class="mt-8 flex justify-center space-x-4">
+                <div class="mt-8">
                     <a href="#diagnosis" class="btn-primary px-8 py-3 rounded-md font-semibold text-lg">
-                        <span data-lang="en">Start the Diagnosis</span>
-                        <span data-lang="pl" class="hidden">Rozpocznij Diagnozę</span>
+                        <span data-lang="en">Begin</span><span data-lang="pl" class="hidden">Rozpocznij</span>
                     </a>
                 </div>
             </div>
@@ -174,208 +91,144 @@
         <section id="diagnosis" class="py-20">
             <div class="text-center mb-12 fade-in">
                 <h2 class="text-3xl md:text-4xl font-bold">
-                    <span data-lang="en">Part I: The Diagnosis</span>
-                    <span data-lang="pl" class="hidden">Część I: Diagnoza</span>
+                    <span data-lang="en">The Premise: Landscape of a Broken Compass</span><span data-lang="pl" class="hidden">Przesłanka: Krajobraz Złamanego Kompasu</span>
                 </h2>
-                <h3 class="text-2xl md:text-3xl font-bold accent-text mt-2">
-                    <span data-lang="en">Landscape of a Broken Compass</span>
-                    <span data-lang="pl" class="hidden">Krajobraz Złamanego Kompasu</span>
-                </h3>
-                <p class="mt-4 max-w-3xl mx-auto text-gray-400 dark:text-gray-400">
-                    <span data-lang="en">Understanding the systemic forces that have fractured the foundations of modern relationships. The world isn't just in your head; the data proves it's broken.</span>
-                    <span data-lang="pl" class="hidden">Zrozumienie sił systemowych, które zniszczyły fundamenty współczesnych relacji. Ten świat nie jest tylko w Twojej głowie; dane dowodzą, że jest zepsuty.</span>
+                <p class="mt-4 max-w-3xl mx-auto text-gray-400">
+                    <span data-lang="en">The feeling of frustration, disorientation, and absurdity that permeates the modern landscape of human relationships is not an isolated, subjective feeling. It is a rational reaction to an observable, systemic crisis. The conclusion that engaging in romantic relationships in the current climate is a meaningless endeavor finds its justification in objective data and sociological analyses.</span>
+                    <span data-lang="pl" class="hidden">Poczucie frustracji, dezorientacji i absurdu, które przenika współczesny krajobraz relacji międzyludzkich, nie jest odosobnionym, subiektywnym odczuciem. Jest to racjonalna reakcja na obserwowalny, systemowy kryzys. Wniosek, że angażowanie się w relacje romantyczne w obecnym klimacie jest przedsięwzięciem pozbawionym sensu, znajduje swoje uzasadnienie w obiektywnych danych i analizach socjologicznych.</span>
                 </p>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="section-card p-6 rounded-lg fade-in">
-                    <h4 class="text-xl font-bold accent-text" data-lang="en">Echo Chamber of the Heart</h4>
-                    <h4 class="text-xl font-bold accent-text hidden" data-lang="pl">Izba Pogłosów Serca</h4>
-                    <p class="mt-2 text-sm text-gray-400 dark:text-gray-400" data-lang="en">Political affiliation has become a primary, non-negotiable filter for intimacy, drastically shrinking the dating pool and turning relationships into ideological purity tests.</p>
-                    <p class="mt-2 text-sm text-gray-400 dark:text-gray-400 hidden" data-lang="pl">Przynależność polityczna stała się podstawowym, niepodlegającym negocjacjom filtrem dla intymności, drastycznie zawężając pulę randkową i zamieniając relacje w ideologiczne testy czystości.</p>
-                    <div class="mt-4 h-64">
-                        <canvas id="politicalDatingChart"></canvas>
-                    </div>
+                    <h4 class="text-xl font-bold accent-text" data-lang="en">Politicization of the Private Sphere</h4><h4 class="text-xl font-bold accent-text hidden" data-lang="pl">Upolitycznienie Sfery Prywatnej</h4>
+                    <p class="mt-2 text-sm text-gray-400" data-lang="en">Intimacy has been transformed from an emotional sanctuary into a battlefield for power. Political affiliation has become a primary filter, turning dialogue across divides into an almost impossible task and minor disagreements into manifestations of systemic oppression.</p>
+                    <p class="mt-2 text-sm text-gray-400 hidden" data-lang="pl">Intymność została przekształcona z emocjonalnego sanktuarium w pole bitwy o władzę. Przynależność polityczna stała się pierwotnym filtrem, czyniąc dialog ponad podziałami zadaniem niemal niewykonalnym, a drobne nieporozumienia manifestacją systemowej opresji.</p>
+                    <div class="mt-4 h-56"><canvas id="politicalDatingChart"></canvas></div>
                 </div>
 
                 <div class="section-card p-6 rounded-lg fade-in" style="transition-delay: 150ms;">
-                    <h4 class="text-xl font-bold accent-text" data-lang="en">The Great Role Confusion</h4>
-                    <h4 class="text-xl font-bold accent-text hidden" data-lang="pl">Wielkie Pomieszanie Ról</h4>
-                    <p class="mt-2 text-sm text-gray-400 dark:text-gray-400" data-lang="en">The "Egalitarian-Traditionalist Paradox": men are expected to be both traditional providers and modern, emotionally available partners—an impossible double-bind leading to systemic failure.</p>
-                    <p class="mt-2 text-sm text-gray-400 dark:text-gray-400 hidden" data-lang="pl">"Paradoks egalitarno-tradycyjny": od mężczyzn oczekuje się, że będą jednocześnie tradycyjnymi żywicielami i nowoczesnymi, emocjonalnie dostępnymi partnerami - to niemożliwe podwójne wiązanie prowadzące do systemowej porażki.</p>
-                    <div class="mt-4 h-64">
-                        <canvas id="divorceInitiationChart"></canvas>
-                    </div>
+                    <h4 class="text-xl font-bold accent-text" data-lang="en">Gender Role Chaos</h4><h4 class="text-xl font-bold accent-text hidden" data-lang="pl">Chaos Ról Płciowych</h4>
+                    <p class="mt-2 text-sm text-gray-400" data-lang="en">A rapid shift in social norms has led to the "Egalitarian-Traditionalist Paradox." Men are expected to simultaneously fulfill the roles of a traditional provider and a modern, emotionally available partner—an impossible "double bind." This leads to mass dissatisfaction, manifesting in the fact that over two-thirds of divorces are initiated by women.</p>
+                    <p class="mt-2 text-sm text-gray-400 hidden" data-lang="pl">Gwałtowna zmiana norm społecznych doprowadziła do "paradoksu egalitarno-tradycyjnego". Od mężczyzn oczekuje się jednoczesnego pełnienia roli tradycyjnego żywiciela i nowoczesnego, emocjonalnie dostępnego partnera — to niemożliwe "podwójne wiązanie". Prowadzi to do masowego niezadowolenia, manifestującego się w fakcie, że ponad dwie trzecie rozwodów inicjują kobiety.</p>
+                    <div class="mt-4 h-56"><canvas id="divorceInitiationChart"></canvas></div>
                 </div>
 
                 <div class="section-card p-6 rounded-lg fade-in" style="transition-delay: 300ms;">
-                    <h4 class="text-xl font-bold accent-text" data-lang="en">The Epidemic of the Mind</h4>
-                    <h4 class="text-xl font-bold accent-text hidden" data-lang="pl">Epidemia Umysłu</h4>
-                    <p class="mt-2 text-sm text-gray-400 dark:text-gray-400" data-lang="en">Widespread mental health crises and existential nihilism erode the very capacity for empathy and connection, making the effort of relationship-building seem futile and absurd.</p>
-                    <p class="mt-2 text-sm text-gray-400 dark:text-gray-400 hidden" data-lang="pl">Powszechne kryzysy zdrowia psychicznego i egzystencjalny nihilizm niszczą samą zdolność do empatii i więzi, sprawiając, że wysiłek budowania relacji wydaje się daremny i absurdalny.</p>
-                    <div class="mt-4 h-64">
-                        <canvas id="mentalHealthChart"></canvas>
-                    </div>
+                    <h4 class="text-xl font-bold accent-text" data-lang="en">Mental Health & Existential Void</h4><h4 class="text-xl font-bold accent-text hidden" data-lang="pl">Kryzys Zdrowia Psychicznego i Egzystencjalna Pustka</h4>
+                    <p class="mt-2 text-sm text-gray-400" data-lang="en">An "epidemic of the mind"—widespread depression, anxiety, and loneliness—undermines the very capacity for empathy. In Poland, one in four adults meets the diagnostic criteria for depression, with women suffering more than twice as often as men. This, combined with an erosion of traditional sources of meaning, makes relationship-building seem futile.</p>
+                    <p class="mt-2 text-sm text-gray-400 hidden" data-lang="pl">"Epidemia umysłu" — powszechna depresja, lęk i samotność — podkopuje samą zdolność do empatii. W Polsce co czwarty dorosły spełnia kryteria diagnostyczne depresji, a kobiety cierpią na nią ponad dwukrotnie częściej niż mężczyźni. To, w połączeniu z erozją tradycyjnych źródeł sensu, sprawia, że budowanie relacji wydaje się daremne.</p>
+                     <div class="mt-4 h-56"><canvas id="mentalHealthChart"></canvas></div>
                 </div>
+            </div>
+             <div class="mt-12 text-center fade-in">
+                <a href="#protocol" class="btn-primary px-8 py-3 rounded-md font-semibold text-lg">
+                    <span data-lang="en">Proceed to the Protocol</span><span data-lang="pl" class="hidden">Przejdź do Protokołu</span>
+                </a>
             </div>
         </section>
 
         <section id="protocol" class="py-20">
             <div class="text-center mb-12 fade-in">
                 <h2 class="text-3xl md:text-4xl font-bold">
-                    <span data-lang="en">Part II: The Protocol</span>
-                    <span data-lang="pl" class="hidden">Część II: Protokół</span>
+                    <span data-lang="en">The Autonomy Protocol</span><span data-lang="pl" class="hidden">Protokół Autonomii</span>
                 </h2>
-                <h3 class="text-2xl md:text-3xl font-bold accent-text mt-2">
-                    <span data-lang="en">Forging a New Compass</span>
-                    <span data-lang="pl" class="hidden">Wykuwanie Nowego Kompasu</span>
-                </h3>
-                <p class="mt-4 max-w-3xl mx-auto text-gray-400 dark:text-gray-400">
-                    <span data-lang="en">A practical, actionable framework for transforming strategic withdrawal into a proactive project of building a new, more resilient, and fulfilling life.</span>
-                    <span data-lang="pl" class="hidden">Praktyczny, możliwy do wdrożenia plan przekształcenia strategicznego wycofania w proaktywny projekt budowy nowego, bardziej odpornego i satysfakcjonującego życia.</span>
+                <p class="mt-4 max-w-3xl mx-auto text-gray-400">
+                    <span data-lang="en">In light of these systemic dysfunctions, the decision to consciously withdraw from the "relationship game" should not be seen as an act of failure. On the contrary, it is an act of strategic and fully rational retreat. This protocol is not about convincing you to return to the battlefield; it is a comprehensive plan that transforms this strategic retreat into a proactive project of building a new, more resilient, and fulfilling life.</span>
+                    <span data-lang="pl" class="hidden">W świetle tych systemowych dysfunkcji, decyzja o świadomym wycofaniu się z "gry" w relacje nie powinna być postrzegana jako akt porażki. Przeciwnie, jest to akt strategicznego i w pełni racjonalnego odwrotu. Ten protokół nie ma na celu przekonywania do powrotu na pole bitwy; to kompleksowy plan, który przekształca ten strategiczny odwrót w proaktywny projekt budowy nowego, bardziej odpornego i satysfakcjonującego życia.</span>
                 </p>
             </div>
-
-            <div class="space-y-16">
-                <div class="flex flex-col md:flex-row items-center gap-8 fade-in">
-                    <div class="md:w-1/2">
-                        <h4 class="text-2xl font-bold accent-text">1. <span data-lang="en">Physical Fortification</span><span data-lang="pl" class="hidden">Fizyczna Fortyfikacja</span></h4>
-                        <p class="mt-4" data-lang="en">The foundation of any stable structure is its material base. For a man, this is his physiology. Before undertaking advanced work on the mind and purpose, it is necessary to establish a solid base in the form of a healthy, strong, and hormonally balanced organism. This is an act of rebellion against superficiality, where the focus shifts from external appearance to optimizing the internal biochemical and psychological environment.</p>
-                        <p class="mt-4 hidden" data-lang="pl">Fundamentem każdej trwałej struktury jest jej podstawa materialna. W przypadku człowieka jest nią jego fizjologia. Zanim rozpocznie się zaawansowaną pracę nad umysłem i celem, konieczne jest ustanowienie solidnej bazy w postaci zdrowego, silnego i zrównoważonego hormonalnie organizmu. To akt buntu przeciwko powierzchowności, w którym nacisk przesuwa się z wyglądu zewnętrznego na optymalizację wewnętrznego środowiska biochemicznego i psychologicznego.</p>
-                        <ul class="mt-4 space-y-3 list-disc list-inside">
-                            <li><b data-lang="en">Hormonal & Psychological Stability Training:</b><span data-lang="pl" class="hidden"><b>Trening na rzecz Stabilności Hormonalnej i Psychologicznej:</b></span>
-                                <span class="block text-sm text-gray-400" data-lang="en">Utilize intensive strength training (squats, deadlifts) as a primary tool for naturally stimulating testosterone production and improving insulin sensitivity. Complement this with martial arts (Boxing, BJJ) not for aggression, but as a forge for discipline, concentration, and a controlled channel to sublimate natural frustration into constructive action.</span>
-                                <span class="block text-sm text-gray-400 hidden" data-lang="pl">Wykorzystaj intensywny trening siłowy (przysiady, martwy ciąg) jako główne narzędzie do naturalnej stymulacji produkcji testosteronu i poprawy wrażliwości na insulinę. Uzupełnij to sportami walki (Boks, BJJ) nie dla agresji, ale jako kuźnię dyscypliny, koncentracji i kontrolowany kanał do sublimacji naturalnej frustracji w konstruktywne działanie.</span>
-                            </li>
-                            <li><b data-lang="en">The Autonomy Diet:</b><span data-lang="pl" class="hidden"><b>Dieta Autonomii:</b></span>
-                                <span class="block text-sm text-gray-400" data-lang="en">A precise tool for managing your own biochemistry. The goal is twofold: first, to provide the body with the highest quality fuel (foods rich in Zinc, Selenium, Vitamin D); second, to gain control over instinctual drives by consciously limiting or eliminating substances that disrupt hormonal balance, such as alcohol, simple sugars, and heavily processed foods. This is not deprivation, but knowledge and control.</span>
-                                <span class="block text-sm text-gray-400 hidden" data-lang="pl">Precyzyjne narzędzie do zarządzania własną biochemią. Cel jest dwojaki: po pierwsze, dostarczenie organizmowi najwyższej jakości paliwa (żywność bogata w cynk, selen, witaminę D); po drugie, uzyskanie kontroli nad instynktownymi popędami poprzez świadome ograniczanie lub eliminowanie substancji zaburzających równowagę hormonalną, takich jak alkohol, cukry proste i wysoko przetworzona żywność. To nie jest wyrzeczenie, lecz wiedza i kontrola.</span>
-                            </li>
-                        </ul>
+            
+            <div class="mb-16 fade-in">
+                <h3 class="text-2xl font-bold text-center mb-6 accent-text" data-lang="en">Table of Contents</h3><h3 class="text-2xl font-bold text-center mb-6 accent-text hidden" data-lang="pl">Spis Treści</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <div>
+                        <h4 class="font-bold mb-2" data-lang="en">Part I: Physical Fortification</h4><h4 class="font-bold mb-2 hidden" data-lang="pl">Część I: Fizyczna Fortyfikacja</h4>
+                        <a href="#ch1" class="block p-2 rounded-md toc-link">Ch. 1: Training</a><a href="#ch2" class="block p-2 mt-2 rounded-md toc-link">Ch. 2: Diet</a>
                     </div>
-                    <div class="md:w-1/2 p-4 section-card rounded-lg">
-                        <svg class="w-full h-auto" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M100 25C141.421 25 175 58.5786 175 100C175 141.421 141.421 175 100 175C58.5786 175 25 141.421 25 100C25 58.5786 58.5786 25 100 25Z" stroke="currentColor" stroke-width="4" class="accent-text opacity-30"/>
-                            <path d="M128.536 71.4645L100 100M100 100L71.4645 128.536M100 100L71.4645 71.4645M100 100L128.536 128.536" stroke="currentColor" stroke-width="4" stroke-linecap="round" class="accent-text opacity-50"/>
-                            <path d="M100 50V35M100 150V165M150 100H165M50 100H35" stroke="currentColor" stroke-width="4" stroke-linecap="round" class="accent-text"/>
-                        </svg>
+                     <div>
+                        <h4 class="font-bold mb-2" data-lang="en">Part II: Mental Sovereignty</h4><h4 class="font-bold mb-2 hidden" data-lang="pl">Część II: Mentalna Suwerenność</h4>
+                        <a href="#ch3" class="block p-2 rounded-md toc-link">Ch. 3: Stoicism</a><a href="#ch4" class="block p-2 mt-2 rounded-md toc-link">Ch. 4: Presence</a><a href="#ch5" class="block p-2 mt-2 rounded-md toc-link">Ch. 5: Sublimation</a>
                     </div>
-                </div>
-
-                <div class="flex flex-col md:flex-row-reverse items-center gap-8 fade-in">
-                    <div class="md:w-1/2">
-                        <h4 class="text-2xl font-bold accent-text">2. <span data-lang="en">Mental Sovereignty</span><span data-lang="pl" class="hidden">Mentalna Suwerenność</span></h4>
-                        <p class="mt-4" data-lang="en">Once the physical foundation is built, the work moves inward. The goal is to equip oneself with a robust set of mental and philosophical tools to build psychological resilience, consciously redirect powerful internal energies, and find peace in a world perceived as chaotic and absurd. This is where the impenetrable walls of the inner citadel are raised.</p>
-                        <p class="mt-4 hidden" data-lang="pl">Po zbudowaniu fizycznego fundamentu, praca przenosi się do wnętrza. Celem jest wyposażenie się w solidny zestaw narzędzi mentalnych i filozoficznych, które pozwolą zbudować psychologiczną odporność, świadomie przekierować potężne wewnętrzne energie i odnaleźć spokój w świecie postrzeganym jako chaotyczny i absurdalny. To tutaj wznosi się mury wewnętrznej cytadeli.</p>
-                        <ul class="mt-4 space-y-3 list-disc list-inside">
-                            <li><b data-lang="en">Applied Stoicism:</b><span data-lang="pl" class="hidden"><b>Stoicyzm Stosowany:</b></span>
-                                <span class="block text-sm text-gray-400" data-lang="en">Embrace the Dichotomy of Control as a life operating system. Iron discipline in distinguishing what is in your power (thoughts, actions) from what is not (others' opinions, societal trends). This allows you to mentally "disconnect" from a game whose rules you do not accept and start playing your own, internal game.</span>
-                                <span class="block text-sm text-gray-400 hidden" data-lang="pl">Przyjmij Dychotomię Kontroli jako życiowy system operacyjny. Żelazna dyscyplina w rozróżnianiu tego, co jest w Twojej mocy (myśli, działania), od tego, co nie jest (opinie innych, trendy społeczne). Pozwala to mentalnie "odłączyć się" od gry, której zasad nie akceptujesz, i zacząć grać we własną, wewnętrzną grę.</span>
-                            </li>
-                            <li><b data-lang="en">Mindfulness & Meta-Awareness:</b><span data-lang="pl" class="hidden"><b>Uważność i Meta-świadomość:</b></span>
-                                 <span class="block text-sm text-gray-400" data-lang="en">Practice meditation not to eliminate thoughts, but to develop the ability to observe your own impulses—desire, loneliness, fear—as transient mental events, not as commands. This creates a space between stimulus and response. In that space lies your freedom from being ruled by automatic, biological programming.</span>
-                                 <span class="block text-sm text-gray-400 hidden" data-lang="pl">Praktykuj medytację nie po to, by eliminować myśli, ale by rozwinąć zdolność obserwowania własnych impulsów — pożądania, samotności, lęku — jako przejściowych zjawisk mentalnych, a nie rozkazów. To tworzy przestrzeń między bodźcem a reakcją. W tej przestrzeni leży Twoja wolność od bycia rządzonym przez automatyczne, biologiczne programy.</span>
-                            </li>
-                            <li><b data-lang="en">The Directive of Sublimation:</b><span data-lang="pl" class="hidden"><b>Dyrektywa Sublimacji:</b></span>
-                                 <span class="block text-sm text-gray-400" data-lang="en">Energy cannot be destroyed, only transformed. Learn to transmute raw, primal energy (libido, aggression) into constructive, creative, and high-value actions. Instead of suppressing the inner fire, build a powerful turbine that transforms its heat into useful power for personal development, mastery, and creation.</span>
-                                 <span class="block text-sm text-gray-400 hidden" data-lang="pl">Energia nie może zostać zniszczona, a jedynie przekształcona. Naucz się transmutować surową, pierwotną energię (libido, agresję) w konstruktywne, twórcze i wartościowe działania. Zamiast tłumić wewnętrzny ogień, zbuduj potężną turbinę, która przekształci jego żar w użyteczną moc napędzającą rozwój osobisty, mistrzostwo i twórczość.</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="md:w-1/2 p-4 section-card rounded-lg">
-                        <svg class="w-full h-auto" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M100 120 C 120 140, 140 140, 160 120" stroke="currentColor" stroke-width="4" stroke-linecap="round" class="accent-text opacity-30"/>
-                            <path d="M40 120 C 60 140, 80 140, 100 120" stroke="currentColor" stroke-width="4" stroke-linecap="round" class="accent-text opacity-30"/>
-                            <path d="M100 30L125.981 80H74.0191L100 30Z" stroke="currentColor" stroke-width="4" class="accent-text"/>
-                            <circle cx="100" cy="115" r="45" stroke="currentColor" stroke-width="4" class="accent-text opacity-60"/>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="flex flex-col md:flex-row items-center gap-8 fade-in">
-                    <div class="md:w-1/2">
-                        <h4 class="text-2xl font-bold accent-text">3. <span data-lang="en">Architecture of a Meaningful Life</span><span data-lang="pl" class="hidden">Architektura Sensownego Życia</span></h4>
-                        <p class="mt-4" data-lang="en">The ultimate goal is to consciously design and erect a new existential structure, one whose foundation is not a romantic relationship, but self-awareness, purpose, and deep, authentic connections of a different kind. This is the architectural plan for a life of profound, internal fulfillment.</p>
-                        <p class="mt-4 hidden" data-lang="pl">Ostatecznym celem jest świadome zaprojektowanie i wzniesienie nowej struktury egzystencjalnej, której fundamentem nie jest relacja romantyczna, lecz samoświadomość, cel i głębokie, autentyczne więzi innego rodzaju. To plan architektoniczny dla życia o głębokim, wewnętrznym spełnieniu.</p>
-                        <ul class="mt-4 space-y-3 list-disc list-inside">
-                            <li><b data-lang="en">The Pursuit of Mastery:</b><span data-lang="pl" class="hidden"><b>Pogoń za Mistrzostwem:</b></span>
-                                 <span class="block text-sm text-gray-400" data-lang="en">In a society that often defines a man's worth through relationships, consciously building an identity based on other foundations is an act of liberation. The pursuit of mastery in a craft, sport, art, or science provides a deep and lasting sense of purpose and competence that is entirely self-generated and independent of external validation.</span>
-                                 <span class="block text-sm text-gray-400 hidden" data-lang="pl">W społeczeństwie, które często definiuje wartość mężczyzny przez pryzmat relacji, świadome budowanie tożsamości w oparciu o inne fundamenty jest aktem wyzwolenia. Pogoń za mistrzostwem w rzemiośle, sporcie, sztuce czy nauce dostarcza głębokiego i trwałego poczucia celu i kompetencji, które jest całkowicie samogenerujące i niezależne od zewnętrznej walidacji.</span>
-                            </li>
-                            <li><b data-lang="en">The Strength of the Pack:</b><span data-lang="pl" class="hidden"><b>Siła Stada:</b></span>
-                                 <span class="block text-sm text-gray-400" data-lang="en">Independence from romantic dynamics is not a sentence to loneliness. It is an opportunity to build a broader, more stable support network based on deep, platonic friendships. Radically redefine "family" as a tribe of carefully chosen, loyal friends who provide mutual support. This provides a sense of belonging that frees you from a desperate search for it in a single, often unstable, romantic relationship.</span>
-                                 <span class="block text-sm text-gray-400 hidden" data-lang="pl">Niezależność od dynamiki romantycznej nie jest wyrokiem samotności. To okazja do zbudowania szerszej, stabilniejszej sieci wsparcia opartej na głębokich, platonicznych przyjaźniach. Radykalnie zdefiniuj na nowo "rodzinę" jako plemię starannie dobranych, lojalnych przyjaciół, którzy zapewniają wzajemne wsparcie. Zapewnia to poczucie przynależności, które uwalnia od desperackiego poszukiwania go w jednej, często niestabilnej, relacji romantycznej.</span>
-                            </li>
-                            <li><b data-lang="en">The Call to Service:</b><span data-lang="pl" class="hidden"><b>Wezwanie do Służby:</b></span>
-                                 <span class="block text-sm text-gray-400" data-lang="en">The highest floor in the architecture of a meaningful life is transcendence—moving beyond the self to engage in something larger. Active work for the benefit of others or a higher idea is the most powerful known antidote to existential nihilism and absurdity. Action gives meaning. It is the final act of building a complete, autonomous existence.</span>
-                                 <span class="block text-sm text-gray-400 hidden" data-lang="pl">Najwyższym piętrem w architekturze sensownego życia jest transcendencja — wyjście poza własne "ja" i zaangażowanie w coś większego. Aktywne działanie na rzecz innych lub wyższej idei jest najpotężniejszym znanym antidotum na egzystencjalny nihilizm i absurd. Działanie nadaje sens. To ostateczny akt budowy kompletnej, autonomicznej egzystencji.</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="md:w-1/2 p-4 section-card rounded-lg">
-                        <svg class="w-full h-auto" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                           <path d="M100 180 L50 150 L50 90 L100 60 L150 90 L150 150 L100 180Z" stroke="currentColor" stroke-width="4" stroke-linejoin="round" class="accent-text"/>
-                           <path d="M50 90 L100 120 L150 90" stroke="currentColor" stroke-width="4" stroke-linejoin="round" class="accent-text opacity-70"/>
-                           <path d="M100 180V120" stroke="currentColor" stroke-width="4" stroke-linejoin="round" class="accent-text opacity-70"/>
-                           <path d="M100 60L100 20" stroke="currentColor" stroke-width="4" stroke-linejoin="round" class="accent-text opacity-40"/>
-                           <path d="M100 20L120 30" stroke="currentColor" stroke-width="4" stroke-linejoin="round" class="accent-text opacity-40"/>
-                           <path d="M100 20L80 30" stroke="currentColor" stroke-width="4" stroke-linejoin="round" class="accent-text opacity-40"/>
-                        </svg>
+                     <div>
+                        <h4 class="font-bold mb-2" data-lang="en">Part III: Architecture of Meaning</h4><h4 class="font-bold mb-2 hidden" data-lang="pl">Część III: Architektura Sensu</h4>
+                        <a href="#ch6" class="block p-2 rounded-md toc-link">Ch. 6: Self-Awareness</a><a href="#ch7" class="block p-2 mt-2 rounded-md toc-link">Ch. 7: Mastery</a><a href="#ch8" class="block p-2 mt-2 rounded-md toc-link">Ch. 8: The Pack</a><a href="#ch9" class="block p-2 mt-2 rounded-md toc-link">Ch. 9: Service</a>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <section id="data" class="py-20">
-            <div class="text-center mb-12 fade-in">
-                <h2 class="text-3xl md:text-4xl font-bold">
-                    <span data-lang="en">Part III: The Data</span>
-                    <span data-lang="pl" class="hidden">Część III: Dane</span>
-                </h2>
-                <h3 class="text-2xl md:text-3xl font-bold accent-text mt-2">
-                    <span data-lang="en">A Statistical Compendium</span>
-                    <span data-lang="pl" class="hidden">Kompendium Statystyczne</span>
-                </h3>
-                <p class="mt-4 max-w-3xl mx-auto text-gray-400 dark:text-gray-400">
-                    <span data-lang="en">The quantitative evidence behind the diagnosis. These are not just feelings; they are measurable, global socio-economic shifts.</span>
-                    <span data-lang="pl" class="hidden">Ilościowe dowody stojące za diagnozą. To nie są tylko odczucia; to mierzalne, globalne przemiany społeczno-ekonomiczne.</span>
-                </p>
-            </div>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="stat-card p-6 rounded-lg text-center fade-in">
-                    <div class="text-4xl font-bold accent-text">71%</div>
-                    <p class="mt-2 text-sm" data-lang="en">of single Democrats would "probably or definitely not" consider a relationship with a Trump voter.</p>
-                    <p class="mt-2 text-sm hidden" data-lang="pl">samotnych Demokratów "prawdopodobnie lub na pewno nie" rozważyłoby związku z wyborcą Trumpa.</p>
-                    <p class="text-xs mt-2 text-gray-500">Source: Pew Research Center, 2020</p>
+            <div class="space-y-12">
+                <div class="p-8 section-card rounded-lg fade-in">
+                    <h3 class="text-2xl font-bold border-b border-gray-700 pb-2 mb-4" data-lang="en">Part I: Physical Fortification: Building the Body as an Inner Citadel</h3><h3 class="text-2xl font-bold border-b border-gray-700 pb-2 mb-4 hidden" data-lang="pl">Część I: Protokół Fizycznej Fortyfikacji: Budowa Ciała jako Wewnętrznej Cytadeli</h3>
+                    <div id="ch1" class="mb-8 pt-4">
+                        <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 1: Training for Hormonal and Psychological Stability</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 1: Trening na rzecz Stabilności Hormonalnej i Psychologicznej</h4>
+                        <p class="mt-2 text-gray-400" data-lang="en">The goal of physical training within the Autonomy Protocol is not to sculpt a body to impress others, but to forge a tool that serves its owner. Testosterone is a fundamental modulator of the male psyche; its proper level is correlated with mood stability, motivation, and confidence. Regular, intense strength training is one of the most effective non-pharmacological ways to naturally stimulate its production. While strength training builds the foundation, martial arts erect the structure of mental resilience, providing a controlled channel to sublimate natural aggression and frustration into constructive action.</p>
+                        <p class="mt-2 text-gray-400 hidden" data-lang="pl">Celem treningu fizycznego w ramach Protokołu Autonomii nie jest rzeźbienie ciała, które ma zaimponować innym, lecz kucie narzędzia, które służy jego właścicielowi. Testosteron jest fundamentalnym modulatorem męskiej psychiki; jego odpowiedni poziom jest skorelowany ze stabilnością nastroju, motywacją i pewnością siebie. Regularny, intensywny trening siłowy jest jednym z najskuteczniejszych niefarmakologicznych sposobów na naturalną stymulację jego produkcji. Podczas gdy trening siłowy buduje fundament, sporty walki wznoszą nad nim strukturę odporności psychicznej, stanowiąc kontrolowany kanał do sublimacji naturalnej agresji oraz frustracji w konstruktywne działanie.</p>
+                    </div>
+                    <div id="ch2" class="pt-4">
+                        <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 2: The Autonomy Diet: Fuel for Vitality, Moderation for Instinct</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 2: Dieta Autonomii: Paliwo dla Witalności, Umiar dla Instynktu</h4>
+                        <p class="mt-2 text-gray-400" data-lang="en">This diet is not a system of deprivation, but a precise tool for consciously managing your own biochemistry. The goal is to provide the body with the highest quality fuel for health and vitality (Zinc, Selenium, Vitamin D, healthy fats) while ensuring control over instinctual drives. This is achieved by limiting or eliminating substances that negatively impact hormonal balance, such as alcohol, simple sugars, and processed foods. It is an approach that rejects ascetic deprivation in favor of knowledge and control.</p>
+                        <p class="mt-2 text-gray-400 hidden" data-lang="pl">Dieta ta nie jest systemem wyrzeczeń, lecz precyzyjnym narzędziem do świadomego zarządzania własną biochemią. Celem jest dostarczenie organizmowi najwyższej jakości paliwa dla zdrowia i witalności (cynk, selen, witamina D, zdrowe tłuszcze) przy jednoczesnym zapewnieniu kontroli nad instynktownymi popędami. Osiąga się to poprzez ograniczanie lub eliminowanie substancji, które negatywnie wpływają na równowagę hormonalną, takich jak alkohol, cukry proste i żywność przetworzona. To podejście odrzuca ascetyczną deprywację na rzecz wiedzy i kontroli.</p>
+                    </div>
                 </div>
-                 <div class="stat-card p-6 rounded-lg text-center fade-in" style="transition-delay: 100ms;">
-                    <div class="text-4xl font-bold accent-text">90%</div>
-                    <p class="mt-2 text-sm" data-lang="en">of divorces among college-educated women in the U.S. are initiated by women.</p>
-                    <p class="mt-2 text-sm hidden" data-lang="pl">rozwodów wśród kobiet z wyższym wykształceniem w USA jest inicjowanych przez kobiety.</p>
-                    <p class="text-xs mt-2 text-gray-500">Source: ASA, 2015</p>
+
+                <div class="p-8 section-card rounded-lg fade-in">
+                    <h3 class="text-2xl font-bold border-b border-gray-700 pb-2 mb-4" data-lang="en">Part II: Mental Sovereignty: Mastering the Inner World</h3><h3 class="text-2xl font-bold border-b border-gray-700 pb-2 mb-4 hidden" data-lang="pl">Część II: Protokół Mentalnej Suwerenności: Opanowanie Wewnętrznego Świata</h3>
+                     <div id="ch3" class="mb-8 pt-4">
+                        <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 3: The Philosophy of the Inner Citadel: Applying Stoicism in Modern Chaos</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 3: Filozofia Wewnętrznej Cytadeli: Zastosowanie Stoicyzmu w Nowoczesnym Chaosie</h4>
+                        <p class="mt-2 text-gray-400" data-lang="en">In the face of a world full of external pressures and events beyond our control, Stoicism offers a timeless and practical operating system for the mind. Its core principle is the Dichotomy of Control: the iron discipline of distinguishing what is in our power (our thoughts, judgments, actions) from what is not (everything else). Frustration and suffering arise from the fundamental error of trying to control the uncontrollable. The Stoic strategy is to consciously shift all attention and energy to one's own responses, choices, and character, thereby mentally disconnecting from a game whose rules you do not accept.</p>
+                        <p class="mt-2 text-gray-400 hidden" data-lang="pl">W obliczu świata pełnego zewnętrznych nacisków i zdarzeń, na które nie ma się wpływu, stoicyzm oferuje ponadczasowy i praktyczny system operacyjny dla umysłu. Jego kluczową zasadą jest Dychotomia Kontroli: żelazna dyscyplina w rozróżnianiu tego, co jest w naszej mocy (nasze myśli, osądy, działania), od tego, co jest poza nią (wszystko inne). Frustracja i cierpienie biorą się z fundamentalnego błędu: próby kontrolowania tego, co jest niekontrolowalne. Stoicka strategia polega na świadomym przeniesieniu całej uwagi i energii na własne reakcje, wybory i charakter, mentalnie "odłączając się" od gry, której zasad się nie akceptuje.</p>
+                    </div>
+                     <div id="ch4" class="mb-8 pt-4">
+                        <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 4: The Practice of Presence: Fundamental Meditation and Mindfulness</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 4: Praktyka Obecności: Fundamentalna Medytacja i Uważność</h4>
+                        <p class="mt-2 text-gray-400" data-lang="en">Meditation is the practical tool for exploring and calming the inner world. Its goal is not to achieve a mystical state or eliminate thoughts, but to develop meta-awareness: the ability to observe your own thoughts, emotions, and instinctual drives from the position of a detached, non-judgmental witness. By observing an impulse arise and pass away without acting on it, its power over you weakens. Repeating this process builds a psychological space between stimulus and reaction. In that space lies the freedom from being ruled by automatic, biological programs.</p>
+                        <p class="mt-2 text-gray-400 hidden" data-lang="pl">Medytacja jest praktycznym narzędziem do eksploracji i uspokojenia wewnętrznego świata. Jej celem nie jest osiągnięcie jakiegoś mistycznego stanu czy całkowite wyeliminowanie myśli, ale rozwinięcie meta-świadomości: zdolności do obserwowania własnych myśli, emocji i instynktownych popędów z pozycji zdystansowanego, nieoceniającego świadka. Obserwując, jak dany impuls pojawia się i znika, bez podejmowania działania, osłabiasz jego władzę nad sobą. Powtarzanie tego procesu buduje psychologiczną przestrzeń między bodźcem a reakcją. W tej przestrzeni leży wolność od bycia rządzonym przez automatyczne, biologiczne programy.</p>
+                    </div>
+                     <div id="ch5" class="pt-4">
+                        <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 5: The Directive of Sublimation: Redirecting Primal Energy to Higher Goals</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 5: Dyrektywa Sublimacji: Przekierowanie Pierwotnej Energii na Wyższe Cele</h4>
+                        <p class="mt-2 text-gray-400" data-lang="en">Sublimation is the alchemical transmutation of primal energies—libido and aggression—into constructive, creative, and high-value activities. It does not involve suppressing energy, but redirecting it. The law of physics states that energy cannot be destroyed, only change its form. The same applies to the powerful psychic energy of libido. The strategy is to consciously create new, higher channels for this energy to flow. The goal is not to extinguish the inner fire, but to build a powerful turbine that transforms its heat into useful power for personal development, mastery, and creativity.</p>
+                        <p class="mt-2 text-gray-400 hidden" data-lang="pl">Sublimacja to alchemiczna transmutacja pierwotnych energii — libido i agresji — w działania konstruktywne, twórcze i o wysokiej wartości. Nie polega na tłumieniu energii, ale na jej przekierowaniu. Prawo fizyki mówi, że energia nie może zostać zniszczona, a jedynie zmienić formę. To samo dotyczy potężnej energii psychicznej, jaką jest libido. Strategia polega na świadomym stworzeniu dla tej energii nowych, wyższych kanałów ujścia. Celem nie jest wygaszenie wewnętrznego ognia, ale zbudowanie potężnej turbiny, która przekształci jego żar w użyteczną moc napędzającą rozwój osobisty, mistrzostwo i twórczość.</p>
+                    </div>
                 </div>
-                 <div class="stat-card p-6 rounded-lg text-center fade-in" style="transition-delay: 200ms;">
-                    <div class="text-4xl font-bold accent-text">78%</div>
-                    <p class="mt-2 text-sm" data-lang="en">of Gen Z users report feeling burned out by dating apps.</p>
-                    <p class="mt-2 text-sm hidden" data-lang="pl">użytkowników z pokolenia Z zgłasza uczucie wypalenia aplikacjami randkowymi.</p>
-                    <p class="text-xs mt-2 text-gray-500">Source: Forbes Health, 2025</p>
+
+                <div class="p-8 section-card rounded-lg fade-in">
+                    <h3 class="text-2xl font-bold border-b border-gray-700 pb-2 mb-4" data-lang="en">Part III: Architecture of a Meaningful Life: Building Purpose Beyond Partnership</h3><h3 class="text-2xl font-bold border-b border-gray-700 pb-2 mb-4 hidden" data-lang="pl">Część III: Architektura Sensownego Życia: Budowanie Celu Poza Partnerstwem</h3>
+                     <div id="ch6" class="mb-8 pt-4">
+                        <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 6: The Blueprint of 'I': Radical Self-Awareness Through Structured Journaling</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 6: Plan Budowy "Ja": Radykalna Samoświadomość poprzez Ustrukturyzowane Prowadzenie Dziennika</h4>
+                        <p class="mt-2 text-gray-400" data-lang="en">Before you can build a satisfying life, you must first know the architect—yourself. Journaling here is not a diary of events, but a research laboratory where, through rigorous self-analysis, you create your "personal constitution": a document defining your fundamental values, boundaries, and mission. This inner compass becomes the supreme law by which all subsequent decisions are made.</p>
+                        <p class="mt-2 text-gray-400 hidden" data-lang="pl">Zanim będzie można zbudować satysfakcjonujące życie, trzeba najpierw poznać architekta — samego siebie. Prowadzenie dziennika w tym kontekście nie jest pamiętnikiem zdarzeń, lecz laboratorium badawczym, w którym poprzez rygorystyczną autoanalizę tworzy się swoją "osobistą konstytucję": dokument określający fundamentalne wartości, granice i misję. Ten wewnętrzny kompas staje się nadrzędnym prawem, według którego podejmowane są wszystkie późniejsze decyzje.</p>
+                    </div>
+                    <div id="ch7" class="mb-8 pt-4">
+                        <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 7: The Pursuit of Mastery: Forging Identity Through Passion and Skill</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 7: Pogoń za Mistrzostwem: Kształtowanie Tożsamości poprzez Pasję i Umiejętności</h4>
+                        <p class="mt-2 text-gray-400" data-lang="en">In a society that often defines a man's value by his relationship status, consciously building an identity on other foundations is a liberating act. The pursuit of mastery in a chosen field—a craft, sport, art, or science—provides a deep and durable sense of purpose, competence, and self-worth that is entirely self-generated and independent of external validation. It provides the same psychological rewards (a sense of agency, pride, respect) but in a way that is stable and fully controlled by the individual.</p>
+                        <p class="mt-2 text-gray-400 hidden" data-lang="pl">W społeczeństwie, które często definiuje wartość mężczyzny przez pryzmat jego statusu w relacjach, świadome zbudowanie tożsamości w oparciu o inne fundamenty jest aktem wyzwoleńczym. Pogoń za mistrzostwem w wybranej dziedzinie — rzemiośle, sporcie, sztuce czy nauce — dostarcza głębokiego i trwałego poczucia celu, kompetencji i własnej wartości, które są całkowicie samogenerujące i niezależne od zewnętrznej walidacji. Zapewnia ona te same nagrody psychologiczne (poczucie sprawczości, dumę, szacunek), ale w sposób, który jest stabilny i w pełni kontrolowany przez jednostkę.</p>
+                    </div>
+                     <div id="ch8" class="mb-8 pt-4">
+                        <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 8: The Strength of the Pack: Cultivating Deep Platonic Bonds</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 8: Siła Stada: Kultywowanie Głębokich Więzi Platonicznych</h4>
+                        <p class="mt-2 text-gray-400" data-lang="en">The decision to become independent of romantic dynamics is not a sentence to loneliness. It is an opportunity to consciously build a much broader and more stable support network based on deep, authentic platonic friendships. Radically redefine "intimacy" not as sex, but as deep trust, mutual understanding, and loyalty. Redefine "family" not by blood or marriage, but as a "tribe" of carefully chosen, loyal friends. This provides a sense of belonging and emotional security that frees one from the desperate search for these values in a single, often unstable, romantic relationship.</p>
+                        <p class="mt-2 text-gray-400 hidden" data-lang="pl">Decyzja o uniezależnieniu się od dynamiki romantycznej nie jest równoznaczna ze skazaniem się na samotność. Jest to okazja do świadomego zbudowania znacznie szerszej i potencjalnie bardziej stabilnej sieci wsparcia opartej na głębokich, autentycznych przyjaźniach platonicznych. Radykalnie zredefiniuj "intymność" nie jako seks, lecz jako głębokie zaufanie, wzajemne zrozumienie i lojalność. Zredefiniuj "rodzinę" nie przez więzy krwi lub małżeństwo, ale jako "plemię" starannie dobranych, lojalnych przyjaciół. Zapewnia to poczucie przynależności i bezpieczeństwa emocjonalnego, które uwalnia od desperackiego poszukiwania tych wartości w jednej, często niestabilnej, relacji romantycznej.</p>
+                    </div>
+                     <div id="ch9" class="pt-4">
+                        <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 9: The Call to Service: Finding Transcendence in Action for Others</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 9: Wezwanie do Służby: Odnalezienie Transcendencji w Działaniu na Rzecz Innych</h4>
+                        <p class="mt-2 text-gray-400" data-lang="en">The final, highest floor in the architecture of a meaningful life is transcendence—moving beyond one's own 'I' and engaging in something larger. In the face of existential nihilism, active work for the benefit of others or a higher ideal is the most powerful known antidote. A sense of meaninglessness is fed by self-absorption. The moment an individual consciously directs their attention and energy outward, a fundamental shift in perspective occurs. Action gives meaning.</p>
+                        <p class="mt-2 text-gray-400 hidden" data-lang="pl">Ostatnim, najwyższym piętrem w architekturze sensownego życia jest transcendencja — wyjście poza własne "ja" i zaangażowanie w coś większego. W obliczu egzystencjalnego nihilizmu, aktywne działanie na rzecz innych lub wyższej idei jest najpotężniejszym znanym antidotum. Poczucie bezsensu karmi się samoabsorpcją. W momencie, gdy jednostka świadomie kieruje swoją uwagę i energię na zewnątrz, następuje fundamentalne przesunięcie perspektywy. Działanie nadaje sens.</p>
+                    </div>
                 </div>
-                 <div class="stat-card p-6 rounded-lg text-center fade-in" style="transition-delay: 300ms;">
-                    <div class="text-4xl font-bold accent-text">35%</div>
-                    <p class="mt-2 text-sm" data-lang="en">of all households worldwide are projected to be single-person by mid-century.</p>
-                    <p class="mt-2 text-sm hidden" data-lang="pl">wszystkich gospodarstw domowych na świecie ma być jednoosobowych do połowy stulecia.</p>
-                    <p class="text-xs mt-2 text-gray-500">Source: Global Issues, 2025</p>
+
+                <div class="p-8 section-card rounded-lg fade-in">
+                    <h3 class="text-2xl font-bold border-b border-gray-700 pb-2 mb-4" data-lang="en">Conclusion: Forging the New Compass</h3><h3 class="text-2xl font-bold border-b border-gray-700 pb-2 mb-4 hidden" data-lang="pl">Zakończenie: Wykuwanie Nowego Kompasu</h3>
+                     <p class="mt-2 text-gray-400" data-lang="en">The path laid out by this protocol is not an easy solution nor a guarantee of constant euphoria. It is a demanding, Stoic path based on discipline, courage, and consistency. However, its ultimate result is the achievement of a state of authentic strength and freedom. An individual who undergoes this process will become a person with an unshakable sense of self-worth, a clearly defined purpose, and a solid support network built on their own terms. They will operate from a position of strength, not need. They will no longer search for a compass outside, because they will have forged it within themselves.</p>
+                     <p class="mt-2 text-gray-400 hidden" data-lang="pl">Ścieżka wytyczona przez ten protokół nie jest łatwym rozwiązaniem ani gwarancją nieustającej euforii. Jest to droga wymagająca, stoicka, oparta na dyscyplinie, odwadze i konsekwencji. Jednak jej ostatecznym rezultatem jest osiągnięcie stanu autentycznej siły i wolności. Jednostka, która przejdzie ten proces, stanie się osobą o niezachwianym poczuciu własnej wartości, z jasno zdefiniowanym celem i solidną siecią wsparcia, zbudowaną na własnych warunkach. Będzie działać z pozycji siły, a nie potrzeby. Nie będzie już poszukiwać kompasu na zewnątrz, ponieważ wykuje go w sobie.</p>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <footer class="border-t border-gray-800 dark:border-gray-800">
-        <div class="container mx-auto px-6 py-8 text-center text-gray-500 dark:text-gray-500">
+    <footer class="border-t border-gray-800">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-500">
             <p class="font-bold accent-text">
-                <span data-lang="en">The Autonomy Protocol</span>
-                <span data-lang="pl" class="hidden">Protokół Autonomii</span>
+                <span data-lang="en">The Autonomy Protocol</span><span data-lang="pl" class="hidden">Protokół Autonomii</span>
             </p>
             <p class="text-sm mt-2">
                 <span data-lang="en">In an age of uncertainty, the greatest power an individual possesses is the power over oneself and the conscious shaping of one's own destiny.</span>
@@ -390,11 +243,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // --- Global Chart Instances ---
-    // We declare them here so they can be accessed by multiple functions.
     let politicalDatingChart, divorceInitiationChart, mentalHealthChart;
-
-    // --- Theme Management ---
     const themeToggle = document.getElementById('theme-toggle');
     const themeIconLight = document.getElementById('theme-icon-light');
     const themeIconDark = document.getElementById('theme-icon-dark');
@@ -409,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function () {
             htmlEl.classList.add('dark');
         }
         updateThemeIcons();
-        redrawAllCharts(); // Redraw charts on theme change
+        redrawAllCharts();
     }
 
     function updateThemeIcons() {
@@ -428,7 +277,6 @@ document.addEventListener('DOMContentLoaded', function () {
         applyTheme(newTheme);
     });
 
-    // --- Language Management ---
     const langToggle = document.getElementById('lang-toggle');
     const langMenu = document.getElementById('lang-menu');
     const currentLangSpan = document.getElementById('current-lang');
@@ -446,15 +294,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function applyLanguage(lang) {
         document.querySelectorAll('[data-lang]').forEach(el => {
-            if (el.dataset.lang === lang) {
-                el.classList.remove('hidden');
-            } else {
-                el.classList.add('hidden');
-            }
+            el.classList.toggle('hidden', el.dataset.lang !== lang);
         });
         currentLangSpan.textContent = lang.toUpperCase();
         localStorage.setItem('language', lang);
-        redrawAllCharts(); // Redraw charts on language change
+        redrawAllCharts();
     }
 
     document.querySelectorAll('[data-lang-set]').forEach(btn => {
@@ -466,35 +310,28 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // --- Animation Observer ---
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
             }
         });
-    }, {
-        threshold: 0.1
-    });
+    }, { threshold: 0.1 });
 
     document.querySelectorAll('.fade-in').forEach(el => {
         observer.observe(el);
     });
 
-    // --- Chart.js Implementation ---
     function redrawAllCharts() {
-        // Safely destroy existing charts before creating new ones
         if (politicalDatingChart) politicalDatingChart.destroy();
         if (divorceInitiationChart) divorceInitiationChart.destroy();
         if (mentalHealthChart) mentalHealthChart.destroy();
-        // A small delay to ensure the DOM has updated with the theme classes if needed
         setTimeout(createCharts, 50);
     }
 
     function createCharts() {
         const isDarkMode = document.documentElement.classList.contains('dark');
         const lang = localStorage.getItem('language') || 'en';
-
         const chartColors = {
             grid: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
             ticks: isDarkMode ? '#9CA3AF' : '#4B5563',
@@ -504,104 +341,80 @@ document.addEventListener('DOMContentLoaded', function () {
             amber: '#F59E0B'
         };
 
-        // Chart 1: Political Dating Chart
-        const ctx1 = document.getElementById('politicalDatingChart').getContext('2d');
-        politicalDatingChart = new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: lang === 'pl' ? ['Demokraci', 'Republikanie'] : ['Democrats', 'Republicans'],
-                datasets: [{
-                    label: lang === 'pl' ? '% którzy nie umówiliby się z przeciwnikiem politycznym' : '% Who Would Not Date Political Opposite',
-                    data: [71, 47],
-                    backgroundColor: [chartColors.sky, chartColors.rose],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-                scales: {
-                    x: { beginAtZero: true, max: 100, grid: { color: chartColors.grid }, ticks: { color: chartColors.ticks, font: { size: 10 } } },
-                    y: { grid: { display: false }, ticks: { color: chartColors.ticks } }
+        const ctx1 = document.getElementById('politicalDatingChart')?.getContext('2d');
+        if(ctx1) {
+            politicalDatingChart = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: lang === 'pl' ? ['Demokraci', 'Republikanie'] : ['Democrats', 'Republicans'],
+                    datasets: [{
+                        label: lang === 'pl' ? '% którzy nie umówiliby się' : '% Who Would Not Date',
+                        data: [71, 47],
+                        backgroundColor: [chartColors.sky, chartColors.rose],
+                        borderWidth: 0
+                    }]
                 },
-                plugins: {
-                    legend: { display: false },
-                    title: { display: true, text: lang === 'pl' ? 'Polaryzacja w randkowaniu (USA)' : 'Dating Polarization (US)', color: chartColors.text }
+                options: {
+                    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                    scales: { x: { beginAtZero: true, max: 100, grid: { color: chartColors.grid }, ticks: { color: chartColors.ticks, font: { size: 10 } } }, y: { grid: { display: false }, ticks: { color: chartColors.ticks } } },
+                    plugins: { legend: { display: false }, title: { display: true, text: lang === 'pl' ? 'Polaryzacja w randkowaniu (USA)' : 'Dating Polarization (US)', color: chartColors.text, font: {size: 14} } }
                 }
-            }
-        });
+            });
+        }
 
-        // Chart 2: Divorce Initiation Chart
-        const ctx2 = document.getElementById('divorceInitiationChart').getContext('2d');
-        divorceInitiationChart = new Chart(ctx2, {
-            type: 'doughnut',
-            data: {
-                labels: lang === 'pl' ? ['Kobiety (wykształcenie wyższe)', 'Pozostali'] : ['College-Educated Women', 'Others'],
-                datasets: [{
-                    data: [90, 10],
-                    backgroundColor: [chartColors.sky, chartColors.rose],
-                    borderColor: isDarkMode ? '#111827' : '#F9FAFB',
-                    borderWidth: 4,
-                    hoverBorderWidth: 4
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false, cutout: '60%',
-                plugins: {
-                    legend: { position: 'bottom', labels: { color: chartColors.ticks } },
-                    title: { display: true, text: lang === 'pl' ? 'Inicjatorzy rozwodów (Kobiety z wyższym wykształceniem, USA)' : 'Divorce Initiators (College-Educated Women, US)', color: chartColors.text }
+        const ctx2 = document.getElementById('divorceInitiationChart')?.getContext('2d');
+        if(ctx2) {
+            divorceInitiationChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: lang === 'pl' ? ['Kobiety (z wyższym wykształceniem)', 'Pozostali'] : ['College-Educated Women', 'Others'],
+                    datasets: [{
+                        data: [90, 10],
+                        backgroundColor: [chartColors.sky, chartColors.rose],
+                        borderColor: isDarkMode ? '#1F2937' : '#F9FAFB',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '60%',
+                    plugins: { legend: { position: 'bottom', labels: { color: chartColors.ticks, font: {size: 10} } }, title: { display: true, text: lang === 'pl' ? 'Inicjatorzy rozwodów (USA)' : 'Divorce Initiators (US)', color: chartColors.text, font: {size: 14} } }
                 }
-            }
-        });
-
-        // Chart 3: Mental Health Chart (Poland)
-        const ctx3 = document.getElementById('mentalHealthChart').getContext('2d');
-        mentalHealthChart = new Chart(ctx3, {
-            type: 'bar',
-            data: {
-                labels: lang === 'pl' ? ['Kobiety', 'Mężczyźni'] : ['Women', 'Men'],
-                datasets: [{
-                    label: lang === 'pl' ? 'Względne ryzyko depresji' : 'Relative Depression Risk',
-                    data: [2, 1],
-                    backgroundColor: [chartColors.sky, chartColors.amber],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true, grid: { color: chartColors.grid },
-                        ticks: { color: chartColors.ticks, callback: (value) => value > 0 ? value + 'x' : '0' }
+            });
+        }
+        
+        const ctx3 = document.getElementById('mentalHealthChart')?.getContext('2d');
+        if(ctx3) {
+            mentalHealthChart = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: lang === 'pl' ? ['Kobiety', 'Mężczyźni'] : ['Women', 'Men'],
+                    datasets: [{
+                        label: lang === 'pl' ? 'Względne ryzyko depresji' : 'Relative Depression Risk',
+                        data: [2, 1],
+                        backgroundColor: [chartColors.sky, chartColors.amber],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: chartColors.grid }, ticks: { color: chartColors.ticks, callback: (value) => value > 0 ? value + 'x' : '0' } },
+                        x: { grid: { display: false }, ticks: { color: chartColors.ticks } }
                     },
-                    x: { grid: { display: false }, ticks: { color: chartColors.ticks } }
-                },
-                plugins: {
-                    legend: { display: false },
-                    title: { display: true, text: lang === 'pl' ? 'Względne ryzyko depresji (Polska)' : 'Relative Depression Risk (Poland)', color: chartColors.text },
-                    tooltip: {
-                        callbacks: {
-                            label: (context) => {
-                                if (context.dataset.data[context.dataIndex] === 2) {
-                                   return lang === 'pl' ? '2x częściej niż mężczyźni' : '2x more likely than men';
-                                }
-                                return lang === 'pl' ? 'Bazowe ryzyko' : 'Baseline risk';
-                            }
-                        }
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, text: lang === 'pl' ? 'Względne ryzyko depresji (PL)' : 'Relative Depression Risk (PL)', color: chartColors.text, font: {size: 14} },
+                        tooltip: { callbacks: { label: (c) => c.raw === 2 ? (lang === 'pl' ? '2x częściej niż mężczyźni' : '2x more likely than men') : (lang === 'pl' ? 'Ryzyko bazowe' : 'Baseline risk') } }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
-    // --- Initial Page Load Setup ---
-    // 1. Set initial theme
     const savedTheme = localStorage.getItem('theme') || 'dark';
     applyTheme(savedTheme);
-
-    // 2. Set initial language
     const savedLang = localStorage.getItem('language') || 'en';
     applyLanguage(savedLang);
-
 });
 </script>
 
