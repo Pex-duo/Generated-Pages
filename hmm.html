@@ -16,28 +16,40 @@
             --bg-start: #111111; --card-start: #1a1a1a; --border-start: #333333; --text-body-start: #a0a0a0; --text-head-start: #e0e0e0; --accent-start: #ff4500; --accent2-start: #ff8c00;
             /* Zen Palette */
             --bg-end: #f0fdf4; --card-end: #ffffff; --border-end: #dcfce7; --text-body-end: #3f3f46; --text-head-end: #18181b; --accent-end: #22c55e; --accent2-end: #84cc16;
+
             /* Dynamic Variables */
             --bg-current: var(--bg-start); --card-current: var(--card-start); --border-current: var(--border-start); --text-body-current: var(--text-body-start); --text-head-current: var(--text-head-start); --accent-current: var(--accent-start); --accent2-current: var(--accent2-start);
         }
+        
         html { scroll-behavior: smooth; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-current); color: var(--text-body-current); transition: background-color 0.5s, color 0.5s; }
+        
         .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; transition: opacity 1s ease-in-out; pointer-events: none; }
         #industrial-bg { opacity: 1; }
         #zen-bg { opacity: 0; }
         .digital-rain { position: absolute; width: 2px; height: 80px; background: linear-gradient(to bottom, rgba(255, 69, 0, 0), rgba(255, 69, 0, 0.4)); animation: fall 3s linear infinite; }
         @keyframes fall { to { transform: translateY(100vh); } }
         .leaf { position: absolute; width: 20px; height: 20px; background-color: var(--accent-end); opacity: 0.5; border-radius: 0 50% 0 50%; animation: float 10s linear infinite; }
-        @keyframes float { 0% { transform: translateY(-10vh) translateX(0) rotate(0deg); } 100% { transform: translateY(110vh) translateX(5vw) rotate(360deg); } }
+        @keyframes float { 
+            0% { transform: translateY(-10vh) translateX(0) rotate(0deg); } 
+            100% { transform: translateY(110vh) translateX(5vw) rotate(360deg); }
+        }
+
         .highlight { color: var(--accent-current); font-weight: 600; }
+        
         .blueprint-card { background-color: var(--card-current); border: 1px solid var(--border-current); transition: all 0.3s ease-in-out; }
         .blueprint-card:hover { transform: translateY(-5px); border-color: var(--accent-current); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        
         .btn-primary { background-color: var(--accent-current); color: var(--bg-start); font-weight: 600; border-radius: 4px; transition: all 0.2s ease-in-out; }
         .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 20px color-mix(in srgb, var(--accent-current) 40%, transparent); }
+        
         .fade-in { opacity: 0; transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
         .fade-in.up { transform: translateY(40px); }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
+        
         .prose-custom { @apply prose prose-sm max-w-none; color: var(--text-body-current); }
         .prose-custom h1, .prose-custom h2, .prose-custom h3, .prose-custom h4, .prose-custom h5, .prose-custom h6, .prose-custom strong { color: var(--text-head-current); }
+
         .source-link { display: inline-flex; align-items: center; justify-content: center; position: relative; width: 16px; height: 16px; background-color: var(--border-current); color: var(--text-body-current); border-radius: 50%; text-decoration: none; font-size: 10px; font-style: italic; font-family: serif; margin-left: 4px; vertical-align: super; }
         .source-link .tooltip { visibility: hidden; width: 220px; background-color: var(--card-current); color: var(--text-body-current); text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 10; bottom: 150%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; font-size: 0.75rem; border: 1px solid var(--border-current); line-height: 1.4; font-family: 'Inter', sans-serif; font-style: normal; }
         .source-link:hover .tooltip { visibility: visible; opacity: 1; }
@@ -55,7 +67,7 @@
                 <a href="#diagnosis" class="font-semibold text-[var(--text-body-current)] hover:text-[var(--accent-current)] transition-colors" data-lang="en">The Labyrinth</a><a href="#diagnosis" class="font-semibold text-[var(--text-body-current)] hover:text-[var(--accent-current)] transition-colors hidden" data-lang="pl">Labirynt</a>
                 <a href="#protocol" class="font-semibold text-[var(--text-body-current)] hover:text-[var(--accent-current)] transition-colors" data-lang="en">The Oasis</a><a href="#protocol" class="font-semibold text-[var(--text-body-current)] hover:text-[var(--accent-current)] transition-colors hidden" data-lang="pl">Oaza</a>
             </div>
-            <div class="flex items-center space-x-4">
+             <div class="flex items-center space-x-4">
                 <button id="theme-toggle" class="p-2 rounded-md bg-[var(--card-current)] border border-[var(--border-current)] text-[var(--text-body-current)]"><svg id="theme-icon-light" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg><svg id="theme-icon-dark" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg></button>
                 <div class="relative">
                     <button id="lang-toggle" class="p-2 rounded-md bg-[var(--card-current)] border border-[var(--border-current)] flex items-center text-sm text-[var(--text-body-current)]"><span id="current-lang">EN</span><svg class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></button>
@@ -169,8 +181,8 @@
                     <p class="mt-2 text-[var(--text-body-current)] max-w-xl mx-auto" data-lang="en">Construct your oasis. This is the final phase of building a meaningful life on the foundations you have forged.</p><p class="mt-2 text-[var(--text-body-current)] max-w-xl mx-auto hidden" data-lang="pl">Zbuduj swoją oazę. To ostatnia faza budowania sensownego życia na fundamentach, które wykułeś.</p>
             </div>
              <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8 fade-in up">
-                <article id="ch6" class="blueprint-card rounded-lg p-8 space-y-6"><header><h4 class="text-xl font-bold text-[var(--accent-current)]" data-lang="en">Chapter 6: Self-Awareness</h4><h4 class="text-xl font-bold text-[var(--accent-current)] hidden" data-lang="pl">Rozdział 6: Samoświadomość</h4></header><div class="prose-custom"><p data-lang="en">Through structured journaling, you create your <strong>"personal constitution"</strong>: a document defining your values and mission. This inner compass becomes the supreme law.</p><p data-lang="pl" class="hidden">Poprzez ustrukturyzowane prowadzenie dziennika tworzysz swoją <strong>"osobistą konstytucję"</strong>: dokument definiujący Twoje wartości i misję. Ten wewnętrzny kompas staje się nadrzędnym prawem.</p></div></article>
-                <article id="ch7" class="blueprint-card rounded-lg p-8 space-y-6"><header><h4 class="text-xl font-bold text-[var(--accent-current)]" data-lang="en">Chapter 7: Mastery & Flow</h4><h4 class="text-xl font-bold text-[var(--accent-current)] hidden" data-lang="pl">Rozdział 7: Mistrzostwo i Flow</h4></header><div class="prose-custom"><p data-lang="en">Leverage <strong>"flow"</strong>—a state of optimal experience from total immersion in a challenging activity. This replaces the need for external validation with an internally generated source of fulfillment.</p><p data-lang="pl" class="hidden">Wykorzystaj <strong>"flow"</strong> — stan optymalnego doświadczenia. Zastępuje to potrzebę zewnętrznej walidacji wewnętrznym źródłem spełnienia.</p></div></article>
+                <article id="ch6" class="blueprint-card rounded-lg p-8 space-y-6"><header><h4 class="text-xl font-bold text-[var(--accent-current)]" data-lang="en">Chapter 6: Self-Awareness</h4><h4 class="text-xl font-bold text-[var(--accent-current)] hidden" data-lang="pl">Rozdział 6: Samoświadomość</h4></header><div class="prose-custom"><p data-lang="en">Through structured journaling, you create your <strong>"personal constitution"</strong>: a document defining your values and mission. This inner compass becomes the supreme law.</p><p data-lang="pl" class="hidden">Poprzez ustrukturyzowane prowadzenie dziennika tworzysz swoją <strong>"osobistą konstytucję"</strong>: dokument definiujący Twoje wartości i misję. Ten wewnętrzny kompas staje się nadrzędnym prawem.</p></div><div class="pt-4 border-t border-[var(--border-current)]"><h5 class="font-bold mb-3 text-[var(--text-head-current)]" data-lang="en">Data Insight</h5><h5 class="font-bold mb-3 text-[var(--text-head-current)] hidden" data-lang="pl">Wgląd w Dane</h5><div class="data-highlight p-4 rounded"><p class="font-extrabold text-2xl text-[var(--accent-current)]">42%</p><p class="text-sm text-[var(--text-head-current)]" data-lang="en">Higher achievement rate for those who write down their goals.</p><p class="text-sm text-[var(--text-head-current)] hidden" data-lang="pl">Wyższy wskaźnik realizacji celów u osób, które je zapisują.</p></div></div></article>
+                <article id="ch7" class="blueprint-card rounded-lg p-8 space-y-6"><header><h4 class="text-xl font-bold text-[var(--accent-current)]" data-lang="en">Chapter 7: Mastery & Flow</h4><h4 class="text-xl font-bold text-[var(--accent-current)] hidden" data-lang="pl">Rozdział 7: Mistrzostwo i Flow</h4></header><div class="prose-custom"><p data-lang="en">Leverage <strong>"flow"</strong>—a state of optimal experience from total immersion in a challenging activity. This replaces the need for external validation with an internally generated source of fulfillment.</p><p data-lang="pl" class="hidden">Wykorzystaj <strong>"flow"</strong> — stan optymalnego doświadczenia. Zastępuje to potrzebę zewnętrznej walidacji wewnętrznym źródłem spełnienia.</p></div><div class="pt-4 border-t border-[var(--border-current)]"><h5 class="font-bold mb-3 text-[var(--text-head-current)]" data-lang="en">Data Insight</h5><h5 class="font-bold mb-3 text-[var(--text-head-current)] hidden" data-lang="pl">Wgląd w Dane</h5><div class="data-highlight p-4 rounded"><p class="font-extrabold text-2xl text-[var(--accent-current)]" data-lang="en">29% Reduction</p><p class="font-extrabold text-2xl text-[var(--accent-current)] hidden" data-lang="pl">29% Redukcji</p><p class="text-sm text-[var(--text-head-current)]" data-lang="en">in all-cause mortality risk is associated with regular hobby engagement.</p><p class="text-sm text-[var(--text-head-current)] hidden" data-lang="pl">ryzyka zgonu, związane z regularnym angażowaniem się w hobby.</p></div></div></article>
                 <article id="ch8" class="blueprint-card rounded-lg p-8 space-y-6"><header><h4 class="text-xl font-bold text-[var(--accent-current)]" data-lang="en">Chapter 8: The Pack</h4><h4 class="text-xl font-bold text-[var(--accent-current)] hidden" data-lang="pl">Rozdział 8: Stado</h4></header><div class="prose-custom"><p data-lang="en">Build a resilient network of deep, platonic friendships. Radically redefine <strong>"family"</strong> as a tribe of chosen, loyal friends. This is a direct counter-strategy to the male loneliness crisis.</p><p data-lang="pl" class="hidden">Zbuduj odporną sieć głębokich, platonicznych przyjaźni. Zredefiniuj <strong>"rodzinę"</strong> jako plemię wybranych, lojalnych przyjaciół. To kontrstrategia wobec kryzysu męskiej samotności.</p></div><div class="pt-4 border-t border-[var(--border-current)]"><h5 class="font-bold mb-3 text-[var(--text-head-current)]" data-lang="en">Data & Evidence</h5><h5 class="font-bold mb-3 text-[var(--text-head-current)] hidden" data-lang="pl">Dane i Dowody</h5><div class="h-48"><canvas id="maleFriendshipChart"></canvas></div></div></article>
                 <article id="ch9" class="blueprint-card rounded-lg p-8 space-y-6"><header><h4 class="text-xl font-bold text-[var(--accent-current)]" data-lang="en">Chapter 9: Service</h4><h4 class="text-xl font-bold text-[var(--accent-current)] hidden" data-lang="pl">Rozdział 9: Służba</h4></header><div class="prose-custom"><p data-lang="en">The highest tier is transcendence: service to something larger than yourself. Active contribution is a powerful, evidence-based antidote to nihilism. It is the ultimate answer to meaninglessness: not discovering a pre-ordained meaning, but actively <strong>creating</strong> it through action.</p><p data-lang="pl" class="hidden">Najwyższy poziom to transcendencja: służba czemuś większemu niż ty sam. Aktywny wkład to potężne antidotum na nihilizm. To ostateczna odpowiedź na bezsens: nie odkrywanie narzuconego sensu, ale aktywne <strong>tworzenie</strong> go poprzez działanie.</p></div></article>
             </div>
@@ -196,7 +208,6 @@ document.addEventListener('DOMContentLoaded', function () {
         htmlEl.classList.add(theme);
         document.getElementById('theme-icon-light').classList.toggle('hidden', theme === 'dark');
         document.getElementById('theme-icon-dark').classList.toggle('hidden', theme === 'light');
-        // We need to re-trigger the scroll handler to apply the new color palette instantly
         window.dispatchEvent(new Event('scroll'));
         redrawAllCharts();
     }
@@ -229,7 +240,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }, { threshold: 0.1 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     
-    // Background and Color transition logic
     const industrialBg = document.getElementById('industrial-bg');
     const zenBg = document.getElementById('zen-bg');
     const root = document.documentElement;
@@ -262,12 +272,9 @@ document.addEventListener('DOMContentLoaded', function () {
         zenBg.style.opacity = progress;
 
         const p = htmlEl.classList.contains('dark') ? palettes : lightPalettes;
-        const start = p.start;
-        const end = p.end;
-
-        Object.keys(start).forEach(key => {
-            const startRgb = hexToRgb(start[key]);
-            const endRgb = hexToRgb(end[key]);
+        Object.keys(p.start).forEach(key => {
+            const startRgb = hexToRgb(p.start[key]);
+            const endRgb = hexToRgb(p.end[key]);
             if(startRgb && endRgb) {
                 const currentR = Math.round(lerp(startRgb.r, endRgb.r, progress));
                 const currentG = Math.round(lerp(startRgb.g, endRgb.g, progress));
@@ -277,7 +284,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }, { passive: true });
 
-    // Background animation generation
     for(let i=0; i<25; i++) {
         const rain = document.createElement('div');
         rain.className = 'digital-rain';
