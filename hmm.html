@@ -3,78 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Autonomy Protocol | An Evidence-Based Dossier</title>
+    <title>The Autonomy Protocol | Your Adventure</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com/3.4.1?plugins=typography"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://cssanimation.io/cssanimation.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         html { scroll-behavior: smooth; }
-        body { font-family: 'Inter', sans-serif; background-color: #0d1117; color: #c9d1d9; transition: background-color 0.3s, color 0.3s; }
-        html.light body { background-color: #f9fafb; color: #1f2937; }
-        .chapter-card { background-color: #161b22; border: 1px solid #30363d; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); transform-style: preserve-3d; }
-        html.light .chapter-card { background-color: #ffffff; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05); }
-        .chapter-card:hover { transform: perspective(1000px) translateY(-5px) scale(1.01); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); }
-        html.light .chapter-card:hover { box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1); }
-        .data-highlight { background-color: rgba(88, 166, 255, 0.1); border-left: 4px solid #58a6ff; }
-        html.light .data-highlight { background-color: rgba(37, 99, 235, 0.05); border-left: 4px solid #2563eb;}
-        .accent-text { color: #58a6ff; }
-        html.light .accent-text { color: #2563eb; }
-        .btn-primary { background-color: #238636; color: white; transition: all 0.3s; font-weight: 600; position: relative; overflow: hidden; z-index: 1; }
-        .btn-primary:hover { background-color: #2ea043; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        html.light .btn-primary { background-color: #2563eb; }
-        html.light .btn-primary:hover { background-color: #1d4ed8; }
-        .btn-secondary { background-color: #21262d; border: 1px solid #30363d; color: #c9d1d9; transition: all 0.3s; }
-        html.light .btn-secondary { background-color: #e5e7eb; border-color: #d1d5db; color: #374151; }
-        .nav-link { position: relative; transition: color 0.3s; }
-        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 50%; transform: translateX(-50%); background-color: #58a6ff; transition: width 0.3s; }
-        html.light .nav-link::after { background-color: #2563eb; }
-        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
-        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        body { font-family: 'Poppins', sans-serif; background-color: #1a202c; color: #e2e8f0; transition: background-color 0.3s, color 0.3s; }
+        html.light body { background-color: #f0f9ff; color: #1e293b; }
+        
+        /* New RPG Theme Styles */
+        .highlight-yellow { color: #facc15; }
+        .highlight-green { color: #4ade80; }
+        .highlight-blue { color: #60a5fa; }
+        .highlight-purple { color: #c084fc; }
+
+        .rpg-panel { background-color: #2d3748; border: 2px solid #4a5568; border-radius: 16px; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05); }
+        html.light .rpg-panel { background-color: #ffffff; border: 2px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .rpg-panel:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+        .rpg-button { 
+            background-image: linear-gradient(to top, #2dd4bf, #34d399);
+            color: #ffffff;
+            font-weight: 700;
+            border: 2px solid #047857;
+            border-bottom-width: 5px;
+            border-radius: 12px;
+            transition: all 0.15s ease-in-out;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .rpg-button:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .rpg-button:active { transform: translateY(1px); border-bottom-width: 2px; }
+        html.light .rpg-button { background-image: linear-gradient(to top, #3b82f6, #60a5fa); border-color: #1e40af; }
+        
+        .cloud-box {
+            background: #4a5568;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: relative;
+            animation: cloudFloat 8s ease-in-out infinite;
+        }
+        html.light .cloud-box { background: #e0f2fe; }
+        @keyframes cloudFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        
+        .part-divider {
+            position: relative;
+            overflow: hidden;
+            background-image: linear-gradient(to top, #2d3748, #1a202c);
+        }
+        html.light .part-divider { background-image: linear-gradient(to top, #e0f2fe, #f0f9ff); }
+        .part-divider .numeral { font-size: 15rem; font-weight: 900; color: #4a5568; opacity: 0.1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; }
+        html.light .part-divider .numeral { color: #cbd5e1; }
+
+        .fade-in { opacity: 0; transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in.up { transform: translateY(40px); }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
-        .bg-grid-pattern { background-image: radial-gradient(#30363d 1px, transparent 1px); background-size: 40px 40px; }
-        html.light .bg-grid-pattern { background-image: radial-gradient(#e5e7eb 1px, transparent 1px); }
-        .styled-table { width: 100%; border-collapse: collapse; }
-        .styled-table th, .styled-table td { padding: 8px 12px; font-size: 0.8rem; text-align: left; border-bottom: 1px solid #30363d; }
-        html.light .styled-table th, html.light .styled-table td { border-bottom: 1px solid #e5e7eb; }
-        .styled-table th { background-color: #0d1117; font-weight: 600; }
-        html.light .styled-table th { background-color: #f9fafb; }
-        blockquote { border-left: 4px solid #30363d; padding-left: 1rem; font-style: italic; color: #8b949e; }
-        html.light blockquote { border-left-color: #d1d5db; color: #4b5563; }
-        .prose-custom { @apply prose prose-invert prose-sm max-w-none prose-p:text-gray-400 prose-headings:text-gray-200 prose-strong:text-white; }
-        html.light .prose-custom { @apply prose-neutral prose-sm max-w-none prose-p:text-gray-600 prose-headings:text-gray-900 prose-strong:text-gray-900; }
-        .animated-gradient-text { background: linear-gradient(to right, #a7b2c1 20%, #c9d1d9 40%, #c9d1d9 60%, #a7b2c1 80%); background-size: 200% auto; background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShine 4s linear infinite; }
-        html.light .animated-gradient-text { background: linear-gradient(to right, #374151 20%, #111827 40%, #111827 60%, #374151 80%); background-size: 200% auto; background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShine 4s linear infinite; }
+        .animated-gradient-text { background: linear-gradient(to right, #fde047, #facc15, #fbbf24, #fde047); background-size: 200% auto; background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShine 3s linear infinite; }
         @keyframes textShine { to { background-position: 200% center; } }
-        .part-divider { background-color: #161b22; }
-        html.light .part-divider { background-color: #f3f4f6; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-300">
 
-    <header class="sticky top-0 z-50 bg-gray-900/80 backdrop-blur-lg border-b border-gray-800">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#hero" class="text-2xl font-bold accent-text"><span data-lang="en">A/P Dossier</span><span data-lang="pl" class="hidden">Dossier P/A</span></a>
-            <div class="hidden md:flex items-center space-x-8">
-                <a href="#diagnosis" class="nav-link" data-lang="en">Diagnosis</a><a href="#diagnosis" class="nav-link hidden" data-lang="pl">Diagnoza</a>
-                <a href="#protocol" class="nav-link" data-lang="en">The Protocol</a><a href="#protocol" class="nav-link hidden" data-lang="pl">Protokół</a>
+    <header class="sticky top-0 z-50 bg-gray-900/80 backdrop-blur-lg border-b border-gray-700">
+         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#hero" class="text-2xl font-black" data-lang="en">The <span class="accent-text">A/P</span> Quest</a>
+            <a href="#hero" class="text-2xl font-black hidden" data-lang="pl">Misja <span class="accent-text">P/A</span></a>
+             <div class="hidden md:flex items-center space-x-8">
+                <a href="#diagnosis" class="font-semibold" data-lang="en">The World</a><a href="#diagnosis" class="font-semibold hidden" data-lang="pl">Świat Gry</a>
+                <a href="#protocol" class="font-semibold" data-lang="en">Your Path</a><a href="#protocol" class="font-semibold hidden" data-lang="pl">Twoja Ścieżka</a>
             </div>
             <div class="flex items-center space-x-4">
-                <button id="theme-toggle" class="p-2 rounded-md btn-secondary">
-                    <svg id="theme-icon-light" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                    <svg id="theme-icon-dark" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
-                </button>
+                <button id="theme-toggle" class="p-2 rounded-md bg-gray-700"><svg id="theme-icon-light" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg><svg id="theme-icon-dark" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg></button>
                 <div class="relative">
-                    <button id="lang-toggle" class="p-2 rounded-md btn-secondary flex items-center text-sm">
-                        <span id="current-lang">EN</span>
-                        <svg class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                    </button>
-                    <div id="lang-menu" class="absolute right-0 mt-2 w-20 bg-gray-800 border border-gray-700 rounded-md shadow-lg hidden">
-                        <a href="#" data-lang-set="en" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">EN</a>
-                        <a href="#" data-lang-set="pl" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">PL</a>
-                    </div>
+                    <button id="lang-toggle" class="p-2 rounded-md bg-gray-700 flex items-center text-sm"><span id="current-lang">EN</span><svg class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></button>
+                    <div id="lang-menu" class="absolute right-0 mt-2 w-20 bg-gray-800 border border-gray-700 rounded-md shadow-lg hidden"><a href="#" data-lang-set="en" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">EN</a><a href="#" data-lang-set="pl" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">PL</a></div>
                 </div>
             </div>
         </nav>
@@ -82,229 +87,119 @@
 
     <main class="container mx-auto px-6 py-12">
 
-        <section id="hero" class="text-center py-20 min-h-screen flex flex-col justify-center items-center bg-grid-pattern">
-            <div class="fade-in max-w-4xl">
-                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
-                    <span class="block" data-lang="en">Do you feel the rules have changed?</span>
-                    <span class="block hidden" data-lang="pl">Czujesz, że zasady gry się zmieniły?</span>
+        <section id="hero" class="text-center py-20 min-h-screen flex flex-col justify-center items-center">
+            <div class="fade-in up max-w-4xl">
+                <h1 class="text-4xl md:text-6xl font-black leading-tight">
+                    <span class="block animated-gradient-text" data-lang="en">Do You Feel The Rules Have Changed?</span>
+                    <span class="block animated-gradient-text hidden" data-lang="pl">Czujesz, Że Zasady Gry Się Zmieniły?</span>
                 </h1>
                 <p class="mt-6 text-lg md:text-xl text-gray-400">
-                    <span data-lang="en">That the compass for navigating relationships is broken? That the effort yields only frustration? You are not alone, and this is not a personal failure. It is a rational response to a system in chaos. This is not a guide to win a broken game. This is a blueprint to build your own.</span>
-                    <span data-lang="pl" class="hidden">Że kompas do nawigacji w relacjach jest zepsuty? Że wysiłek przynosi tylko frustrację? Nie jesteś sam i to nie jest osobista porażka. To racjonalna reakcja na system w chaosie. To nie jest poradnik, jak wygrać w zepsutą grę. To plan, jak zbudować własną.</span>
+                    <span data-lang="en">That the compass for navigating relationships is <strong class="highlight-yellow">broken</strong>? That the effort yields only <strong class="highlight-yellow">frustration</strong>? You are not alone, and this is not a personal failure. It is a rational response to a system in chaos. This is not a guide to win a broken game. <strong class="highlight-green">This is a quest to build your own.</strong></span>
+                    <span data-lang="pl" class="hidden">Że kompas do nawigacji w relacjach jest <strong class="highlight-yellow">zepsuty</strong>? Że wysiłek przynosi tylko <strong class="highlight-yellow">frustrację</strong>? Nie jesteś sam i to nie jest osobista porażka. To racjonalna reakcja na system w chaosie. To nie jest poradnik, jak wygrać w zepsutą grę. <strong class="highlight-green">To misja, aby zbudować własną.</strong></span>
                 </p>
                 <div class="mt-10">
-                    <a href="#diagnosis" class="btn-primary px-8 py-3 rounded-md text-base">
-                        <span data-lang="en">Understand the Chaos</span><span data-lang="pl" class="hidden">Zrozum Chaos</span>
+                    <a href="#diagnosis" class="rpg-button px-10 py-4 text-lg">
+                        <span data-lang="en">START YOUR ADVENTURE</span><span data-lang="pl" class="hidden">ROZPOCZNIJ PRZYGODĘ</span>
                     </a>
                 </div>
             </div>
         </section>
 
         <section id="diagnosis" class="py-20">
-            <div class="text-center mb-16 fade-in">
-                <h2 class="text-3xl md:text-4xl font-bold animated-gradient-text">
-                    <span data-lang="en">Empirical Foundations of the "Broken Compass"</span><span data-lang="pl" class="hidden">Empiryczne Fundamenty "Złamanego Kompasu"</span>
-                </h2>
-                <p class="mt-4 max-w-3xl mx-auto text-gray-400">
-                    <span data-lang="en">The premise that the contemporary landscape of relationships is systemically dysfunctional is not subjective. It is a factual reality substantiated by measurable societal trends. The decision to strategically withdraw is a rational response to this observable reality.</span>
-                    <span data-lang="pl" class="hidden">Przesłanka, że współczesny krajobraz relacji jest systemowo dysfunkcjonalny, nie jest subiektywna. To faktyczna rzeczywistość potwierdzona przez mierzalne trendy społeczne. Decyzja o strategicznym wycofaniu się jest racjonalną odpowiedzią na tę obserwowalną rzeczywistość.</span>
-                </p>
+            <div class="text-center mb-16 fade-in up">
+                <h2 class="text-3xl md:text-4xl font-black animated-gradient-text"><span data-lang="en">The State of the World</span><span data-lang="pl" class="hidden">Stan Świata Gry</span></h2>
+                <p class="mt-4 max-w-3xl mx-auto text-gray-400"><span data-lang="en">Before you begin your quest, you must understand the environment. The feeling of a "Broken Compass" is not in your head. It is a measurable reality.</span><span data-lang="pl" class="hidden">Zanim zaczniesz misję, musisz zrozumieć otoczenie. Uczucie "Zepsutego Kompasu" nie jest w Twojej głowie. To mierzalna rzeczywistość.</span></p>
             </div>
             <div class="space-y-20">
-                <article class="grid md:grid-cols-5 gap-8 items-center fade-in">
-                    <div class="md:col-span-3">
-                        <h3 class="text-2xl font-bold accent-text" data-lang="en">1. The Politicization of Intimacy</h3><h3 class="text-2xl font-bold accent-text hidden" data-lang="pl">1. Upolitycznienie Intymności</h3>
-                        <div class="prose-custom mt-4">
-                             <p data-lang="en">The private sphere has become an ideological battlefield. Partner selection is no longer a search for connection but an act of ideological filtering, driven by "affective polarization"—a visceral dislike for the opposing political camp. This is not mere disagreement; a potential bond can be severed in an instant by a single comment, a moment described as "the sound of a scratching record." Political affiliation now serves as a proxy for core moral worldviews regarding equality, authority, and tradition. In Poland, this is a powerful force, with <strong>73% of couples sharing voting preferences</strong>. A growing gender-generation gap, with young Polish women (15-29) identifying as significantly more left-wing than their male peers, further fractures the dating pool.</p>
-                            <p data-lang="pl" class="hidden">Sfera prywatna stała się polem bitwy ideologicznej. Dobór partnera nie jest już poszukiwaniem więzi, ale aktem ideologicznej filtracji, napędzanym przez "polaryzację afektywną" — głęboką niechęć do przeciwnego obozu politycznego. To nie jest zwykła niezgoda; potencjalna więź może zostać zerwana w jednej chwili przez jeden komentarz, moment opisywany jako "dźwięk rysowanej płyty". Przynależność polityczna służy obecnie jako wyznacznik podstawowych światopoglądów moralnych dotyczących równości, autorytetu i tradycji. W Polsce jest to potężna siła – <strong>73% par ma te same preferencje wyborcze</strong>. Rosnąca luka płciowo-pokoleniowa, w której młode Polki (15-29 lat) identyfikują się jako znacznie bardziej lewicowe niż ich rówieśnicy, dodatkowo dzieli pulę randkową.</p>
-                        </div>
+                <article class="grid md:grid-cols-2 gap-12 items-center fade-in up">
+                    <div>
+                        <h3 class="text-2xl font-bold"><span class="highlight-purple">Debuff:</span> <span data-lang="en">Politicized Intimacy</span><span data-lang="pl" class="hidden">Intymność Upolityczniona</span></h3>
+                        <p class="mt-4 text-gray-400" data-lang="en">The private sphere has become an ideological battlefield. Partner selection is no longer a search for connection but an act of <strong class="highlight-yellow">ideological filtering</strong>, driven by "affective polarization"—a visceral dislike for the opposing political camp. A potential bond can be severed by a single comment. This is a powerful force, with <strong class="highlight-yellow">73% of couples</strong> in Poland sharing voting preferences.</p>
+                        <p class="mt-4 text-gray-400 hidden" data-lang="pl">Sfera prywatna stała się polem bitwy ideologicznej. Dobór partnera to już nie poszukiwanie więzi, ale akt <strong class="highlight-yellow">ideologicznej filtracji</strong>, napędzany przez "polaryzację afektywną" — głęboką niechęć do przeciwnego obozu. Potencjalna więź może zostać zerwana przez jeden komentarz. To potężna siła, w Polsce <strong class="highlight-yellow">73% par</strong> ma te same preferencje wyborcze.</p>
                     </div>
-                    <div class="md:col-span-2 section-card p-4 rounded-lg"><div class="h-64"><canvas id="politicalGapChart"></canvas></div></div>
+                    <div class="p-6 cloud-box"><div class="h-64"><canvas id="politicalGapChart"></canvas></div></div>
                 </article>
-                <article class="grid md:grid-cols-5 gap-8 items-center fade-in">
-                     <div class="md:col-span-2 section-card p-4 rounded-lg md:order-1"><div class="h-64"><canvas id="educationMismatchChart"></canvas></div></div>
-                    <div class="md:col-span-3 md:order-2">
-                        <h3 class="text-2xl font-bold accent-text" data-lang="en">2. The Chaos of Gender Roles</h3><h3 class="text-2xl font-bold accent-text hidden" data-lang="pl">2. Chaos Ról Płciowych</h3>
-                         <div class="prose-custom mt-4">
-                             <p data-lang="en">A rapid and fundamental shift in gender roles has led to what is termed the "egalitarian-traditional paradox." Men are often subjected to a "double bind": expected to be both a traditional provider and a modern, emotionally available partner. This is an unrealistic expectation. On the other hand, a massive educational mismatch has occurred in Poland: <strong>56% of women aged 25-34 hold a university degree, compared to only 37% of men</strong>. This structural reality, combined with lingering preferences for female hypergamy, creates a "mating squeeze" for highly educated women. The result is a potent source of frustration, manifesting in the fact that women initiate approximately <strong>two-thirds of all divorces</strong>.</p>
-                            <p data-lang="pl" class="hidden">Gwałtowna i fundamentalna zmiana ról płciowych doprowadziła do tak zwanego "paradoksu egalitarno-tradycyjnego". Mężczyźni często poddawani są "podwójnemu wiązaniu": oczekuje się od nich, że będą zarówno tradycyjnymi żywicielami, jak i nowoczesnymi, emocjonalnie dostępnymi partnerami. To nierealistyczne oczekiwanie. Z drugiej strony, w Polsce nastąpiło ogromne niedopasowanie edukacyjne: <strong>56% kobiet w wieku 25-34 lata posiada dyplom uniwersytecki, w porównaniu do zaledwie 37% mężczyzn</strong>. Ta strukturalna rzeczywistość, w połączeniu z utrzymującymi się preferencjami do hipergamii kobiecej, tworzy "ucisk matrymonialny" dla wysoko wykształconych kobiet. Rezultatem jest potężne źródło frustracji, objawiające się tym, że kobiety inicjują około <strong>dwóch trzecich wszystkich rozwodów</strong>.</p>
-                        </div>
+                <article class="grid md:grid-cols-2 gap-12 items-center fade-in up">
+                     <div class="p-6 cloud-box md:order-2"><div class="h-64"><canvas id="educationMismatchChart"></canvas></div></div>
+                    <div class="md:order-1">
+                        <h3 class="text-2xl font-bold"><span class="highlight-purple">Debuff:</span> <span data-lang="en">Gender Role Chaos</span><span data-lang="pl" class="hidden">Chaos Ról Płciowych</span></h3>
+                        <p class="mt-4 text-gray-400" data-lang="en">A rapid shift in gender roles has led to the "egalitarian-traditional paradox." Men are subjected to a <strong class="highlight-yellow">"double bind"</strong>: be a traditional provider and a modern, emotional partner. A massive educational mismatch has occurred in Poland: <strong class="highlight-yellow">56% of women</strong> (25-34) hold a university degree, vs. only <strong class="highlight-yellow">37% of men</strong>. This creates immense frustration, manifesting in women initiating <strong class="highlight-yellow">~66% of divorces</strong>.</p>
+                        <p class="mt-4 text-gray-400 hidden" data-lang="pl">Szybka zmiana ról płciowych doprowadziła do "paradoksu egalitarno-tradycyjnego". Mężczyźni poddawani są <strong class="highlight-yellow">"podwójnemu wiązaniu"</strong>: bądź tradycyjnym żywicielem i nowoczesnym, emocjonalnym partnerem. W Polsce występuje ogromne niedopasowanie edukacyjne: <strong class="highlight-yellow">56% kobiet</strong> (25-34) ma wykształcenie wyższe, w porównaniu do zaledwie <strong class="highlight-yellow">37% mężczyzn</strong>. To tworzy ogromną frustrację, objawiającą się tym, że kobiety inicjują <strong class="highlight-yellow">~66% rozwodów</strong>.</p>
                     </div>
                 </article>
-                <article class="grid md:grid-cols-5 gap-8 items-center fade-in">
-                    <div class="md:col-span-3">
-                        <h3 class="text-2xl font-bold accent-text" data-lang="en">3. The Dual Crisis: Mental Health & Social Connection</h3><h3 class="text-2xl font-bold accent-text hidden" data-lang="pl">3. Podwójny Kryzys: Zdrowie Psychiczne i Więzi Społeczne</h3>
-                        <div class="prose-custom mt-4">
-                            <p data-lang="en">A dual crisis is unfolding, undermining the very capacity for empathy. Firstly, a crisis of mood disorders, where depression is ~50% more common in women. In Poland, women constitute over <strong>75% of patients treated for recurring depressive disorders</strong>. Secondly, a crisis of social connection disproportionately affecting young men. In Poland, <strong>55% of men up to age 24</strong> and <strong>53% of men aged 25-34</strong> report high levels of loneliness. This occurs as single-person households become a dominant global structure (projected 35% by 2050). This trend normalizes autonomy, making the protocol an alignment with an emerging social reality, not a fringe reaction.</p>
-                            <p data-lang="pl" class="hidden">Rozwija się podwójny kryzys, podważający samą zdolność do empatii. Po pierwsze, kryzys zaburzeń nastroju, w którym depresja jest o ~50% częstsza u kobiet. W Polsce kobiety stanowią ponad <strong>75% pacjentów leczonych z powodu nawracających zaburzeń depresyjnych</strong>. Po drugie, kryzys więzi społecznych, który nieproporcjonalnie dotyka młodych mężczyzn. W Polsce <strong>55% mężczyzn do 24. roku życia</strong> i <strong>53% mężczyzn w wieku 25-34 lata</strong> zgłasza wysoki poziom samotności. Dzieje się to w czasie, gdy jednoosobowe gospodarstwa domowe stają się dominującą globalną strukturą (prognozowane 35% do 2050 r.). Trend ten normalizuje autonomię, czyniąc protokół dostosowaniem do nowej rzeczywistości społecznej, a nie marginalną reakcją.</p>
-                        </div>
+                <article class="grid md:grid-cols-2 gap-12 items-center fade-in up">
+                    <div>
+                        <h3 class="text-2xl font-bold"><span class="highlight-purple">Debuff:</span> <span data-lang="en">The Dual Crisis</span><span class="hidden" data-lang="pl">Podwójny Kryzys</span></h3>
+                        <p class="mt-4 text-gray-400" data-lang="en">A dual crisis undermines the capacity for empathy. Firstly, mood disorders, where depression is more common in women (in Poland, they are <strong class="highlight-yellow">75% of patients</strong>). Secondly, a crisis of social connection affecting young men. In Poland, <strong class="highlight-yellow">55% of men under 24</strong> report high levels of loneliness. This normalizes autonomy as a rational survival strategy.</p>
+                        <p class="mt-4 text-gray-400 hidden" data-lang="pl">Podwójny kryzys podważa zdolność do empatii. Po pierwsze, zaburzenia nastroju, gdzie depresja jest częstsza u kobiet (w Polsce stanowią one <strong class="highlight-yellow">75% pacjentów</strong>). Po drugie, kryzys więzi społecznych dotykający młodych mężczyzn. W Polsce <strong class="highlight-yellow">55% mężczyzn poniżej 24 roku życia</strong> zgłasza wysoki poziom samotności. To normalizuje autonomię jako racjonalną strategię przetrwania.</p>
                     </div>
-                    <div class="md:col-span-2 section-card p-4 rounded-lg"><div class="h-64"><canvas id="lonelinessChart"></canvas></div></div>
+                     <div class="p-6 cloud-box"><div class="h-64"><canvas id="lonelinessChart"></canvas></div></div>
                 </article>
             </div>
-             <div class="mt-20 text-center fade-in">
-                 <a href="#protocol" class="group btn-primary px-8 py-3 rounded-md text-base inline-flex items-center">
-                    <span data-lang="en">Begin the Protocol</span><span data-lang="pl" class="hidden">Rozpocznij Protokół</span>
-                    <svg class="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+            <div class="mt-20 text-center fade-in up">
+                 <a href="#protocol" class="rpg-button px-10 py-4 text-lg">
+                    <span data-lang="en">ACCEPT THE QUEST</span><span data-lang="pl" class="hidden">AKCEPTUJ MISJĘ</span>
                 </a>
             </div>
         </section>
 
         <section id="protocol" class="py-20 space-y-20">
-            <div class="text-center fade-in">
-                <h2 class="text-3xl md:text-4xl font-bold animated-gradient-text"><span data-lang="en">The Autonomy Protocol</span><span data-lang="pl" class="hidden">Protokół Autonomii</span></h2>
-                 <p class="mt-4 max-w-3xl mx-auto text-gray-400"><span data-lang="en">A detailed, evidence-based system for constructing a life of internal strength and self-generated meaning.</span><span data-lang="pl" class="hidden">Szczegółowy, oparty na dowodach system budowy życia opartego na wewnętrznej sile i samodzielnie generowanym sensie.</span></p>
+            <div class="text-center fade-in up">
+                <h2 class="text-3xl md:text-4xl font-black animated-gradient-text"><span data-lang="en">Your Path to Autonomy</span><span data-lang="pl" class="hidden">Twoja Ścieżka do Autonomii</span></h2>
+                <p class="mt-4 max-w-3xl mx-auto text-gray-400"><span data-lang="en">This is your skill tree. Each stage builds upon the last, forging a new, independent self.</span><span data-lang="pl" class="hidden">To jest Twoje drzewko umiejętności. Każdy etap buduje się na poprzednim, wykuwając nowe, niezależne "ja".</span></p>
             </div>
             
-            <div class="part-divider py-16 text-center fade-in rounded-lg">
-                <p class="text-7xl font-black text-gray-700 opacity-25">I</p>
-                <h3 class="text-3xl font-bold mt-2" data-lang="en">Physical Fortification</h3><h3 class="text-3xl font-bold mt-2 hidden" data-lang="pl">Fizyczna Fortyfikacja</h3>
-                <p class="mt-2 text-gray-400 max-w-xl mx-auto" data-lang="en">Building the Body as an Inner Citadel. Before advanced work on the mind, establish a solid physiological base.</p><p class="mt-2 text-gray-400 max-w-xl mx-auto hidden" data-lang="pl">Budowa Ciała jako Wewnętrznej Cytadeli. Zanim rozpoczniesz pracę nad umysłem, stwórz solidną bazę fizjologiczną.</p>
+            <div class="part-divider py-16 text-center fade-in up rounded-lg relative">
+                <span class="numeral">I</span>
+                <div class="relative z-10">
+                    <svg class="mx-auto h-24 w-24 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.52905C12 6.52905 15.6395 3.5 19.5 3.5C21.433 3.5 23 5.067 23 7C23 10.3225 20.3125 12.5 12 20.5C3.6875 12.5 1 10.3225 1 7C1 5.067 2.56701 3.5 4.50001 3.5C8.36052 3.5 12 6.52905 12 6.52905Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 20.5L12 23.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 23.5H15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <h3 class="text-3xl font-bold mt-2" data-lang="en">Stage I: Physical Fortification</h3><h3 class="text-3xl font-bold mt-2 hidden" data-lang="pl">Etap I: Fortyfikacja Fizyczna</h3>
+                    <p class="mt-2 text-gray-400 max-w-xl mx-auto" data-lang="en">Build your foundation. Master your physiology to master your mind.</p><p class="mt-2 text-gray-400 max-w-xl mx-auto hidden" data-lang="pl">Zbuduj swój fundament. Opanuj fizjologię, by opanować umysł.</p>
+                </div>
             </div>
-            <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8 fade-in">
-                <article id="ch1" class="chapter-card rounded-lg p-8 space-y-6">
-                    <header>
-                        <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 1: The Biochemistry of Training</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 1: Biochemia Treningu</h4>
-                        <blockquote><p data-lang="en">Forge a tool that serves its owner, not a body to impress others. Establish physiological sovereignty.</p><p data-lang="pl" class="hidden">Wykuwaj narzędzie, które służy właścicielowi, a nie ciało, by imponować innym. Ustanów fizjologiczną suwerenność.</p></blockquote>
-                    </header>
-                    <div class="prose-custom">
-                        <h5 data-lang="en">Core Explanation</h5><h5 data-lang="pl" class="hidden">Główne Wyjaśnienie</h5>
-                        <p data-lang="en">This is a psychophysiological regulation system. <strong>Strength Training</strong> provides the anabolic effect, stimulating testosterone and lowering cortisol. <strong>Combat Sports</strong> forge resilience through stress inoculation, teaching the mind to remain calm under duress while providing a channel for sublimation. <strong>Calibrated Endurance</strong> (moderate cardio or HIIT) stimulates mood-boosting endorphins without the catabolic cortisol spike of excessive exercise.</p>
-                        <p data-lang="pl" class="hidden">To system regulacji psychofizjologicznej. <strong>Trening Siłowy</strong> zapewnia efekt anaboliczny, stymulując testosteron i obniżając kortyzol. <strong>Sporty Walki</strong> budują odporność poprzez "szczepienie" na stres, ucząc umysł zachowania spokoju pod presją i zapewniając kanał do sublimacji. <strong>Kalibrowany Trening Wytrzymałościowy</strong> (umiarkowane kardio lub HIIT) stymuluje poprawiające nastrój endorfiny bez katabolicznego skoku kortyzolu, charakterystycznego dla nadmiernego wysiłku.</p>
-                    </div>
-                     <div class="pt-4 border-t border-gray-700">
-                        <h5 class="font-bold mb-3" data-lang="en">Actionable Protocol</h5><h5 class="font-bold mb-3 hidden" data-lang="pl">Protokół do Wdrożenia</h5>
-                        <ul class="space-y-3">
-                            <li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm" data-lang="en"><strong>Strength Train 2-3x/week:</strong> Focus on compound lifts (squats, deadlifts, presses) to maximize hormonal response.</span><span class="text-sm hidden" data-lang="pl"><strong>Trenuj siłowo 2-3x w tygodniu:</strong> Skup się na ćwiczeniach wielostawowych (przysiady, martwy ciąg, wyciskania), aby zmaksymalizować odpowiedź hormonalną.</span></li>
-                            <li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm" data-lang="en"><strong>Engage in Martial Arts 2-3x/week:</strong> Choose a discipline (Boxing, BJJ, MMA) to build mental toughness and sublimate aggression.</span><span class="text-sm hidden" data-lang="pl"><strong>Uprawiaj sporty walki 2-3x w tygodniu:</strong> Wybierz dyscyplinę (Boks, BJJ, MMA), aby zbudować odporność psychiczną i sublimować agresję.</span></li>
-                             <li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm" data-lang="en"><strong>Calibrated Cardio 3-4x/week:</strong> 30-45 mins at 60-70% max heart rate to boost endorphins without raising cortisol.</span><span class="text-sm hidden" data-lang="pl"><strong>Kalibrowane Kardio 3-4x w tygodniu:</strong> 30-45 min na poziomie 60-70% tętna maksymalnego, aby podnieść endorfiny bez zwiększania kortyzolu.</span></li>
-                        </ul>
-                    </div>
-                </article>
-                <article id="ch2" class="chapter-card rounded-lg p-8 space-y-6">
-                    <header>
-                        <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 2: The Biochemistry of the Autonomy Diet</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 2: Biochemia Diety Autonomii</h4>
-                        <blockquote><p data-lang="en">A tool for biochemical management, not deprivation. Libido regulation is a secondary consequence of hormonal health.</p><p data-lang="pl" class="hidden">Narzędzie do zarządzania biochemią, nie wyrzeczeń. Regulacja libido jest wtórną konsekwencją zdrowia hormonalnego.</p></blockquote>
-                    </header>
-                    <div class="prose-custom">
-                        <h5 data-lang="en">Core Explanation</h5><h5 data-lang="pl" class="hidden">Główne Wyjaśnienie</h5>
-                        <p data-lang="en">This diet is designed to remove harmful inputs while providing the essential building blocks for a stable endocrine system. It prioritizes whole foods rich in micronutrients validated to support male hormonal health (<strong>Zinc, Selenium, Vitamin D</strong>) and is built on a foundation of <strong>Healthy Fats</strong>, the direct molecular precursors for all steroid hormones. Concurrently, it requires the conscious limitation of endocrine disruptors like <strong>alcohol</strong> and <strong>simple sugars</strong>, which suppress testosterone production pathways.</p>
-                        <p data-lang="pl" class="hidden">Dieta ta ma na celu usunięcie szkodliwych czynników i dostarczenie niezbędnych budulców dla stabilnego układu hormonalnego. Priorytetowo traktuje żywność nieprzetworzoną, bogatą w mikroelementy o udowodnionym wpływie na męskie zdrowie hormonalne (<strong>Cynk, Selen, Witamina D</strong>) i opiera się na fundamencie <strong>Zdrowych Tłuszczów</strong>, bezpośrednich prekursorów molekularnych wszystkich hormonów steroidowych. Jednocześnie wymaga świadomego ograniczania substancji zaburzających gospodarkę hormonalną, takich jak <strong>alkohol</strong> i <strong>cukry proste</strong>, które hamują ścieżki produkcji testosteronu.</p>
-                    </div>
-                     <div class="pt-4 border-t border-gray-700">
-                        <h5 class="font-bold mb-3" data-lang="en">Actionable Protocol</h5><h5 class="font-bold mb-3 hidden" data-lang="pl">Protokół do Wdrożenia</h5>
-                        <ul class="space-y-3">
-                           <li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm" data-lang="en"><strong>Prioritize Vitality Nutrients:</strong> Actively include foods rich in Zinc (lean meat, seeds), Selenium (brazil nuts, fish), and Vitamin D (fatty fish, sun exposure).</span><span class="text-sm hidden" data-lang="pl"><strong>Priorytet dla składników witalności:</strong> Aktywnie włączaj żywność bogatą w Cynk (chude mięso, pestki), Selen (orzechy brazylijskie, ryby) i Witaminę D (tłuste ryby, ekspozycja na słońce).</span></li>
-                           <li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-red-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg><span class="text-sm" data-lang="en"><strong>Eliminate/Minimize Endocrine Disruptors:</strong> Radically reduce or eliminate alcohol, sugary drinks, sweets, and highly processed foods containing trans fats.</span><span class="text-sm hidden" data-lang="pl"><strong>Wyeliminuj/Zminimalizuj czynniki hormonalne:</strong> Radykalnie ogranicz lub wyeliminuj alkohol, słodzone napoje, słodycze i wysoko przetworzoną żywność zawierającą tłuszcze trans.</span></li>
-                        </ul>
-                    </div>
-                </article>
+            <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8 fade-in up">
+                <article id="ch1" class="rpg-panel p-8 space-y-6"><header><h4 class="text-xl font-bold"><span class="highlight-green">Skill 1:</span> <span data-lang="en">The Biochemistry of Training</span><span data-lang="pl" class="hidden">Biochemia Treningu</span></h4></header><div class="prose prose-sm max-w-none text-gray-400"><p data-lang="en">This is a system for psychophysiological regulation. <strong class="highlight-yellow">Strength Training</strong> provides the anabolic effect, stimulating testosterone. <strong class="highlight-yellow">Combat Sports</strong> forge resilience through stress inoculation. <strong class="highlight-yellow">Calibrated Endurance</strong> boosts endorphins without raising cortisol.</p><p data-lang="pl" class="hidden">To system regulacji psychofizjologicznej. <strong class="highlight-yellow">Trening Siłowy</strong> daje efekt anaboliczny, stymulując testosteron. <strong class="highlight-yellow">Sporty Walki</strong> budują odporność przez "szczepienie" na stres. <strong class="highlight-yellow">Kalibrowane Kardio</strong> podnosi endorfiny bez zwiększania kortyzolu.</p></div><div class="pt-4 border-t border-gray-700"><h5 class="font-bold mb-3 text-lg" data-lang="en">Actionable Protocol</h5><h5 class="font-bold mb-3 text-lg hidden" data-lang="pl">Protokół do Wdrożenia</h5><ul class="space-y-3"><li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm" data-lang="en"><strong>Strength Train 2-3x/week:</strong> Focus on compound lifts to maximize hormonal response.</span><span class="text-sm hidden" data-lang="pl"><strong>Trenuj siłowo 2-3x w tygodniu:</strong> Skup się na ćwiczeniach wielostawowych.</span></li><li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm" data-lang="en"><strong>Engage in Martial Arts 2-3x/week:</strong> Build mental toughness and sublimate aggression.</span><span class="text-sm hidden" data-lang="pl"><strong>Uprawiaj sporty walki 2-3x w tygodniu:</strong> Buduj odporność i sublimuj agresję.</span></li></ul></div></article>
+                <article id="ch2" class="rpg-panel p-8 space-y-6"><header><h4 class="text-xl font-bold"><span class="highlight-green">Skill 2:</span> <span data-lang="en">The Autonomy Diet</span><span data-lang="pl" class="hidden">Dieta Autonomii</span></h4></header><div class="prose prose-sm max-w-none text-gray-400"><p data-lang="en">This is a tool for biochemical management, not deprivation. Prioritize whole foods rich in <strong class="highlight-yellow">Zinc, Selenium, and Vitamin D</strong>. Concurrently, eliminate endocrine disruptors like <strong class="highlight-yellow">alcohol</strong> and <strong class="highlight-yellow">simple sugars</strong>, which suppress testosterone production.</p><p data-lang="pl" class="hidden">To narzędzie do zarządzania biochemią, nie wyrzeczeń. Priorytetem jest żywność bogata w <strong class="highlight-yellow">cynk, selen i witaminę D</strong>. Jednocześnie wyeliminuj czynniki zaburzające gospodarkę hormonalną, jak <strong class="highlight-yellow">alkohol</strong> i <strong class="highlight-yellow">cukry proste</strong>, które hamują produkcję testosteronu.</p></div><div class="pt-4 border-t border-gray-700"><h5 class="font-bold mb-3 text-lg" data-lang="en">Actionable Protocol</h5><h5 class="font-bold mb-3 text-lg hidden" data-lang="pl">Protokół do Wdrożenia</h5><ul class="space-y-3"><li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm" data-lang="en"><strong>Prioritize Vitality Nutrients:</strong> Actively include lean meat, seeds, fish, and nuts.</span><span class="text-sm hidden" data-lang="pl"><strong>Priorytet dla składników witalności:</strong> Włącz chude mięso, pestki, ryby i orzechy.</span></li><li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-red-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg><span class="text-sm" data-lang="en"><strong>Eliminate Endocrine Disruptors:</strong> Radically reduce alcohol and sugary drinks.</span><span class="text-sm hidden" data-lang="pl"><strong>Wyeliminuj czynniki hormonalne:</strong> Radykalnie ogranicz alkohol i słodkie napoje.</span></li></ul></div></article>
             </div>
 
-            <div class="part-divider py-16 text-center fade-in rounded-lg">
-                <p class="text-7xl font-black text-gray-700 opacity-25">II</p>
-                <h3 class="text-3xl font-bold mt-2" data-lang="en">Mental Sovereignty</h3><h3 class="text-3xl font-bold mt-2 hidden" data-lang="pl">Mentalna Suwerenność</h3>
-                <p class="mt-2 text-gray-400 max-w-xl mx-auto" data-lang="en">Mastering the Inner World. Building a robust psychological framework to find peace in a chaotic world.</p><p class="mt-2 text-gray-400 max-w-xl mx-auto hidden" data-lang="pl">Opanowanie Wewnętrznego Świata. Budowanie solidnych ram psychologicznych, aby znaleźć spokój w chaotycznym świecie.</p>
+            <div class="part-divider py-16 text-center fade-in up rounded-lg relative">
+                <span class="numeral">II</span>
+                <div class="relative z-10">
+                    <svg class="mx-auto h-24 w-24 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4.5 10.5C4.5 8.29086 6.29086 6.5 8.5 6.5C10.7091 6.5 12.5 8.29086 12.5 10.5C12.5 12.7091 10.7091 14.5 8.5 14.5C6.29086 14.5 4.5 12.7091 4.5 10.5Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5 10.5C11.5 8.29086 13.2909 6.5 15.5 6.5C17.7091 6.5 19.5 8.29086 19.5 10.5C19.5 12.7091 17.7091 14.5 15.5 14.5C13.2909 14.5 11.5 12.7091 11.5 10.5Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 14.5C8.5 16.7091 10.2909 18.5 12.5 18.5C14.7091 18.5 16.5 16.7091 16.5 14.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.5 6.5C12.5 4.29086 14.2909 2.5 16.5 2.5C18.7091 2.5 20.5 4.29086 20.5 6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <h3 class="text-3xl font-bold mt-2" data-lang="en">Stage II: Mental Sovereignty</h3><h3 class="text-3xl font-bold mt-2 hidden" data-lang="pl">Etap II: Mentalna Suwerenność</h3>
+                    <p class="mt-2 text-gray-400 max-w-xl mx-auto" data-lang="en">Master your inner world. Build a psychological framework to find peace in chaos.</p><p class="mt-2 text-gray-400 max-w-xl mx-auto hidden" data-lang="pl">Opanuj swój wewnętrzny świat. Zbuduj ramy psychologiczne, by znaleźć spokój w chaosie.</p>
             </div>
-            <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8 fade-in">
-                <article id="ch3" class="chapter-card rounded-lg p-8 space-y-6">
-                    <header><h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 3: Stoicism as an Operating System</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 3: Stoicyzm jako System Operacyjny</h4></header>
-                    <div class="prose-custom">
-                        <p data-lang="en">Stoicism is the direct philosophical precursor to Cognitive Behavioral Therapy (CBT). Its core tenet—"It's not things that upset us but our judgements about them"—is the foundation of modern resilience training. By practicing the <strong>Dichotomy of Control</strong> (distinguishing what is in your power from what is not), you mentally disconnect from a game whose rules you do not accept and begin playing your own, internal game.</p>
-                        <p data-lang="pl" class="hidden">Stoicyzm jest bezpośrednim filozoficznym prekursorem Terapii Poznawczo-Behawioralnej (CBT). Jego podstawowa zasada — "Niepokoją nas nie rzeczy, lecz nasze sądy o rzeczach" — jest fundamentem nowoczesnego treningu odporności. Praktykując <strong>Dychotomię Kontroli</strong> (rozróżniając to, co jest w Twojej mocy, od tego, co nie jest), mentalnie odłączasz się od gry, której zasad nie akceptujesz, i zaczynasz grać we własną, wewnętrzną grę.</p>
-                    </div>
-                    <div class="pt-4 border-t border-gray-700">
-                        <h5 class="font-bold mb-3" data-lang="en">Actionable Protocol</h5><h5 class="font-bold mb-3 hidden" data-lang="pl">Protokół do Wdrożenia</h5>
-                         <ul class="space-y-3">
-                           <li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm" data-lang="en"><strong>Morning Reflection (5 min):</strong> Mentally prepare for challenges. Decide in advance to respond with virtue, focusing only on your actions.</span><span class="text-sm hidden" data-lang="pl"><strong>Poranna Refleksja (5 min):</strong> Przygotuj się mentalnie na wyzwania. Z góry zdecyduj, że odpowiesz cnotą, skupiając się tylko na swoich działaniach.</span></li>
-                           <li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm" data-lang="en"><strong>Evening Review (10 min):</strong> Honestly assess your actions: What did I do well? What could I have done better? What did I learn?</span><span class="text-sm hidden" data-lang="pl"><strong>Wieczorny Przegląd (10 min):</strong> Uczciwie oceń swoje działania: Co zrobiłem dobrze? Co mogłem zrobić lepiej? Czego się nauczyłem?</span></li>
-                        </ul>
-                    </div>
-                </article>
-                <article id="ch4" class="chapter-card rounded-lg p-8 space-y-6">
-                    <header><h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 4: The Neuroscience of Mindfulness</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 4: Neuronauka Uważności</h4></header>
-                     <div class="prose-custom">
-                        <p data-lang="en">Meditation is a documented neurological intervention. Its goal is not to eliminate thoughts, but to cultivate <strong>meta-awareness</strong>: the ability to observe your impulses as transient mental events, not as commands. This creates a crucial "pause" between stimulus and response. In that space lies freedom from being ruled by automatic, biological programming.</p>
-                        <p data-lang="pl" class="hidden">Medytacja jest udokumentowaną interwencją neurologiczną. Jej celem nie jest eliminacja myśli, ale kultywowanie <strong>meta-świadomości</strong>: zdolności do obserwowania swoich impulsów jako przejściowych zjawisk mentalnych, a nie rozkazów. Tworzy to kluczową "pauzę" między bodźcem a reakcją. W tej przestrzeni leży wolność od bycia rządzonym przez automatyczne, biologiczne programy.</p>
-                    </div>
-                     <div class="pt-4 border-t border-gray-700">
-                        <h5 class="font-bold mb-3" data-lang="en">Data & Evidence: Brain Changes</h5><h5 class="font-bold mb-3 hidden" data-lang="pl">Dane i Dowody: Zmiany w Mózgu</h5>
-                        <ul class="text-sm text-gray-400 list-disc list-inside space-y-1">
-                            <li><strong><span data-lang="en">Increases</span></strong><span data-lang="en"> gray matter in the <strong>prefrontal cortex</strong> (emotional regulation).</span><span data-lang="pl" class="hidden"><strong>Zwiększa</strong> ilość istoty szarej w <strong>korze przedczołowej</strong> (regulacja emocji).</span></li>
-                            <li><strong><span data-lang="en">Decreases</span></strong><span data-lang="en"> gray matter volume of the <strong>amygdala</strong> (fear/threat center).</span><span data-lang="pl" class="hidden"><strong>Zmniejsza</strong> objętość istoty szarej w <strong>ciele migdałowatym</strong> (centrum strachu/zagrożenia).</span></li>
-                        </ul>
-                    </div>
-                </article>
-                <article id="ch5" class="chapter-card rounded-lg p-8 space-y-6">
-                    <header><h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 5: Sublimation as a Creative Engine</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 5: Sublimacja jako Silnik Twórczy</h4></header>
-                    <div class="prose-custom">
-                        <p data-lang="en">Sublimation is a mature adaptive mechanism for channeling, not repressing, unwanted impulses—primarily raw libido and aggression—into valuable, socially acceptable outlets. It is the transmutation of energy. Withdrawing from the romantic marketplace frees up significant psychic energy. Sublimation is the mechanism that repurposes this energy, making the "Pursuit of Mastery" the designated outlet for building self-generated value.</p>
-                        <p data-lang="pl" class="hidden">Sublimacja jest dojrzałym mechanizmem adaptacyjnym polegającym na kanalizowaniu, a nie tłumieniu, niechcianych impulsów — głównie surowego libido i agresji — w wartościowe, społecznie akceptowalne działania. To transmutacja energii. Wycofanie się z rynku romantycznego uwalnia znaczną energię psychiczną. Sublimacja jest mechanizmem, który przekierowuje tę energię, czyniąc "Pogoń za Mistrzostwem" wyznaczonym ujściem dla budowania samodzielnie generowanej wartości.</p>
-                    </div>
-                </article>
+            <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8 fade-in up">
+                <article id="ch3" class="rpg-panel p-8 space-y-6"><header><h4 class="text-xl font-bold"><span class="highlight-blue">Skill 3:</span> <span data-lang="en">Stoicism OS</span><span data-lang="pl" class="hidden">System Stoicyzm</span></h4></header><div class="prose prose-sm max-w-none text-gray-400"><p data-lang="en">Install Stoicism as your mind's operating system. Its core principle is the <strong class="highlight-yellow">Dichotomy of Control</strong>: distinguish what is in your power from what is not. This allows you to mentally disconnect from the broken game and play your own.</p><p data-lang="pl" class="hidden">Zainstaluj stoicyzm jako system operacyjny swojego umysłu. Jego główną zasadą jest <strong class="highlight-yellow">Dychotomia Kontroli</strong>: rozróżniaj to, co jest w Twojej mocy, od tego, co nie jest. To pozwoli Ci mentalnie odłączyć się od zepsutej gry i grać we własną.</p></div><div class="pt-4 border-t border-gray-700"><h5 class="font-bold mb-3 text-lg" data-lang="en">Actionable Protocol</h5><h5 class="font-bold mb-3 text-lg hidden" data-lang="pl">Protokół do Wdrożenia</h5><ul class="space-y-3"><li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm" data-lang="en"><strong>Morning Reflection (5 min):</strong> Decide in advance to respond to challenges with virtue.</span><span class="text-sm hidden" data-lang="pl"><strong>Poranna Refleksja (5 min):</strong> Z góry zdecyduj, że na wyzwania odpowiesz cnotą.</span></li><li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm" data-lang="en"><strong>Evening Review (10 min):</strong> Honestly assess your actions and learn from them.</span><span class="text-sm hidden" data-lang="pl"><strong>Wieczorny Przegląd (10 min):</strong> Uczciwie oceniaj swoje działania i ucz się z nich.</span></li></ul></div></article>
+                <article id="ch4" class="rpg-panel p-8 space-y-6"><header><h4 class="text-xl font-bold"><span class="highlight-blue">Skill 4:</span> <span data-lang="en">Mindfulness</span><span data-lang="pl" class="hidden">Uważność</span></h4></header><div class="prose prose-sm max-w-none text-gray-400"><p data-lang="en">Meditation is neurological training. The goal is to cultivate <strong class="highlight-yellow">meta-awareness</strong>: the ability to observe impulses as transient events, not commands. This creates a "pause" between stimulus and response. In that space lies your freedom.</p><p data-lang="pl" class="hidden">Medytacja to trening neurologiczny. Celem jest kultywowanie <strong class="highlight-yellow">meta-świadomości</strong>: zdolności do obserwowania impulsów jako przejściowych zdarzeń, a nie rozkazów. To tworzy "pauzę" między bodźcem a reakcją. W tej przestrzeni leży Twoja wolność.</p></div><div class="pt-4 border-t border-gray-700"><h5 class="font-bold mb-3 text-lg" data-lang="en">Data Insight</h5><h5 class="font-bold mb-3 text-lg hidden" data-lang="pl">Wgląd w Dane</h5><div class="data-highlight p-4 rounded text-sm" data-lang="en">Studies show meditation increases gray matter in the <strong>prefrontal cortex</strong> (regulation) and decreases it in the <strong>amygdala</strong> (fear).</div><div class="data-highlight p-4 rounded text-sm hidden" data-lang="pl">Badania pokazują, że medytacja zwiększa ilość istoty szarej w <strong>korze przedczołowej</strong> (regulacja) i zmniejsza ją w <strong>ciele migdałowatym</strong> (strach).</div></div></article>
+                <article id="ch5" class="rpg-panel p-8 space-y-6"><header><h4 class="text-xl font-bold"><span class="highlight-blue">Skill 5:</span> <span data-lang="en">Sublimation</span><span data-lang="pl" class="hidden">Sublimacja</span></h4></header><div class="prose prose-sm max-w-none text-gray-400"><p data-lang="en">Sublimation is a mature adaptive mechanism for <strong class="highlight-yellow">channeling</strong>, not repressing, raw libido and aggression into valuable outlets. Withdrawing from the romantic marketplace frees up significant psychic energy. Sublimation is the engine that transmutes this energy into the <strong class="highlight-yellow">Pursuit of Mastery</strong>.</p><p data-lang="pl" class="hidden">Sublimacja to dojrzały mechanizm adaptacyjny do <strong class="highlight-yellow">kanalizowania</strong>, a nie tłumienia, surowego libido i agresji w wartościowe działania. Wycofanie się z rynku romantycznego uwalnia znaczną energię psychiczną. Sublimacja to silnik, który transmutuje tę energię w <strong class="highlight-yellow">Pogoń za Mistrzostwem</strong>.</p></div><div class="pt-4 border-t border-gray-700"><h5 class="font-bold mb-3 text-lg" data-lang="en">Data Insight</h5><h5 class="font-bold mb-3 text-lg hidden" data-lang="pl">Wgląd w Dane</h5><div class="data-highlight p-4 rounded text-sm" data-lang="en">Studies have linked anxieties about taboo desires to <strong>greater lifetime creative accomplishments</strong>.</div><div class="data-highlight p-4 rounded text-sm hidden" data-lang="pl">Badania powiązały lęki związane z pragnieniami tabu z <strong>większymi życiowymi osiągnięciami twórczymi</strong>.</div></div></article>
             </div>
 
-             <div class="part-divider py-16 text-center fade-in rounded-lg">
-                <p class="text-7xl font-black text-gray-700 opacity-25">III</p>
-                <h3 class="text-3xl font-bold mt-2" data-lang="en">Architecture of a Meaningful Life</h3><h3 class="text-3xl font-bold mt-2 hidden" data-lang="pl">Architektura Sensownego Życia</h3>
-                <p class="mt-2 text-gray-400 max-w-xl mx-auto" data-lang="en">Building Purpose Beyond Partnership. Consciously designing a life of profound, internal fulfillment.</p><p class="mt-2 text-gray-400 max-w-xl mx-auto hidden" data-lang="pl">Budowanie Celu Poza Partnerstwem. Świadome projektowanie życia o głębokim, wewnętrznym spełnieniu.</p>
+            <div class="part-divider py-16 text-center fade-in up rounded-lg relative">
+                 <span class="numeral">III</span>
+                <div class="relative z-10">
+                    <svg class="mx-auto h-24 w-24 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.22156 12.3314C2.08399 11.2299 2.78953 10.1534 3.86423 9.81586L4.22557 9.6922C4.54273 9.58493 4.88147 9.58493 5.19864 9.6922L19.7744 14.8078C20.4554 15.0354 21 15.6599 21 16.3719V16.3719C21 17.2372 20.2929 17.9443 19.4276 17.9443H4.57241C3.70715 17.9443 3 17.2372 3 16.3719V16.3719C3 14.7766 2.52843 13.2355 2.22156 12.3314Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 9.5L12 3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 3.5H15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <h3 class="text-3xl font-bold mt-2" data-lang="en">Stage III: Architecture of a Meaningful Life</h3><h3 class="text-3xl font-bold mt-2 hidden" data-lang="pl">Etap III: Architektura Sensownego Życia</h3>
+                    <p class="mt-2 text-gray-400 max-w-xl mx-auto" data-lang="en">Build your purpose. Consciously design a life of profound, internal fulfillment.</p><p class="mt-2 text-gray-400 max-w-xl mx-auto hidden" data-lang="pl">Zbuduj swój cel. Świadomie zaprojektuj życie o głębokim, wewnętrznym spełnieniu.</p>
             </div>
-            <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8 fade-in">
-                <article id="ch6" class="chapter-card rounded-lg p-8 space-y-6">
-                    <header><h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 6: Radical Self-Awareness</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 6: Radykalna Samoświadomość</h4></header>
-                    <div class="prose-custom"><p data-lang="en">Before building a life, you must know the architect: yourself. Through structured journaling, you create your "personal constitution": a document defining your values, boundaries, and mission. This inner compass becomes the supreme law by which all subsequent decisions are made.</p><p data-lang="pl" class="hidden">Zanim zbudujesz życie, musisz poznać architekta: samego siebie. Poprzez ustrukturyzowane prowadzenie dziennika tworzysz swoją "osobistą konstytucję": dokument definiujący Twoje wartości, granice i misję. Ten wewnętrzny kompas staje się nadrzędnym prawem, według którego podejmowane są wszystkie późniejsze decyzje.</p></div>
-                    <div class="pt-4 border-t border-gray-700">
-                        <h5 class="font-bold mb-3" data-lang="en">Data Insight</h5><h5 class="font-bold mb-3 hidden" data-lang="pl">Wgląd w Dane</h5>
-                        <div class="data-highlight p-4 rounded"><p class="font-bold text-lg accent-text">42%</p><p class="text-xs text-gray-300" data-lang="en">Higher achievement rate for individuals who commit their goals to paper.</p><p class="text-xs text-gray-300 hidden" data-lang="pl">Wyższy wskaźnik realizacji celów u osób, które zapisują swoje cele na papierze.</p></div>
-                    </div>
-                </article>
-                <article id="ch7" class="chapter-card rounded-lg p-8 space-y-6">
-                    <header><h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 7: The Pursuit of Mastery</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 7: Pogoń za Mistrzostwem</h4></header>
-                    <div class="prose-custom"><p data-lang="en">This leverages the theory of "flow"—a state of optimal experience from total immersion in a challenging activity. Pursuing mastery is a reliable method for generating this state, replacing the need for external validation with an internally generated source of fulfillment.</p><p data-lang="pl" class="hidden">Wykorzystuje to teorię "flow" — stan optymalnego doświadczenia wynikającego z całkowitego zanurzenia w wymagającej aktywności. Dążenie do mistrzostwa jest niezawodną metodą generowania tego stanu, zastępując potrzebę zewnętrznej walidacji wewnętrznie generowanym źródłem spełnienia.</p></div>
-                     <div class="pt-4 border-t border-gray-700">
-                        <h5 class="font-bold mb-3" data-lang="en">Actionable Protocol</h5><h5 class="font-bold mb-3 hidden" data-lang="pl">Protokół do Wdrożenia</h5>
-                         <ul class="space-y-3">
-                           <li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm" data-lang="en"><strong>Explore:</strong> Identify areas of curiosity (Creative, Physical, Practical, Intellectual).</span><span class="text-sm hidden" data-lang="pl"><strong>Eksploruj:</strong> Zidentyfikuj obszary ciekawości (Kreatywne, Fizyczne, Praktyczne, Intelektualne).</span></li>
-                           <li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm" data-lang="en"><strong>Experiment:</strong> Dedicate a month to 3-4 different interests to see what resonates.</span><span class="text-sm hidden" data-lang="pl"><strong>Eksperymentuj:</strong> Poświęć miesiąc na 3-4 różne zainteresowania, aby zobaczyć, co z Tobą rezonuje.</span></li>
-                            <li class="flex items-start"><svg class="w-5 h-5 mr-3 mt-1 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-sm" data-lang="en"><strong>Immerse:</strong> Once chosen, commit to disciplined practice and continuous learning.</span><span class="text-sm hidden" data-lang="pl"><strong>Zanurz się:</strong> Po wyborze, zaangażuj się w zdyscyplinowaną praktykę i ciągłą naukę.</span></li>
-                        </ul>
-                    </div>
-                </article>
-                <article id="ch8" class="chapter-card rounded-lg p-8 space-y-6">
-                    <header><h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 8: The Strength of the Pack</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 8: Siła Stada</h4></header>
-                    <div class="prose-custom"><p data-lang="en">This is an opportunity to build a resilient network of deep, platonic friendships. Radically redefine "family" as a tribe of carefully chosen, loyal friends. This provides a sense of belonging that frees you from a desperate search for it in a single, unstable romantic relationship. This is a direct counter-strategy to the male loneliness crisis.</p><p data-lang="pl" class="hidden">To okazja do zbudowania odpornej sieci głębokich, platonicznych przyjaźni. Radykalnie zredefiniuj "rodzinę" jako plemię starannie dobranych, lojalnych przyjaciół. Zapewnia to poczucie przynależności, które uwalnia od desperackiego poszukiwania go w jednej, niestabilnej relacji romantycznej. To bezpośrednia kontrstrategia wobec kryzysu męskiej samotności.</p></div>
-                    <div class="pt-4 border-t border-gray-700">
-                        <h5 class="font-bold mb-3" data-lang="en">Data & Evidence</h5><h5 class="font-bold mb-3 hidden" data-lang="pl">Dane i Dowody</h5>
-                        <div class="h-48"><canvas id="maleFriendshipChart"></canvas></div>
-                    </div>
-                </article>
-                <article id="ch9" class="chapter-card rounded-lg p-8 space-y-6">
-                    <header><h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 9: The Dividend of Service</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 9: Dywidenda ze Służby</h4></header>
-                    <div class="prose-custom"><p data-lang="en">The highest tier of a meaningful life is transcendence: service to something larger than oneself. Active contribution is a powerful, evidence-based antidote to nihilism. This final step completes the journey from self-improvement to contribution, breaking an inward focus and directing newfound strength outward. It is the ultimate answer to meaninglessness: not discovering a pre-ordained meaning, but actively <strong>creating</strong> it through action.</p><p data-lang="pl" class="hidden">Najwyższym poziomem sensownego życia jest transcendencja: służba czemuś większemu niż my sami. Aktywny wkład jest potężnym, opartym na dowodach antidotum na nihilizm. Ten ostatni krok dopełnia podróż od samodoskonalenia do wkładu w społeczeństwo, przełamując skupienie na sobie i kierując nowo zdobytą siłę na zewnątrz. To ostateczna odpowiedź na bezsens: nie odkrywanie z góry narzuconego sensu, ale aktywne jego <strong>tworzenie</strong> poprzez działanie.</p></div>
-                    <div class="pt-4 border-t border-gray-700">
-                        <h5 class="font-bold mb-3" data-lang="en">Data Insight</h5><h5 class="font-bold mb-3 hidden" data-lang="pl">Wgląd w Dane</h5>
-                        <div class="data-highlight p-4 rounded"><p class="text-xs text-gray-300" data-lang="en">The link between altruism and well-being is a human universal, observed in <strong>120 out of 136 countries</strong> studied.</p><p class="text-xs text-gray-300 hidden" data-lang="pl">Związek między altruizmem a dobrostanem jest uniwersalny dla człowieka, zaobserwowano go w <strong>120 ze 136 badanych krajów</strong>.</p></div>
-                    </div>
-                </article>
+             <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8 fade-in up">
+                <article id="ch6" class="rpg-panel p-8 space-y-6"><header><h4 class="text-xl font-bold"><span class="highlight-yellow">Quest 1:</span> <span data-lang="en">Radical Self-Awareness</span><span class="hidden" data-lang="pl">Radykalna Samoświadomość</span></h4></header><div class="prose prose-sm max-w-none text-gray-400"><p data-lang="en">Through structured journaling, you create your <strong class="highlight-yellow">"personal constitution"</strong>: a document defining your values and mission. This inner compass becomes the supreme law by which all subsequent decisions are made.</p><p data-lang="pl" class="hidden">Poprzez ustrukturyzowane prowadzenie dziennika tworzysz swoją <strong class="highlight-yellow">"osobistą konstytucję"</strong>: dokument definiujący Twoje wartości i misję. Ten wewnętrzny kompas staje się nadrzędnym prawem.</p></div><div class="pt-4 border-t border-gray-700"><h5 class="font-bold mb-3 text-lg" data-lang="en">Data Insight</h5><h5 class="font-bold mb-3 text-lg hidden" data-lang="pl">Wgląd w Dane</h5><div class="data-highlight p-4 rounded"><p class="font-bold text-lg accent-text">42%</p><p class="text-xs text-gray-300" data-lang="en">Higher achievement rate for individuals who write down their goals.</p><p class="text-xs text-gray-300 hidden" data-lang="pl">Wyższy wskaźnik realizacji celów u osób, które je zapisują.</p></div></div></article>
+                <article id="ch7" class="rpg-panel p-8 space-y-6"><header><h4 class="text-xl font-bold"><span class="highlight-yellow">Quest 2:</span> <span data-lang="en">Pursuit of Mastery</span><span class="hidden" data-lang="pl">Pogoń za Mistrzostwem</span></h4></header><div class="prose prose-sm max-w-none text-gray-400"><p data-lang="en">Leverage the theory of <strong class="highlight-yellow">"flow"</strong>—a state of optimal experience from total immersion in a challenging activity. This replaces the need for external validation with an internally generated source of fulfillment.</p><p data-lang="pl" class="hidden">Wykorzystaj teorię <strong class="highlight-yellow">"flow"</strong> — stan optymalnego doświadczenia wynikającego z całkowitego zanurzenia w wyzwaniu. Zastępuje to potrzebę zewnętrznej walidacji wewnętrznym źródłem spełnienia.</p></div><div class="pt-4 border-t border-gray-700"><h5 class="font-bold mb-3 text-lg" data-lang="en">Data Insight</h5><h5 class="font-bold mb-3 text-lg hidden" data-lang="pl">Wgląd w Dane</h5><div class="data-highlight p-4 rounded"><p class="font-bold text-lg accent-text" data-lang="en">29% Reduction</p><p class="font-bold text-lg accent-text hidden" data-lang="pl">29% Redukcji</p><p class="text-xs text-gray-300" data-lang="en">in all-cause mortality risk is associated with regular hobby engagement.</p><p class="text-xs text-gray-300 hidden" data-lang="pl">ryzyka zgonu, związane z regularnym angażowaniem się w hobby.</p></div></div></article>
+                <article id="ch8" class="rpg-panel p-8 space-y-6"><header><h4 class="text-xl font-bold"><span class="highlight-yellow">Quest 3:</span> <span data-lang="en">Strength of the Pack</span><span class="hidden" data-lang="pl">Siła Stada</span></h4></header><div class="prose prose-sm max-w-none text-gray-400"><p data-lang="en">Build a resilient network of deep, platonic friendships. Radically redefine <strong class="highlight-yellow">"family"</strong> as a tribe of chosen, loyal friends. This is a direct counter-strategy to the male loneliness crisis, as loneliness is linked to a <strong class="highlight-yellow">26% increased risk of premature death</strong>.</p><p data-lang="pl" class="hidden">Zbuduj odporną sieć głębokich, platonicznych przyjaźni. Radykalnie zredefiniuj <strong class="highlight-yellow">"rodzinę"</strong> jako plemię wybranych, lojalnych przyjaciół. To bezpośrednia kontrstrategia wobec kryzysu męskiej samotności, która wiąże się z <strong class="highlight-yellow">26% wzrostem ryzyka przedwczesnej śmierci</strong>.</p></div><div class="pt-4 border-t border-gray-700"><h5 class="font-bold mb-3 text-lg" data-lang="en">Data & Evidence</h5><h5 class="font-bold mb-3 text-lg hidden" data-lang="pl">Dane i Dowody</h5><div class="h-48"><canvas id="maleFriendshipChart"></canvas></div></div></article>
+                <article id="ch9" class="rpg-panel p-8 space-y-6"><header><h4 class="text-xl font-bold"><span class="highlight-yellow">Final Quest:</span> <span data-lang="en">The Dividend of Service</span><span class="hidden" data-lang="pl">Dywidenda ze Służby</span></h4></header><div class="prose prose-sm max-w-none text-gray-400"><p data-lang="en">The highest tier is transcendence: service to something larger than yourself. Active contribution is a powerful, evidence-based antidote to nihilism. It is the ultimate answer to meaninglessness: not discovering a pre-ordained meaning, but actively <strong class="highlight-yellow">creating</strong> it through action.</p><p data-lang="pl" class="hidden">Najwyższy poziom to transcendencja: służba czemuś większemu niż ty sam. Aktywny wkład to potężne, oparte na dowodach antidotum na nihilizm. To ostateczna odpowiedź na bezsens: nie odkrywanie narzuconego sensu, ale aktywne <strong class="highlight-yellow">tworzenie</strong> go poprzez działanie.</p></div><div class="pt-4 border-t border-gray-700"><h5 class="font-bold mb-3 text-lg" data-lang="en">Data Insight</h5><h5 class="font-bold mb-3 text-lg hidden" data-lang="pl">Wgląd w Dane</h5><div class="data-highlight p-4 rounded"><p class="text-xs text-gray-300" data-lang="en">The link between altruism and well-being is a human universal, observed in <strong>120 out of 136 countries</strong>.</p><p class="text-xs text-gray-300 hidden" data-lang="pl">Związek między altruizmem a dobrostanem jest uniwersalny, zaobserwowano go w <strong>120 ze 136 krajów</strong>.</p></div></div></article>
             </div>
             
-            <div class="mt-20 fade-in">
-                <div class="p-8 section-card rounded-lg">
-                    <h3 class="text-2xl font-bold" data-lang="en">Final Conclusion: Forging the Compass Within</h3><h3 class="text-2xl font-bold hidden" data-lang="pl">Ostateczny Wniosek: Wykuwanie Kompasu Wewnątrz</h3>
-                    <div class="prose-custom mt-4">
-                        <p data-lang="en">This dossier validates the Autonomy Protocol as a rational, evidence-based response to a dysfunctional relational landscape. The path outlined is not one of ease but of discipline, courage, and consequence. Its ultimate outcome is the attainment of authentic strength and freedom—an unwavering sense of self-worth, a clearly defined purpose, and a resilient support network built on one's own terms. The individual who navigates this protocol will operate from a position of strength, not of need. <strong>They will no longer seek a compass in the external world, for they will have forged one within themselves.</strong></p>
-                        <p data-lang="pl" class="hidden">To dossier potwierdza Protokół Autonomii jako racjonalną, opartą na dowodach odpowiedź na dysfunkcyjny krajobraz relacyjny. Nakreślona ścieżka nie jest łatwa, lecz wymaga dyscypliny, odwagi i konsekwencji. Jej ostatecznym rezultatem jest osiągnięcie autentycznej siły i wolności — niezachwianego poczucia własnej wartości, jasno określonego celu i odpornej sieci wsparcia zbudowanej na własnych warunkach. Jednostka, która przejdzie ten protokół, będzie działać z pozycji siły, a nie potrzeby. <strong>Nie będzie już szukać kompasu w świecie zewnętrznym, ponieważ wykuje go w sobie.</strong></p>
-                    </div>
+            <div class="mt-20 fade-in up">
+                <div class="section-card rounded-lg p-8">
+                    <h3 class="text-2xl font-bold" data-lang="en">Quest Complete: Forging the Compass Within</h3><h3 class="text-2xl font-bold hidden" data-lang="pl">Misja Ukończona: Wykuwanie Kompasu Wewnątrz</h3>
+                    <div class="prose prose-sm max-w-none text-gray-400 mt-4"><p data-lang="en">This dossier validates the Autonomy Protocol as a rational, evidence-based response. The path is not one of ease but of discipline. Its outcome is authentic strength and freedom—an unwavering sense of self-worth, a clearly defined purpose, and a resilient support network built on your own terms. You will operate from a position of strength, not of need. <strong>You will no longer seek a compass in the external world, for you will have forged one within yourself.</strong></p><p data-lang="pl" class="hidden">To dossier potwierdza Protokół Autonomii jako racjonalną, opartą na dowodach odpowiedź. Ścieżka ta nie jest łatwa, lecz wymaga dyscypliny. Jej rezultatem jest autentyczna siła i wolność — niezachwiane poczucie własnej wartości, jasno określony cel i odporna sieć wsparcia zbudowana na własnych warunkach. Będziesz działać z pozycji siły, a nie potrzeby. <strong>Nie będziesz już szukać kompasu w świecie zewnętrznym, ponieważ wykujesz go w sobie.</strong></p></div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="border-t border-gray-800">
-        <div class="container mx-auto px-6 py-8 text-center text-gray-500">
-            <p class="font-bold accent-text"><span data-lang="en">The Autonomy Protocol Dossier</span><span data-lang="pl" class="hidden">Dossier Protokołu Autonomii</span></p>
-            <p class="text-xs mt-4"><span data-lang="en">Content synthesized from provided analytical documents. This is a conceptual framework, not professional advice.</span><span data-lang="pl" class="hidden">Treść zsyntetyzowana na podstawie dostarczonych dokumentów analitycznych. Jest to koncepcyjny model, a nie profesjonalna porada.</span></p>
-        </div>
+    <footer class="border-t border-gray-700">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-500"><p class="font-bold accent-text"><span data-lang="en">The Autonomy Protocol Dossier</span><span data-lang="pl" class="hidden">Dossier Protokołu Autonomii</span></p><p class="text-xs mt-4"><span data-lang="en">Content synthesized from provided analytical documents. This is a conceptual framework, not professional advice.</span><span data-lang="pl" class="hidden">Treść zsyntetyzowana na podstawie dostarczonych dokumentów analitycznych. Jest to koncepcyjny model, a nie profesjonalna porada.</span></p></div>
     </footer>
 
 <script>
@@ -351,7 +246,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('visible');
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                entry.target.classList.add('ca__animate');
+            }
         });
     }, { threshold: 0.1 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
@@ -371,14 +269,15 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: isDarkMode ? '#30363d' : '#e5e7eb',
             ticks: isDarkMode ? '#8b949e' : '#4b5563',
             text: isDarkMode ? '#c9d1d9' : '#1f2937',
-            sky: '#58a6ff',
-            rose: '#ff7b72',
-            amber: '#f1e05a'
+            sky: '#60a5fa',
+            rose: '#fb7185',
+            amber: '#facc15',
+            teal: '#2dd4bf'
         };
         const commonOptions = {
              responsive: true, maintainAspectRatio: false,
              plugins: { legend: { display: false } },
-             scales: { y: { grid: { color: chartColors.grid }, ticks: { color: chartColors.ticks } }, x: { grid: { color: chartColors.grid }, ticks: { color: chartColors.ticks } } }
+             scales: { y: { grid: { color: chartColors.grid }, ticks: { color: chartColors.ticks, font: { family: "'Poppins', sans-serif"} } }, x: { grid: { color: chartColors.grid }, ticks: { color: chartColors.ticks, font: { family: "'Poppins', sans-serif"} } } }
         };
 
         const politicalCtx = document.getElementById('politicalGapChart')?.getContext('2d');
@@ -389,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     labels: [lang === 'pl' ? 'Młode Kobiety' : 'Young Women', lang === 'pl' ? 'Młodzi Mężczyźni' : 'Young Men'],
                     datasets: [{ label: 'Score', data: [4.49, 5.53], backgroundColor: [chartColors.rose, chartColors.sky] }]
                 },
-                options: { ...commonOptions, plugins: { ...commonOptions.plugins, title: { display: true, text: lang === 'pl' ? 'Luka Polityczna (Polska, 15-29 lat, 0=Lewica)' : 'Political Gap (Poland, 15-29y, 0=Left)', color: chartColors.text } }, scales: { y: { ...commonOptions.scales.y, beginAtZero: true, max: 10 } } }
+                options: { ...commonOptions, plugins: { ...commonOptions.plugins, title: { display: true, text: lang === 'pl' ? 'Luka Polityczna (Polska, 15-29 lat, 0=Lewica)' : 'Political Gap (Poland, 15-29y, 0=Left)', color: chartColors.text, font: { family: "'Poppins', sans-serif"} } }, scales: { y: { ...commonOptions.scales.y, beginAtZero: true, max: 10 } } }
             });
         }
 
@@ -399,9 +298,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 type: 'doughnut',
                 data: {
                     labels: [lang === 'pl' ? 'Kobiety' : 'Women', lang === 'pl' ? 'Mężczyźni' : 'Men'],
-                    datasets: [{ data: [56, 37], backgroundColor: [chartColors.sky, chartColors.amber], borderColor: isDarkMode ? '#161b22' : '#FFFFFF', borderWidth: 4 }]
+                    datasets: [{ data: [56, 37], backgroundColor: [chartColors.sky, chartColors.amber], borderColor: isDarkMode ? '#2d3748' : '#e0f2fe', borderWidth: 4 }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom', labels: { color: chartColors.ticks } }, title: { display: true, text: lang === 'pl' ? '% z Wyższym Wykształceniem (Polska, 25-34 lata)' : '% with Higher Education (Poland, 25-34y)', color: chartColors.text } } }
+                options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom', labels: { color: chartColors.ticks, font: { family: "'Poppins', sans-serif"} } }, title: { display: true, text: lang === 'pl' ? '% z Wyższym Wykształceniem (Polska, 25-34 lata)' : '% with Higher Education (Poland, 25-34y)', color: chartColors.text, font: { family: "'Poppins', sans-serif"} } } }
             });
         }
 
@@ -413,7 +312,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     labels: [lang === 'pl' ? 'Mężczyźni <24' : 'Men <24', lang === 'pl' ? 'Mężczyźni 25-34' : 'Men 25-34'],
                     datasets: [{ label: '%', data: [55, 53], backgroundColor: [chartColors.sky, chartColors.amber] }]
                 },
-                options: { ...commonOptions, plugins: { ...commonOptions.plugins, title: { display: true, text: lang === 'pl' ? 'Wysoki Poziom Samotności (Młodzi Mężczyźni, PL)' : 'High Loneliness Levels (Young Men, PL)', color: chartColors.text } }, scales: { y: { ...commonOptions.scales.y, beginAtZero: true, max: 60, ticks: { ...commonOptions.scales.y.ticks, callback: v => v + '%' } } } }
+                options: { ...commonOptions, plugins: { ...commonOptions.plugins, title: { display: true, text: lang === 'pl' ? 'Wysoki Poziom Samotności (Młodzi Mężczyźni, PL)' : 'High Loneliness Levels (Young Men, PL)', color: chartColors.text, font: { family: "'Poppins', sans-serif"} } }, scales: { y: { ...commonOptions.scales.y, beginAtZero: true, max: 60, ticks: { ...commonOptions.scales.y.ticks, callback: v => v + '%' } } } }
             });
         }
         
@@ -425,7 +324,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     labels: ['1990', '2021'],
                     datasets: [{ label: '%', data: [3, 15], backgroundColor: [chartColors.sky, chartColors.rose] }]
                 },
-                options: { ...commonOptions, plugins: { ...commonOptions.plugins, title: { display: true, text: lang === 'pl' ? '% Mężczyzn bez bliskich przyjaciół (USA)' : '% of Men with No Close Friends (US)', color: chartColors.text } }, scales: { y: { ...commonOptions.scales.y, beginAtZero: true, max: 20, ticks: { ...commonOptions.scales.y.ticks, callback: v => v + '%' } } } }
+                options: { ...commonOptions, plugins: { ...commonOptions.plugins, title: { display: true, text: lang === 'pl' ? '% Mężczyzn bez bliskich przyjaciół (USA)' : '% of Men with No Close Friends (US)', color: chartColors.text, font: { family: "'Poppins', sans-serif"} } }, scales: { y: { ...commonOptions.scales.y, beginAtZero: true, max: 20, ticks: { ...commonOptions.scales.y.ticks, callback: v => v + '%' } } } }
             });
         }
     }
