@@ -9,21 +9,22 @@
     <script src="https://cdn.tailwindcss.com/3.4.1?plugins=typography"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://cssanimation.io/cssanimation.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
         html { scroll-behavior: smooth; }
         body { font-family: 'Inter', sans-serif; background-color: #0d1117; color: #c9d1d9; transition: background-color 0.3s, color 0.3s; }
         html.light body { background-color: #f9fafb; color: #1f2937; }
-        .section-card { background-color: rgba(22, 27, 34, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid #30363d; transition: all 0.3s; }
-        html.light .section-card { background-color: rgba(255, 255, 255, 0.7); border: 1px solid #e5e7eb; }
-        .chapter-card { background-color: #161b22; border: 1px solid #30363d; transition: all 0.3s; }
+        .chapter-card { background-color: #161b22; border: 1px solid #30363d; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); transform-style: preserve-3d; }
         html.light .chapter-card { background-color: #ffffff; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05); }
-        .data-highlight { background-color: rgba(56, 189, 248, 0.1); border-left: 4px solid #38BDF8; }
-        html.light .data-highlight { background-color: rgba(2, 132, 199, 0.05); border-left: 4px solid #0284C7;}
+        .chapter-card:hover { transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) scale(1.02); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); }
+        html.light .chapter-card:hover { box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1); }
+        .data-highlight { background-color: rgba(88, 166, 255, 0.1); border-left: 4px solid #58a6ff; }
+        html.light .data-highlight { background-color: rgba(37, 99, 235, 0.05); border-left: 4px solid #2563eb;}
         .accent-text { color: #58a6ff; }
         html.light .accent-text { color: #2563eb; }
-        .btn-primary { background-color: #238636; color: white; transition: background-color 0.3s; font-weight: 600; }
-        .btn-primary:hover { background-color: #2ea043; }
+        .btn-primary { background-color: #238636; color: white; transition: all 0.3s; font-weight: 600; position: relative; overflow: hidden; z-index: 1; }
+        .btn-primary:hover { background-color: #2ea043; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         html.light .btn-primary { background-color: #2563eb; }
         html.light .btn-primary:hover { background-color: #1d4ed8; }
         .btn-secondary { background-color: #21262d; border: 1px solid #30363d; color: #c9d1d9; transition: all 0.3s; }
@@ -32,7 +33,7 @@
         .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 50%; transform: translateX(-50%); background-color: #58a6ff; transition: width 0.3s; }
         html.light .nav-link::after { background-color: #2563eb; }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
-        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
         .bg-grid-pattern { background-image: radial-gradient(#30363d 1px, transparent 1px); background-size: 40px 40px; }
         html.light .bg-grid-pattern { background-image: radial-gradient(#e5e7eb 1px, transparent 1px); }
@@ -43,8 +44,11 @@
         html.light .styled-table th { background-color: #f9fafb; }
         blockquote { border-left: 4px solid #30363d; padding-left: 1rem; font-style: italic; color: #8b949e; }
         html.light blockquote { border-left-color: #d1d5db; color: #4b5563; }
-        .prose-custom { @apply prose prose-invert prose-sm max-w-none prose-p:text-gray-400 prose-headings:text-gray-200 prose-strong:text-gray-200; }
-        html.light .prose-custom { @apply prose-invert-reverse; }
+        .prose-custom { @apply prose prose-invert prose-sm max-w-none prose-p:text-gray-400 prose-headings:text-gray-200 prose-strong:text-white; }
+        html.light .prose-custom { @apply prose-neutral prose-sm max-w-none prose-p:text-gray-600 prose-headings:text-gray-900 prose-strong:text-gray-900; }
+        .animated-gradient-text { background: linear-gradient(to right, #a7b2c1 20%, #c9d1d9 40%, #c9d1d9 60%, #a7b2c1 80%); background-size: 200% auto; background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShine 4s linear infinite; }
+        html.light .animated-gradient-text { background: linear-gradient(to right, #374151 20%, #111827 40%, #111827 60%, #374151 80%); background-size: 200% auto; background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShine 4s linear infinite; }
+        @keyframes textShine { to { background-position: 200% center; } }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-300">
@@ -83,7 +87,7 @@
             <div class="fade-in">
                  <h2 class="text-xl font-semibold accent-text" data-lang="en">An Evidence-Based Dossier</h2><h2 class="text-xl font-semibold accent-text hidden" data-lang="pl">Dossier Oparte na Dowodach</h2>
                 <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mt-2">
-                    <span class="block" data-lang="en">The Autonomy Protocol</span><span class="block hidden" data-lang="pl">Protokół Autonomii</span>
+                    <span class="animated-gradient-text block" data-lang="en">The Autonomy Protocol</span><span class="animated-gradient-text block hidden" data-lang="pl">Protokół Autonomii</span>
                 </h1>
                 <p class="mt-4 text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
                     <span data-lang="en">A data-driven framework for building inner strength and independence in an age of systemic relational dysfunction. This is not a guide to finding a partner. It is a blueprint for forging yourself.</span>
@@ -99,7 +103,7 @@
 
         <section id="diagnosis" class="py-20">
             <div class="text-center mb-12 fade-in">
-                <h2 class="text-3xl md:text-4xl font-bold">
+                <h2 class="text-3xl md:text-4xl font-bold animated-gradient-text">
                     <span data-lang="en">Empirical Foundations of the "Broken Compass"</span><span data-lang="pl" class="hidden">Empiryczne Fundamenty "Złamanego Kompasu"</span>
                 </h2>
                 <p class="mt-4 max-w-3xl mx-auto text-gray-400">
@@ -113,8 +117,8 @@
                     <div class="md:col-span-3">
                         <h3 class="text-2xl font-bold accent-text" data-lang="en">1. The Politicization of Intimacy</h3><h3 class="text-2xl font-bold accent-text hidden" data-lang="pl">1. Upolitycznienie Intymności</h3>
                         <div class="prose-custom mt-4">
-                            <p data-lang="en">The private sphere has become an ideological battlefield. Partner selection is no longer a search for connection but an act of ideological filtering, driven by "affective polarization"—a visceral dislike for the opposing political camp. This is not mere disagreement; a potential bond can be severed in an instant by a single comment, a moment described as "the sound of a scratching record." Political affiliation now serves as a proxy for core moral worldviews regarding equality, authority, and tradition. In Poland, this is a powerful force, with **73% of couples sharing voting preferences**. A growing gender-generation gap, with young Polish women (15-29) identifying as significantly more left-wing than their male peers, further fractures the dating pool.</p>
-                            <p data-lang="pl" class="hidden">Sfera prywatna stała się polem bitwy ideologicznej. Dobór partnera nie jest już poszukiwaniem więzi, ale aktem ideologicznej filtracji, napędzanym przez "polaryzację afektywną" — głęboką niechęć do przeciwnego obozu politycznego. To nie jest zwykła niezgoda; potencjalna więź może zostać zerwana w jednej chwili przez jeden komentarz, moment opisywany jako "dźwięk rysowanej płyty". Przynależność polityczna służy obecnie jako wyznacznik podstawowych światopoglądów moralnych dotyczących równości, autorytetu i tradycji. W Polsce jest to potężna siła – **73% par ma te same preferencje wyborcze**. Rosnąca luka płciowo-pokoleniowa, w której młode Polki (15-29 lat) identyfikują się jako znacznie bardziej lewicowe niż ich rówieśnicy, dodatkowo dzieli pulę randkową.</p>
+                            <p data-lang="en">The private sphere has become an ideological battlefield. Partner selection is no longer a search for connection but an act of ideological filtering, driven by "affective polarization"—a visceral dislike for the opposing political camp. This is not mere disagreement; a potential bond can be severed in an instant by a single comment, a moment described as "the sound of a scratching record." Political affiliation now serves as a proxy for core moral worldviews regarding equality, authority, and tradition. In Poland, this is a powerful force, with <strong>73% of couples sharing voting preferences</strong>. A growing gender-generation gap, with young Polish women (15-29) identifying as significantly more left-wing than their male peers, further fractures the dating pool.</p>
+                            <p data-lang="pl" class="hidden">Sfera prywatna stała się polem bitwy ideologicznej. Dobór partnera nie jest już poszukiwaniem więzi, ale aktem ideologicznej filtracji, napędzanym przez "polaryzację afektywną" — głęboką niechęć do przeciwnego obozu politycznego. To nie jest zwykła niezgoda; potencjalna więź może zostać zerwana w jednej chwili przez jeden komentarz, moment opisywany jako "dźwięk rysowanej płyty". Przynależność polityczna służy obecnie jako wyznacznik podstawowych światopoglądów moralnych dotyczących równości, autorytetu i tradycji. W Polsce jest to potężna siła – <strong>73% par ma te same preferencje wyborcze</strong>. Rosnąca luka płciowo-pokoleniowa, w której młode Polki (15-29 lat) identyfikują się jako znacznie bardziej lewicowe niż ich rówieśnicy, dodatkowo dzieli pulę randkową.</p>
                         </div>
                     </div>
                     <div class="md:col-span-2 section-card p-4 rounded-lg">
@@ -129,8 +133,8 @@
                     <div class="md:col-span-3 md:order-2">
                         <h3 class="text-2xl font-bold accent-text" data-lang="en">2. The Chaos of Gender Roles</h3><h3 class="text-2xl font-bold accent-text hidden" data-lang="pl">2. Chaos Ról Płciowych</h3>
                          <div class="prose-custom mt-4">
-                            <p data-lang="en">A rapid and fundamental shift in gender roles has led to what is termed the "egalitarian-traditional paradox." Men are often subjected to a "double bind": expected to be both a traditional provider and a modern, emotionally available partner. This is an unrealistic expectation. On the other hand, a massive educational mismatch has occurred in Poland: **56% of women aged 25-34 hold a university degree, compared to only 37% of men**. This structural reality, combined with lingering preferences for female hypergamy, creates a "mating squeeze" for highly educated women. The result is a potent source of frustration, manifesting in the fact that women initiate approximately **two-thirds of all divorces**.</p>
-                            <p data-lang="pl" class="hidden">Gwałtowna i fundamentalna zmiana ról płciowych doprowadziła do tak zwanego "paradoksu egalitarno-tradycyjnego". Mężczyźni często poddawani są "podwójnemu wiązaniu": oczekuje się od nich, że będą zarówno tradycyjnymi żywicielami, jak i nowoczesnymi, emocjonalnie dostępnymi partnerami. To nierealistyczne oczekiwanie. Z drugiej strony, w Polsce nastąpiło ogromne niedopasowanie edukacyjne: **56% kobiet w wieku 25-34 lata posiada dyplom uniwersytecki, w porównaniu do zaledwie 37% mężczyzn**. Ta strukturalna rzeczywistość, w połączeniu z utrzymującymi się preferencjami do hipergamii kobiecej, tworzy "ucisk matrymonialny" dla wysoko wykształconych kobiet. Rezultatem jest potężne źródło frustracji, objawiające się tym, że kobiety inicjują około **dwóch trzecich wszystkich rozwodów**.</p>
+                            <p data-lang="en">A rapid and fundamental shift in gender roles has led to what is termed the "egalitarian-traditional paradox." Men are often subjected to a "double bind": expected to be both a traditional provider and a modern, emotionally available partner. This is an unrealistic expectation. On the other hand, a massive educational mismatch has occurred in Poland: <strong>56% of women aged 25-34 hold a university degree, compared to only 37% of men</strong>. This structural reality, combined with lingering preferences for female hypergamy, creates a "mating squeeze" for highly educated women. The result is a potent source of frustration, manifesting in the fact that women initiate approximately <strong>two-thirds of all divorces</strong>.</p>
+                            <p data-lang="pl" class="hidden">Gwałtowna i fundamentalna zmiana ról płciowych doprowadziła do tak zwanego "paradoksu egalitarno-tradycyjnego". Mężczyźni często poddawani są "podwójnemu wiązaniu": oczekuje się od nich, że będą zarówno tradycyjnymi żywicielami, jak i nowoczesnymi, emocjonalnie dostępnymi partnerami. To nierealistyczne oczekiwanie. Z drugiej strony, w Polsce nastąpiło ogromne niedopasowanie edukacyjne: <strong>56% kobiet w wieku 25-34 lata posiada dyplom uniwersytecki, w porównaniu do zaledwie 37% mężczyzn</strong>. Ta strukturalna rzeczywistość, w połączeniu z utrzymującymi się preferencjami do hipergamii kobiecej, tworzy "ucisk matrymonialny" dla wysoko wykształconych kobiet. Rezultatem jest potężne źródło frustracji, objawiające się tym, że kobiety inicjują około <strong>dwóch trzecich wszystkich rozwodów</strong>.</p>
                         </div>
                     </div>
                 </article>
@@ -139,8 +143,8 @@
                     <div class="md:col-span-3">
                         <h3 class="text-2xl font-bold accent-text" data-lang="en">3. The Dual Crisis: Mental Health & Social Connection</h3><h3 class="text-2xl font-bold accent-text hidden" data-lang="pl">3. Podwójny Kryzys: Zdrowie Psychiczne i Więzi Społeczne</h3>
                         <div class="prose-custom mt-4">
-                            <p data-lang="en">A dual crisis is unfolding, undermining the very capacity for empathy. Firstly, a crisis of mood disorders, where depression is ~50% more common in women. In Poland, women constitute over **75% of patients treated for recurring depressive disorders**. Secondly, a crisis of social connection disproportionately affecting young men. In Poland, **55% of men up to age 24** and **53% of men aged 25-34** report high levels of loneliness. This occurs as single-person households become a dominant global structure (projected 35% by 2050). This trend normalizes autonomy, making the protocol an alignment with an emerging social reality, not a fringe reaction.</p>
-                            <p data-lang="pl" class="hidden">Rozwija się podwójny kryzys, podważający samą zdolność do empatii. Po pierwsze, kryzys zaburzeń nastroju, w którym depresja jest o ~50% częstsza u kobiet. W Polsce kobiety stanowią ponad **75% pacjentów leczonych z powodu nawracających zaburzeń depresyjnych**. Po drugie, kryzys więzi społecznych, który nieproporcjonalnie dotyka młodych mężczyzn. W Polsce **55% mężczyzn do 24. roku życia** i **53% mężczyzn w wieku 25-34 lata** zgłasza wysoki poziom samotności. Dzieje się to w czasie, gdy jednoosobowe gospodarstwa domowe stają się dominującą globalną strukturą (prognozowane 35% do 2050 r.). Trend ten normalizuje autonomię, czyniąc protokół dostosowaniem do nowej rzeczywistości społecznej, a nie marginalną reakcją.</p>
+                            <p data-lang="en">A dual crisis is unfolding, undermining the very capacity for empathy. Firstly, a crisis of mood disorders, where depression is ~50% more common in women. In Poland, women constitute over <strong>75% of patients treated for recurring depressive disorders</strong>. Secondly, a crisis of social connection disproportionately affecting young men. In Poland, <strong>55% of men up to age 24</strong> and <strong>53% of men aged 25-34</strong> report high levels of loneliness. This occurs as single-person households become a dominant global structure (projected 35% by 2050). This trend normalizes autonomy, making the protocol an alignment with an emerging social reality, not a fringe reaction.</p>
+                            <p data-lang="pl" class="hidden">Rozwija się podwójny kryzys, podważający samą zdolność do empatii. Po pierwsze, kryzys zaburzeń nastroju, w którym depresja jest o ~50% częstsza u kobiet. W Polsce kobiety stanowią ponad <strong>75% pacjentów leczonych z powodu nawracających zaburzeń depresyjnych</strong>. Po drugie, kryzys więzi społecznych, który nieproporcjonalnie dotyka młodych mężczyzn. W Polsce <strong>55% mężczyzn do 24. roku życia</strong> i <strong>53% mężczyzn w wieku 25-34 lata</strong> zgłasza wysoki poziom samotności. Dzieje się to w czasie, gdy jednoosobowe gospodarstwa domowe stają się dominującą globalną strukturą (prognozowane 35% do 2050 r.). Trend ten normalizuje autonomię, czyniąc protokół dostosowaniem do nowej rzeczywistości społecznej, a nie marginalną reakcją.</p>
                         </div>
                     </div>
                     <div class="md:col-span-2 section-card p-4 rounded-lg">
@@ -149,15 +153,16 @@
                 </article>
             </div>
              <div class="mt-20 text-center fade-in">
-                <a href="#protocol" class="btn-primary px-8 py-3 rounded-md text-base">
+                 <a href="#protocol" class="group btn-primary px-8 py-3 rounded-md text-base inline-flex items-center">
                     <span data-lang="en">Initiate the Protocol</span><span data-lang="pl" class="hidden">Uruchom Protokół</span>
+                    <svg class="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                 </a>
             </div>
         </section>
 
         <section id="protocol" class="py-20">
             <div class="text-center mb-12 fade-in">
-                <h2 class="text-3xl md:text-4xl font-bold">
+                <h2 class="text-3xl md:text-4xl font-bold animated-gradient-text">
                     <span data-lang="en">The Autonomy Protocol: A Blueprint</span><span data-lang="pl" class="hidden">Protokół Autonomii: Plan</span>
                 </h2>
                  <p class="mt-4 max-w-3xl mx-auto text-gray-400">
@@ -191,7 +196,7 @@
                                 <div class="overflow-x-auto">
                                     <table class="styled-table">
                                         <thead><tr><th data-lang="en">Modality</th><th data-lang="pl" class="hidden">Modalność</th><th data-lang="en">Hormonal Impact</th><th data-lang="pl" class="hidden">Wpływ Hormonalny</th><th data-lang="en">Psychological Benefit</th><th data-lang="pl" class="hidden">Korzyść Psychologiczna</th></tr></thead>
-                                        <tbody><tr><td><span data-lang="en">Strength</span><span data-lang="pl" class="hidden">Siłowy</span></td><td>↑ Testosterone, ↓ Cortisol</td><td><span data-lang="en">Confidence, mood stability</span><span data-lang="pl" class="hidden">Pewność siebie, stabilność nastroju</span></td></tr><tr><td><span data-lang="en">Combat</span><span data-lang="pl" class="hidden">Walki</span></td><td><span data-lang="en">Stress hormone regulation</span><span data-lang="pl" class="hidden">Regulacja hormonów stresu</span></td><td><span data-lang="en">Discipline, resilience, sublimation</span><span data-lang="pl" class="hidden">Dyscyplina, odporność, sublimacja</span></td></tr><tr><td><span data-lang="en">Cardio (Calibrated)</span><span data-lang="pl" class="hidden">Kardio (Kalibrowane)</span></td><td>↑ Endorphins</td><td><span data-lang="en">Stress reduction, mood lift</span><span data-lang="pl" class="hidden">Redukcja stresu, poprawa nastroju</span></td></tr></tbody>
+                                        <tbody><tr><td><strong><span data-lang="en">Strength</span><span data-lang="pl" class="hidden">Siłowy</span></strong></td><td>↑ Testosterone, ↓ Cortisol</td><td><span data-lang="en">Confidence, mood stability</span><span data-lang="pl" class="hidden">Pewność siebie, stabilność nastroju</span></td></tr><tr><td><strong><span data-lang="en">Combat</span><span data-lang="pl" class="hidden">Walki</span></strong></td><td><span data-lang="en">Stress hormone regulation</span><span data-lang="pl" class="hidden">Regulacja hormonów stresu</span></td><td><span data-lang="en">Discipline, resilience, sublimation</span><span data-lang="pl" class="hidden">Dyscyplina, odporność, sublimacja</span></td></tr><tr><td><strong><span data-lang="en">Cardio (Calibrated)</span><span data-lang="pl" class="hidden">Kardio (Kalibrowane)</span></strong></td><td>↑ Endorphins</td><td><span data-lang="en">Stress reduction, mood lift</span><span data-lang="pl" class="hidden">Redukcja stresu, poprawa nastroju</span></td></tr></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -205,11 +210,11 @@
                             </header>
                             <div class="prose-custom">
                                 <h5 data-lang="en">Micronutrients for Vitality</h5><h5 data-lang="pl" class="hidden">Mikroelementy dla Witalności</h5>
-                                <p data-lang="en">Prioritize whole foods rich in specific micronutrients scientifically validated to support male hormonal health. **Zinc** is essential for the enzymatic processes in testosterone production. **Selenium** is a powerful antioxidant for the reproductive system, protecting testosterone-producing Leydig cells from oxidative damage. **Vitamin D**, a prohormone, has a positive correlation with testosterone levels. **Healthy Fats** (saturated and monounsaturated) are the direct molecular precursors for all steroid hormones.</p>
-                                <p data-lang="pl" class="hidden">Priorytetowo traktuj żywność nieprzetworzoną, bogatą w specyficzne mikroelementy, których skuteczność w wspieraniu męskiego zdrowia hormonalnego została naukowo potwierdzona. **Cynk** jest niezbędny dla procesów enzymatycznych w produkcji testosteronu. **Selen** jest silnym antyoksydantem dla układu rozrodczego, chroniącym komórki Leydiga produkujące testosteron przed uszkodzeniem oksydacyjnym. **Witamina D**, prohormon, wykazuje pozytywną korelację z poziomem testosteronu. **Zdrowe tłuszcze** (nasycone i jednonienasycone) są bezpośrednimi prekursorami molekularnymi dla wszystkich hormonów steroidowych.</p>
+                                <p data-lang="en">Prioritize whole foods rich in specific micronutrients scientifically validated to support male hormonal health. <strong>Zinc</strong> is essential for the enzymatic processes in testosterone production. <strong>Selenium</strong> is a powerful antioxidant for the reproductive system, protecting testosterone-producing Leydig cells from oxidative damage. <strong>Vitamin D</strong>, a prohormone, has a positive correlation with testosterone levels. <strong>Healthy Fats</strong> (saturated and monounsaturated) are the direct molecular precursors for all steroid hormones.</p>
+                                <p data-lang="pl" class="hidden">Priorytetowo traktuj żywność nieprzetworzoną, bogatą w specyficzne mikroelementy, których skuteczność w wspieraniu męskiego zdrowia hormonalnego została naukowo potwierdzona. <strong>Cynk</strong> jest niezbędny dla procesów enzymatycznych w produkcji testosteronu. <strong>Selen</strong> jest silnym antyoksydantem dla układu rozrodczego, chroniącym komórki Leydiga produkujące testosteron przed uszkodzeniem oksydacyjnym. <strong>Witamina D</strong>, prohormon, wykazuje pozytywną korelację z poziomem testosteronu. <strong>Zdrowe tłuszcze</strong> (nasycone i jednonienasycone) są bezpośrednimi prekursorami molekularnymi dla wszystkich hormonów steroidowych.</p>
                                 <h5 data-lang="en">Substances for Hormonal Regulation</h5><h5 data-lang="pl" class="hidden">Substancje do Regulacji Hormonalnej</h5>
-                                <p data-lang="en">Consciously limit or eliminate endocrine disruptors. Chronic **alcohol** consumption disrupts the entire HPG axis, is toxic to Leydig cells, and increases the aromatase enzyme, which converts testosterone into estrogen. A high intake of **simple sugars** leads to insulin spikes which can suppress the release of luteinizing hormone (LH), interrupting the signal for the testes to produce testosterone. Artificial **trans fats** are strongly linked to lower testosterone levels.</p>
-                                <p data-lang="pl" class="hidden">Świadomie ograniczaj lub eliminuj substancje zaburzające gospodarkę hormonalną. Przewlekłe spożywanie **alkoholu** zaburza całą oś podwzgórze-przysadka-gonady (HPG), jest toksyczne для komórek Leydiga i zwiększa aktywność enzymu aromatazy, który przekształca testosteron w estrogen. Wysokie spożycie **cukrów prostych** prowadzi do skoków insuliny, które mogą hamować uwalnianie hormonu luteinizującego (LH), przerywając sygnał dla jąder do produkcji testosteronu. Sztuczne **tłuszcze trans** są silnie powiązane z niższym poziomem testosteronu.</p>
+                                <p data-lang="en">Consciously limit or eliminate endocrine disruptors. Chronic <strong>alcohol</strong> consumption disrupts the entire HPG axis, is toxic to Leydig cells, and increases the aromatase enzyme, which converts testosterone into estrogen. A high intake of <strong>simple sugars</strong> leads to insulin spikes which can suppress the release of luteinizing hormone (LH), interrupting the signal for the testes to produce testosterone. Artificial <strong>trans fats</strong> are strongly linked to lower testosterone levels.</p>
+                                <p data-lang="pl" class="hidden">Świadomie ograniczaj lub eliminuj substancje zaburzające gospodarkę hormonalną. Przewlekłe spożywanie <strong>alkoholu</strong> zaburza całą oś podwzgórze-przysadka-gonady (HPG), jest toksyczne dla komórek Leydiga i zwiększa aktywność enzymu aromatazy, który przekształca testosteron w estrogen. Wysokie spożycie <strong>cukrów prostych</strong> prowadzi do skoków insuliny, które mogą hamować uwalnianie hormonu luteinizującego (LH), przerywając sygnał dla jąder do produkcji testosteronu. Sztuczne <strong>tłuszcze trans</strong> są silnie powiązane z niższym poziomem testosteronu.</p>
                             </div>
                         </article>
                      </div>
@@ -223,8 +228,8 @@
                                 <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 3: Stoicism as Preventative Cognitive Therapy</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 3: Stoicyzm jako Prewencyjna Terapia Poznawcza</h4>
                             </header>
                              <div class="prose-custom">
-                                <p data-lang="en">Stoicism is the direct philosophical precursor to Cognitive Behavioral Therapy (CBT). Its core tenet, famously articulated by Epictetus—"It's not things that upset us but our judgements about them"—is the foundation of CBT's cognitive model. The foundational Stoic exercise of the "dichotomy of control" is a cornerstone of modern resilience training, focusing mental energy exclusively on what is actionable. While CBT is a therapeutic intervention, Stoicism applies these principles prophylactically, aiming to build a cognitive framework so robust it prevents the development of chronic frustration and anxiety. It is a form of self-directed, preventative mental maintenance.</p>
-                                <p data-lang="pl" class="hidden">Stoicyzm jest bezpośrednim filozoficznym prekursorem Terapii Poznawczo-Behawioralnej (CBT). Jego podstawowa zasada, słynnie sformułowana przez Epikteta — "Niepokoją nas nie rzeczy, lecz nasze sądy o rzeczach" — jest fundamentem modelu poznawczego CBT. Fundamentalne ćwiczenie stoickie "dychotomii kontroli" jest kamieniem węgielnym nowoczesnego treningu odporności, skupiając energię psychiczną wyłącznie na tym, co jest w naszej mocy. Podczas gdy CBT jest interwencją terapeutyczną, stoicyzm stosuje te zasady profilaktycznie, dążąc do zbudowania tak solidnej struktury poznawczej, aby zapobiegać rozwojowi chronicznej frustracji i lęku. Jest to forma samodzielnej, prewencyjnej konserwacji umysłu.</p>
+                                <p data-lang="en">Stoicism is the direct philosophical precursor to Cognitive Behavioral Therapy (CBT). Its core tenet, articulated by Epictetus—"It's not things that upset us but our judgements about them"—is the foundation of CBT's cognitive model. The foundational Stoic exercise of the "dichotomy of control" is a cornerstone of modern resilience training, focusing mental energy exclusively on what is actionable. While CBT is a therapeutic intervention, Stoicism applies these principles prophylactically, aiming to build a cognitive framework so robust it prevents the development of chronic frustration and anxiety. It is a form of self-directed, preventative mental maintenance.</p>
+                                <p data-lang="pl" class="hidden">Stoicyzm jest bezpośrednim filozoficznym prekursorem Terapii Poznawczo-Behawioralnej (CBT). Jego podstawowa zasada, sformułowana przez Epikteta — "Niepokoją nas nie rzeczy, lecz nasze sądy o rzeczach" — jest fundamentem modelu poznawczego CBT. Fundamentalne ćwiczenie stoickie "dychotomii kontroli" jest kamieniem węgielnym nowoczesnego treningu odporności, skupiając energię psychiczną wyłącznie na tym, co jest w naszej mocy. Podczas gdy CBT jest interwencją terapeutyczną, stoicyzm stosuje te zasady profilaktycznie, dążąc do zbudowania tak solidnej struktury poznawczej, aby zapobiegać rozwojowi chronicznej frustracji i lęku. Jest to forma samodzielnej, prewencyjnej konserwacji umysłu.</p>
                             </div>
                         </article>
                         <article id="ch4" class="chapter-card rounded-lg p-6 space-y-4">
@@ -238,9 +243,9 @@
                              <div class="pt-4 border-t border-gray-700">
                                 <h5 class="font-bold text-sm mb-2" data-lang="en">Data & Evidence: Brain Changes</h5><h5 class="font-bold text-sm mb-2 hidden" data-lang="pl">Dane i Dowody: Zmiany w Mózgu</h5>
                                 <ul class="text-sm text-gray-400 list-disc list-inside space-y-1">
-                                    <li><span data-lang="en">**Increases** gray matter in the **prefrontal cortex** (executive function, emotional regulation).</span><span data-lang="pl" class="hidden">**Zwiększa** ilość istoty szarej w **korze przedczołowej** (funkcje wykonawcze, regulacja emocji).</span></li>
-                                    <li><span data-lang="en">**Decreases** gray matter volume of the **amygdala** (fear and threat-detection center).</span><span data-lang="pl" class="hidden">**Zmniejsza** objętość istoty szarej w **ciele migdałowatym** (centrum strachu i wykrywania zagrożeń).</span></li>
-                                    <li><span data-lang="en">Meta-analysis confirms it significantly **reduces behavioral impulsivity**.</span><span data-lang="pl" class="hidden">Metaanaliza potwierdza, że znacznie **redukuje impulsywność behawioralną**.</span></li>
+                                    <li><strong><span data-lang="en">Increases</span></strong><span data-lang="en"> gray matter in the <strong>prefrontal cortex</strong> (emotional regulation).</span><span data-lang="pl" class="hidden"><strong>Zwiększa</strong> ilość istoty szarej w <strong>korze przedczołowej</strong> (regulacja emocji).</span></li>
+                                    <li><strong><span data-lang="en">Decreases</span></strong><span data-lang="en"> gray matter volume of the <strong>amygdala</strong> (fear/threat center).</span><span data-lang="pl" class="hidden"><strong>Zmniejsza</strong> objętość istoty szarej w <strong>ciele migdałowatym</strong> (centrum strachu/zagrożenia).</span></li>
+                                    <li><span data-lang="en">Meta-analysis confirms it significantly <strong>reduces behavioral impulsivity</strong>.</span><span data-lang="pl" class="hidden">Metaanaliza potwierdza, że znacznie <strong>redukuje impulsywność behawioralną</strong>.</span></li>
                                 </ul>
                             </div>
                         </article>
@@ -249,8 +254,15 @@
                                 <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 5: Sublimation as a Creative Engine</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 5: Sublimacja jako Silnik Twórczy</h4>
                             </header>
                              <div class="prose-custom">
-                                <p data-lang="en">Sublimation is a mature adaptive mechanism for channeling, not repressing, unwanted impulses—primarily raw libido and aggression—into valuable, socially acceptable outlets. This is a process of channeling psychic energy. Withdrawing from the romantic marketplace frees up a significant amount of this energy previously directed toward mating efforts. Sublimation provides the mechanism for this energy's transmutation. The "Pursuit of Mastery" is therefore not just "getting a hobby"; it is the designated, primary outlet for these powerful sublimated energies, creating a self-reinforcing system of building value and purpose.</p>
-                                <p data-lang="pl" class="hidden">Sublimacja jest dojrzałym mechanizmem adaptacyjnym polegającym na kanalizowaniu, a nie tłumieniu, niechcianych impulsów — głównie surowego libido i agresji — w wartościowe, społecznie akceptowalne działania. Jest to proces kanalizowania energii psychicznej. Wycofanie się z rynku romantycznego uwalnia znaczną ilość tej energii, wcześniej skierowanej na wysiłki związane z poszukiwaniem partnerki. Sublimacja zapewnia mechanizm transmutacji tej energii. "Pogoń za Mistrzostwem" nie jest więc tylko "znalezieniem hobby"; jest wyznaczonym, głównym ujściem dla tych potężnych, zsublimowanych energii, tworząc samonapędzający się system budowania wartości i celu.</p>
+                                <p data-lang="en">Sublimation is a mature adaptive mechanism for channeling, not repressing, unwanted impulses—primarily raw libido and aggression—into valuable, socially acceptable outlets. Withdrawing from the romantic marketplace frees up significant psychic energy. Sublimation provides the mechanism for this energy's transmutation. The "Pursuit of Mastery" is therefore not just "getting a hobby"; it is the designated, primary outlet for these powerful sublimated energies, creating a self-reinforcing system of building value and purpose.</p>
+                                <p data-lang="pl" class="hidden">Sublimacja jest dojrzałym mechanizmem adaptacyjnym polegającym na kanalizowaniu, a nie tłumieniu, niechcianych impulsów — głównie surowego libido i agresji — w wartościowe, społecznie akceptowalne działania. Wycofanie się z rynku romantycznego uwalnia znaczną energię psychiczną. Sublimacja zapewnia mechanizm transmutacji tej energii. "Pogoń za Mistrzostwem" nie jest więc tylko "znalezieniem hobby"; jest wyznaczonym, głównym ujściem dla tych potężnych, zsublimowanych energii, tworząc samonapędzający się system budowania wartości i celu.</p>
+                            </div>
+                            <div class="pt-4 border-t border-gray-700">
+                                <h5 class="font-bold text-sm mb-2" data-lang="en">Data Insight</h5><h5 class="font-bold text-sm mb-2 hidden" data-lang="pl">Wgląd w Dane</h5>
+                                <div class="data-highlight p-3 rounded">
+                                    <p class="text-xs text-gray-300" data-lang="en">An analysis of the Terman study found individuals with anxieties about taboo desires had <strong>significantly greater lifetime creative accomplishments</strong>.</p>
+                                    <p class="text-xs text-gray-300 hidden" data-lang="pl">Analiza badania Termana wykazała, że osoby z lękami dotyczącymi pragnień tabu miały <strong>znacznie większe życiowe osiągnięcia twórcze</strong>.</p>
+                                </div>
                             </div>
                         </article>
                      </div>
@@ -260,7 +272,7 @@
                      <h3 class="text-2xl font-bold mb-6" data-lang="en">Part III: Architecture of a Meaningful Life</h3><h3 class="text-2xl font-bold mb-6 hidden" data-lang="pl">Część III: Architektura Sensownego Życia</h3>
                      <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8">
                         <article id="ch6" class="chapter-card rounded-lg p-6 space-y-4">
-                            <header>
+                             <header>
                                 <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 6: Self-Awareness & Goal Achievement</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 6: Samoświadomość i Osiąganie Celów</h4>
                             </header>
                             <div class="prose-custom">
@@ -282,8 +294,15 @@
                                 <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 7: The Psychology of Mastery & Flow</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 7: Psychologia Mistrzostwa i Flow</h4>
                             </header>
                             <div class="prose-custom">
-                                <p data-lang="en">The "Pursuit of Mastery" is based on the theory of "flow"—a state of optimal experience from total immersion in a challenging activity. A primary condition is the "challenge-skills balance": the task must be demanding but not overwhelming. Pursuing mastery is a reliable method for generating this state, replacing the need for external validation with an internally generated source of fulfillment. Global research demonstrates that regular hobby engagement is associated with a 29% reduction in all-cause mortality risk.</p>
-                                <p data-lang="pl" class="hidden">"Pogoń za Mistrzostwem" opiera się na teorii "flow" — stanie optymalnego doświadczenia wynikającego z całkowitego zanurzenia w wymagającej aktywności. Podstawowym warunkiem jest "równowaga między wyzwaniem a umiejętnościami": zadanie musi być wymagające, ale nie przytłaczające. Dążenie do mistrzostwa jest zatem niezawodną metodą generowania tego stanu, zastępując potrzebę zewnętrznej walidacji wewnętrznie generowanym źródłem spełnienia. Globalne badania wykazują, że regularne angażowanie się w hobby jest związane z 29% redukcją ryzyka zgonu z jakiejkolwiek przyczyny.</p>
+                                <p data-lang="en">The "Pursuit of Mastery" leverages the psychological theory of "flow"—a state of optimal experience from total immersion in a challenging activity. A primary condition is the "challenge-skills balance": the task must be demanding but not overwhelming. Pursuing mastery is therefore a reliable method for generating this powerful, self-sustaining engine for well-being, replacing the need for external validation with an internally generated source of fulfillment.</p>
+                                <p data-lang="pl" class="hidden">"Pogoń za Mistrzostwem" wykorzystuje psychologiczną teorię "flow" — stan optymalnego doświadczenia wynikającego z całkowitego zanurzenia w wymagającej aktywności. Podstawowym warunkiem jest "równowaga między wyzwaniem a umiejętnościami": zadanie musi być wymagające, ale nie przytłaczające. Dążenie do mistrzostwa jest zatem niezawodną metodą generowania tego potężnego, samopodtrzymującego się silnika dobrostanu, zastępując potrzebę zewnętrznej walidacji wewnętrznie generowanym źródłem spełnienia.</p>
+                            </div>
+                            <div class="pt-4 border-t border-gray-700">
+                               <h5 class="font-bold text-sm mb-2" data-lang="en">Data & Evidence</h5><h5 class="font-bold text-sm mb-2 hidden" data-lang="pl">Dane i Dowody</h5>
+                                 <div class="data-highlight p-3 rounded">
+                                    <p class="font-bold text-lg accent-text" data-lang="en">29% Reduction</p><p class="font-bold text-lg accent-text hidden" data-lang="pl">29% Redukcji</p>
+                                    <p class="text-xs text-gray-300" data-lang="en">in all-cause mortality risk associated with regular hobby engagement.</p><p class="text-xs text-gray-300 hidden" data-lang="pl">ryzyka zgonu z jakiejkolwiek przyczyny, związane z regularnym angażowaniem się w hobby.</p>
+                                </div>
                             </div>
                         </article>
                          <article id="ch8" class="chapter-card rounded-lg p-6 space-y-4">
@@ -291,8 +310,8 @@
                                 <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 8: The Critical Importance of Platonic Bonds</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 8: Krytyczne Znaczenie Więzi Platonicznych</h4>
                             </header>
                             <div class="prose-custom">
-                                <p data-lang="en">This is not a sentence to loneliness but an opportunity to build a resilient network of deep, platonic friendships. This is critical, as data reveals a growing crisis in male social connection. Redefining strength not as isolation, but as the courage to cultivate a reliable support network, is a direct counter-strategy to a major public health crisis, as loneliness is strongly correlated with a 26% increased risk of premature death.</p>
-                                <p data-lang="pl" class="hidden">To nie jest wyrok samotności, lecz okazja do zbudowania odpornej sieci głębokich, platonicznych przyjaźni. Jest to kluczowe, ponieważ dane ujawniają narastający kryzys męskich więzi społecznych. Redefiniowanie siły nie jako izolacji, ale jako odwagi do kultywowania niezawodnej sieci wsparcia, jest bezpośrednią kontrstrategią wobec poważnego kryzysu zdrowia publicznego, ponieważ samotność jest silnie skorelowana z 26% wzrostem ryzyka przedwczesnej śmierci.</p>
+                                <p data-lang="en">This is not a sentence to loneliness but an opportunity to build a resilient network of deep, platonic friendships. This is critical, as data reveals a growing crisis in male social connection. Redefining strength not as isolation, but as the courage to cultivate a reliable support network, is a direct counter-strategy to a major public health crisis, as loneliness is strongly correlated with a <strong>26% increased risk of premature death</strong>.</p>
+                                <p data-lang="pl" class="hidden">To nie jest wyrok samotności, lecz okazja do zbudowania odpornej sieci głębokich, platonicznych przyjaźni. Jest to kluczowe, ponieważ dane ujawniają narastający kryzys męskich więzi społecznych. Redefiniowanie siły nie jako izolacji, ale jako odwagi do kultywowania niezawodnej sieci wsparcia, jest bezpośrednią kontrstrategią wobec poważnego kryzysu zdrowia publicznego, ponieważ samotność jest silnie skorelowana z <strong>26% wzrostem ryzyka przedwczesnej śmierci</strong>.</p>
                             </div>
                              <div class="pt-4 border-t border-gray-700">
                                 <h5 class="font-bold text-sm mb-2" data-lang="en">Data & Evidence</h5><h5 class="font-bold text-sm mb-2 hidden" data-lang="pl">Dane i Dowody</h5>
@@ -304,14 +323,14 @@
                                 <h4 class="text-xl font-semibold accent-text" data-lang="en">Chapter 9: The Well-Being Dividend of Service</h4><h4 class="text-xl font-semibold accent-text hidden" data-lang="pl">Rozdział 9: Dywidenda Dobrostanu ze Służby</h4>
                             </header>
                             <div class="prose-custom">
-                                <p data-lang="en">The highest tier of a meaningful life is transcendence: moving beyond the self to engage in service for something larger. Active contribution is a powerful, evidence-based antidote to nihilism. This final step completes the journey from self-improvement to contribution, breaking an inward focus and directing newfound strength outward. It is the ultimate answer to meaninglessness: not discovering a pre-ordained meaning, but actively creating it through action.</p>
-                                <p data-lang="pl" class="hidden">Najwyższym poziomem sensownego życia jest transcendencja: wyjście poza własne "ja", aby zaangażować się w służbę czemuś większemu. Aktywny wkład jest potężnym, opartym na dowodach antidotum na nihilizm. Ten ostatni krok dopełnia podróż od samodoskonalenia do wkładu w społeczeństwo, przełamując skupienie na sobie i kierując nowo zdobytą siłę na zewnątrz. To ostateczna odpowiedź na bezsens: nie odkrywanie z góry narzuconego sensu, ale aktywne jego tworzenie poprzez działanie.</p>
+                                <p data-lang="en">The highest tier of a meaningful life is transcendence: service to something larger than oneself. Active contribution is a powerful, evidence-based antidote to nihilism. This final step completes the journey from self-improvement to contribution, breaking an inward focus and directing newfound strength outward. It is the ultimate answer to meaninglessness: not discovering a pre-ordained meaning, but actively creating it through action.</p>
+                                <p data-lang="pl" class="hidden">Najwyższym poziomem sensownego życia jest transcendencja: służba czemuś większemu niż my sami. Aktywny wkład jest potężnym, opartym na dowodach antidotum na nihilizm. Ten ostatni krok dopełnia podróż od samodoskonalenia do wkładu w społeczeństwo, przełamując skupienie na sobie i kierując nowo zdobytą siłę na zewnątrz. To ostateczna odpowiedź na bezsens: nie odkrywanie z góry narzuconego sensu, ale aktywne jego tworzenie poprzez działanie.</p>
                             </div>
                              <div class="pt-4 border-t border-gray-700">
                                 <h5 class="font-bold text-sm mb-2" data-lang="en">Data & Evidence</h5><h5 class="font-bold text-sm mb-2 hidden" data-lang="pl">Dane i Dowody</h5>
                                 <div class="data-highlight p-3 rounded">
-                                    <p class="text-xs text-gray-300" data-lang="en">A meta-analysis confirms prosocial behavior **reliably improves well-being**. This link is a human universal, observed in **120 out of 136 countries** studied. In Poland, **28.4%** of the population engaged in volunteering in 2022.</p>
-                                    <p class="text-xs text-gray-300 hidden" data-lang="pl">Metaanaliza potwierdza, że zachowania prospołeczne **niezawodnie poprawiają dobrostan**. Związek ten jest uniwersalny dla człowieka, zaobserwowano go w **120 ze 136 badanych krajów**. W Polsce w 2022 roku **28,4%** populacji angażowało się w wolontariat.</p>
+                                    <p class="text-xs text-gray-300" data-lang="en">A meta-analysis confirms prosocial behavior <strong>reliably improves well-being</strong>. This link is a human universal, observed in <strong>120 out of 136 countries</strong> studied. In Poland, <strong>28.4%</strong> of the population engaged in volunteering in 2022.</p>
+                                    <p class="text-xs text-gray-300 hidden" data-lang="pl">Metaanaliza potwierdza, że zachowania prospołeczne <strong>niezawodnie poprawiają dobrostan</strong>. Związek ten jest uniwersalny dla człowieka, zaobserwowano go w <strong>120 ze 136 badanych krajów</strong>. W Polsce w 2022 roku <strong>28,4%</strong> populacji angażowało się w wolontariat.</p>
                                 </div>
                             </div>
                         </article>
@@ -322,14 +341,13 @@
                     <div class="p-8 section-card rounded-lg">
                         <h3 class="text-2xl font-bold" data-lang="en">Final Conclusion: Forging the Compass Within</h3><h3 class="text-2xl font-bold hidden" data-lang="pl">Ostateczny Wniosek: Wykuwanie Kompasu Wewnątrz</h3>
                          <div class="prose-custom mt-4">
-                            <p data-lang="en">This dossier validates the Autonomy Protocol as a rational, evidence-based response to a dysfunctional relational landscape. The path outlined is not one of ease but of discipline, courage, and consequence. Its ultimate outcome is the attainment of authentic strength and freedom—an unwavering sense of self-worth, a clearly defined purpose, and a resilient support network built on one's own terms. The individual who navigates this protocol will operate from a position of strength, not of need. They will no longer seek a compass in the external world, for they will have forged one within themselves.</p>
-                            <p data-lang="pl" class="hidden">To dossier potwierdza Protokół Autonomii jako racjonalną, opartą na dowodach odpowiedź na dysfunkcyjny krajobraz relacyjny. Nakreślona ścieżka nie jest łatwa, lecz wymaga dyscypliny, odwagi i konsekwencji. Jej ostatecznym rezultatem jest osiągnięcie autentycznej siły i wolności — niezachwianego poczucia własnej wartości, jasno określonego celu i odpornej sieci wsparcia zbudowanej na własnych warunkach. Jednostka, która przejdzie ten protokół, będzie działać z pozycji siły, a nie potrzeby. Nie będzie już szukać kompasu w świecie zewnętrznym, ponieważ wykuje go w sobie.</p>
+                            <p data-lang="en">This dossier validates the Autonomy Protocol as a rational, evidence-based response to a dysfunctional relational landscape. The path outlined is not one of ease but of discipline, courage, and consequence. Its ultimate outcome is the attainment of authentic strength and freedom—an unwavering sense of self-worth, a clearly defined purpose, and a resilient support network built on one's own terms. The individual who navigates this protocol will operate from a position of strength, not of need. <strong>They will no longer seek a compass in the external world, for they will have forged one within themselves.</strong></p>
+                            <p data-lang="pl" class="hidden">To dossier potwierdza Protokół Autonomii jako racjonalną, opartą na dowodach odpowiedź na dysfunkcyjny krajobraz relacyjny. Nakreślona ścieżka nie jest łatwa, lecz wymaga dyscypliny, odwagi i konsekwencji. Jej ostatecznym rezultatem jest osiągnięcie autentycznej siły i wolności — niezachwianego poczucia własnej wartości, jasno określonego celu i odpornej sieci wsparcia zbudowanej na własnych warunkach. Jednostka, która przejdzie ten protokół, będzie działać z pozycji siły, a nie potrzeby. <strong>Nie będzie już szukać kompasu w świecie zewnętrznym, ponieważ wykuje go w sobie.</strong></p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-
     </main>
 
     <footer class="border-t border-gray-800">
@@ -347,7 +365,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     let politicalGapChart, educationMismatchChart, lonelinessChart, maleFriendshipChart;
-
     const themeToggle = document.getElementById('theme-toggle');
     const htmlEl = document.documentElement;
 
@@ -377,13 +394,8 @@ document.addEventListener('DOMContentLoaded', function () {
         redrawAllCharts();
     }
 
-    langToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        langMenu.classList.toggle('hidden');
-    });
-
+    langToggle.addEventListener('click', (e) => { e.stopPropagation(); langMenu.classList.toggle('hidden'); });
     document.addEventListener('click', () => langMenu.classList.add('hidden'));
-    
     document.querySelectorAll('[data-lang-set]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
