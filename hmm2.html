@@ -94,7 +94,7 @@
             border-bottom: 1px solid var(--ui-border);
         }
         
-       .asymmetric-grid {
+        .asymmetric-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 4rem;
@@ -102,7 +102,7 @@
         }
 
         /* 2.1.3 Header Design */
-       .hero {
+        .hero {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -111,7 +111,7 @@
             position: relative;
         }
         
-       .text-only-hero {
+        .text-only-hero {
             text-align: left;
         }
 
@@ -135,7 +135,7 @@
         #menu-toggle:hover {
             transform: scale(1.1);
         }
-        #menu-toggle.icon-bar {
+        #menu-toggle .icon-bar {
             display: block;
             width: 22px;
             height: 2px;
@@ -143,8 +143,8 @@
             transition: transform 0.3s ease, opacity 0.3s ease;
             position: relative;
         }
-        #menu-toggle.icon-bar::before,
-        #menu-toggle.icon-bar::after {
+        #menu-toggle .icon-bar::before,
+        #menu-toggle .icon-bar::after {
             content: '';
             position: absolute;
             left: 0;
@@ -153,12 +153,12 @@
             background-color: var(--text-primary);
             transition: transform 0.3s ease;
         }
-        #menu-toggle.icon-bar::before { transform: translateY(-7px); }
-        #menu-toggle.icon-bar::after { transform: translateY(7px); }
+        #menu-toggle .icon-bar::before { transform: translateY(-7px); }
+        #menu-toggle .icon-bar::after { transform: translateY(7px); }
 
-        #menu-toggle.active.icon-bar { background-color: transparent; }
-        #menu-toggle.active.icon-bar::before { transform: translateY(0) rotate(45deg); }
-        #menu-toggle.active.icon-bar::after { transform: translateY(0) rotate(-45deg); }
+        #menu-toggle.active .icon-bar { background-color: transparent; }
+        #menu-toggle.active .icon-bar::before { transform: translateY(0) rotate(45deg); }
+        #menu-toggle.active .icon-bar::after { transform: translateY(0) rotate(-45deg); }
 
         #radial-menu {
             position: fixed;
@@ -188,10 +188,11 @@
             font-size: clamp(1.5rem, 4vw, 2.5rem);
             transition: transform 0.3s ease, color 0.3s ease;
             transform-origin: center center;
+            transform: translate(-50%, -50%); /* Base transform */
         }
         #radial-menu nav a:hover {
             color: var(--accent-cta);
-            transform: scale(1.1);
+            transform: translate(-50%, -50%) scale(1.1); /* Combined transform */
         }
 
         #theme-toggle {
@@ -218,7 +219,7 @@
             height: 24px;
             stroke: var(--text-primary);
         }
-       .hidden { display: none; }
+        .hidden { display: none; }
 
         /* --- Part III: The Content Engine --- */
 
@@ -312,7 +313,7 @@
         }
 
         /* 3.3 Data-Driven Content Modules */
-       .data-card {
+        .data-card {
             background-color: var(--bg-secondary);
             border: 1px solid var(--ui-border);
             padding: 2rem;
@@ -321,17 +322,17 @@
             flex-direction: column;
             gap: 1.5rem;
         }
-       .chart-container {
+        .chart-container {
             position: relative;
             height: 300px;
             width: 100%;
         }
-       .dual-chart-container {
+        .dual-chart-container {
             display: flex;
             gap: 2rem;
             flex-wrap: wrap;
         }
-       .dual-chart-container.chart-container {
+        .dual-chart-container > .chart-container {
             flex: 1;
             min-width: 250px;
         }
@@ -339,12 +340,12 @@
         /* --- Part IV: Dynamic & Interactive Experience Layer --- */
 
         /* 4.1 Motion & Micro-interaction Language */
-       .fade-in {
+        .fade-in {
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
-       .fade-in.visible {
+        .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
         }
@@ -360,20 +361,26 @@
             z-index: 9999;
             transition: transform 0.2s ease-out, width 0.2s ease-out, height 0.2s ease-out, background-color 0.2s ease-out;
             mix-blend-mode: difference;
+            transform: translate(-50%, -50%);
         }
         #custom-cursor.hover {
-            transform: scale(3);
+            transform: translate(-50%, -50%) scale(3);
             background-color: white;
         }
-        body {
+        body.no-native-cursor {
             cursor: none;
         }
-        a, button, input, textarea, #menu-toggle, #theme-toggle {
+        body.no-native-cursor a,
+        body.no-native-cursor button,
+        body.no-native-cursor input,
+        body.no-native-cursor textarea,
+        body.no-native-cursor #menu-toggle,
+        body.no-native-cursor #theme-toggle {
             cursor: none;
         }
 
         /* --- Part V: The Self-Discovery Engine --- */
-       .quiz-container {
+        .quiz-container {
             background-color: var(--bg-secondary);
             padding: 4rem;
             border-radius: 12px;
@@ -386,6 +393,7 @@
         }
         #quiz-textarea {
             width: 100%;
+            box-sizing: border-box;
             min-height: 200px;
             margin: 2rem 0;
             padding: 1rem;
@@ -402,7 +410,7 @@
             outline: none;
             border-color: var(--accent-cta);
         }
-       .quiz-nav {
+        .quiz-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -423,7 +431,7 @@
         }
 
         /* --- Part VI: Component-Level Design Library --- */
-       .btn {
+        .btn {
             display: inline-block;
             padding: 1rem 2.5rem;
             border-radius: 4px;
@@ -432,38 +440,40 @@
             text-decoration: none;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             border: 1px solid transparent;
+            cursor: pointer;
         }
-       .btn:hover {
+        .btn:hover {
             transform: scale(1.05);
         }
-       .btn-primary {
+        .btn-primary {
             background-color: var(--accent-cta);
             color: #fff;
         }
-       .btn-secondary {
+        .btn-secondary {
             background-color: transparent;
             border-color: var(--ui-border);
             color: var(--text-primary);
         }
-       .btn-secondary:hover {
+        .btn-secondary:hover {
             background-color: var(--bg-secondary);
             border-color: var(--accent-cta);
         }
 
         footer {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             padding: 4rem 5vw;
             margin-top: 8rem;
             background-color: var(--bg-secondary);
             text-align: center;
         }
         footer p {
-            font-family: inherit;
+            font-family: 'Inter', sans-serif;
             color: var(--text-secondary);
             font-size: 0.9rem;
+            max-width: none;
+            margin: 0 auto 0.5rem;
         }
         footer a {
-            font-family: inherit;
+            font-family: 'Inter', sans-serif;
             color: var(--link-text);
             text-decoration: underline;
         }
@@ -474,14 +484,13 @@
         @media (max-width: 768px) {
             h1 { font-size: clamp(2.5rem, 15vw, 4rem); }
             h2 { font-size: clamp(2rem, 12vw, 3rem); }
-           .asymmetric-grid { gap: 2rem; }
+            .asymmetric-grid { gap: 2rem; }
             section { padding: 4rem 0; }
-           .quiz-container, #constitution-output { padding: 2rem; }
+            .quiz-container, #constitution-output { padding: 2rem; }
             #custom-cursor { display: none; }
             body { cursor: auto; }
             a, button, input, textarea, #menu-toggle, #theme-toggle { cursor: pointer; }
         }
-
     </style>
 </head>
 <body>
@@ -494,8 +503,7 @@
             <span class="icon-bar"></span>
         </button>
         <div id="radial-menu">
-            <nav>
-                </nav>
+            <nav></nav>
         </div>
         <button id="theme-toggle" aria-label="Toggle Theme">
             <svg id="theme-icon-light" class="hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" /></svg>
@@ -583,7 +591,7 @@
         // 4.3 Generative Art Background
         const canvas = document.getElementById('generative-background');
         const ctx = canvas.getContext('2d');
-        let particles =;
+        let particles = [];
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -601,16 +609,12 @@
                 this.size = Math.random() * 50 + 20;
                 this.speedX = Math.random() * 0.4 - 0.2;
                 this.speedY = Math.random() * 0.4 - 0.2;
-                this.color = isDarkMode()? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)';
+                this.color = isDarkMode() ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)';
             }
             update() {
                 this.x += this.speedX;
                 this.y += this.speedY;
-                if (this.x > canvas.width + this.size |
-
-| this.x < -this.size |
-| this.y > canvas.height + this.size |
-| this.y < -this.size) {
+                if (this.x > canvas.width + this.size || this.x < -this.size || this.y > canvas.height + this.size || this.y < -this.size) {
                     this.x = Math.random() * canvas.width;
                     this.y = -this.size;
                 }
@@ -624,7 +628,7 @@
         }
 
         function initParticles() {
-            particles =;
+            particles = [];
             for (let i = 0; i < 15; i++) {
                 particles.push(new Particle());
             }
@@ -644,6 +648,7 @@
         // 4.2 Advanced Interactivity—Cursor
         const cursor = document.getElementById('custom-cursor');
         if (window.matchMedia("(pointer: fine)").matches) {
+            document.body.classList.add('no-native-cursor');
             window.addEventListener('mousemove', e => {
                 cursor.style.left = e.clientX + 'px';
                 cursor.style.top = e.clientY + 'px';
@@ -670,8 +675,12 @@
         const menuToggle = document.getElementById('menu-toggle');
         const radialMenu = document.getElementById('radial-menu');
         const navContainer = radialMenu.querySelector('nav');
-        const sections = document.querySelectorAll('main > section');
-        const navItems =;
+        
+        const navItems = [
+            { name: 'Start', href: '#hero' },
+            { name: 'Analysis', href: '#data' },
+            { name: 'Engine', href: '#engine' }
+        ];
 
         navItems.forEach((item, i) => {
             const angle = (i / navItems.length) * 2 * Math.PI - (Math.PI / 2);
@@ -679,19 +688,19 @@
             const a = document.createElement('a');
             a.href = item.href;
             a.textContent = item.name;
-            a.style.transform = `translate(-50%, -50%) translate(${Math.cos(angle) * radius}px, ${Math.sin(angle) * radius}px)`;
+            a.style.setProperty('--angle', `${Math.cos(angle) * radius}px`);
+            a.style.setProperty('--radius', `${Math.sin(angle) * radius}px`);
+            a.style.transform = `translate(calc(-50% + var(--angle)), calc(-50% + var(--radius)))`;
             navContainer.appendChild(a);
         });
-
+        
         menuToggle.addEventListener('click', () => {
             menuToggle.classList.toggle('active');
             radialMenu.classList.toggle('active');
         });
         
         radialMenu.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A' |
-
-| e.target === radialMenu) {
+            if (e.target.tagName === 'A' || e.target === radialMenu) {
                 menuToggle.classList.remove('active');
                 radialMenu.classList.remove('active');
             }
@@ -713,7 +722,7 @@
         }
 
         themeToggle.addEventListener('click', () => {
-            const newTheme = document.documentElement.classList.contains('dark')? 'light' : 'dark';
+            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
             applyTheme(newTheme);
         });
 
@@ -722,11 +731,11 @@
         window.chartsInitialized = false;
 
         function createCharts() {
-            const currentTheme = isDarkMode()? 'dark' : 'light';
+            const currentTheme = isDarkMode() ? 'dark' : 'light';
             const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--ui-border').trim();
             const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim();
             const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-cta').trim();
-            const secondaryAccentColor = currentTheme === 'dark'? '#87CEFA' : '#005A9C';
+            const secondaryAccentColor = currentTheme === 'dark' ? '#87CEFA' : '#005A9C';
 
             const baseOptions = {
                 maintainAspectRatio: false,
@@ -762,8 +771,8 @@
             if (swipeRateCtx) charts.swipeRate = new Chart(swipeRateCtx, {
                 type: 'doughnut',
                 data: {
-                    labels:,
-                    datasets: [{ data: , backgroundColor: [secondaryAccentColor, accentColor] }]
+                    labels: ['Men', 'Women'],
+                    datasets: [{ data: [48, 14], backgroundColor: [secondaryAccentColor, accentColor] }]
                 },
                 options: {...doughnutOptions, plugins: {...doughnutOptions.plugins, title: {...doughnutOptions.plugins.title, text: 'Average Swipe Right Rate (%)' } } }
             });
@@ -773,12 +782,14 @@
             if (politicalDatingCtx) charts.politicalDating = new Chart(politicalDatingCtx, {
                 type: 'bar',
                 data: {
-                    labels:,
-                    datasets:,
+                    labels: ['Women Unlikely to Date Trump Supporter', 'Men Unlikely to Date Feminist'],
+                    datasets: [{
+                        label: 'Percentage',
+                        data: [73, 39],
                         backgroundColor: [accentColor, secondaryAccentColor]
                     }]
                 },
-                options: {...baseOptions, indexAxis: 'y', scales: {...baseOptions.scales, y: { ticks: { color: textColor, font: { size: 10 } } } } }
+                options: {...baseOptions, indexAxis: 'y', scales: {...baseOptions.scales, y: { ticks: { color: textColor, font: { size: 10 } } }, x: { max: 100 } } }
             });
 
             // CDM-03 Chart
@@ -786,10 +797,10 @@
             if (polishEducationCtx) charts.polishEducation = new Chart(polishEducationCtx, {
                 type: 'bar',
                 data: {
-                    labels:,
+                    labels: ["Women as PhD Graduates", "Women in Grade A Academic Positions"],
                     datasets: [{
                         label: 'Percentage',
-                        data: ,
+                        data: [53, 28],
                         backgroundColor: [accentColor, secondaryAccentColor]
                     }]
                 },
@@ -801,23 +812,27 @@
             if (mentalHealthCtx) charts.mentalHealth = new Chart(mentalHealthCtx, {
                 type: 'bar',
                 data: {
-                    labels:,
-                    datasets:, backgroundColor: accentColor },
+                    labels: ['Women', 'Men'],
+                    datasets: [
+                        { label: 'Reported Need for Service', data: [50, 35], backgroundColor: accentColor },
                         { label: 'Received Professional Care', data: [20.8, 28.1], backgroundColor: secondaryAccentColor }
                     ]
                 },
-                options: {...baseOptions, plugins: { legend: { display: true, labels: { color: textColor } } } }
+                options: {...baseOptions, plugins: { legend: { display: true, position: 'bottom', labels: { color: textColor } } } }
             });
 
             // CDM-05 Chart
             const kindnessCtx = document.getElementById('kindnessChart')?.getContext('2d');
             if (kindnessCtx) charts.kindness = new Chart(kindnessCtx, {
-                type: 'doughnut',
+                type: 'bar',
                 data: {
-                    labels:,
-                    datasets: [{ data: , backgroundColor: [accentColor, secondaryAccentColor, gridColor] }]
+                    labels: ['Wallet Return Rate'],
+                    datasets: [
+                        { label: 'Expected', data: [100], backgroundColor: secondaryAccentColor },
+                        { label: 'Actual', data: [180], backgroundColor: accentColor }
+                    ]
                 },
-                options: {...doughnutOptions, plugins: {...doughnutOptions.plugins, title: {...doughnutOptions.plugins.title, text: 'Life Evaluation Changes (136 Countries)' } } }
+                options: {...baseOptions, plugins: { legend: { display: true, position: 'bottom', labels: { color: textColor } }, title: {display: true, text: 'Kindness: Expectation vs. Reality', color: textColor, font: {size: 14, family: 'Inter'}}}, scales: {...baseOptions.scales, x: {ticks: {display:false}}}}
             });
             
             window.chartsInitialized = true;
@@ -840,19 +855,22 @@
         const progressIndicator = document.getElementById('progress-indicator');
         const constitutionOutput = document.getElementById('constitution-output');
 
-        const prompts =;
+        const prompts = [
+            { module: "Module I: Core Values", question: "What are 3-5 non-negotiable principles that guide your most important decisions?" },
+            { module: "Module II: Mission & Vision", question: "What is your primary mission in this chapter of your life? What impact do you want to create?" },
+            { module: "Module III: Boundaries & Standards", question: "What behaviors or situations will you no longer tolerate from yourself or others?" },
+            { module: "Module IV: Growth & Learning", question: "What skills or knowledge are you committed to acquiring in the next year to support your mission?" },
+            { module: "Module V: Contribution & Legacy", question: "How will you contribute to the well-being of your community or the world, even in a small way?" }
+        ];
 
-        let currentPromptIndex = 0;
-        let userAnswers = JSON.parse(localStorage.getItem('constitutionAnswers')) |
-
-| new Array(prompts.length).fill('');
+        let userAnswers = JSON.parse(localStorage.getItem('constitutionAnswers')) || new Array(prompts.length).fill('');
 
         function showPrompt(index) {
             promptText.textContent = prompts[index].question;
             quizTextarea.value = userAnswers[index];
             progressIndicator.textContent = `Step ${index + 1} of ${prompts.length}`;
-            prevBtn.style.visibility = index === 0? 'hidden' : 'visible';
-            nextBtn.textContent = index === prompts.length - 1? 'Generate Constitution' : 'Next';
+            prevBtn.style.visibility = index === 0 ? 'hidden' : 'visible';
+            nextBtn.textContent = index === prompts.length - 1 ? 'Generate Constitution' : 'Next';
         }
 
         startQuizBtn.addEventListener('click', () => {
@@ -860,7 +878,8 @@
             quizMain.classList.remove('hidden');
             showPrompt(currentPromptIndex);
         });
-
+        
+        let currentPromptIndex = 0;
         nextBtn.addEventListener('click', () => {
             userAnswers[currentPromptIndex] = quizTextarea.value;
             localStorage.setItem('constitutionAnswers', JSON.stringify(userAnswers));
@@ -890,16 +909,14 @@
             let currentModule = "";
 
             prompts.forEach((prompt, index) => {
-                if (prompt.module!== currentModule) {
+                if (prompt.module !== currentModule) {
                     currentModule = prompt.module;
                     html += `<h2>${currentModule}</h2>`;
                 }
                 html += `
                     <div class="constitution-entry">
                         <h4>${prompt.question}</h4>
-                        <blockquote>${userAnswers[index] |
-
-| "No answer provided."}</blockquote>
+                        <blockquote>${userAnswers[index].replace(/\n/g, '<br>') || "No answer provided."}</blockquote>
                     </div>
                 `;
             });
@@ -907,7 +924,7 @@
             html += `<div style="margin-top: 3rem; text-align: center;">
                         <button onclick="window.print()" class="btn btn-primary">Download as PDF</button>
                         <button onclick="resetQuiz()" class="btn btn-secondary">Start Over</button>
-                     </div>`;
+                    </div>`;
 
             constitutionOutput.innerHTML = html;
             constitutionOutput.scrollIntoView({ behavior: 'smooth' });
@@ -924,9 +941,7 @@
         }
 
         // --- Initial Load ---
-        const savedTheme = localStorage.getItem('theme') |
-
-| 'dark';
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         applyTheme(savedTheme);
         createCharts();
     });
