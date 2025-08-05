@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Autonomy Protocol | A Journey Within</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.1?plugins=typography"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <style>
+        /* --- DYNAMIC COLOR PALETTES & THEME --- */
+        :root {
+            /* Industrial Palette - Dark */
+            --bg-start-dark: #111111; --card-start-dark: #1a1a1a; --border-start-dark: #333333; --text-body-start-dark: #a0a0a0; --text-head-start-dark: #e0e0e0; --accent-start-dark: #ff4500; --accent2-start-dark: #ff8c00; --link-start-dark: #ff8c00;
+            /* Zen Palette - Dark */
+            --bg-end-dark: #0f1f2e; --card-end-dark: #172b3f; --border-end-dark: #2a4a68; --text-body-end-dark: #b0c4de; --text-head-end-dark: #e0e6f0; --accent-end-dark: #22c55e; --accent2-end-dark: #facc15; --link-end-dark: #87CEFA;
+            /* Industrial Palette - Light */
+            --bg-start-light: #f8fafc; --card-start-light: #ffffff; --border-start-light: #e2e8f0; --text-body-start-light: #334155; --text-head-start-light: #000000; --accent-start-light: #f97316; --accent2-start-light: #ea580c; --link-start-light: #ea580c;
+            /* Zen Palette - Light */
+            --bg-end-light: #f0f8ff; --card-end-light: #ffffff; --border-end-light: #d1e9f4; --text-body-end-light: #4c1d95; --text-head-end-light: #000000; --accent-end-light: #22c55e; --accent2-end-light: #3b82f6; --link-end-light: #3b82f6;
+
+            /* Dynamically interpolated variables */
+            --bg-current: var(--bg-start-dark); --card-current: var(--card-start-dark); --border-current: var(--border-start-dark); --text-body-current: var(--text-body-start-dark); --text-head-current: var(--text-head-start-dark); --accent-current: var(--accent-start-dark); --accent2-current: var(--accent2-start-dark); --link-current: var(--link-start-dark);
+        }
+
+        /* --- CORE STRUCTURE & TYPOGRAPHY --- */
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-current); color: var(--text-body-current); transition: background-color 0.5s, color 0.5s; overflow-x: hidden; }
+        h1, h2, h3 { font-family: 'DM Serif Display', serif; color: var(--text-head-current); transition: color 0.5s; font-weight: 400; }
+        h1 { font-size: clamp(3rem, 10vw, 6rem); line-height: 1.1; }
+        h2 { font-size: clamp(2.5rem, 8vw, 4rem); line-height: 1.2; margin-bottom: 2rem; }
+        h3 { font-size: clamp(1.75rem, 5vw, 2.25rem); line-height: 1.3; }
+        h4, h5 { font-family: 'Inter', sans-serif; color: var(--text-head-current); transition: color 0.5s; font-weight: 700; }
+        strong { color: var(--text-head-current); transition: color 0.5s; }
+        p, li { line-height: 1.7; }
+        .highlight { color: var(--accent-current); font-weight: 600; }
+
+        /* --- BACKGROUND & ANIMATIONS --- */
+        .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; transition: opacity 1.5s ease-in-out; pointer-events: none; }
+        #industrial-bg { opacity: 1; }
+        #zen-bg { opacity: 0; }
+        .digital-rain { position: absolute; width: 2px; height: 80px; background: linear-gradient(to bottom, rgba(255, 69, 0, 0), rgba(255, 69, 0, 0.4)); animation: fall 3s linear infinite; }
+        @keyframes fall { to { transform: translateY(100vh); } }
+        .leaf { position: absolute; width: 20px; height: 20px; background-color: #22c55e; opacity: 0.5; border-radius: 0 50% 0 50%; animation: float 10s linear infinite; }
+        html.light .leaf { background-color: #22c55e; }
+        @keyframes float { 0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; } 50% { opacity: 0.7; } 100% { transform: translateY(110vh) translateX(5vw) rotate(360deg); opacity: 0; } }
+        .fade-in { opacity: 0; transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .fade-in.up { transform: translateY(40px); }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* --- COMPONENTS & MODULES --- */
+        .btn { display: inline-block; padding: 0.75rem 2rem; border-radius: 4px; font-weight: 700; text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease; border: 1px solid transparent; cursor: pointer; }
+        .btn:hover { transform: scale(1.05); }
+        .btn-primary { background-color: var(--accent-current); color: #ffffff; }
+        .btn-primary:hover { box-shadow: 0 0 20px color-mix(in srgb, var(--accent-current) 40%, transparent); }
+        .btn-secondary { background-color: transparent; border-color: var(--border-current); color: var(--text-head-current); }
+        .btn-secondary:hover { background-color: var(--card-current); border-color: var(--accent-current); }
+
+        .data-card { background-color: var(--card-current); border: 1px solid var(--border-current); transition: all 0.3s ease-in-out; }
+        .data-card:hover { transform: translateY(-5px); border-color: var(--accent-current); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .chart-container { position: relative; height: 300px; width: 100%; }
+
+        /* Source Tooltips */
+        .source-link { display: inline-flex; align-items: center; justify-content: center; position: relative; width: 16px; height: 16px; background-color: color-mix(in srgb, var(--border-current) 50%, transparent); color: var(--text-body-current); border-radius: 50%; text-decoration: none; font-size: 10px; font-style: italic; font-family: serif; margin-left: 2px; vertical-align: super; cursor: pointer; transition: background-color 0.3s; }
+        .source-link:hover { background-color: var(--accent-current); }
+        .source-link .tooltip { visibility: hidden; width: 220px; background-color: var(--card-current); color: var(--text-body-current); text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 10; bottom: 150%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; font-size: 0.75rem; border: 1px solid var(--border-current); line-height: 1.4; font-family: 'Inter', sans-serif; font-style: normal; pointer-events: none;}
+        .source-link:hover .tooltip { visibility: visible; opacity: 1; }
+
+        /* Interactive Quiz */
+        .quiz-container { background-color: var(--card-current); border: 1px solid var(--border-current); transition: all 0.3s ease-in-out; }
+        #quiz-textarea { width: 100%; box-sizing: border-box; min-height: 150px; margin: 1.5rem 0; padding: 1rem; font-family: 'Inter', sans-serif; font-size: 1rem; line-height: 1.6; border: 1px solid var(--border-current); background-color: var(--bg-current); color: var(--text-body-current); border-radius: 4px; resize: vertical; transition: all 0.3s ease-in-out; }
+        #quiz-textarea:focus { outline: none; border-color: var(--accent-current); background-color: var(--card-current); }
+        #constitution-output blockquote { border-left: 4px solid var(--accent-current); padding-left: 1.5rem; margin: 1rem 0; font-style: italic; color: var(--text-body-current); }
+
+        /* Custom Cursor */
+        #custom-cursor { position: fixed; width: 20px; height: 20px; background-color: var(--accent-current); border-radius: 50%; pointer-events: none; z-index: 9999; transition: transform 0.2s ease-out, opacity 0.2s ease-out; mix-blend-mode: difference; transform: translate(-50%, -50%); opacity: 0; }
+        body.no-native-cursor { cursor: none; }
+        body.no-native-cursor a, body.no-native-cursor button { cursor: none; }
+        #custom-cursor.hover { transform: translate(-50%, -50%) scale(3); }
+        @media (pointer: fine) { #custom-cursor { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div id="custom-cursor"></div>
+    <div id="industrial-bg" class="background-container"></div>
+    <div id="zen-bg" class="background-container"></div>
+
+    <header class="sticky top-0 z-50 bg-[var(--bg-current)]/80 backdrop-blur-lg border-b border-[var(--border-current)] transition-colors duration-500">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#hero" class="text-2xl font-bold text-[var(--text-head-current)] transition-colors duration-500">A<span class="text-[var(--accent-current)] transition-colors duration-500">/</span>P</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#diagnosis" class="font-semibold text-[var(--text-body-current)] hover:text-[var(--accent-current)] transition-colors" data-lang="en">The Labyrinth</a><a href="#diagnosis" class="font-semibold text-[var(--text-body-current)] hover:text-[var(--accent-current)] transition-colors hidden" data-lang="pl">Labirynt</a>
+                <a href="#protocol" class="font-semibold text-[var(--text-body-current)] hover:text-[var(--accent-current)] transition-colors" data-lang="en">The Oasis</a><a href="#protocol" class="font-semibold text-[var(--text-body-current)] hover:text-[var(--accent-current)] transition-colors hidden" data-lang="pl">Oaza</a>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button id="theme-toggle" class="p-2 rounded-full bg-[var(--card-current)] border border-[var(--border-current)] text-[var(--text-body-current)]"><svg id="theme-icon-light" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg><svg id="theme-icon-dark" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg></button>
+                <button id="lang-toggle" class="p-2 w-10 h-10 rounded-full bg-[var(--card-current)] border border-[var(--border-current)] flex items-center justify-center text-sm font-bold text-[var(--text-body-current)]"><span id="current-lang">EN</span></button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12 relative z-10">
+        <section id="hero" class="text-left py-20 min-h-screen flex flex-col justify-center">
+            <div class="fade-in up max-w-4xl">
+                <h1 data-lang="en">The Signal is Lost in the Noise.</h1>
+                <h1 data-lang="pl" class="hidden">Sygnał Zaginął w Szumie.</h1>
+                <p class="mt-6 text-xl text-[var(--text-body-current)] transition-colors duration-500 max-w-2xl">
+                    <span data-lang="en">The old maps are obsolete. When the world outside offers only static, the only path forward is to build an oasis <span class="highlight">within</span>. This is your blueprint.</span>
+                    <span data-lang="pl" class="hidden">Stare mapy są przestarzałe. Kiedy świat na zewnątrz oferuje tylko szum, jedyna droga naprzód prowadzi przez budowę oazy <span class="highlight">wewnątrz</span>. Oto Twój plan.</span>
+                </p>
+                <div class="mt-10">
+                    <a href="#diagnosis" class="btn btn-primary">
+                        <span data-lang="en">Analyze the Labyrinth</span><span data-lang="pl" class="hidden">Analizuj Labirynt</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="diagnosis" class="py-20">
+            <div class="text-center mb-16 fade-in up">
+                <h2 data-lang="en">Analysis of the Labyrinth</h2>
+                <h2 data-lang="pl" class="hidden">Analiza Labiryntu</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-[var(--text-body-current)]">
+                    <span data-lang="en">The feeling of being lost is not an illusion. The system is flawed by design. This is the data that proves it.</span>
+                    <span data-lang="pl" class="hidden">Uczucie zagubienia nie jest iluzją. System jest wadliwy z założenia. Oto dane, które to potwierdzają.</span>
+                </p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <article class="data-card p-8 rounded-lg fade-in up lg:col-span-2">
+                    <h3 class="font-bold text-[var(--accent-current)]" data-lang="en">Glitch 01: The Great Swipe Divide</h3>
+                    <h3 class="font-bold text-[var(--accent-current)] hidden" data-lang="pl">Błąd 01: Wielki Podział w Aplikacjach</h3>
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="chart-container"><canvas id="tinderGenderChart"></canvas></div>
+                        <p class="text-sm">
+                            <span data-lang="en">The user experience on dating apps is profoundly asymmetrical. A stark gender imbalance (~76% male on Tinder) creates divergent strategies: a high-volume approach for men vs. a high-selectivity approach for women. This leads to widespread pessimism, with 45% of users feeling frustrated.<a href="https://www.pewresearch.org/internet/2020/02/06/the-virtues-and-downsides-of-online-dating/" target="_blank" class="source-link">i<span class="tooltip">Source: Pew Research Center</span></a></span>
+                            <span data-lang="pl" class="hidden">Doświadczenie w aplikacjach randkowych jest głęboko asymetryczne. Różnica w proporcji płci (~76% mężczyzn na Tinderze) tworzy rozbieżne strategie: masowe podejście u mężczyzn kontra wysoka selektywność u kobiet. Prowadzi to do powszechnego pesymizmu, a 45% użytkowników odczuwa frustrację.<a href="https://www.pewresearch.org/internet/2020/02/06/the-virtues-and-downsides-of-online-dating/" target="_blank" class="source-link">i<span class="tooltip">Źródło: Pew Research Center</span></a></span>
+                        </p>
+                    </div>
+                </article>
+                <article class="data-card p-6 rounded-lg fade-in up flex flex-col justify-center">
+                    <h3 class="font-bold text-[var(--accent-current)]" data-lang="en">Glitch 02: Politicized Intimacy</h3>
+                    <h3 class="font-bold text-[var(--accent-current)] hidden" data-lang="pl">Błąd 02: Upolityczniona Intymność</h3>
+                    <div class="chart-container h-48"><canvas id="politicalDatingChart"></canvas></div>
+                    <p class="text-sm mt-4">
+                       <span data-lang="en">Political affiliation now acts as a primary filter for intimacy. 71% of Democrats would likely not date a Trump voter. This isn't just policy; it's a proxy for one's moral compass, drastically shrinking the dating pool.<a href="https://www.pewresearch.org/short-reads/2020/04/24/most-democrats-who-are-looking-for-a-relationship-would-not-consider-dating-a-trump-voter/" target="_blank" class="source-link">i<span class="tooltip">Source: Pew Research</span></a></span>
+                       <span data-lang="pl" class="hidden">Przynależność polityczna działa jako główny filtr intymności. 71% Demokratów prawdopodobnie nie umówiłoby się z wyborcą Trumpa. Nie chodzi tylko o politykę; to wyznacznik kompasu moralnego, drastycznie zmniejszający pulę randkową.<a href="https://www.pewresearch.org/short-reads/2020/04/24/most-democrats-who-are-looking-for-a-relationship-would-not-consider-dating-a-trump-voter/" target="_blank" class="source-link">i<span class="tooltip">Źródło: Pew Research</span></a></span>
+                    </p>
+                </article>
+                <article class="data-card p-6 rounded-lg fade-in up">
+                    <h3 class="font-bold text-[var(--accent-current)]" data-lang="en">Glitch 03: The Polish Education Paradox</h3>
+                    <h3 class="font-bold text-[var(--accent-current)] hidden" data-lang="pl">Błąd 03: Polski Paradoks Edukacyjny</h3>
+                    <div class="chart-container h-48"><canvas id="polishEducationChart"></canvas></div>
+                     <p class="text-sm mt-4">
+                       <span data-lang="en">In Poland, women have dramatically surpassed men in higher education (56% vs 37% for ages 25-34), creating structural mismatches and unmet egalitarian expectations, a key driver of relationship dissolution.<a href="https://www.frse.org.pl/brepo/panel_repo_files/2024/06/28/6iolqc/luka-plci-w-edukacji-online-ang.pdf" target="_blank" class="source-link">i<span class="tooltip">Source: FRSE</span></a></span>
+                       <span data-lang="pl" class="hidden">W Polsce kobiety znacznie przewyższyły mężczyzn w wyższym wykształceniu (56% vs 37% dla wieku 25-34), co tworzy strukturalne niedopasowania i niespełnione oczekiwania egalitarne, kluczowy czynnik rozpadu związków.<a href="https://www.frse.org.pl/brepo/panel_repo_files/2024/06/28/6iolqc/luka-plci-w-edukacji-online-ang.pdf" target="_blank" class="source-link">i<span class="tooltip">Źródło: FRSE</span></a></span>
+                    </p>
+                </article>
+                <article class="data-card p-6 rounded-lg fade-in up lg:col-span-2">
+                    <h3 class="font-bold text-[var(--accent-current)]" data-lang="en">Glitch 04: The Dual Crisis of Mind & Connection</h3>
+                    <h3 class="font-bold text-[var(--accent-current)] hidden" data-lang="pl">Błąd 04: Podwójny Kryzys Umysłu i Więzi</h3>
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="chart-container h-48"><canvas id="mentalHealthChart"></canvas></div>
+                        <p class="text-sm">
+                           <span data-lang="en">A dual crisis erodes connection. A global mental health crisis disproportionately affects women in diagnosable disorders, while a crisis of social connection isolates young men, with 55% of Polish men under 24 reporting high levels of loneliness.<a href="https://pravda.org.pl/mlodzi-mezczyzni-samotnos/" target="_blank" class="source-link">i<span class="tooltip">Source: Pravda.org.pl</span></a></span>
+                           <span data-lang="pl" class="hidden">Podwójny kryzys niszczy więzi. Globalny kryzys zdrowia psychicznego nieproporcjonalnie dotyka kobiety, podczas gdy kryzys więzi społecznych izoluje młodych mężczyzn - 55% Polaków poniżej 24 lat zgłasza wysoki poziom samotności.<a href="https://pravda.org.pl/mlodzi-mezczyzni-samotnos/" target="_blank" class="source-link">i<span class="tooltip">Źródło: Pravda.org.pl</span></a></span>
+                        </p>
+                    </div>
+                </article>
+            </div>
+             <div class="mt-20 text-center fade-in up">
+                <a href="#protocol" class="btn btn-primary px-10 py-4 text-lg">
+                    <span data-lang="en">Find the Way Out</span><span data-lang="pl" class="hidden">Znajdź Wyjście</span>
+                </a>
+            </div>
+        </section>
+
+        <section id="protocol" class="py-20 space-y-16">
+            <div class="text-center fade-in up">
+                <h2 data-lang="en">The Blueprint for an Oasis</h2>
+                <h2 data-lang="pl" class="hidden">Plan Oazy</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-[var(--text-body-current)]">
+                    <span data-lang="en">A detailed, evidence-based system for constructing a life of internal strength and self-generated meaning.</span>
+                    <span data-lang="pl" class="hidden">Szczegółowy, oparty na dowodach system budowy życia opartego na wewnętrznej sile i samodzielnie generowanym sensie.</span>
+                </p>
+            </div>
+
+            <div class="part-divider py-20 text-center fade-in up rounded-lg relative border-y border-[var(--border-current)]">
+                <span class="text-9xl md:text-[12rem] font-black text-[var(--card-current)] opacity-50 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0">I</span>
+                <div class="relative z-10 grid justify-items-center gap-4">
+                    <svg class="h-24 w-24 text-[var(--accent-current)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L12 22M12 2L6 8M12 2L18 8M20 12L4 12"/></svg>
+                    <h3 data-lang="en">Phase I: Physical Fortification</h3><h3 class="hidden" data-lang="pl">Faza I: Fortyfikacja Fizyczna</h3>
+                    <p class="mt-2 text-[var(--text-body-current)] max-w-xl mx-auto" data-lang="en">Seize control of your biology to build a non-negotiable base of health and vitality.</p><p class="mt-2 text-[var(--text-body-current)] max-w-xl mx-auto hidden" data-lang="pl">Przejmij kontrolę nad swoją biologią, aby zbudować nienegocjowalną bazę zdrowia i witalności.</p>
+                </div>
+            </div>
+            <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8 fade-in up">
+                <article class="data-card rounded-lg p-8 space-y-4"><header><h4 class="text-xl font-bold text-[var(--accent-current)]" data-lang="en">Chapter 1: The Biochemistry of Training</h4><h4 class="text-xl font-bold text-[var(--accent-current)] hidden" data-lang="pl">Rozdział 1: Biochemia Treningu</h4></header><div><p data-lang="en">A system for psychophysiological regulation. A triad of <strong>Strength Training</strong> (anabolic effect), <strong>Combat Sports</strong> (stress inoculation), and <strong>Calibrated Endurance</strong> (endorphin boost) to optimize the testosterone-to-cortisol ratio.<a href="https://www.scholarsresearchlibrary.com/articles/the-effect-of-different-types-of-exercise-on-the-testosteronecortisol-ratio-in-untrained-young-males.pdf" target="_blank" class="source-link">i<span class="tooltip">Source: Scholars Research Library</span></a></p><p data-lang="pl" class="hidden">System regulacji psychofizjologicznej. Triada: <strong>Trening Siłowy</strong> (efekt anaboliczny), <strong>Sporty Walki</strong> (inokulacja stresu) i <strong>Kalibrowane Kardio</strong> (endorfiny) w celu optymalizacji stosunku testosteronu do kortyzolu.<a href="https://www.scholarsresearchlibrary.com/articles/the-effect-of-different-types-of-exercise-on-the-testosteronecortisol-ratio-in-untrained-young-males.pdf" target="_blank" class="source-link">i<span class="tooltip">Źródło: Scholars Research Library</span></a></p></div></article>
+                <article class="data-card rounded-lg p-8 space-y-4"><header><h4 class="text-xl font-bold text-[var(--accent-current)]" data-lang="en">Chapter 2: The Autonomy Diet</h4><h4 class="text-xl font-bold text-[var(--accent-current)] hidden" data-lang="pl">Rozdział 2: Dieta Autonomii</h4></header><div><p data-lang="en">A tool for biochemical management. Prioritize whole foods rich in <strong>Zinc, Selenium,</strong> and <strong>Vitamin D</strong>.<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6719970/" target="_blank" class="source-link">i<span class="tooltip">Source: PMC</span></a> Strategically eliminate endocrine disruptors like chronic <strong>alcohol</strong> use and <strong>simple sugars</strong>.<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6761906/" target="_blank" class="source-link">i<span class="tooltip">Source: PMC</span></a></p><p data-lang="pl" class="hidden">Narzędzie do zarządzania biochemią. Priorytetem jest żywność bogata w <strong>cynk, selen</strong> i <strong>witaminę D</strong>.<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6719970/" target="_blank" class="source-link">i<span class="tooltip">Źródło: PMC</span></a> Strategicznie wyeliminuj czynniki zaburzające, takie jak chroniczne spożycie <strong>alkoholu</strong> i <strong>cukry proste</strong>.<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6761906/" target="_blank" class="source-link">i<span class="tooltip">Źródło: PMC</span></a></p></div></article>
+            </div>
+
+            <div class="part-divider py-20 text-center fade-in up rounded-lg relative border-y border-[var(--border-current)]">
+                <span class="text-9xl md:text-[12rem] font-black text-[var(--card-current)] opacity-50 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0">II</span>
+                <div class="relative z-10 grid justify-items-center gap-4">
+                    <svg class="h-24 w-24 text-[var(--accent-current)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5C12 20.5 8.36049 17.5 4.5 17.5C2.56699 17.5 1 15.933 1 14C1 10.6775 3.6875 8.5 12 1.5C20.3125 8.5 23 10.6775 23 14C23 15.933 21.433 17.5 19.5 17.5C15.6395 17.5 12 20.5 12 20.5Z"/></svg>
+                    <h3 data-lang="en">Phase II: Mental Sovereignty</h3><h3 class="hidden" data-lang="pl">Faza II: Mentalna Suwerenność</h3>
+                    <p class="mt-2 text-[var(--text-body-current)] max-w-xl mx-auto" data-lang="en">Calm the inner storm by building a psychological framework to find peace and control in chaos.</p><p class="mt-2 text-[var(--text-body-current)] max-w-xl mx-auto hidden" data-lang="pl">Uspokój wewnętrzną burzę, budując ramy psychologiczne, by znaleźć spokój i kontrolę w chaosie.</p>
+                </div>
+            </div>
+            <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8 fade-in up">
+                <article class="data-card rounded-lg p-8 space-y-4"><header><h4 class="text-xl font-bold text-[var(--accent-current)]" data-lang="en">Chapter 3: Stoicism OS</h4><h4 class="text-xl font-bold text-[var(--accent-current)] hidden" data-lang="pl">Rozdział 3: System Stoicyzm</h4></header><div><p data-lang="en">Install Stoicism as your mind's OS. Its core is the <strong>Dichotomy of Control</strong>: focus only on what is in your power. This is the direct precursor to modern Cognitive Behavioral Therapy (CBT).<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10175387/" target="_blank" class="source-link">i<span class="tooltip">Source: PMC</span></a></p><p data-lang="pl" class="hidden">Zainstaluj stoicyzm jako system operacyjny umysłu. Jego rdzeniem jest <strong>Dychotomia Kontroli</strong>: skupiaj się tylko na tym, co jest w Twojej mocy. To bezpośredni prekursor Terapii Poznawczo-Behawioralnej (CBT).<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10175387/" target="_blank" class="source-link">i<span class="tooltip">Źródło: PMC</span></a></p></div></article>
+                <article class="data-card rounded-lg p-8 space-y-4"><header><h4 class="text-xl font-bold text-[var(--accent-current)]" data-lang="en">Chapter 4: Mindfulness Training</h4><h4 class="text-xl font-bold text-[var(--accent-current)] hidden" data-lang="pl">Rozdział 4: Trening Uważności</h4></header><div><p data-lang="en">Meditation is practical neurological training. Cultivate <strong>meta-awareness</strong>: the ability to observe your thoughts as transient events, creating a "pause" between stimulus and response. This induces neuroplasticity, reshaping the brain's fear center.<a href="https://www.numberanalytics.com/blog/neuroscience-meditation-fMRI-perspective" target="_blank" class="source-link">i<span class="tooltip">Source: Number Analytics</span></a></p><p data-lang="pl" class="hidden">Medytacja to praktyczny trening neurologiczny. Kultywuj <strong>meta-świadomość</strong>: zdolność obserwowania myśli jako przejściowych zdarzeń, tworząc "pauzę" między bodźcem a reakcją. Indukuje to neuroplastyczność, przekształcając centrum strachu w mózgu.<a href="https://www.numberanalytics.com/blog/neuroscience-meditation-fMRI-perspective" target="_blank" class="source-link">i<span class="tooltip">Źródło: Number Analytics</span></a></p></div></article>
+                <article class="data-card rounded-lg p-8 space-y-4"><header><h4 class="text-xl font-bold text-[var(--accent-current)]" data-lang="en">Chapter 5: Sublimation Directive</h4><h4 class="text-xl font-bold text-[var(--accent-current)] hidden" data-lang="pl">Rozdział 5: Dyrektywa Sublimacji</h4></header><div><p data-lang="en">Sublimation is a mature adaptive mechanism for <strong>channeling</strong> raw libido and aggression into valuable outlets like art or entrepreneurship.<a href="https://psychcentral.com/health/sublimation-psychology" target="_blank" class="source-link">i<span class="tooltip">Source: Psych Central</span></a> It provides the engine to transmute that drive, fueling your Pursuit of Mastery.</p><p data-lang="pl" class="hidden">Sublimacja to dojrzały mechanizm adaptacyjny do <strong>kanalizowania</strong> surowego libido i agresji w wartościowe ujścia, jak sztuka czy przedsiębiorczość.<a href="https://psychcentral.com/health/sublimation-psychology" target="_blank" class="source-link">i<span class="tooltip">Źródło: Psych Central</span></a> Dostarcza silnika do transmutacji tego popędu, zasilając Pogoń za Mistrzostwem.</p></div></article>
+            </div>
+
+            <div class="part-divider py-20 text-center fade-in up rounded-lg relative border-y border-[var(--border-current)]">
+                 <span class="text-9xl md:text-[12rem] font-black text-[var(--card-current)] opacity-50 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0">III</span>
+                <div class="relative z-10 grid justify-items-center gap-4">
+                    <svg class="h-24 w-24 text-[var(--accent-current)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 17L12 22L22 17M12 2L2 7L12 12L22 7L12 2Z"/><path d="M2 12L12 17L22 12"/></svg>
+                    <h3 data-lang="en">Phase III: Architecture of a Meaningful Life</h3><h3 class="hidden" data-lang="pl">Faza III: Architektura Sensownego Życia</h3>
+                    <p class="mt-2 text-[var(--text-body-current)] max-w-xl mx-auto" data-lang="en">From a bedrock of fortification, build the pillars of a life that is independently meaningful.</p><p class="mt-2 text-[var(--text-body-current)] max-w-xl mx-auto hidden" data-lang="pl">Z fundamentu fortyfikacji wznieś filary życia, które jest niezależnie znaczące.</p>
+                </div>
+            </div>
+            <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8 fade-in up">
+                <article class="data-card rounded-lg p-8 lg:col-span-2">
+                    <header class="text-center">
+                        <h4 class="text-xl font-bold text-[var(--accent-current)]" data-lang="en">Chapter 6: The Self-Discovery Engine</h4>
+                        <h4 class="text-xl font-bold text-[var(--accent-current)] hidden" data-lang="pl">Rozdział 6: Silnik Samopoznania</h4>
+                    </header>
+                    <div id="quiz-container" class="quiz-container p-6 rounded-lg">
+                        <div id="quiz-intro">
+                            <h3 class="text-center" data-lang="en">Craft Your Personal Constitution</h3>
+                            <h3 class="text-center hidden" data-lang="pl">Stwórz Swoją Osobistą Konstytucję</h3>
+                            <p class="text-center max-w-xl mx-auto mt-4">
+                                <span data-lang="en">This is an interactive tool for self-reflection. The act of writing down your goals makes you 42% more likely to achieve them.<a href="https://www.mindsera.com/articles/benefits-of-journaling-the-science-of-reflection" target="_blank" class="source-link">i<span class="tooltip">Source: Mindsera</span></a> Answer the prompts to generate your own personalized constitution.</span>
+                                <span data-lang="pl" class="hidden">To interaktywne narzędzie do autorefleksji. Zapisywanie celów zwiększa szansę ich osiągnięcia o 42%.<a href="https://www.mindsera.com/articles/benefits-of-journaling-the-science-of-reflection" target="_blank" class="source-link">i<span class="tooltip">Źródło: Mindsera</span></a> Odpowiedz na pytania, aby wygenerować spersonalizowaną konstytucję.</span>
+                            </p>
+                            <div class="mt-6 text-center">
+                                <button id="start-quiz-btn" class="btn btn-primary"><span data-lang="en">Begin Journey</span><span data-lang="pl" class="hidden">Rozpocznij Podróż</span></button>
+                            </div>
+                        </div>
+                        <div id="quiz-main" class="hidden">
+                            <h4 id="prompt-text" class="text-center text-lg font-semibold"></h4>
+                            <textarea id="quiz-textarea" placeholder="Your reflection..."></textarea>
+                            <div class="flex justify-between items-center">
+                                <button id="prev-btn" class="btn btn-secondary"><span data-lang="en">Previous</span><span data-lang="pl" class="hidden">Poprzedni</span></button>
+                                <span id="progress-indicator" class="text-sm text-[var(--text-body-current)]"></span>
+                                <button id="next-btn" class="btn btn-primary"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="constitution-output" class="hidden p-6"></div>
+                </article>
+
+                <article class="data-card rounded-lg p-8 space-y-4"><header><h4 class="text-xl font-bold text-[var(--accent-current)]" data-lang="en">Chapter 7: The Pursuit of Mastery & Flow</h4><h4 class="text-xl font-bold text-[var(--accent-current)] hidden" data-lang="pl">Rozdział 7: Pogoń za Mistrzostwem i Flow</h4></header><div><p data-lang="en">Deep, disciplined engagement with a skill is a reliable method for generating <strong>"flow"</strong>—a key component of genuine happiness.<a href="https://www.flowresearchcollective.com/blog/role-of-flow-in-mastery" target="_blank" class="source-link">i<span class="tooltip">Source: Flow Research Collective</span></a> This replaces unreliable external validation with internal fulfillment.</p><p data-lang="pl" class="hidden">Głębokie zaangażowanie w umiejętność jest niezawodną metodą generowania <strong>"flow"</strong> — kluczowego składnika szczęścia.<a href="https://www.flowresearchcollective.com/blog/role-of-flow-in-mastery" target="_blank" class="source-link">i<span class="tooltip">Źródło: Flow Research Collective</span></a> Zastępuje to zewnętrzną walidację wewnętrznym spełnieniem.</p></div></article>
+                <article class="data-card rounded-lg p-8 space-y-4"><header><h4 class="text-xl font-bold text-[var(--accent-current)]" data-lang="en">Chapter 8: The Strength of the Pack</h4><h4 class="text-xl font-bold text-[var(--accent-current)] hidden" data-lang="pl">Rozdział 8: Siła Stada</h4></header><div><p data-lang="en">Autonomy is not isolation. Radically redefine <strong>"family"</strong> as a tribe of chosen friends. This is a critical counter-strategy to the male loneliness crisis. Social isolation is correlated with a 26% increased risk of premature death.<a href="https://www.peacehealth.org/healthy-you/why-making-and-keeping-friends-important-mens-health" target="_blank" class="source-link">i<span class="tooltip">Source: PeaceHealth</span></a></p><p data-lang="pl" class="hidden">Autonomia to nie izolacja. Zredefiniuj <strong>"rodzinę"</strong> jako plemię wybranych przyjaciół. To kluczowa kontrstrategia wobec kryzysu męskiej samotności. Izolacja społeczna koreluje z 26% wzrostem ryzyka przedwczesnej śmierci.<a href="https://www.peacehealth.org/healthy-you/why-making-and-keeping-friends-important-mens-health" target="_blank" class="source-link">i<span class="tooltip">Źródło: PeaceHealth</span></a></p></div></article>
+            </div>
+
+            <div class="mt-20 fade-in up">
+                <div class="data-card rounded-lg p-10 text-center">
+                    <h2 data-lang="en">Arrival: The Oasis Within</h2><h2 data-lang="pl" class="hidden">Cel: Wewnętrzna Oaza</h2>
+                    <p class="max-w-3xl mx-auto text-lg mt-4">
+                        <span data-lang="en">The outcome is authentic freedom. You will operate from a position of strength, not of need. <strong>You will no longer seek a compass in the external world, for you will have forged one within yourself.</strong></span>
+                        <span data-lang="pl" class="hidden">Rezultatem jest autentyczna wolność. Będziesz działać z pozycji siły, a nie potrzeby. <strong>Nie będziesz już szukać kompasu w świecie zewnętrznym, ponieważ wykujesz go w sobie.</strong></span>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-[var(--border-current)] mt-16">
+        <div class="container mx-auto px-6 py-8 text-center text-[var(--text-body-current)]/60">
+            <p class="font-bold text-[var(--accent-current)]/80" data-lang="en">The Autonomy Protocol</p><p class="font-bold text-[var(--accent-current)]/80 hidden" data-lang="pl">Protokół Autonomii</p>
+            <p class="text-xs mt-2" data-lang="en">A conceptual framework for introspection. Not professional advice.</p><p class="text-xs mt-2 hidden" data-lang="pl">Koncepcyjny model introspekcji. To nie jest profesjonalna porada.</p>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // --- CACHE DOM ELEMENTS ---
+    const htmlEl = document.documentElement;
+    const themeToggle = document.getElementById('theme-toggle');
+    const langToggle = document.getElementById('lang-toggle');
+    const industrialBg = document.getElementById('industrial-bg');
+    const zenBg = document.getElementById('zen-bg');
+    const transitionStartEl = document.getElementById('protocol');
+    const cursor = document.getElementById('custom-cursor');
+    const quizContainer = document.getElementById('quiz-container');
+    const quizIntro = document.getElementById('quiz-intro');
+    const quizMain = document.getElementById('quiz-main');
+    const startQuizBtn = document.getElementById('start-quiz-btn');
+    const promptText = document.getElementById('prompt-text');
+    const quizTextarea = document.getElementById('quiz-textarea');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const progressIndicator = document.getElementById('progress-indicator');
+    const constitutionOutput = document.getElementById('constitution-output');
+
+    let charts = {};
+
+    // --- INTERACTIVITY: THEME & LANGUAGE ---
+    function applyTheme(theme) {
+        htmlEl.classList.remove('light', 'dark');
+        htmlEl.classList.add(theme);
+        document.getElementById('theme-icon-light').classList.toggle('hidden', theme === 'dark');
+        document.getElementById('theme-icon-dark').classList.toggle('hidden', theme === 'light');
+        window.dispatchEvent(new Event('scroll')); // Force color recalculation
+        redrawAllCharts();
+    }
+
+    themeToggle.addEventListener('click', () => {
+        const newTheme = htmlEl.classList.contains('dark') ? 'light' : 'dark';
+        localStorage.setItem('theme', newTheme);
+        applyTheme(newTheme);
+    });
+
+    function applyLanguage(lang) {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            el.classList.toggle('hidden', el.dataset.lang !== lang);
+        });
+        document.getElementById('current-lang').textContent = lang.toUpperCase();
+        localStorage.setItem('language', lang);
+        updateQuizLang(lang);
+        redrawAllCharts();
+    }
+    
+    langToggle.addEventListener('click', () => {
+        const currentLang = localStorage.getItem('language') || 'en';
+        const newLang = currentLang === 'en' ? 'pl' : 'en';
+        applyLanguage(newLang);
+    });
+
+    // --- INTERACTIVITY: FADE-IN & CURSOR ---
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    
+    if (window.matchMedia("(pointer: fine)").matches) {
+        document.body.classList.add('no-native-cursor');
+        window.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+    }
+
+    // --- DYNAMIC BACKGROUND & COLOR TRANSITION ---
+    function lerp(start, end, amt) { return (1 - amt) * start + amt * end; }
+    function hexToRgb(hex) {
+        let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : null;
+    }
+
+    const palettes = {
+        dark: {
+            start: { bg: '#111111', card: '#1a1a1a', border: '#333333', 'text-body': '#a0a0a0', 'text-head': '#e0e0e0', accent: '#ff4500', accent2: '#ff8c00', link: '#ff8c00'},
+            end:   { bg: '#0f1f2e', card: '#172b3f', border: '#2a4a68', 'text-body': '#b0c4de', 'text-head': '#e0e6f0', accent: '#22c55e', accent2: '#facc15', link: '#87CEFA'}
+        },
+        light: {
+            start: { bg: '#f8fafc', card: '#ffffff', border: '#e2e8f0', 'text-body': '#334155', 'text-head': '#000000', accent: '#f97316', accent2: '#ea580c', link: '#ea580c'},
+            end:   { bg: '#f0f8ff', card: '#ffffff', border: '#d1e9f4', 'text-body': '#4c1d95', 'text-head': '#000000', accent: '#22c55e', accent2: '#3b82f6', link: '#3b82f6'}
+        }
+    };
+
+    window.addEventListener('scroll', () => {
+        if (!transitionStartEl) return;
+        const rect = transitionStartEl.getBoundingClientRect();
+        const progress = Math.max(0, Math.min(1, 1 - (rect.top / (window.innerHeight * 0.8))));
+
+        industrialBg.style.opacity = 1 - progress;
+        zenBg.style.opacity = progress;
+
+        const currentTheme = htmlEl.classList.contains('dark') ? 'dark' : 'light';
+        const p = palettes[currentTheme];
+
+        Object.keys(p.start).forEach(key => {
+            const startRgb = hexToRgb(p.start[key]);
+            const endRgb = hexToRgb(p.end[key]);
+            if(startRgb && endRgb) {
+                const r = Math.round(lerp(startRgb.r, endRgb.r, progress));
+                const g = Math.round(lerp(startRgb.g, endRgb.g, progress));
+                const b = Math.round(lerp(startRgb.b, endRgb.b, progress));
+                htmlEl.style.setProperty(`--${key}-current`, `rgb(${r}, ${g}, ${b})`);
+            }
+        });
+    }, { passive: true });
+
+    for(let i=0; i<30; i++) {
+        const rain = document.createElement('div');
+        rain.className = 'digital-rain';
+        rain.style.left = `${Math.random() * 100}vw`;
+        rain.style.animationDuration = `${2 + Math.random() * 2}s`;
+        rain.style.animationDelay = `${Math.random() * 4}s`;
+        industrialBg.appendChild(rain);
+
+        const leaf = document.createElement('div');
+        leaf.className = 'leaf';
+        leaf.style.left = `${Math.random() * 100}vw`;
+        leaf.style.animationDuration = `${8 + Math.random() * 12}s`;
+        leaf.style.animationDelay = `${Math.random() * 10}s`;
+        zenBg.appendChild(leaf);
+    }
+
+    // --- INTERACTIVE QUIZ ENGINE ---
+    const prompts = {
+        en: [
+            { module: "Module I: Core Values", question: "What are 3-5 non-negotiable principles that guide your most important decisions?" },
+            { module: "Module II: Mission & Vision", question: "What is your primary mission in this chapter of your life? What impact do you want to create?" },
+            { module: "Module III: Boundaries & Standards", question: "What behaviors or situations will you no longer tolerate from yourself or others?" },
+            { module: "Module IV: Growth & Learning", question: "What skills or knowledge are you committed to acquiring to support your mission?" },
+            { module: "Module V: Contribution & Legacy", question: "How will you contribute to the well-being of your community or the world?" }
+        ],
+        pl: [
+            { module: "Moduł I: Główne Wartości", question: "Jakie są 3-5 nienegocjowalnych zasad, które kierują Twoimi najważniejszymi decyzjami?" },
+            { module: "Moduł II: Misja i Wizja", question: "Jaka jest Twoja główna misja w tym rozdziale życia? Jaki wpływ chcesz wywrzeć?" },
+            { module: "Moduł III: Granice i Standardy", question: "Jakich zachowań lub sytuacji nie będziesz już tolerować od siebie lub innych?" },
+            { module: "Moduł IV: Wzrost i Nauka", question: "Jakie umiejętności lub wiedzę zamierzasz zdobyć, aby wesprzeć swoją misję?" },
+            { module: "Moduł V: Wkład i Dziedzictwo", question: "W jaki sposób przyczynisz się do dobrostanu swojej społeczności lub świata?" }
+        ]
+    };
+    let currentPromptIndex = 0;
+    let userAnswers = JSON.parse(localStorage.getItem('constitutionAnswers')) || new Array(prompts.en.length).fill('');
+    
+    function updateQuizLang(lang) {
+        if (quizMain.classList.contains('hidden')) return;
+        showPrompt(currentPromptIndex, lang);
+    }
+
+    function showPrompt(index, lang = localStorage.getItem('language') || 'en') {
+        const currentPrompts = prompts[lang];
+        promptText.textContent = currentPrompts[index].question;
+        quizTextarea.value = userAnswers[index];
+        progressIndicator.textContent = `${lang === 'pl' ? 'Krok' : 'Step'} ${index + 1} / ${currentPrompts.length}`;
+        prevBtn.style.visibility = index === 0 ? 'hidden' : 'visible';
+        nextBtn.innerHTML = index === currentPrompts.length - 1 ? 
+            `<span data-lang="en">Generate</span><span data-lang="pl" class="hidden">Generuj</span>` : 
+            `<span data-lang="en">Next</span><span data-lang="pl" class="hidden">Dalej</span>`;
+        applyLanguage(lang); // Re-apply to show correct button text
+    }
+
+    startQuizBtn.addEventListener('click', () => {
+        quizIntro.classList.add('hidden');
+        quizMain.classList.remove('hidden');
+        showPrompt(currentPromptIndex);
+    });
+
+    nextBtn.addEventListener('click', () => {
+        userAnswers[currentPromptIndex] = quizTextarea.value;
+        localStorage.setItem('constitutionAnswers', JSON.stringify(userAnswers));
+        const lang = localStorage.getItem('language') || 'en';
+        if (currentPromptIndex < prompts[lang].length - 1) {
+            currentPromptIndex++;
+            showPrompt(currentPromptIndex);
+        } else {
+            generateConstitution();
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentPromptIndex > 0) {
+            userAnswers[currentPromptIndex] = quizTextarea.value;
+            localStorage.setItem('constitutionAnswers', JSON.stringify(userAnswers));
+            currentPromptIndex--;
+            showPrompt(currentPromptIndex);
+        }
+    });
+
+    function generateConstitution() {
+        quizContainer.classList.add('hidden');
+        constitutionOutput.classList.remove('hidden');
+        const lang = localStorage.getItem('language') || 'en';
+        const currentPrompts = prompts[lang];
+        
+        let html = `<h2 class="text-center mb-8">${lang === 'pl' ? 'Moja Osobista Konstytucja' : 'My Personal Constitution'}</h2>`;
+        currentPrompts.forEach((prompt, index) => {
+            html += `
+                <div class="mb-6">
+                    <h4>${prompt.module}</h4>
+                    <blockquote>${userAnswers[index].replace(/\n/g, '<br>') || (lang === 'pl' ? 'Brak odpowiedzi.' : 'No answer provided.')}</blockquote>
+                </div>`;
+        });
+        html += `<div class="mt-8 text-center">
+            <button onclick="window.resetQuiz()" class="btn btn-primary">${lang === 'pl' ? 'Zacznij od nowa' : 'Start Over'}</button>
+        </div>`;
+        constitutionOutput.innerHTML = html;
+        constitutionOutput.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.resetQuiz = function() {
+        localStorage.removeItem('constitutionAnswers');
+        userAnswers = new Array(prompts.en.length).fill('');
+        currentPromptIndex = 0;
+        constitutionOutput.classList.add('hidden');
+        quizContainer.classList.remove('hidden');
+        quizMain.classList.add('hidden');
+        quizIntro.classList.remove('hidden');
+    }
+
+    // --- CHART.JS RENDERING ---
+    function redrawAllCharts() {
+        Object.values(charts).forEach(chart => { if (chart) chart.destroy(); });
+        setTimeout(createCharts, 50); // Allow time for CSS vars to update
+    }
+
+    function createCharts() {
+        const lang = localStorage.getItem('language') || 'en';
+        const getStyle = (prop) => getComputedStyle(htmlEl).getPropertyValue(prop).trim();
+        const gridColor = getStyle('--border-current');
+        const textColor = getStyle('--text-body-current');
+        const accentColor = getStyle('--accent-current');
+        const accent2Color = getStyle('--accent2-current');
+
+        const baseOptions = (extraOpts = {}) => ({
+            maintainAspectRatio: false, responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { ticks: { color: textColor, font: { family: 'Inter' } }, grid: { color: gridColor } },
+                x: { ticks: { color: textColor, font: { family: 'Inter' } }, grid: { color: gridColor } }
+            },
+            ...extraOpts
+        });
+
+        const doughnutOptions = (titleText) => ({
+            maintainAspectRatio: false, responsive: true,
+            plugins: {
+                legend: { position: 'bottom', labels: { color: textColor, font: { family: 'Inter' } } },
+                title: { display: true, text: titleText, color: textColor, font: { size: 14, family: 'Inter' } }
+            }
+        });
+
+        const chartConfigs = {
+            tinderGenderChart: { type: 'doughnut', ctx: 'tinderGenderChart',
+                data: { labels: [lang === 'pl' ? 'Mężczyźni' : 'Men', lang === 'pl' ? 'Kobiety' : 'Women'], datasets: [{ data: [75.8, 24.2], backgroundColor: [accent2Color, accentColor] }] },
+                options: doughnutOptions(lang === 'pl' ? 'Stosunek płci na Tinderze (%)' : 'Tinder Gender Ratio (%)') },
+            politicalDatingChart: { type: 'bar', ctx: 'politicalDatingChart',
+                data: { labels: [lang === 'pl' ? 'Demokraci niechętni wyborcom Trumpa' : 'Democrats unwilling to date Trump voters'], datasets: [{ data: [71], backgroundColor: [accentColor] }] },
+                options: baseOptions({ indexAxis: 'y', scales: { x: { max: 100 }, y: { ticks: { font: { size: 10 } } } }}) },
+            polishEducationChart: { type: 'bar', ctx: 'polishEducationChart',
+                data: { labels: [lang === 'pl' ? 'Kobiety' : 'Women', lang === 'pl' ? 'Mężczyźni' : 'Men'], datasets: [{ label: '% z wyższym wykształceniem (Polska, 25-34)', data: [56, 37], backgroundColor: [accentColor, accent2Color] }] },
+                options: baseOptions({ scales: { y: { max: 100 } }}) },
+            mentalHealthChart: { type: 'bar', ctx: 'mentalHealthChart',
+                data: { labels: [lang === 'pl' ? 'Zgłoszona potrzeba (K/M)' : 'Reported Need (W/M)', lang === 'pl' ? 'Otrzymana pomoc (K/M)' : 'Received Care (W/M)'], datasets: [
+                    { label: lang === 'pl' ? 'Kobiety' : 'Women', data: [50, 21], backgroundColor: accentColor },
+                    { label: lang === 'pl' ? 'Mężczyźni' : 'Men', data: [35, 28], backgroundColor: accent2Color }
+                ]},
+                options: baseOptions({ plugins: { legend: { display: true, position: 'bottom', labels: { color: textColor } } } }) }
+        };
+
+        Object.keys(chartConfigs).forEach(key => {
+            const config = chartConfigs[key];
+            const ctx = document.getElementById(config.ctx)?.getContext('2d');
+            if (ctx) charts[key] = new Chart(ctx, { type: config.type, data: config.data, options: config.options });
+        });
+    }
+
+    // --- INITIALIZATION ---
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const savedLang = localStorage.getItem('language') || 'en';
+    applyTheme(savedTheme);
+    applyLanguage(savedLang);
+});
+</script>
+</body>
+</html>
