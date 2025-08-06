@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The New Absolutism: An Interactive Analysis</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -58,28 +60,57 @@
             color: #f43f5e;
             font-weight: 600;
         }
-        .tooltip .tooltiptext {
+        .tooltip .tooltip-card {
             visibility: hidden;
-            width: 250px;
+            width: 340px;
             background-color: #1e293b; /* slate-800 */
             color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 10px;
+            text-align: left;
+            border-radius: 8px;
+            padding: 1rem;
             position: absolute;
-            z-index: 1;
+            z-index: 10;
             bottom: 125%;
             left: 50%;
-            margin-left: -125px;
+            margin-left: -170px;
             opacity: 0;
             transition: opacity 0.3s;
             font-family: 'Inter', sans-serif;
             font-size: 0.875rem;
             font-weight: 400;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
-        .tooltip:hover .tooltiptext {
+        .tooltip:hover .tooltip-card {
             visibility: visible;
             opacity: 1;
+        }
+        .tooltip-card h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            color: #f43f5e;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        .tooltip-card p {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+        }
+        .tooltip-card blockquote {
+            font-size: 0.8rem;
+            border-left-color: #f43f5e;
+            padding: 0.5rem 0.75rem;
+            margin: 0.75rem 0;
+            background-color: #334155;
+            border-radius: 4px;
+        }
+        .tooltip-card cite {
+            display: block;
+            text-align: right;
+            font-size: 0.75rem;
+            color: #94a3b8; /* slate-400 */
+            margin-top: 0.5rem;
         }
         .tab-button.active {
             background-color: #f43f5e; /* rose-500 */
@@ -138,12 +169,19 @@
 
             <section id="intro" class="fade-in">
                 <p class="text-2xl italic text-slate-600">Our political landscape is fractured. Debates that once revolved around policy and economics have been replaced by intense, often vicious, culture wars. An analysis of the dominant ideologies of our time reveals that this is no accident.</p>
-                <p>These movements, despite their different goals, share a deep structural DNA that is increasingly at odds with the foundational principles of a tolerant, open society. While the horrors of state Communism seem a world away from a corporate DEI seminar or a nationalist rally, a close examination reveals a shared architecture. This architecture functions like an <span class="tooltip">ideological mind virus<span class="tooltiptext">A self-replicating system of thought that prioritizes its own propagation over truth and fosters division as a means of control.</span></span>, a system that is essential to understand if we are to diagnose the modern problems of social polarization, the decay of rational discourse, and the rise of a new, decentralized form of absolutism.</p>
+                <p>These movements, despite their different goals, share a deep structural DNA that is increasingly at odds with the foundational principles of a tolerant, open society. While the horrors of state <span class="tooltip">Communism<span class="tooltip-card"><h4>Communism: State Absolutism</h4><p>An ideology advocating for a classless society where all property is publicly owned. In practice, its pursuit led to totalitarian states, economic collapse, and mass death.</p><blockquote>"The theory of the Communists may be summed up in the single sentence: Abolition of private property."</blockquote><cite>Source: Karl Marx, The Communist Manifesto</cite></span></span> seem a world away from a corporate DEI seminar or a nationalist rally, a close examination reveals a shared architecture. This architecture functions like an <span class="tooltip">ideological mind virus<span class="tooltip-card"><h4>Ideological Mind Virus</h4><p>A self-replicating system of thought that prioritizes its own propagation over truth. It spreads via emotional contagion and social pressure, often bypassing rational thought by exploiting cognitive biases.</p><blockquote>"Some memes... function like viruses... through cultural transmission, which he termed 'epidemiology, not evidence'."</blockquote><cite>Source: Richard Dawkins, "Viruses of the Mind"</cite></span></span>, a system that is essential to understand if we are to diagnose the modern problems of social polarization, the decay of rational discourse, and the rise of a new, decentralized form of absolutism.</p>
+            </section>
+
+            <section id="left-right" class="fade-in">
+                <h2>Deconstructing the Political Compass</h2>
+                <p>Before analyzing specific ideologies, it's crucial to address the very language we use. The terms "left-wing" and "right-wing" are not timeless truths; they are a historical artifact born from the seating arrangement of the <span class="tooltip">French National Assembly in 1789<span class="tooltip-card"><h4>The Origin of Left vs. Right</h4><p>During the French Revolution, supporters of the king and the old order sat to the president's right, while revolutionaries and radicals sat to his left. This accidental seating chart created a political metaphor that has lasted for centuries, often oversimplifying complex political realities.</p><cite>Source: "The Left-Right Political Spectrum," Encyclopaedia Britannica</cite></span></span>. Those who supported the king sat to his right, while revolutionaries sat to his left.</p>
+                <blockquote>This simple physical division created a political binary that has been used for over 200 years to polarize populations and simplify complex beliefs into a one-dimensional conflict.</blockquote>
+                <p>This analysis will largely avoid these labels. Instead, it will focus on the **structure** of an ideology. The most important distinction is not between left and right, but between frameworks that are **open, liberal, and tolerant of dissent** versus those that are **closed, absolutist, and demand conformity.** The danger lies in the structure, not the seat.</p>
             </section>
 
             <section id="logic" class="fade-in">
                 <h2>The Shared Logic: A World Divided</h2>
-                <p>All absolutist ideologies, whether from the left or right, are built on a simple, powerful premise: history is a struggle between a virtuous in-group and a demonized out-group. This binary framework is a remarkably effective tool for mobilizing fervor. This same core logic has been adapted and redeployed across the political spectrum, shifting the battleground but keeping the structure of the conflict intact.</p>
+                <p>All absolutist ideologies are built on a simple, powerful premise: history is a struggle between a virtuous in-group and a demonized out-group. This binary framework is a remarkably effective tool for mobilizing fervor. This same core logic has been adapted and redeployed across the political spectrum, shifting the battleground but keeping the structure of the conflict intact.</p>
 
                 <!-- Interactive Tabs for Ideologies -->
                 <div class="bg-white rounded-lg shadow-xl p-6 my-8">
@@ -186,10 +224,10 @@
             
             <section id="dna" class="fade-in">
                 <h2>The Intellectual DNA</h2>
-                <p>The parallels between these ideologies are not coincidental; they reveal a shared intellectual blueprint. The core logic of Marxism—a binary dialectic of an oppressor class exploiting an oppressed class over resources—has been systematically adapted across the political spectrum.</p>
+                <p>The parallels between these ideologies are not coincidental; they reveal a shared intellectual blueprint. The core logic of <span class="tooltip">Marxism<span class="tooltip-card"><h4>Marxism: The Dialectic</h4><p>A theory developed by Karl Marx and Friedrich Engels. Its core is "historical materialism," the idea that history progresses through a series of conflicts between an economic oppressor class and an oppressed class. This dialectical framework has been adapted by many subsequent ideologies.</p><cite>Source: "The Communist Manifesto"</cite></span></span>—a binary dialectic of an oppressor class exploiting an oppressed class over resources—has been systematically adapted across the political spectrum.</p>
                 <ul>
-                    <li><strong>Left-wing ideologies</strong> substitute economic class with cultural identity (race, gender, sexuality), retaining the oppressor/oppressed framework.</li>
-                    <li><strong>Right-wing ideologies</strong> substitute class with national or ethnic identity, framing a struggle against "outsiders" or "decadent" cultural forces.</li>
+                    <li>Ideologies focused on <span class="tooltip">group equity<span class="tooltip-card"><h4>Group Equity</h4><p>A focus on achieving equal outcomes between identity groups. This often involves treating individuals differently based on their group affiliation to correct for historical imbalances, contrasting with the principle of equal opportunity for all individuals.</p></span></span> substitute economic class with cultural identity (race, gender, sexuality), retaining the oppressor/oppressed framework.</li>
+                    <li>Ideologies focused on <span class="tooltip">group purity<span class="tooltip-card"><h4>Group Purity</h4><p>A focus on maintaining the perceived integrity of a national, ethnic, or religious group. This often involves viewing outside influences or minority groups as contaminants that threaten the cohesion and strength of the in-group, leading to exclusionary policies.</p></span></span> substitute class with national or ethnic identity, framing a struggle against "outsiders" or "decadent" cultural forces.</li>
                 </ul>
                 <p>This shared DNA explains why their rhetorical strategies are so similar, grounded in group-based grievance and aimed at revolutionary or purificatory goals.</p>
             </section>
@@ -202,7 +240,7 @@
                 </blockquote>
                 <p>This leads to two powerful ideological tools:</p>
                 <ul>
-                    <li><strong><span class="tooltip">Standpoint Theory<span class="tooltiptext">The claim that individuals from a specific group have a more authentic understanding of reality due to their identity or experience.</span></span>:</strong> This creates a "hierarchy of grievance" or "purity," where moral authority is determined by identity, not the validity of an argument.</li>
+                    <li><strong><span class="tooltip">Standpoint Theory<span class="tooltip-card"><h4>Standpoint Theory</h4><p>The claim that an individual's perspectives are shaped by their social and political experiences. In absolutist frameworks, this is often twisted to mean that only those with a specific identity (e.g., oppressed, pure) can know the "truth," invalidating all other viewpoints.</p><blockquote>"Our situation as Black people necessitates... a development of consciousness that is peculiar to our situation."</blockquote><cite>Source: Combahee River Collective Statement</cite></span></span>:</strong> This creates a "hierarchy of grievance" or "purity," where moral authority is determined by identity, not the validity of an argument.</li>
                     <li><strong>The Weaponization of "Harm" and "Betrayal":</strong> Dissenting opinions are no longer merely incorrect; they are framed as acts of "violence," "erasure," or "betrayal," making good-faith debate impossible and justifying censorship.</li>
                 </ul>
             </section>
@@ -224,7 +262,6 @@
                     </div>
                     <div id="test-agreement" class="hidden text-center">
                         <!-- Agreement text will be injected here by JS -->
-                        <button id="see-implications-btn" class="test-button mt-6">See the Implications</button>
                     </div>
                     <div id="test-reveal" class="hidden">
                         <!-- Reveal text will be injected here by JS -->
@@ -239,7 +276,7 @@
 
             <section id="propaganda" class="fade-in">
                 <h2>The New Propaganda: From State Control to Social Contagion</h2>
-                <p>The methods of ideological propagation have also transformed. While Communism relied on a top-down, state-controlled machine, modern movements have perfected a decentralized, networked model of <span class="tooltip">social contagion<span class="tooltiptext">A phenomenon where ideas, emotions, and behaviors spread rapidly and often unconsciously through social networks, much like a virus.</span></span>.</p>
+                <p>The methods of ideological propagation have also transformed. While Communism relied on a top-down, state-controlled machine, modern movements have perfected a decentralized, networked model of <span class="tooltip">social contagion<span class="tooltip-card"><h4>Social Contagion & Polarization</h4><p>Ideas and emotions spread rapidly through social networks. Social media algorithms accelerate this by favoring polarizing content, leading to a measurable increase in partisan division over time.</p><canvas id="polarization-chart-tooltip" width="300" height="150"></canvas><cite>Source: Pew Research Center data on polarization</cite></span></span>.</p>
                 
                 <div class="grid md:grid-cols-2 gap-8 my-8">
                     <div class="bg-white rounded-lg shadow-lg p-6 border-t-4 border-slate-800">
@@ -256,21 +293,32 @@
                         <ul class="list-disc list-inside text-slate-600">
                             <li>Hashtag activism & memetic warfare</li>
                             <li>Institutional capture (HR, NGOs)</li>
-                            <li><span class="tooltip">Cancel Culture<span class="tooltiptext">Public shaming campaigns to de-platform or fire individuals who violate ideological norms.</span></span> & social enforcement</li>
+                            <li><span class="tooltip">Cancel Culture<span class="tooltip-card"><h4>Cancel Culture</h4><p>A modern form of social enforcement where public shaming campaigns are used to de-platform or fire individuals who violate ideological norms. It functions as a decentralized, fear-based mechanism for ensuring conformity.</p><blockquote>"The point of modern propaganda isn't only to misinform or push an agenda. It is to exhaust your critical thinking, to annihilate truth."</blockquote><cite>Source: Garry Kasparov</cite></span></span> & social enforcement</li>
                             <li><strong>Goal:</strong> Cultural saturation via peer pressure</li>
                         </ul>
                     </div>
                 </div>
-                 <p>Today, social media platforms, with algorithms optimized for engagement, create the perfect environment for this new propaganda. Outrage spreads virally, driven by emotion rather than reason, creating perpetual conflict cycles and extreme social polarization.</p>
+                 <p>Today, social media platforms, with algorithms optimized for engagement, create the perfect environment for this new propaganda. Outrage spreads virally, driven by emotion rather than reason, creating perpetual conflict cycles and extreme <span class="tooltip">social polarization<span class="tooltip-card"><h4>Social Polarization</h4><p>The division of a society into opposing groups or camps, where political identity becomes a primary source of social identity. This leads to decreased trust and cooperation between groups and makes political compromise nearly impossible.</p></span></span>.</p>
+            </section>
+
+            <section id="consequences" class="fade-in">
+                <h2>A Ledger of Consequences</h2>
+                <p>While the mechanisms may be similar, the real-world consequences of absolutist ideologies vary dramatically based on the power they can wield. The 20th century provides a stark, quantitative measure of the physical destruction caused by state-controlled absolutism. In contrast, modern decentralized ideologies inflict a different kind of damage—less physical, but corrosive to the social fabric and intellectual health of a free society.</p>
+                <div class="bg-white rounded-lg shadow-xl p-6 my-8">
+                    <h3 class="text-2xl font-bold text-slate-800 text-center mb-4">Comparing Historical Impact</h3>
+                    <canvas id="consequences-chart" width="400" height="350"></canvas>
+                    <p class="text-sm text-center mt-4 text-slate-500 italic">Note: "Social/Cultural Damage" is a conceptual metric representing erosion of free speech, social trust, and institutional integrity, not a quantitative value.</p>
+                </div>
+                <p>The chart above starkly illustrates the difference in scale and nature. The death tolls under regimes like Communism and Nazism are a historical fact measured in the tens of millions. The damage from modern absolutist ideologies is not measured in mass graves but in a climate of fear, the suppression of dissent in our institutions, the erosion of meritocratic principles, and the deepening of social polarization that makes a functioning democracy increasingly difficult.</p>
             </section>
 
             <section id="paradox" class="fade-in">
                 <h2>The Paradox of Progress</h2>
-                <p>For many of these movements, tangible successes have not led to greater social harmony. As concrete legal goals were achieved, the focus often shifted to more abstract and totalizing goals: dismantling "patriarchy," deconstructing the "gender binary," or purifying the "national soul."</p>
+                <p>For many of these movements, tangible successes have not led to greater social harmony. As concrete legal goals were achieved, the focus often shifted to more abstract and totalizing goals: dismantling <span class="tooltip">Feminism's "patriarchy,"<span class="tooltip-card"><h4>The "Wage Gap" Paradox</h4><p>The "uncontrolled" wage gap (raw earnings) is often cited as proof of systemic oppression. However, the "controlled" gap, which adjusts for factors like job, hours, and experience, is nearly nonexistent. The focus on the divisive, uncontrolled figure is a hallmark of absolutist framing.</p><canvas id="feminism-chart-tooltip" width="300" height="150"></canvas><cite>Source: Payscale, "The State of the Gender Pay Gap 2023"</cite></span></span> deconstructing the "gender binary," or purifying the "national soul."</p>
                 <blockquote>
                     A demand for voting rights is a finite political objective. A demand to dismantle "patriarchy" is an infinite cultural and psychological project that implicates every person's thoughts, language, and behavior. The battleground moves from the statehouse to the soul.
                 </blockquote>
-                <p>This creates a world of perpetual conflict with no possibility of forgiveness. If the problem is an immutable characteristic like being male, white, or having the "wrong" heritage, and the sin is "privilege" or "impurity," there is no path to redemption, only endless confession and struggle. This framing erodes social cohesion and undermines the principles of universalism and shared humanity that are the bedrock of any functioning, diverse society.</p>
+                <p>This creates a world of perpetual conflict with no possibility of forgiveness. If the problem is an immutable characteristic like being male, white, or having the "wrong" heritage, and the sin is "privilege" or "impurity," there is no path to redemption, only endless confession and struggle. This framing erodes social cohesion and undermines the principles of <span class="tooltip">universalism<span class="tooltip-card"><h4>Universalism</h4><p>The belief that certain values, rights, and principles are valid for all people, regardless of their group identity (race, gender, nationality, etc.). It emphasizes a shared humanity. Absolutist ideologies often reject universalism in favor of group-specific truths and moralities.</p></span></span> and shared humanity that are the bedrock of any functioning, diverse society.</p>
             </section>
 
             <section id="conclusion" class="fade-in">
@@ -323,9 +371,7 @@
         const revealDiv = document.getElementById('test-reveal');
         
         const pathBtns = document.querySelectorAll('.path-btn');
-        const implicationsBtn = document.getElementById('see-implications-btn');
-        const restartBtn = document.getElementById('restart-test-btn');
-
+        
         const paths = {
             justice: {
                 questions: [
@@ -395,7 +441,7 @@
                 });
             } else {
                 questionsDiv.classList.add('hidden');
-                agreementDiv.innerHTML = paths[currentPath].agreement + agreementDiv.innerHTML;
+                agreementDiv.innerHTML = paths[currentPath].agreement + '<button id="see-implications-btn" class="test-button mt-6">See the Implications</button>';
                 agreementDiv.classList.remove('hidden');
             }
         }
@@ -407,7 +453,6 @@
                 startDiv.classList.add('hidden');
                 revealDiv.classList.add('hidden');
                 agreementDiv.classList.add('hidden');
-                agreementDiv.innerHTML = '<button id="see-implications-btn" class="test-button mt-6">See the Implications</button>'; // Reset button
                 questionsDiv.classList.remove('hidden');
                 showQuestion();
             });
@@ -416,21 +461,153 @@
         agreementDiv.addEventListener('click', (e) => {
             if (e.target.id === 'see-implications-btn') {
                 agreementDiv.classList.add('hidden');
-                revealDiv.innerHTML = paths[currentPath].reveal + revealDiv.innerHTML;
-                revealDiv.classList.remove('hidden');
-            }
-        });
-
-        restartBtn.addEventListener('click', () => {
-            revealDiv.classList.add('hidden');
-            revealDiv.innerHTML = `<div id="test-reflection" class="mt-8 text-center">
+                const revealContent = paths[currentPath].reveal;
+                const reflectionContent = `<div id="test-reflection" class="mt-8 text-center">
                             <h3 class="text-xl font-bold text-rose-600">A Final Question for Reflection:</h3>
                             <p class="mt-4 italic">At what point does a framework for a better world become a rigid ideology that creates new injustices? Does the path to a promised utopia justify the erosion of individual rights, free speech, and open debate along the way?</p>
                              <button id="restart-test-btn" class="test-button mt-6 bg-slate-600 hover:bg-slate-800">Restart Test</button>
                         </div>`;
-            startDiv.classList.remove('hidden');
+                revealDiv.innerHTML = revealContent + reflectionContent;
+                revealDiv.classList.remove('hidden');
+                document.getElementById('restart-test-btn').addEventListener('click', restartTest);
+            }
         });
 
+        function restartTest() {
+            revealDiv.classList.add('hidden');
+            startDiv.classList.remove('hidden');
+        }
+
+        // --- Charting Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            Chart.register(ChartDataLabels);
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            
+            // Main Consequences Chart
+            const ctx = document.getElementById('consequences-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['State Absolutism (20th C.)', 'Networked Absolutism (21st C.)'],
+                    datasets: [
+                    {
+                        label: 'Physical Destruction (Deaths)',
+                        data: [125, 0],
+                        backgroundColor: 'rgba(220, 38, 38, 0.7)',
+                    }, 
+                    {
+                        label: 'Suppression of Speech',
+                        data: [10, 8],
+                        backgroundColor: 'rgba(244, 63, 94, 0.7)',
+                    },
+                    {
+                        label: 'Social Polarization',
+                        data: [7, 9],
+                        backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    scales: {
+                        x: { stacked: true, title: { display: true, text: 'Conceptual Impact Score' } },
+                        y: { stacked: true }
+                    },
+                    plugins: {
+                        datalabels: {
+                            color: 'white',
+                            font: { weight: 'bold' },
+                            formatter: (value, context) => {
+                                if (context.dataset.label.includes('Destruction')) {
+                                    return value > 0 ? value + 'M' : '';
+                                }
+                                return '';
+                            }
+                        },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.dataset.label.includes('Destruction')) {
+                                        label += context.raw + ' Million Estimated Deaths';
+                                    } else {
+                                        label += 'High Conceptual Impact';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Tooltip Charts
+            const tooltipChartOptions = {
+                plugins: { legend: { display: false }, datalabels: { display: false } }, 
+                scales: { 
+                    y: { ticks: { display: false }, grid: { color: '#475569'} }, 
+                    x: { ticks: { color: 'white', font: {size: 10} }, grid: { display: false } }
+                }
+            };
+
+            new Chart(document.getElementById('communism-chart-tooltip').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['1950', '1970', '1990'],
+                    datasets: [
+                        { label: 'West (Avg. GDP per capita)', data: [5000, 15000, 30000], borderColor: '#3b82f6', tension: 0.1, pointBackgroundColor: '#3b82f6' },
+                        { label: 'USSR (GDP per capita)', data: [2000, 6000, 6500], borderColor: '#ef4444', tension: 0.1, pointBackgroundColor: '#ef4444' }
+                    ]
+                },
+                options: tooltipChartOptions
+            });
+
+            new Chart(document.getElementById('feminism-chart-tooltip').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Uncontrolled', 'Controlled'],
+                    datasets: [{ 
+                        label: 'Pay Gap (cents per dollar)', 
+                        data: [18, 2], // Women earn 82c (18c gap), or 98c (2c gap)
+                        backgroundColor: ['#ef4444', '#10b981'],
+                        borderColor: ['#ef4444', '#10b981'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: { 
+                        legend: { display: false },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            color: 'white',
+                            formatter: (value) => value + '¢'
+                        }
+                    }, 
+                    scales: { 
+                        y: { ticks: { color: 'white'}, grid: { color: '#475569'} }, 
+                        x: { ticks: { color: 'white', font: {size: 10} }, grid: { display: false } }
+                    }
+                }
+            });
+            
+            new Chart(document.getElementById('polarization-chart-tooltip').getContext('2d'), {
+                 type: 'line',
+                data: {
+                    labels: ['1994', '2004', '2017'],
+                    datasets: [{
+                        label: 'Median Partisan Gap in Political Values',
+                        data: [15, 21, 36],
+                        borderColor: '#f97316',
+                        tension: 0.1,
+                        fill: false,
+                        pointBackgroundColor: '#f97316'
+                    }]
+                },
+                options: tooltipChartOptions
+            });
+        });
     </script>
 
 </body>
