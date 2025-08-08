@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Handheld PC Advisor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Tech-focused Dark Slate with Electric Blue and Violet accents. -->
+    <!-- Application Structure Plan: The app is structured into two primary, switchable views: "Current Devices" and "Future/Speculative". This directly addresses the user's request for two distinct lists. Within each view, a grid of device cards provides a high-level overview. The core interaction is clicking a card to launch a detailed modal. This modal is a mini-dashboard for that device, containing a spec table, a pros/cons list aligned with user priorities, and a dynamic radar chart for at-a-glance multi-axis comparison. This structure prevents overwhelming the user with information upfront, allowing them to explore devices of interest on demand. The separation of current vs. future devices makes the "wait or buy now" decision clearer. -->
+    <!-- Visualization & Content Choices: Report Info: Device specs, community reputation, form factor. Goal: Compare devices across user's 5 weighted priorities. Viz: Radar Chart (Chart.js) in a modal. Interaction: Clicking a device card dynamically generates and displays its unique radar chart. Justification: A radar chart is the most effective way to visualize a device's "profile" across multiple, distinct criteria (Performance, Comfort, Community, Form Factor, Support), allowing for rapid comparison of their strengths and weaknesses. Report Info: Lists of current and future devices. Goal: Organize and present two large sets of data. Presentation: Tabbed interface with interactive cards. Interaction: Tabs switch between the "Current" and "Future" datasets. Cards expand into detailed modals. Justification: Tabs are a standard, intuitive UI pattern for managing distinct content sections without cluttering the page. The card-to-modal flow encourages exploration without information overload. CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* gray-900 */
+            color: #d1d5db; /* gray-300 */
+        }
+        .glass-pane {
+            background: rgba(31, 41, 55, 0.6); /* gray-800 with opacity */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(55, 65, 81, 0.5); /* gray-700 with opacity */
+        }
+        .active-tab {
+            background-color: #4f46e5; /* indigo-600 */
+            color: #ffffff;
+        }
+        .inactive-tab {
+            background-color: #374151; /* gray-700 */
+            color: #d1d5db; /* gray-300 */
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            margin: 5% auto;
+            width: 90%;
+            max-width: 1000px;
+        }
+        .priority-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 4px;
+            border: 1px solid #4b5563;
+        }
+        .priority-filled {
+            background-color: #6d28d9; /* violet-700 */
+        }
+        .priority-high { background-color: #4f46e5; /* indigo-600 */ }
+        .priority-medium { background-color: #2563eb; /* blue-600 */ }
+        .priority-low { background-color: #374151; /* gray-700 */ }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 1rem auto;
+            height: 300px;
+        }
+        .comparison-chart-container {
+             position: relative;
+             width: 100%;
+             max-width: 500px;
+             margin: 1rem auto;
+             height: 400px;
+        }
+        .comparison-footer {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: bottom 0.3s ease-in-out;
+            z-index: 50;
+        }
+        .comparison-footer.visible {
+            bottom: 20px;
+        }
+        .device-card.selected {
+            border-color: #4f46e5; /* indigo-600 */
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.5);
+        }
+        .legend-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">Handheld PC Advisor</h1>
+            <p class="text-lg text-gray-400">Your Definitive Guide to High-Performance Handhelds</p>
+        </header>
+
+        <div class="mb-4 flex justify-center">
+            <div class="flex space-x-1 p-1 rounded-xl glass-pane">
+                <button id="tab-current" class="px-4 py-2 text-sm font-semibold rounded-lg transition-colors duration-300 active-tab">Current Devices</button>
+                <button id="tab-future" class="px-4 py-2 text-sm font-semibold rounded-lg transition-colors duration-300 inactive-tab">Future & Speculative</button>
+            </div>
+        </div>
+        
+        <div class="mb-8 text-center">
+            <button id="legend-toggle" class="text-indigo-400 font-semibold hover:text-indigo-300 transition-colors">Show Scoring Legend ▼</button>
+            <div id="legend-container" class="legend-content text-left max-w-5xl mx-auto mt-4 glass-pane p-6 rounded-xl">
+                <div id="legend-body" class="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6 text-sm"></div>
+            </div>
+        </div>
+
+        <main>
+            <div id="current-devices-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Device cards will be injected here -->
+            </div>
+            <div id="future-devices-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Device cards will be injected here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="device-modal" class="modal">
+        <div id="modal-content-container" class="modal-content glass-pane rounded-2xl p-6 md:p-8 relative">
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl font-bold">&times;</button>
+            <div id="modal-body">
+                <!-- Modal content will be injected here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Comparison Footer -->
+    <div id="comparison-footer" class="comparison-footer">
+        <div class="glass-pane p-2 rounded-xl flex items-center space-x-4">
+            <button id="compare-btn" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700 transition-colors">Compare (<span id="selection-count">0</span>)</button>
+            <button id="clear-selection-btn" class="bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">Clear</button>
+        </div>
+    </div>
+
+
+    <script>
+        const priorities = {
+            performance: { 
+                label: 'Performance', 
+                description: 'PS2/PS3 & PC Gaming Power',
+                legend: {
+                    '10': 'Flawless PS3 / High-end PC / Some PS4',
+                    '9': 'Excellent PS3 / Most PC Games',
+                    '7.5': 'Good PS Vita Emulation',
+                    '6': 'Full PS2 Emulation',
+                    '2': 'Full PSP Emulation',
+                    '0': 'Below PSP'
+                }
+            },
+            comfort: { 
+                label: 'Comfort & Portability', 
+                description: 'Ergonomics and Form Factor',
+                legend: {
+                    '10': 'Sub-550g & pocketable (e.g. clamshell)',
+                    '9': 'Sub-600g, very compact',
+                    '7-8': 'Balanced weight (~600-700g) & good ergonomics',
+                    '5-6': 'Heavy (>700g) or bulky',
+                    '3-4': 'Very heavy (>800g), poor for long sessions',
+                    '0-2': 'Extremely heavy (>900g), laptop-like'
+                }
+            },
+            community: { 
+                label: 'Community & Modding', 
+                description: 'Customization and Support',
+                legend: {
+                    '9-10': 'Massive, mainstream community (e.g. Steam Deck)',
+                    '7-8': 'Large, helpful community, easy to mod',
+                    '5-6': 'Active niche community, some custom FW',
+                    '3-4': 'Small community, difficult to mod',
+                    '0-2': 'No community, closed system'
+                }
+            },
+            form: { 
+                label: 'Keyboard/2nd Screen', 
+                description: 'Productivity Features',
+                legend: {
+                    '8-10': 'Excellent, highly usable implementation',
+                    '5-7': 'Functional but compromised (e.g. slider)',
+                    '1-4': 'Poor implementation (e.g. bad feel)',
+                    '0': 'None'
+                }
+            },
+            support: { 
+                label: 'Official Support', 
+                description: 'Manufacturer Reliability',
+                legend: {
+                    '9-10': 'Excellent, accessible support (e.g. Valve)',
+                    '7-8': 'Good support from a major OEM',
+                    '5-6': 'Inconsistent but functional (e.g. GPD)',
+                    '3-4': 'Lottery, slow, requires self-repair',
+                    '0-2': 'Non-existent, bad reputation (e.g. AYANEO)'
+                }
+            },
+            battery: {
+                label: 'Battery & Efficiency',
+                description: 'Real-world gameplay duration',
+                legend: {
+                    '9-10': 'Exceptional (8+ hrs)',
+                    '7-8': 'Very Good (5-7 hrs)',
+                    '5-6': 'Average (3-5 hrs)',
+                    '3-4': 'Below Average (2-3 hrs)',
+                    '0-2': 'Poor (<2 hrs)'
+                }
+            }
+        };
+
+        const currentDevices = [
+            { id: "gpd_win_mini_2025", name: "GPD Win Mini (2025)", img: "GPD+Win+Mini", scores: { performance: 9.2, comfort: 10, community: 7.2, form: 10, support: 5.5, battery: 5.0 }, specs: { soc: "Ryzen AI 9 HX370", screen: "7\" 120Hz VRR", weight: "520g" }, pros: ["Excellent PS3 & PC performance", "Excellent clamshell keyboard", "Extremely portable and pocketable"], cons: ["Boutique brand support lottery", "Average battery life for x86"] },
+            { id: "gpd_win_4_2025", name: "GPD Win 4 (2025)", img: "GPD+Win+4", scores: { performance: 9.2, comfort: 8.5, community: 8.0, form: 8.5, support: 5.5, battery: 5.0 }, specs: { soc: "Ryzen AI 9 HX370", screen: "6\" 60Hz", weight: "598g" }, pros: ["Excellent PS3 & PC performance", "Very compact slider design", "Active modding community"], cons: ["Known input lag issues (needs fix)", "Outdated 60Hz screen", "Boutique brand support"] },
+            { id: "ayaneo_flip_1s", name: "AYANEO Flip 1S", img: "AYANEO+Flip+1S", scores: { performance: 9.2, comfort: 7.5, community: 5.0, form: 10, support: 2.0, battery: 4.0 }, specs: { soc: "Ryzen AI 9 HX370", screen: "7\" 144Hz OLED + 4.5\" IPS", weight: "655g" }, pros: ["Excellent PS3 & PC performance", "Innovative dual-screen design", "Compact clamshell form"], cons: ["Extremely poor support reputation", "Known hardware quality issues (cracking)", "Sub-par battery"] },
+            { id: "onexplayer_x1", name: "OneXPlayer X1", img: "OneXPlayer+X1", scores: { performance: 9.5, comfort: 3.5, community: 4.0, form: 8.0, support: 3.0, battery: 6.0 }, specs: { soc: "Intel Core Ultra 7 155H", screen: "10.95\" 120Hz", weight: "789g+" }, pros: ["Excellent PS3 & PC performance", "Huge screen", "Detachable controllers"], cons: ["Tablet form factor; not a true handheld", "Poor support reputation"] },
+            { id: "ayaneo_slide", name: "AYANEO Slide", img: "AYANEO+Slide", scores: { performance: 8.2, comfort: 6.5, community: 5.0, form: 9.0, support: 2.0, battery: 4.0 }, specs: { soc: "Ryzen 7 7840U", screen: "6\" 60Hz", weight: "650g" }, pros: ["Good PS3 & PC performance", "Unique tilting screen", "Good keyboard"], cons: ["Fragile sliding mechanism", "Terrible support", "No headphone jack"] },
+            { id: "gpd_win_max_2", name: "GPD Win Max 2", img: "GPD+Win+Max+2", scores: { performance: 8.2, comfort: 2.0, community: 7.0, form: 10, support: 5.5, battery: 7.0 }, specs: { soc: "Ryzen 7 7840U", screen: "10.1\"", weight: "1005g" }, pros: ["Good PS3 & PC performance", "Full laptop-style keyboard", "Massive screen and battery"], cons: ["Extremely large and heavy; not a true handheld"] },
+            { id: "asus_rog_ally", name: "ASUS ROG Ally", img: "ROG+Ally", scores: { performance: 8.2, comfort: 8.8, community: 8.0, form: 0, support: 8.0, battery: 4.0 }, specs: { soc: "Ryzen Z1 Extreme", screen: "7\" 120Hz VRR", weight: "608g" }, pros: ["Good PS3 & PC performance", "Very comfortable and light", "Strong OEM support"], cons: ["Known SD card reader issues", "Poor battery life"] },
+            { id: "steam_deck_oled", name: "Steam Deck OLED", img: "Steam+Deck+OLED", scores: { performance: 6.5, comfort: 7.5, community: 10, form: 0, support: 9.0, battery: 8.0 }, specs: { soc: "Custom AMD APU", screen: "7.4\" 90Hz HDR OLED", weight: "640g" }, pros: ["Excellent for PS2 & PC games", "Massive community & easy modding", "Excellent official support and battery life"], cons: ["Struggles with many PS3 titles", "Objectively large and not pocketable"] },
+            { id: "ayn_odin_2_max", name: "AYN Odin 2 Max", img: "AYN+Odin+2+Max", scores: { performance: 7.0, comfort: 9.5, community: 7.5, form: 0, support: 3.5, battery: 10 }, specs: { soc: "Snapdragon 8 Gen 2", screen: "6\" IPS", weight: "420g" }, pros: ["Excellent for PS2 & Vita emulation", "Best-in-class battery life", "Extremely lightweight and comfortable"], cons: ["Cannot play Steam (PC) games", "Cannot emulate PS3", "Boutique brand support"] },
+            { id: "lenovo_legion_go", name: "Lenovo Legion Go", img: "Legion+Go", scores: { performance: 8.2, comfort: 4.0, community: 7.0, form: 0, support: 8.0, battery: 6.0 }, specs: { soc: "Ryzen Z1 Extreme", screen: "8.8\" 144Hz QHD+", weight: "854g" }, pros: ["Good PS3 & PC performance", "Huge, beautiful high-res screen", "Good official support"], cons: ["Extremely heavy and bulky", "Software needs refinement"] },
+            { id: "ayaneo_kun", name: "AYANEO Kun", img: "AYANEO+Kun", scores: { performance: 8.2, comfort: 3.0, community: 5.0, form: 0, support: 2.0, battery: 8.0 }, specs: { soc: "Ryzen 7 7840U", screen: "8.4\" QHD+", weight: "950g" }, pros: ["Good PS3 & PC performance", "Huge battery", "Large, high-res screen"], cons: ["Absurdly heavy; poor portability", "Very poor support reputation"] },
+            { id: "retroid_pocket_4_pro", name: "Retroid Pocket 4 Pro", img: "RP4+Pro", scores: { performance: 4.5, comfort: 9.8, community: 8.0, form: 0, support: 4.0, battery: 9.0 }, specs: { soc: "Dimensity 1100", screen: "4.7\" IPS", weight: "261g" }, pros: ["Excellent for PSP and some PS2", "Extremely portable and great battery", "Strong community for its class"], cons: ["Not a full PS2 device", "Cannot play Steam/PS3"] },
+        ];
+
+        const futureDevices = [
+            { id: "asus_rog_ally_2", name: "ASUS ROG Ally 2 (Rumor)", img: "ROG+Ally+2", scores: { performance: 10, comfort: 9, community: 8.5, form: 0, support: 8.0, battery: 6.0 }, specs: { soc: "Next-gen AMD/Intel?", screen: "Improved VRR screen?", weight: "~600g" }, pros: ["Expected excellent PS3 & PC performance", "Refined ergonomics from a major OEM"], cons: ["No keyboard/2nd screen", "Release likely late 2025"] },
+            { id: "ayaneo_flip_ds", name: "AYANEO Flip DS", img: "AYANEO+Flip+DS", scores: { performance: 9.5, comfort: 8.0, community: 5.0, form: 10, support: 2.0, battery: 5.0 }, specs: { soc: "Next-gen AMD/Intel?", screen: "7\" Main + 3.5\" Sub", weight: "~670g" }, pros: ["Expected excellent PS3 & PC performance", "True dual-screen experience"], cons: ["Will have AYANEO's poor support", "Likely to be very expensive"] },
+            { id: "steam_deck_2", name: "Steam Deck 2 (Speculation)", img: "Steam+Deck+2", scores: { performance: 8.5, comfort: 8.0, community: 10, form: 0, support: 9.0, battery: 8.0 }, specs: { soc: "Custom AMD Zen 5 APU?", screen: "OLED with VRR?", weight: "~650g" }, pros: ["Expected good PS3 performance", "Guaranteed excellent ergonomics & support"], cons: ["Likely 2026 or later", "Will still be a large device"] },
+            { id: "msi_claw_a8", name: "MSI Claw A8 (Upcoming)", img: "MSI+Claw+A8", scores: { performance: 9.5, comfort: 7.0, community: 6.0, form: 0, support: 7.0, battery: 7.0 }, specs: { soc: "Intel Lunar Lake", screen: "8\" 120Hz VRR", weight: "675g" }, pros: ["Expected excellent PS3 & PC performance", "Potentially very power efficient"], cons: ["Intel drivers can be hit-or-miss"] },
+            { id: "lenovo_legion_go_2", name: "Lenovo Legion Go 2 (Speculation)", img: "Legion+Go+2", scores: { performance: 10, comfort: 4.0, community: 7.0, form: 0, support: 8.0, battery: 7.0 }, specs: { soc: "Ryzen Z2 Extreme?", screen: "8.8\" OLED?", weight: "~850g" }, pros: ["Expected excellent PS3 & PC performance", "Potential for an even better large screen"], cons: ["Will likely remain very heavy"] },
+            { id: "gpd_win_5", name: "GPD Win 5 (Rumor)", img: "GPD+Win+5", scores: { performance: 9.5, comfort: 8.5, community: 7.0, form: 0, support: 5.5, battery: 6.0 }, specs: { soc: "Ryzen Z2 Extreme?", screen: "7\" OLED?", weight: "~600g" }, pros: ["Expected excellent PS3 & PC performance", "Likely to have refined ergonomics"], cons: ["Will inherit GPD support risks", "No physical keyboard"] },
+            { id: "ayaneo_next_2", name: "AYANEO Next 2", img: "AYANEO+Next+2", scores: { performance: 10, comfort: 5.0, community: 5.0, form: 0, support: 2.0, battery: 7.0 }, specs: { soc: "Next-gen AMD/Intel", screen: "8\" OLED?", weight: "~750g" }, pros: ["Top-tier performance expected", "Premium build materials"], cons: ["Guaranteed poor support", "Likely very heavy and expensive"] },
+            { id: "ayaneo_flip_2", name: "AYANEO Flip 2 (Speculation)", img: "AYANEO+Flip+2", scores: { performance: 10, comfort: 7.0, community: 5.0, form: 10, support: 2.0, battery: 5.0 }, specs: { soc: "Next-gen AMD/Intel?", screen: "Improved dual-screen setup?", weight: "~650g" }, pros: ["Expected excellent PS3 & PC performance", "Will push dual-screen innovation"], cons: ["Guaranteed to have AYANEO's poor support"] },
+            { id: "zotac_zone_2", name: "Zotac Zone 2 (Upcoming)", img: "Zotac+Zone+2", scores: { performance: 9.0, comfort: 6.0, community: 6.0, form: 0, support: 6.0, battery: 5.0 }, specs: { soc: "Ryzen AI 9 HX370", screen: "7\" 120Hz AMOLED", weight: "~700g" }, pros: ["Excellent PS3 & PC performance", "Promising AMOLED screen"], cons: ["Unproven ergonomics and software", "Heavier than key competitors"] },
+            { id: "adata_xpg_nia", name: "ADATA XPG Nia (Upcoming)", img: "ADATA+XPG+Nia", scores: { performance: 9.0, comfort: 7.0, community: 6.0, form: 0, support: 5.0, battery: 6.0 }, specs: { soc: "Custom AMD APU", screen: "Eye-tracking screen?", weight: "TBD" }, pros: ["Focus on upgradable RAM/SSD", "Potentially innovative eye-tracking"], cons: ["Unproven brand in handhelds"] },
+            { id: "orange_pi_neo", name: "Orange Pi Neo", img: "OrangePi+Neo", scores: { performance: 8.2, comfort: 7.0, community: 6.5, form: 0, support: 4.0, battery: 5.0 }, specs: { soc: "Ryzen 7 7840U", screen: "7\" 120Hz", weight: "600g" }, pros: ["Good PS3 & PC performance", "Manjaro Linux option", "Competitive pricing"], cons: ["New entrant, unproven support", "Generic design"] },
+            { id: "playstation_handheld", name: "PlayStation Handheld (Rumor)", img: "PS+Handheld", scores: { performance: 4.0, comfort: 6.0, community: 2.0, form: 0, support: 9.0, battery: 6.0 }, specs: { soc: "Custom AMD APU", screen: "TBD", weight: "TBD" }, pros: ["Deep integration with PS ecosystem", "Guaranteed high-quality hardware", "Excellent OEM support"], cons: ["Will not be an open PC; no emulators", "Expected to be bulky", "Closed ecosystem"] },
+            { id: "xbox_handheld", name: "Xbox Handheld (Rumor)", img: "Xbox+Handheld", scores: { performance: 4.0, comfort: 6.0, community: 2.0, form: 0, support: 9.0, battery: 6.0 }, specs: { soc: "Custom AMD/Intel APU", screen: "TBD", weight: "TBD" }, pros: ["Native Game Pass experience", "High-quality hardware from Microsoft", "Excellent OEM support"], cons: ["Will be a locked-down OS; no emulators", "Expected to be bulky", "Closed ecosystem"] },
+        ];
+        
+        let selectedDevices = [];
+
+        function createDeviceCard(device, isFuture = false) {
+            const totalScore = Object.values(device.scores).reduce((sum, score) => sum + score, 0);
+            let priorityHtml = '';
+            const priorityOrder = ['performance', 'comfort', 'community', 'form', 'support', 'battery'];
+            priorityOrder.forEach(p => {
+                const score = device.scores[p];
+                let colorClass = 'priority-low';
+                if (score > 7) colorClass = 'priority-high';
+                else if (score > 4) colorClass = 'priority-medium';
+                priorityHtml += `<div class="flex items-center" title="${priorities[p].label}: ${priorities[p].description}"><div class="w-4 h-4 ${colorClass} rounded-sm mr-2"></div><span class="text-xs text-gray-400">${priorities[p].label.split(' ')[0]}</span></div>`;
+            });
+            
+            const card = document.createElement('div');
+            card.className = 'device-card glass-pane rounded-2xl p-4 flex flex-col justify-between transition-all duration-300 relative';
+            card.dataset.deviceId = device.id;
+            card.innerHTML = `
+                <div class="absolute top-2 right-2 z-10">
+                    <input type="checkbox" class="device-checkbox h-5 w-5 rounded bg-gray-700 border-gray-500 text-indigo-600 focus:ring-indigo-500">
+                </div>
+                <div class="cursor-pointer flex-grow flex flex-col" onclick="openModalById('${device.id}')">
+                    <img src="https://placehold.co/600x400/1f2937/d1d5db?text=${device.img}" alt="${device.name}" class="w-full h-40 object-cover rounded-lg mb-4" onerror="this.onerror=null;this.src='https://placehold.co/600x400/1f2937/d1d5db?text=Image+Error';">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-white text-lg">${device.name}</h3>
+                        <span class="text-lg font-bold text-indigo-300 bg-indigo-900/50 px-2 py-1 rounded-md">${totalScore.toFixed(1)}</span>
+                    </div>
+                    <p class="text-sm text-indigo-400 font-semibold mb-3 flex-grow">${isFuture ? 'Speculative / Upcoming' : 'Currently Available'}</p>
+                    <div class="grid grid-cols-2 gap-1 mt-auto">
+                        ${priorityHtml}
+                    </div>
+                </div>
+            `;
+            
+            const checkbox = card.querySelector('.device-checkbox');
+            checkbox.addEventListener('change', (e) => {
+                e.stopPropagation();
+                if (e.target.checked) {
+                    if (!selectedDevices.includes(device.id)) {
+                        selectedDevices.push(device.id);
+                    }
+                    card.classList.add('selected');
+                } else {
+                    selectedDevices = selectedDevices.filter(id => id !== device.id);
+                    card.classList.remove('selected');
+                }
+                updateComparisonFooter();
+            });
+
+            return card;
+        }
+        
+        function findDeviceById(id) {
+            return [...currentDevices, ...futureDevices].find(d => d.id === id);
+        }
+
+        function openModalById(id) {
+            const device = findDeviceById(id);
+            if (device) openModal(device);
+        }
+
+        function openModal(device) {
+            const modal = document.getElementById('device-modal');
+            const modalBody = document.getElementById('modal-body');
+
+            modalBody.innerHTML = `
+                <h2 class="text-3xl font-extrabold text-white mb-2">${device.name}</h2>
+                <div class="md:flex md:space-x-8">
+                    <div class="md:w-1/2">
+                        <h3 class="font-bold text-xl text-indigo-400 mt-4 mb-2">Priority Breakdown</h3>
+                        <div class="chart-container">
+                            <canvas id="radar-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <h3 class="font-bold text-xl text-indigo-400 mt-4 mb-2">Deep-Dive Analysis</h3>
+                        <div class="bg-gray-900/50 p-4 rounded-lg mb-4">
+                            <h4 class="font-semibold text-white mb-2">Pros:</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1">${device.pros.map(p => `<li>${p}</li>`).join('')}</ul>
+                        </div>
+                        <div class="bg-gray-900/50 p-4 rounded-lg">
+                            <h4 class="font-semibold text-white mb-2">Cons:</h4>
+                            <ul class="list-disc list-inside text-sm space-y-1">${device.cons.map(c => `<li>${c}</li>`).join('')}</ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h3 class="font-bold text-xl text-indigo-400 mb-2">Key Specifications</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-gray-400 uppercase bg-gray-900/50">
+                                <tr><th class="px-4 py-2">SoC</th><th class="px-4 py-2">Screen</th><th class="px-4 py-2">Weight</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-gray-700">
+                                    <td class="px-4 py-2">${device.specs.soc}</td>
+                                    <td class="px-4 py-2">${device.specs.screen}</td>
+                                    <td class="px-4 py-2">${device.specs.weight}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            
+            const ctx = document.getElementById('radar-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: Object.values(priorities).map(p => p.label.replace(' & ', ' & \n')),
+                    datasets: [{
+                        label: device.name,
+                        data: Object.keys(priorities).map(p => device.scores[p]),
+                        backgroundColor: 'rgba(79, 70, 229, 0.2)',
+                        borderColor: 'rgba(79, 70, 229, 1)',
+                        pointBackgroundColor: 'rgba(79, 70, 229, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(79, 70, 229, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255, 255, 255, 0.2)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.2)' },
+                            pointLabels: { font: { size: 11 }, color: '#d1d5db' },
+                            ticks: { display: false, stepSize: 2 },
+                            min: 0,
+                            max: 10
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        
+        function openComparisonModal() {
+            const devicesToCompare = selectedDevices.map(id => findDeviceById(id));
+            if (devicesToCompare.length < 2) return;
+
+            const modal = document.getElementById('device-modal');
+            const modalBody = document.getElementById('modal-body');
+            
+            let tableHtml = `
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead>
+                            <tr class="text-xs text-gray-400 uppercase bg-gray-900/50">
+                                <th class="px-4 py-2">Feature</th>
+                                ${devicesToCompare.map(d => `<th class="px-4 py-2 text-center">${d.name}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            const specKeys = ['soc', 'screen', 'weight'];
+            specKeys.forEach(key => {
+                tableHtml += `<tr class="border-b border-gray-700"><td class="px-4 py-2 font-semibold capitalize">${key}</td>`;
+                devicesToCompare.forEach(d => {
+                    tableHtml += `<td class="px-4 py-2 text-center">${d.specs[key]}</td>`;
+                });
+                tableHtml += `</tr>`;
+            });
+
+            Object.keys(priorities).forEach(key => {
+                tableHtml += `<tr class="border-b border-gray-700"><td class="px-4 py-2 font-semibold capitalize">${priorities[key].label}</td>`;
+                devicesToCompare.forEach(d => {
+                    tableHtml += `<td class="px-4 py-2 text-center font-bold text-lg text-indigo-400">${d.scores[key]}</td>`;
+                });
+                tableHtml += `</tr>`;
+            });
+
+            // Add Total Score Row
+            tableHtml += `<tr class="border-t-2 border-indigo-500 bg-gray-900/30"><td class="px-4 py-2 font-extrabold text-white">Total Score</td>`;
+            devicesToCompare.forEach(d => {
+                const totalScore = Object.values(d.scores).reduce((s, c) => s + c, 0);
+                tableHtml += `<td class="px-4 py-2 text-center font-extrabold text-xl text-white">${totalScore.toFixed(1)}</td>`;
+            });
+            tableHtml += `</tr>`;
+
+
+            tableHtml += `</tbody></table></div>`;
+
+            modalBody.innerHTML = `
+                <h2 class="text-3xl font-extrabold text-white mb-4">Device Comparison</h2>
+                <div class="lg:flex lg:space-x-8">
+                    <div class="lg:w-1/2">
+                        <div class="comparison-chart-container">
+                            <canvas id="comparison-radar-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2">
+                        ${tableHtml}
+                    </div>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+
+            const ctx = document.getElementById('comparison-radar-chart').getContext('2d');
+            const datasets = devicesToCompare.map((device, index) => {
+                const colors = [
+                    { bg: 'rgba(79, 70, 229, 0.2)', border: 'rgba(79, 70, 229, 1)' },   // Indigo
+                    { bg: 'rgba(168, 85, 247, 0.2)', border: 'rgba(168, 85, 247, 1)' }, // Purple
+                    { bg: 'rgba(219, 39, 119, 0.2)', border: 'rgba(219, 39, 119, 1)' }, // Pink
+                    { bg: 'rgba(14, 165, 233, 0.2)', border: 'rgba(14, 165, 233, 1)' }, // Sky
+                ];
+                const color = colors[index % colors.length];
+                return {
+                    label: device.name,
+                    data: Object.keys(priorities).map(p => device.scores[p]),
+                    backgroundColor: color.bg,
+                    borderColor: color.border,
+                    pointBackgroundColor: color.border,
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: color.border,
+                    borderWidth: 2
+                }
+            });
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: Object.values(priorities).map(p => p.label.replace(' & ', ' & \n')),
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255, 255, 255, 0.2)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.2)' },
+                            pointLabels: { font: { size: 11 }, color: '#d1d5db' },
+                            ticks: { display: false, stepSize: 2 },
+                            min: 0,
+                            max: 10
+                        }
+                    },
+                    plugins: { legend: { position: 'top', labels: { color: '#d1d5db' } } }
+                }
+            });
+        }
+
+        function updateComparisonFooter() {
+            const footer = document.getElementById('comparison-footer');
+            const countSpan = document.getElementById('selection-count');
+            countSpan.textContent = selectedDevices.length;
+            if (selectedDevices.length > 0) {
+                footer.classList.add('visible');
+            } else {
+                footer.classList.remove('visible');
+            }
+        }
+        
+        function clearSelection() {
+            selectedDevices = [];
+            document.querySelectorAll('.device-checkbox').forEach(cb => cb.checked = false);
+            document.querySelectorAll('.device-card').forEach(card => card.classList.remove('selected'));
+            updateComparisonFooter();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const sortDevices = (devices) => {
+                return devices.sort((a, b) => {
+                    const scoreA = Object.values(a.scores).reduce((s, c) => s + c, 0);
+                    const scoreB = Object.values(b.scores).reduce((s, c) => s + c, 0);
+                    return scoreB - scoreA;
+                });
+            };
+
+            const currentGrid = document.getElementById('current-devices-grid');
+            const futureGrid = document.getElementById('future-devices-grid');
+            
+            sortDevices(currentDevices).forEach(device => currentGrid.appendChild(createDeviceCard(device, false)));
+            sortDevices(futureDevices).forEach(device => futureGrid.appendChild(createDeviceCard(device, true)));
+
+            const tabCurrent = document.getElementById('tab-current');
+            const tabFuture = document.getElementById('tab-future');
+
+            tabCurrent.addEventListener('click', () => {
+                currentGrid.classList.remove('hidden');
+                futureGrid.classList.add('hidden');
+                tabCurrent.classList.add('active-tab');
+                tabCurrent.classList.remove('inactive-tab');
+                tabFuture.classList.add('inactive-tab');
+                tabFuture.classList.remove('active-tab');
+            });
+
+            tabFuture.addEventListener('click', () => {
+                currentGrid.classList.add('hidden');
+                futureGrid.classList.remove('hidden');
+                tabFuture.classList.add('active-tab');
+                tabFuture.classList.remove('inactive-tab');
+                tabCurrent.classList.add('inactive-tab');
+                tabCurrent.classList.remove('active-tab');
+            });
+
+            const modal = document.getElementById('device-modal');
+            document.getElementById('close-modal').addEventListener('click', () => modal.style.display = 'none');
+            window.addEventListener('click', (event) => {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            document.getElementById('compare-btn').addEventListener('click', openComparisonModal);
+            document.getElementById('clear-selection-btn').addEventListener('click', clearSelection);
+            
+            const legendToggle = document.getElementById('legend-toggle');
+            const legendContainer = document.getElementById('legend-container');
+            const legendBody = document.getElementById('legend-body');
+
+            Object.values(priorities).forEach(p => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'text-gray-300';
+                let legendHtml = `<h4 class="font-bold text-white mb-2">${p.label}</h4><ul>`;
+                
+                const sortedLegendKeys = Object.keys(p.legend).sort((a, b) => parseFloat(b) - parseFloat(a));
+
+                sortedLegendKeys.forEach(score => {
+                    const desc = p.legend[score];
+                    legendHtml += `<li class="mb-1"><strong class="text-indigo-400 w-12 inline-block">${score}:</strong> ${desc}</li>`;
+                });
+                legendHtml += `</ul>`;
+                categoryDiv.innerHTML = legendHtml;
+                legendBody.appendChild(categoryDiv);
+            });
+
+            legendToggle.addEventListener('click', () => {
+                if (legendContainer.style.maxHeight) {
+                    legendContainer.style.maxHeight = null;
+                    legendToggle.textContent = 'Show Scoring Legend ▼';
+                } else {
+                    legendContainer.style.maxHeight = legendContainer.scrollHeight + "px";
+                    legendToggle.textContent = 'Hide Scoring Legend ▲';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
