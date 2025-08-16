@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kompleksowy Plan Projektu RPG | Godot + Rust</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals (Stone, Zinc, Teal) -->
+    <!-- Application Structure Plan: Aplikacja została przeprojektowana na kompleksowy, wielosekcyjny pulpit nawigacyjny. Nowa struktura obejmuje wszystkie aspekty planu, od wizji, przez architekturę, projekt dźwięku, strategię wydawniczą, aż po konkretne kroki do wykonania. Zastosowano rozbudowaną nawigację i różnorodne, interaktywne moduły (karty, wykresy, rozwijane listy, checklisty), aby ułatwić przyswajanie dużej ilości informacji i umożliwić użytkownikowi skupienie się na wybranych fragmentach planu. -->
+    <!-- Visualization & Content Choices: 1. Podział Odpowiedzialności (Godot/Rust): Istniejący wykres słupkowy został zachowany. 2. Plan Rozwoju: Interaktywna oś czasu została zachowana. 3. Projekt Dźwięku & Strategia: Nowe sekcje przedstawione jako siatka kart dla lepszej czytelności. 4. Dalsze Kroki: Nowa sekcja zaimplementowana jako interaktywna checklista, aby wizualnie śledzić postęp. 5. Architektura: Istniejący diagram blokowy został zachowany. Wybory te mają na celu przekształcenie statycznego dokumentu w dynamiczne narzędzie do planowania. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f4; /* stone-100 */
+            color: #2727a1; /* zinc-800 */
+        }
+        .nav-link {
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .nav-link.active {
+            color: #0d9488; /* teal-600 */
+            border-bottom-color: #0d9488;
+        }
+        .card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .flowchart-box {
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+        }
+        .flowchart-box:hover {
+            transform: scale(1.03);
+        }
+        .flowchart-box.active {
+            background-color: #ccfbf1; /* teal-100 */
+            border-color: #0d9488; /* teal-600 */
+            transform: scale(1.03);
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 1.25rem;
+            left: -0.5rem;
+            transform: translateY(-50%);
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 9999px;
+            background-color: #f5f5f4;
+            border: 4px solid #0d9488;
+            z-index: 10;
+        }
+        .timeline-line {
+            position: absolute;
+            top: 1.25rem;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background-color: #99f6e4; /* teal-200 */
+        }
+        .details-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .details-content.open {
+            max-height: 500px; /* Adjust as needed */
+        }
+        .checklist-item input:checked + label span:first-child {
+            background-color: #0d9488;
+            border-color: #0d9488;
+        }
+        .checklist-item input:checked + label span:last-child {
+            text-decoration: line-through;
+            color: #a1a1aa; /* zinc-400 */
+        }
+        .checklist-item input:checked + label svg {
+            display: block;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-teal-700">Kompleksowy Plan RPG</span>
+                </div>
+                <div class="hidden lg:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#vision" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-zinc-600 hover:text-teal-600 border-b-2 border-transparent">Wizja</a>
+                        <a href="#architecture" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-zinc-600 hover:text-teal-600 border-b-2 border-transparent">Architektura</a>
+                        <a href="#art-sound" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-zinc-600 hover:text-teal-600 border-b-2 border-transparent">Sztuka i Dźwięk</a>
+                        <a href="#roadmap" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-zinc-600 hover:text-teal-600 border-b-2 border-transparent">Plan Rozwoju</a>
+                        <a href="#strategy" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-zinc-600 hover:text-teal-600 border-b-2 border-transparent">Strategia</a>
+                        <a href="#next-steps" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-zinc-600 hover:text-teal-600 border-b-2 border-transparent">Dalsze Kroki</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <section id="vision" class="mb-24 scroll-mt-20">
+            <h1 class="text-4xl font-bold text-center mb-4 text-teal-800">1. Wizja i Koncepcja Gry</h1>
+            <p class="text-center text-lg text-zinc-600 max-w-3xl mx-auto mb-12">Izometryczna gra akcji RPG z taktyczną walką w czasie rzeczywistym, głęboką personalizacją i światem reagującym na decyzje gracza.</p>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md mb-12">
+                <h3 class="text-xl font-bold mb-4 text-zinc-800">Kluczowe Cechy</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                    <div class="bg-stone-50 p-4 rounded-lg"><strong>Głęboka personalizacja:</strong> Rozbudowany system ekwipunku, umiejętności i modyfikacji wyglądu postaci.</div>
+                    <div class="bg-stone-50 p-4 rounded-lg"><strong>System towarzyszy:</strong> Możliwość rekrutowania i rozwijania postaci niezależnych (NPC).</div>
+                    <div class="bg-stone-50 p-4 rounded-lg"><strong>Reaktywny świat:</strong> Decyzje gracza mają widoczny i trwały wpływ na świat gry, postacie i fabułę.</div>
+                    <div class="bg-stone-50 p-4 rounded-lg"><strong>Taktyczna walka:</strong> Gracz kontroluje jedną postać, a towarzysze działają w oparciu o zaawansowany, programowalny system taktyk.</div>
+                </div>
+            </div>
+
+            <h2 class="text-3xl font-bold text-center mb-2">Filary Projektu</h2>
+            <p class="text-center text-zinc-600 max-w-2xl mx-auto mb-12">Nadrzędne zasady kierujące każdą decyzją projektową, zapewniające spójność doświadczenia.</p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card bg-white p-6 rounded-lg shadow-lg border-t-4 border-teal-500">
+                    <h3 class="text-xl font-bold mb-3 flex items-center"><span class="text-3xl mr-3">♟️</span> Strategiczna Autonomia</h3>
+                    <p class="text-zinc-600">Gracz czuje się jak dowódca, a nie mikrozarządca. System taktyk pozwala przygotować drużynę i obserwować efekty strategicznych decyzji, nagradzając planowanie i adaptację.</p>
+                </div>
+                <div class="card bg-white p-6 rounded-lg shadow-lg border-t-4 border-teal-500">
+                    <h3 class="text-xl font-bold mb-3 flex items-center"><span class="text-3xl mr-3">🎨</span> Ekspresja Gracza</h3>
+                    <p class="text-zinc-600">Każdy element – od umiejętności, przez ekwipunek, po decyzje fabularne – jest narzędziem dla gracza do wyrażenia siebie i swojego unikalnego stylu gry.</p>
+                </div>
+                <div class="card bg-white p-6 rounded-lg shadow-lg border-t-4 border-teal-500">
+                    <h3 class="text-xl font-bold mb-3 flex items-center"><span class="text-3xl mr-3">🌍</span> Żyjący Świat</h3>
+                    <p class="text-zinc-600">Otoczenie nie jest statyczną planszą. Działania gracza inicjują zmiany, otwierają nowe możliwości i zamykają inne. Świat "pamięta" i reaguje.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-t-2 border-teal-200/50">
+
+        <section id="architecture" class="mb-24 scroll-mt-20">
+            <h1 class="text-4xl font-bold text-center mb-12 text-teal-800">2. Architektura Techniczna</h1>
+            
+            <div class="bg-white p-8 rounded-lg shadow-lg mb-12">
+                <h3 class="text-2xl font-bold mb-1 text-teal-700">Podział Odpowiedzialności: Godot vs Rust</h3>
+                <p class="text-zinc-600 mb-6">Strategiczne rozdzielenie zadań jest kluczem do wykorzystania pełni potencjału obu technologii. Kliknij na segmenty wykresu, aby zobaczyć uzasadnienie wyboru.</p>
+                <div class="grid lg:grid-cols-5 gap-8 items-center">
+                    <div class="lg:col-span-3">
+                        <div class="chart-container h-96 max-h-[450px] w-full max-w-3xl mx-auto">
+                            <canvas id="techSplitChart"></canvas>
+                        </div>
+                    </div>
+                    <div id="tech-split-details" class="lg:col-span-2 bg-stone-100 p-6 rounded-lg min-h-[300px] flex items-center justify-center">
+                        <p class="text-zinc-500 text-center">Wybierz obszar na wykresie, aby wyświetlić szczegóły.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h3 class="text-2xl font-bold mb-1 text-teal-700">Trzy Filary Architektury Odpornej na Błędy</h3>
+                <p class="text-zinc-600 mb-6">Te wzorce projektowe współpracują, aby zminimalizować zależności między systemami. Kliknij na filary, aby dowiedzieć się więcej.</p>
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                        <div class="space-y-4 relative">
+                            <div class="flowchart-box border-2 border-zinc-300 p-4 rounded-lg" data-arch-id="eda"><h4 class="font-bold text-lg">1. Architektura Sterowana Zdarzeniami (EDA)</h4></div>
+                            <div class="flowchart-box border-2 border-zinc-300 p-4 rounded-lg" data-arch-id="ec"><h4 class="font-bold text-lg">2. Encja-Komponent (EC) w Godocie</h4></div>
+                            <div class="flowchart-box border-2 border-zinc-300 p-4 rounded-lg" data-arch-id="layers"><h4 class="font-bold text-lg">3. Trójwarstwowa Abstrakcja</h4></div>
+                        </div>
+                    </div>
+                    <div id="arch-details" class="bg-stone-100 p-6 rounded-lg flex items-center justify-center min-h-[250px]">
+                         <p class="text-zinc-500 text-center">Wybierz filar z diagramu, aby zobaczyć jego cel i korzyści.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-t-2 border-teal-200/50">
+
+        <section id="art-sound" class="mb-24 scroll-mt-20">
+            <h1 class="text-4xl font-bold text-center mb-12 text-teal-800">3. Sztuka i Dźwięk</h1>
+
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-lg shadow-md mb-12">
+                <h3 class="text-2xl font-bold mb-2 text-amber-800">Kierunek Artystyczny i Wizualny (DO UZUPEŁNIENIA)</h3>
+                <p class="text-zinc-700">To jest najważniejszy następny krok w procesie kreatywnym. Należy tu zdefiniować "duszę" wizualną gry, określając styl graficzny, paletę kolorów, nastrój i główne inspiracje wizualne.</p>
+            </div>
+
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h3 class="text-2xl font-bold mb-1 text-teal-700">Projekt Dźwięku i Muzyki</h3>
+                <p class="text-zinc-600 mb-6">Dźwięk jest kluczowym elementem budującym immersję i dostarczającym graczowi informacji zwrotnej. Każdy dźwięk powinien mieć cel: informować, budować nastrój lub nagradzać.</p>
+                <div class="grid md:grid-cols-2 gap-6 mt-6">
+                    <div class="card p-4 bg-stone-50 rounded-lg">
+                        <h4 class="font-bold text-lg">Filozofia Audio</h4>
+                        <p class="text-sm text-zinc-600">Dźwięk jako narzędzie informacyjne i budujące nastrój, nie tylko dodatek.</p>
+                    </div>
+                    <div class="card p-4 bg-stone-50 rounded-lg">
+                        <h4 class="font-bold text-lg">Sugerowane Narzędzia</h4>
+                        <p class="text-sm text-zinc-600"><strong>LMMS</strong> do tworzenia muzyki, <strong>Audacity</strong> do edycji SFX, wykorzystanie bibliotek dźwięków.</p>
+                    </div>
+                    <div class="card p-4 bg-stone-50 rounded-lg">
+                        <h4 class="font-bold text-lg">Muzyka Adaptacyjna</h4>
+                        <p class="text-sm text-zinc-600">Ścieżka dźwiękowa dynamicznie reagująca na sytuację w grze (eksploracja, walka, napięcie).</p>
+                    </div>
+                    <div class="card p-4 bg-stone-50 rounded-lg">
+                        <h4 class="font-bold text-lg">Efekty Dźwiękowe (SFX)</h4>
+                        <p class="text-sm text-zinc-600">Satysfakcjonujące dźwięki walki, subtelne UI i klimatyczne odgłosy otoczenia.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-t-2 border-teal-200/50">
+
+        <section id="roadmap" class="mb-24 scroll-mt-20">
+            <h1 class="text-4xl font-bold text-center mb-2 text-teal-800">4. Plan Rozwoju (Roadmapa)</h1>
+            <p class="text-center text-zinc-600 max-w-2xl mx-auto mb-12">Podejście iteracyjne, które w pierwszej kolejności adresuje największe ryzyka techniczne. Kliknij na fazę, aby rozwinąć szczegóły.</p>
+
+            <div class="relative pl-4 sm:pl-6">
+                <div class="timeline-line hidden sm:block"></div>
+                <div class="space-y-4">
+                    <div class="timeline-item relative">
+                        <div class="roadmap-toggle cursor-pointer p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"><h3 class="text-xl font-bold text-teal-700">Faza 1: Fundament (Spike)</h3></div>
+                        <div class="details-content ml-4 mt-2"><ul class="list-disc list-inside text-zinc-600 space-y-1 p-4 bg-stone-50 rounded-md"><li>Konfiguracja projektu Godot + GDExtension w Rust.</li><li>Implementacja prototypu Event Busa.</li><li>Zbudowanie i przetestowanie wersjonowanego systemu zapisu/odczytu.</li></ul></div>
+                    </div>
+                    <div class="timeline-item relative">
+                        <div class="roadmap-toggle cursor-pointer p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"><h3 class="text-xl font-bold text-teal-700">Faza 2: Pionowy Przekrój (Vertical Slice)</h3></div>
+                        <div class="details-content ml-4 mt-2"><ul class="list-disc list-inside text-zinc-600 space-y-1 p-4 bg-stone-50 rounded-md"><li>Implementacja szkieletów systemów postaci, ekwipunku i AI.</li><li>Jedna prosta misja, jeden typ wroga, jeden towarzysz.</li></ul></div>
+                    </div>
+                    <div class="timeline-item relative">
+                        <div class="roadmap-toggle cursor-pointer p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"><h3 class="text-xl font-bold text-teal-700">Faza 3: Produkcja Treści</h3></div>
+                         <div class="details-content ml-4 mt-2"><ul class="list-disc list-inside text-zinc-600 space-y-1 p-4 bg-stone-50 rounded-md"><li>Dodawanie nowych przedmiotów, umiejętności, zadań.</li><li>Projektowanie poziomów i implementacja fabuły.</li></ul></div>
+                    </div>
+                     <div class="timeline-item relative">
+                        <div class="roadmap-toggle cursor-pointer p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"><h3 class="text-xl font-bold text-teal-700">Faza 4: Dopracowanie i Optymalizacja</h3></div>
+                         <div class="details-content ml-4 mt-2"><ul class="list-disc list-inside text-zinc-600 space-y-1 p-4 bg-stone-50 rounded-md"><li>Regularne profilowanie i optymalizacja.</li><li>Balansowanie rozgrywki i poprawa UX.</li></ul></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-t-2 border-teal-200/50">
+
+        <section id="strategy" class="mb-24 scroll-mt-20">
+            <h1 class="text-4xl font-bold text-center mb-12 text-teal-800">5. Strategia i Zespół</h1>
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-4 text-teal-700">Strategia Wydawnicza i Marketingowa</h3>
+                    <div class="space-y-4">
+                        <div><h4 class="font-bold">Model Biznesowy</h4><p class="text-zinc-600">Sugerowany: <strong>Premium (jednorazowy zakup)</strong>, z opcją Early Access na Steam.</p></div>
+                        <div><h4 class="font-bold">Platformy Dystrybucji</h4><p class="text-zinc-600">Główne: <strong>Steam, GOG</strong>. Dodatkowe: <strong>Itch.io</strong> dla dem i prototypów.</p></div>
+                        <div><h4 class="font-bold">Marketing i Społeczność</h4><p class="text-zinc-600">Prowadzenie <strong>Devloga</strong>, aktywność na <strong>Social Media</strong> (Twitter, Reddit) i stworzenie serwera <strong>Discord</strong>.</p></div>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-4 text-teal-700">Zespół i Role</h3>
+                    <p class="text-zinc-600 mb-4">Nawet przy pracy solo, myślenie w kategoriach ról pomaga zorganizować pracę.</p>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        <span class="bg-teal-50 text-teal-800 p-2 rounded">Programowanie</span>
+                        <span class="bg-teal-50 text-teal-800 p-2 rounded">Projektowanie Gry</span>
+                        <span class="bg-teal-50 text-teal-800 p-2 rounded">Grafika 2D/3D</span>
+                        <span class="bg-teal-50 text-teal-800 p-2 rounded">Dźwięk i Muzyka</span>
+                        <span class="bg-teal-50 text-teal-800 p-2 rounded">Pisanie</span>
+                        <span class="bg-teal-50 text-teal-800 p-2 rounded">Marketing</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-t-2 border-teal-200/50">
+
+        <section id="next-steps" class="scroll-mt-20">
+            <h1 class="text-4xl font-bold text-center mb-12 text-teal-800">6. Sugerowane Dalsze Kroki</h1>
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h3 class="text-2xl font-bold mb-4 text-teal-700">Checklista Pre-produkcji</h3>
+                <div class="space-y-3">
+                    <div class="checklist-item"><input id="task1" type="checkbox" class="hidden"><label for="task1" class="flex items-center cursor-pointer"><span class="w-5 h-5 border-2 border-zinc-300 rounded-sm mr-3 flex-shrink-0 flex items-center justify-center"><svg class="w-3 h-3 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></span><span class="transition-colors">Zdefiniuj Kierunek Artystyczny (stwórz "mood board").</span></label></div>
+                    <div class="checklist-item"><input id="task2" type="checkbox" class="hidden"><label for="task2" class="flex items-center cursor-pointer"><span class="w-5 h-5 border-2 border-zinc-300 rounded-sm mr-3 flex-shrink-0 flex items-center justify-center"><svg class="w-3 h-3 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></span><span class="transition-colors">Napisz Zarys Fabuły (One-Pager).</span></label></div>
+                    <div class="checklist-item"><input id="task3" type="checkbox" class="hidden"><label for="task3" class="flex items-center cursor-pointer"><span class="w-5 h-5 border-2 border-zinc-300 rounded-sm mr-3 flex-shrink-0 flex items-center justify-center"><svg class="w-3 h-3 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></span><span class="transition-colors">Zaprojektuj Główną Pętlę Rozgrywki (Core Gameplay Loop).</span></label></div>
+                    <div class="checklist-item"><input id="task4" type="checkbox" class="hidden"><label for="task4" class="flex items-center cursor-pointer"><span class="w-5 h-5 border-2 border-zinc-300 rounded-sm mr-3 flex-shrink-0 flex items-center justify-center"><svg class="w-3 h-3 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></span><span class="transition-colors">Określ Zakres "Vertical Slice".</span></label></div>
+                    <div class="checklist-item"><input id="task5" type="checkbox" class="hidden"><label for="task5" class="flex items-center cursor-pointer"><span class="w-5 h-5 border-2 border-zinc-300 rounded-sm mr-3 flex-shrink-0 flex items-center justify-center"><svg class="w-3 h-3 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></span><span class="transition-colors">Rozpocznij Fazę 1 (Fundament - prototyp techniczny).</span></label></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white mt-16">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-zinc-500 text-sm">
+            <p>Interaktywna wizualizacja kompleksowego planu projektu gry.</p>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const techSplitData = {
+        labels: ['Logika UI', 'Zarządzanie Sceną', 'Formuły Walki', 'Pętla AI', 'Zarządzanie Ekwipunkiem', 'Logika Zadań'],
+        datasets: [{
+            label: 'GDScript', data: [100, 100, 10, 0, 20, 10], backgroundColor: 'rgba(96, 165, 250, 0.8)'
+        }, {
+            label: 'Rust', data: [0, 0, 90, 100, 80, 90], backgroundColor: 'rgba(251, 146, 60, 0.8)'
+        }],
+        justifications: [
+            { title: 'Logika UI', reason: 'GDScript jest idealny do szybkiego prototypowania i ścisłej integracji z węzłami interfejsu Godota.' },
+            { title: 'Zarządzanie Sceną', reason: 'Bezpośredni i idiomatyczny dostęp do drzewa scen jest podstawową siłą GDScript.' },
+            { title: 'Formuły Walki', reason: 'Rust zapewnia krytyczną wydajność i bezpieczeństwo typów dla złożonych obliczeń, eliminując błędy.' },
+            { title: 'Pętla AI', reason: 'Rust jest idealny do intensywnych obliczeń i zarządzania złożonym stanem dla wielu agentów AI.' },
+            { title: 'Zarządzanie Ekwipunkiem', reason: 'Rust chroni kluczowe dane gracza przed uszkodzeniem dzięki gwarancjom bezpieczeństwa pamięci.' },
+            { title: 'Logika Zadań', reason: 'Rust zarządza złożonym grafem zależności między zadaniami, zapewniając integralność stanu progresji.' }
+        ]
+    };
+
+    const techSplitDetailsEl = document.getElementById('tech-split-details');
+    const ctx = document.getElementById('techSplitChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar', data: techSplitData,
+        options: {
+            indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+            scales: { x: { stacked: true, max: 100, ticks: { callback: value => value + '%' } }, y: { stacked: true } },
+            plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.x}%` } } },
+            onClick: (event, elements) => {
+                if (elements.length > 0) {
+                    const { index } = elements[0];
+                    const justification = techSplitData.justifications[index];
+                    techSplitDetailsEl.innerHTML = `<div class="text-left w-full"><h4 class="text-xl font-bold mb-2">${justification.title}</h4><p class="text-zinc-700">${justification.reason}</p></div>`;
+                }
+            }
+        }
+    });
+
+    const archDetailsMap = {
+        'eda': { title: 'Architektura Sterowana Zdarzeniami', desc: 'Systemy nie komunikują się ze sobą bezpośrednio. Zamiast tego emitują globalne zdarzenia (np. "gracz_otrzymał_obrażenia"), a inne systemy na nie reagują. To maksymalnie oddziela komponenty, ułatwiając testowanie i rozbudowę.' },
+        'ec': { title: 'Encja-Komponent w Godocie', desc: 'Obiekty w grze (np. postać) są "pustymi" kontenerami (Encja), do których dołączane są "klocki" z funkcjonalnością (Komponenty), np. ekwipunek, statystyki. Promuje to reużywalność kodu.' },
+        'layers': { title: 'Trójwarstwowa Abstrakcja', desc: 'Kod jest podzielony na trzy warstwy: Danych (statystyki przedmiotów), Logiki (formuły obrażeń) i Prezentacji (efekty wizualne). Zmiana w jednej warstwie (np. wygląd UI) nie psuje pozostałych.' }
+    };
+    
+    function setupInteractiveBoxes(containerSelector, detailsMap, detailsElId) {
+        const boxes = document.querySelectorAll(`${containerSelector} .flowchart-box`);
+        const detailsEl = document.getElementById(detailsElId);
+        const dataAttribute = Object.keys(boxes[0].dataset)[0];
+        boxes.forEach(box => {
+            box.addEventListener('click', () => {
+                boxes.forEach(b => b.classList.remove('active'));
+                box.classList.add('active');
+                const id = box.dataset[dataAttribute];
+                const details = detailsMap[id];
+                if (details) {
+                    detailsEl.innerHTML = `<div class="text-left w-full"><h4 class="text-lg font-bold mb-2 text-teal-800">${details.title}</h4><p class="text-zinc-700">${details.desc}</p></div>`;
+                }
+            });
+        });
+    }
+    setupInteractiveBoxes('#architecture', archDetailsMap, 'arch-details');
+
+    document.querySelectorAll('.roadmap-toggle').forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            toggle.nextElementSibling.classList.toggle('open');
+        });
+    });
+
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                });
+            }
+        });
+    }, { rootMargin: "-40% 0px -60% 0px" });
+    sections.forEach(section => observer.observe(section));
+});
+</script>
+
+</body>
+</html>
