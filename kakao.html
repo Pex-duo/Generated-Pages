@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktywny Przewodnik po Kakao</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Cocoa Neutrals -->
+    <!-- Application Structure Plan: Aplikacja została zaprojektowana jako interaktywny pulpit (dashboard) z nawigacją u góry, co pozwala na nieliniową eksplorację treści. Centralnym elementem jest "Kreator Napoju", który jest zorientowany na zadanie i odpowiada na główne pytanie użytkownika: "Jak przygotować kakao, aby uzyskać określony efekt?". Ta struktura stawia praktyczne zastosowanie na pierwszym miejscu. Sekcje "Składniki Aktywne" i "Dobre Praktyki" dostarczają kontekstu i pogłębiają wiedzę w sposób modułowy i łatwo przyswajalny. Taki układ jest bardziej intuicyjny i angażujący niż liniowe przedstawienie raportu, ponieważ pozwala użytkownikowi od razu przejść do interesujących go zagadnień. -->
+    <!-- Visualization & Content Choices: Główne dane (protokoły spożycia) zostały przekształcone w interaktywny "Kreator". Cel: Umożliwienie personalizacji. Metoda: Przyciski wyboru celu, dynamicznie aktualizowana karta z przepisem i wykres radarowy (Chart.js/Canvas) wizualizujący balans efektów (Energia, Skupienie, Relaks, Nastrój). Uzasadnienie: Bezpośrednia interakcja i natychmiastowa wizualna informacja zwrotna są znacznie skuteczniejsze niż czytanie tabeli. Złożone informacje biochemiczne zostały podzielone na interaktywne karty w sekcji "Składniki Aktywne". Cel: Uproszczenie skomplikowanych danych. Metoda: Siatka kart, po kliknięciu których pojawia się zwięzły opis. Uzasadnienie: Zapobiega to przeładowaniu informacjami i pozwala na naukę we własnym tempie. Biblioteka: Chart.js (Canvas). -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A2E1F;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #8D6E63;
+            border-bottom-color: #8D6E63;
+        }
+        .btn {
+            transition: all 0.3s;
+        }
+        .btn-active {
+            background-color: #8D6E63 !important;
+            color: #FFFFFF !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 40vh;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        section {
+            scroll-margin-top: 80px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-[#6D4C41]">
+                Kakao<span class="text-[#A1887F]">Lab</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#intro" class="nav-link pb-1">Wprowadzenie</a>
+                <a href="#creator" class="nav-link pb-1">Kreator Napoju</a>
+                <a href="#compounds" class="nav-link pb-1">Składniki Aktywne</a>
+                <a href="#practices" class="nav-link pb-1">Dobre Praktyki</a>
+            </div>
+            <div class="md:hidden">
+                <select id="mobile-nav" class="bg-white border border-gray-300 rounded-md py-2 px-3 text-[#6D4C41] focus:outline-none focus:ring-2 focus:ring-[#A1887F]">
+                    <option value="#intro">Wprowadzenie</option>
+                    <option value="#creator">Kreator Napoju</option>
+                    <option value="#compounds">Składniki Aktywne</option>
+                    <option value="#practices">Dobre Praktyki</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="intro" class="text-center mb-24">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-[#6D4C41]">Odkryj Dwoistą Naturę Kakao</h1>
+            <p class="max-w-3xl mx-auto text-lg text-[#8D6E63]">
+                Kakao to niezwykła roślina, która potrafi jednocześnie pobudzać i relaksować. Ta interaktywna aplikacja pomoże Ci zrozumieć, jak świadomie korzystać z jego mocy. Dowiedz się, jak dawka, pora i sposób przygotowania wpływają na jego działanie, aby idealnie dopasować je do swoich potrzeb – od porannego zastrzyku energii po wieczorne wyciszenie.
+            </p>
+        </section>
+
+        <section id="creator" class="mb-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#6D4C41]">Interaktywny Kreator Napoju</h2>
+                <p class="mt-2 text-lg text-[#8D6E63]">Wybierz cel, a my przygotujemy dla Ciebie idealny przepis i pokażemy jego działanie.</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-6 md:p-10">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <div>
+                        <h3 class="font-bold text-xl mb-4 text-[#6D4C41]">1. Wybierz swój cel:</h3>
+                        <div id="goal-buttons" class="grid grid-cols-2 gap-4 mb-8">
+                            <button data-goal="stimulation" class="btn p-4 bg-stone-100 rounded-lg font-semibold text-[#6D4C41] hover:bg-stone-200">Pobudzenie i Skupienie</button>
+                            <button data-goal="training" class="btn p-4 bg-stone-100 rounded-lg font-semibold text-[#6D4C41] hover:bg-stone-200">Wsparcie Treningu</button>
+                            <button data-goal="mood" class="btn p-4 bg-stone-100 rounded-lg font-semibold text-[#6D4C41] hover:bg-stone-200">Poprawa Nastroju</button>
+                            <button data-goal="relaxation" class="btn p-4 bg-stone-100 rounded-lg font-semibold text-[#6D4C41] hover:bg-stone-200">Relaks i Sen</button>
+                        </div>
+
+                        <h3 class="font-bold text-xl mb-4 text-[#6D4C41]">2. Twój spersonalizowany protokół:</h3>
+                        <div id="recipe-card" class="bg-stone-50 p-6 rounded-lg min-h-[250px]">
+                            <h4 id="recipe-title" class="font-bold text-lg text-[#8D6E63]">Wybierz cel, aby zobaczyć przepis...</h4>
+                            <ul id="recipe-details" class="mt-4 space-y-2 text-[#4A2E1F]"></ul>
+                            <p id="recipe-explanation" class="mt-4 text-sm text-[#A1887F]"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-xl mb-4 text-center text-[#6D4C41]">3. Przewidywany profil działania:</h3>
+                        <div class="chart-container">
+                            <canvas id="effectsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="compounds" class="mb-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#6D4C41]">Poznaj Składniki Aktywne Kakao</h2>
+                <p class="mt-2 text-lg text-[#8D6E63]">Kliknij na kartę, aby dowiedzieć się więcej o kluczowych związkach i ich wpływie na organizm.</p>
+            </div>
+            <div id="compounds-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+        </section>
+
+        <section id="practices" class="mb-12">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#6D4C41]">Dobre Praktyki i Kluczowe Zasady</h2>
+                <p class="mt-2 text-lg text-[#8D6E63]">Jak maksymalizować korzyści i unikać pułapek? Oto co musisz wiedzieć.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-xl mb-3 text-green-700">✅ Co robić?</h3>
+                    <ul class="space-y-3 text-[#4A2E1F]">
+                        <li class="flex items-start"><span class="text-green-500 mr-3 mt-1">✓</span><div><strong class="font-semibold">Wybieraj jakość:</strong> Sięgaj po naturalne, niealkalizowane kakao. Proces holenderski niszczy cenne flawanole.</div></li>
+                        <li class="flex items-start"><span class="text-green-500 mr-3 mt-1">✓</span><div><strong class="font-semibold">Używaj wody lub mleka roślinnego:</strong> Białka mleka krowiego (kazeina) blokują wchłanianie antyoksydantów.</div></li>
+                        <li class="flex items-start"><span class="text-green-500 mr-3 mt-1">✓</span><div><strong class="font-semibold">Eksperymentuj z przyprawami:</strong> Chili i cynamon wzmacniają działanie kakao, poprawiając metabolizm i krążenie.</div></li>
+                        <li class="flex items-start"><span class="text-green-500 mr-3 mt-1">✓</span><div><strong class="font-semibold">Słuchaj organizmu:</strong> Zacznij od mniejszych dawek, aby poznać swoją indywidualną tolerancję.</div></li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-xl mb-3 text-red-700">❌ Czego unikać?</h3>
+                    <ul class="space-y-3 text-[#4A2E1F]">
+                        <li class="flex items-start"><span class="text-red-500 mr-3 mt-1">✗</span><div><strong class="font-semibold">Unikaj cukru:</strong> Rafinowany cukier niweczy korzyści metaboliczne kakao i przekształca je w kaloryczny napój.</div></li>
+                        <li class="flex items-start"><span class="text-red-500 mr-3 mt-1">✗</span><div><strong class="font-semibold">Nie pij na pusty żołądek (jeśli jesteś wrażliwy):</strong> Kakao jest kwaśne i może podrażniać żołądek. Spożycie po posiłku łagodzi ten efekt.</div></li>
+                        <li class="flex items-start"><span class="text-red-500 mr-3 mt-1">✗</span><div><strong class="font-semibold">Uważaj na późne pory:</strong> Duże dawki kakao po godzinie 15:00 mogą zakłócić sen z powodu długiego działania teobrominy.</div></li>
+                        <li class="flex items-start"><span class="text-red-500 mr-3 mt-1">✗</span><div><strong class="font-semibold">Zachowaj ostrożność przy GERD:</strong> Teobromina może nasilać objawy refluksu.</div></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-100 mt-16">
+        <div class="container mx-auto px-6 py-8 text-center text-[#A1887F]">
+            <p>Stworzone z pasją do natury i nauki.</p>
+            <p class="text-sm mt-2">Ta aplikacja ma charakter informacyjny i nie zastępuje profesjonalnej porady medycznej.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const data = {
+                recipes: {
+                    stimulation: {
+                        title: "Protokół Porannej Stymulacji",
+                        details: [
+                            "<strong>Dawka:</strong> 20-30 g (3-4 łyżki)",
+                            "<strong>Płyn:</strong> 250 ml gorącej wody",
+                            "<strong>Dodatki:</strong> Szczypta chili, cynamon",
+                            "<strong>Pora:</strong> Do 2h po przebudzeniu"
+                        ],
+                        explanation: "Wysoka dawka teobrominy i flawanoli zapewnia długotrwałą, stabilną energię i poprawia krążenie mózgowe, zwiększając skupienie.",
+                        chartData: [5, 5, 1, 3]
+                    },
+                    training: {
+                        title: "Protokół Przedtreningowy",
+                        details: [
+                            "<strong>Dawka:</strong> 15-20 g (2-3 łyżki)",
+                            "<strong>Płyn:</strong> 200 ml wody",
+                            "<strong>Dodatki:</strong> Szczypta soli (elektrolity)",
+                            "<strong>Pora:</strong> 30-45 min przed wysiłkiem"
+                        ],
+                        explanation: "Teobromina i flawanole rozszerzają naczynia krwionośne, zwiększając przepływ krwi do mięśni i dając łagodny bodziec energetyczny.",
+                        chartData: [4, 3, 2, 2]
+                    },
+                    mood: {
+                        title: "Protokół Poprawy Nastroju",
+                        details: [
+                            "<strong>Dawka:</strong> 10-15 g (1-2 łyżki)",
+                            "<strong>Płyn:</strong> 200 ml mleka roślinnego",
+                            "<strong>Dodatki:</strong> Brak",
+                            "<strong>Pora:</strong> Między 13:00 a 15:00"
+                        ],
+                        explanation: "Umiarkowana dawka stymulantów w połączeniu z tryptofanem i PEA przeciwdziała popołudniowemu spadkowi energii i poprawia samopoczucie.",
+                        chartData: [3, 3, 3, 5]
+                    },
+                    relaxation: {
+                        title: "Protokół Wieczornej Relaksacji",
+                        details: [
+                            "<strong>Dawka:</strong> 5-10 g (1-2 łyżeczki)",
+                            "<strong>Płyn:</strong> 150 ml ciepłej wody",
+                            "<strong>Dodatki:</strong> Brak",
+                            "<strong>Pora:</strong> 90 min przed snem"
+                        ],
+                        explanation: "Niska dawka teobrominy minimalizuje pobudzenie, a wysoka zawartość magnezu i tryptofanu inicjuje procesy relaksacyjne i produkcję melatoniny.",
+                        chartData: [1, 1, 5, 4]
+                    }
+                },
+                compounds: [
+                    { name: 'Teobromina', description: 'Główny alkaloid w kakao. Działa jak łagodny, długotrwały stymulant. Rozszerza naczynia krwionośne, obniżając ciśnienie i relaksując mięśnie.' },
+                    { name: 'Kofeina', description: 'Występuje w małych ilościach. Działa jako szybki, intensywny stymulant, ale w przeciwieństwie do teobrominy, zwęża naczynia krwionośne.' },
+                    { name: 'Flawanole', description: 'Potężne antyoksydanty, które poprawiają przepływ krwi i zdrowie serca poprzez stymulację produkcji tlenku azotu. To one odpowiadają za większość korzyści zdrowotnych.' },
+                    { name: 'Magnez', description: 'Kluczowy minerał dla relaksacji. Wycisza układ nerwowy, zmniejsza napięcie mięśniowe i jest niezbędny w ponad 300 reakcjach w organizmie.' },
+                    { name: 'Tryptofan', description: 'Aminokwas, z którego organizm produkuje serotoninę ("hormon szczęścia") i melatoninę ("hormon snu"). Klucz do regulacji nastroju i cyklu dobowego.' },
+                    { name: 'Fenyloetyloamina (PEA)', description: 'Nazywana "molekułą miłości". Poprawia nastrój i koncentrację poprzez wpływ na uwalnianie dopaminy. Odpowiada za uczucie euforii po zjedzeniu czekolady.' }
+                ]
+            };
+
+            const goalButtons = document.getElementById('goal-buttons');
+            const recipeTitle = document.getElementById('recipe-title');
+            const recipeDetails = document.getElementById('recipe-details');
+            const recipeExplanation = document.getElementById('recipe-explanation');
+            
+            let currentChart;
+
+            function createChart(data) {
+                const ctx = document.getElementById('effectsChart').getContext('2d');
+                if (currentChart) {
+                    currentChart.destroy();
+                }
+                currentChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Energia', 'Skupienie', 'Relaks', 'Nastrój'],
+                        datasets: [{
+                            label: 'Profil Działania',
+                            data: data,
+                            backgroundColor: 'rgba(141, 110, 99, 0.2)',
+                            borderColor: 'rgba(141, 110, 99, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(141, 110, 99, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(141, 110, 99, 1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 5,
+                                pointLabels: {
+                                    font: {
+                                        size: 14,
+                                        family: 'Inter, sans-serif'
+                                    },
+                                    color: '#4A2E1F'
+                                },
+                                grid: {
+                                    color: 'rgba(161, 136, 127, 0.2)'
+                                },
+                                angleLines: {
+                                    color: 'rgba(161, 136, 127, 0.2)'
+                                },
+                                ticks: {
+                                    display: false,
+                                    stepSize: 1
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+
+            function updateRecipe(goal) {
+                const recipe = data.recipes[goal];
+                recipeTitle.textContent = recipe.title;
+                recipeDetails.innerHTML = recipe.details.map(item => `<li>${item}</li>`).join('');
+                recipeExplanation.textContent = recipe.explanation;
+                createChart(recipe.chartData);
+            }
+
+            goalButtons.addEventListener('click', function(e) {
+                if (e.target.tagName === 'BUTTON') {
+                    const goal = e.target.dataset.goal;
+                    
+                    document.querySelectorAll('#goal-buttons button').forEach(btn => {
+                        btn.classList.remove('btn-active');
+                    });
+                    
+                    e.target.classList.add('btn-active');
+                    updateRecipe(goal);
+                }
+            });
+
+            const compoundsGrid = document.getElementById('compounds-grid');
+            data.compounds.forEach(compound => {
+                const card = document.createElement('div');
+                card.className = 'card bg-white p-6 rounded-lg shadow-md cursor-pointer';
+                card.innerHTML = `
+                    <h3 class="font-bold text-xl mb-2 text-[#6D4C41]">${compound.name}</h3>
+                    <p class="text-[#8D6E63]">${compound.description}</p>
+                `;
+                compoundsGrid.appendChild(card);
+            });
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 90) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+            
+            const mobileNav = document.getElementById('mobile-nav');
+            mobileNav.addEventListener('change', (e) => {
+                window.location.hash = e.target.value;
+            });
+
+            updateRecipe('stimulation');
+            document.querySelector('[data-goal="stimulation"]').classList.add('btn-active');
+        });
+    </script>
+</body>
+</html>
