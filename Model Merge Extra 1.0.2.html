@@ -100,11 +100,11 @@
             <h2 class="mb-8">Wprowadzenie: Paradoks Predykcji</h2>
             <div class="grid md:grid-cols-2 gap-8 items-center">
                 <div class="space-y-6">
-                    <p>Standardowe łączenie modeli o różnych typach predykcji — Epsilon ($\epsilon$) i V-Prediction ($v$) — jest jak próba połączenia dwóch silników działających na zupełnie innym paliwie. Model $\epsilon$ uczy się przewidywać <strong>szum</strong>, podczas gdy model $v$ uczy się przewidywać <strong>"prędkość"</strong>, czyli wektor łączący szum i czysty obraz. Bezpośrednie mieszanie ich wag prowadzi do chaosu i artefaktów.</p>
-                    <p>Oryginalny węzeł `CalibratedFunctionalConverter` próbował obejść ten problem, "oszukując" sampler, aby traktował model $\epsilon$ jak model $v$. Było to sprytne, ale nie dawało pełnej kontroli.</p>
+                    <p>Standardowe łączenie modeli o różnych typach predykcji — Epsilon (<sup>epsilon</sup>) i V-Prediction (<sup>v</sup>) — jest jak próba połączenia dwóch silników działających na zupełnie innym paliwie. Model <sup>epsilon</sup> uczy się przewidywać <strong>szum</strong>, podczas gdy model <sup>v</sup> uczy się przewidywać <strong>"prędkość"</strong>, czyli wektor łączący szum i czysty obraz. Bezpośrednie mieszanie ich wag prowadzi do chaosu i artefaktów.</p>
+                    <p>Oryginalny węzeł `CalibratedFunctionalConverter` próbował obejść ten problem, "oszukując" sampler, aby traktował model <sup>epsilon</sup> jak model <sup>v</sup>. Było to sprytne, ale nie dawało pełnej kontroli.</p>
                     <div class="p-6 info-panel">
                         <h3 class="text-lg mb-2">Nowe Rozwiązanie: Adaptacyjna Konwersja</h3>
-                        <p>Ulepszony węzeł, <strong>`AdaptivePredictionConverter`</strong>, wprowadza rewolucyjną koncepcję: <strong>płynne, hybrydowe mieszanie typów predykcji</strong>. Zamiast dokonywać twardej konwersji, pozwala na precyzyjne dostrojenie, jak bardzo "v-podobny" ma być wynik modelu $\epsilon$, dając Ci bezprecedensową kontrolę nad procesem łączenia.</p>
+                        <p>Ulepszony węzeł, <strong>`AdaptivePredictionConverter`</strong>, wprowadza rewolucyjną koncepcję: <strong>płynne, hybrydowe mieszanie typów predykcji</strong>. Zamiast dokonywać twardej konwersji, pozwala na precyzyjne dostrojenie, jak bardzo "v-podobny" ma być wynik modelu <sup>epsilon</sup>, dając Ci bezprecedensową kontrolę nad procesem łączenia.</p>
                     </div>
                 </div>
                 <div class="schematic-block p-6">
@@ -112,14 +112,14 @@
                     <div class="flex items-center justify-around text-center">
                         <div>
                             <div class="p-4 border border-dashed border-primary-accent">
-                                <h4 class="text-lg">Model A ($\epsilon$)</h4>
+                                <h4 class="text-lg">Model A (<sup>epsilon</sup>)</h4>
                                 <p class="text-sm text-muted">Przewiduje Szum</p>
                             </div>
                         </div>
                         <div class="schematic-connector text-4xl text-primary-accent font-bold">≠</div>
                         <div>
                             <div class="p-4 border border-dashed border-secondary-accent">
-                                <h4 class="text-lg">Model B ($v$)</h4>
+                                <h4 class="text-lg">Model B (<sup>v</sup>)</h4>
                                 <p class="text-sm text-muted">Przewiduje Prędkość</p>
                             </div>
                         </div>
@@ -132,24 +132,24 @@
 
         <section id="node" class="mb-24 scroll-mt-20">
             <h2 class="mb-8">Nowy Węzeł: AdaptivePredictionConverter</h2>
-            <p class="max-w-4xl mb-12">Ten ulepszony węzeł zastępuje poprzedni. Jego kluczową innowacją jest wprowadzenie trybu hybrydowego, kontrolowanego przez parametr `hybrid_alpha`. Pozwala on na interpolację między skalibrowaną predykcją $\epsilon$ a jej matematycznym odpowiednikiem $v$.</p>
+            <p class="max-w-4xl mb-12">Ten ulepszony węzeł zastępuje poprzedni. Jego kluczową innowacją jest wprowadzenie trybu hybrydowego, kontrolowanego przez parametr `hybrid_alpha`. Pozwala on na interpolację między skalibrowaną predykcją <sup>epsilon</sup> a jej matematycznym odpowiednikiem <sup>v</sup>.</p>
             <div class="card p-8">
                 <h3 class="text-2xl mb-6 text-center">Parametry i Logika Działania</h3>
                 <div class="grid md:grid-cols-3 gap-8 text-center">
                     <div class="schematic-block p-6">
                         <h4 class="text-xl mb-2" style="color: var(--primary-accent);">Tryb: Epsilon</h4>
                         <p class="mb-4"><strong>hybrid_alpha = 0.0</strong></p>
-                        <p class="text-sm text-muted">Węzeł przekazuje skalibrowaną predykcję $\epsilon$ z modelu. Idealne, gdy chcesz zachować oryginalny charakter modelu bazowego.</p>
+                        <p class="text-sm text-muted">Węzeł przekazuje skalibrowaną predykcję <sup>epsilon</sup> z modelu. Idealne, gdy chcesz zachować oryginalny charakter modelu bazowego.</p>
                     </div>
                     <div class="schematic-block p-6 border-2 border-tertiary-accent">
                         <h4 class="text-xl mb-2" style="color: var(--tertiary-accent);">Tryb: Hybrydowy</h4>
                         <p class="mb-4"><strong>0.0 &lt; hybrid_alpha &lt; 1.0</strong></p>
-                        <p class="text-sm text-muted">Węzeł tworzy ważoną mieszankę predykcji $\epsilon$ i $v$. To serce nowej metody, pozwalające znaleźć "złoty środek" między dwoma modelami.</p>
+                        <p class="text-sm text-muted">Węzeł tworzy ważoną mieszankę predykcji <sup>epsilon</sup> i <sup>v</sup>. To serce nowej metody, pozwalające znaleźć "złoty środek" między dwoma modelami.</p>
                     </div>
                     <div class="schematic-block p-6">
                         <h4 class="text-xl mb-2" style="color: var(--secondary-accent);">Tryb: V-Prediction</h4>
                         <p class="mb-4"><strong>hybrid_alpha = 1.0</strong></p>
-                        <p class="text-sm text-muted">Węzeł dokonuje pełnej, "udawanej" konwersji na $v$-prediction. Użyteczne do pełnej adaptacji do modelu docelowego.</p>
+                        <p class="text-sm text-muted">Węzeł dokonuje pełnej, "udawanej" konwersji na <sup>v</sup>-prediction. Użyteczne do pełnej adaptacji do modelu docelowego.</p>
                     </div>
                 </div>
             </div>
@@ -157,7 +157,7 @@
 
         <section id="recipe" class="mb-24 scroll-mt-20">
             <h2 class="mb-8">Ulepszony Przepis na Łączenie</h2>
-            <p class="max-w-4xl mb-12">Oto zaktualizowany, precyzyjny przepis na połączenie Twojego modelu "Hybrid Patching" ($\epsilon$) z "New Era 6.3" ($v$), wykorzystujący nowy węzeł `AdaptivePredictionConverter`.</p>
+            <p class="max-w-4xl mb-12">Oto zaktualizowany, precyzyjny przepis na połączenie Twojego modelu "Hybrid Patching" (<sup>epsilon</sup>) z "New Era 6.3" (<sup>v</sup>), wykorzystujący nowy węzeł `AdaptivePredictionConverter`.</p>
             
             <div class="card p-8 space-y-12">
                 <div>
@@ -172,7 +172,7 @@
                                     <li>`target_prediction`: Ustaw na **`v_prediction`**.</li>
                                     <li>`calibration_steps`: `15`.</li>
                                     <li>`calibration_strength`: `1.0`.</li>
-                                    <li><strong>`hybrid_alpha` (Kluczowy Parametr):</strong> Ustaw na **`0.65`**. To oznacza, że wynik będzie w 65% przekonwertowany na $v$, zachowując 35% oryginalnego charakteru $\epsilon$. To nasz punkt startowy do znalezienia równowagi.</li>
+                                    <li><strong>`hybrid_alpha` (Kluczowy Parametr):</strong> Ustaw na **`0.65`**. To oznacza, że wynik będzie w 65% przekonwertowany na <sup>v</sup>, zachowując 35% oryginalnego charakteru <sup>epsilon</sup>. To nasz punkt startowy do znalezienia równowagi.</li>
                                 </ul>
                             </li>
                         </ol>
