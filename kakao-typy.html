@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Report: Urban Green Spaces in Europe 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Earthy Harmony -->
+    <!-- Application Structure Plan: A thematic, multi-section dashboard. Starts with a high-level overview, moves to an interactive city comparison tool (chart + detail card), then presents qualitative themes (challenges/benefits), explores data subsets (green space types), and ends with conclusions. This structure was chosen to guide the user from general to specific, allowing non-linear exploration of the data through the central interactive chart, which is more engaging and user-friendly than a static, linear report format. -->
+    <!-- Visualization & Content Choices: 1. City Rankings: Goal=Compare. Viz=Horizontal Bar Chart (Chart.js). Interaction=Buttons to change sort metric, click bar to update detail card. Justification=Ideal for ranking and interactive drill-down. 2. Green Space Breakdown: Goal=Proportions. Viz=Donut Chart (Chart.js). Interaction=Click segment to show descriptive text. Justification=Clear part-to-whole visualization. 3. Key Metrics: Goal=Inform. Viz=Styled HTML cards. Interaction=None. Justification=Quick, scannable display of top-level stats. 4. Themes: Goal=Organize. Viz=Two-column HTML/Tailwind layout with icons. Interaction=None. Justification=Simple, clear presentation of qualitative data. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #4F4A45;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #4A7C59;
+            border-bottom-color: #4A7C59;
+        }
+        .metric-button {
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .metric-button.active {
+            background-color: #4A7C59;
+            color: #FDFBF8;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 border-b border-gray-200/50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-[#6A5F5A]">Urban Green Spaces 2025</h1>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#overview" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">Overview</a>
+                <a href="#comparison" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">City Comparison</a>
+                <a href="#themes" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">Key Themes</a>
+                <a href="#types" class="nav-link text-gray-600 border-b-2 border-transparent pb-1">Space Types</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        
+        <section id="overview" class="text-center mb-24 scroll-mt-24">
+            <h2 class="text-4xl md:text-5xl font-bold text-[#6A5F5A] mb-4">The State of Urban Green Spaces</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-12">
+                This 2025 report provides an interactive overview of the accessibility, quality, and impact of green spaces in major European cities. Explore the data to understand how cities are fostering nature for a healthier, more sustainable future.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200/80">
+                    <h3 class="text-3xl font-bold text-[#4A7C59]">34.2%</h3>
+                    <p class="text-gray-500 mt-2">Average Green Space Coverage</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200/80">
+                    <h3 class="text-3xl font-bold text-[#4A7C59]">€52</h3>
+                    <p class="text-gray-500 mt-2">Average Per Capita Annual Spend</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200/80">
+                    <h3 class="text-3xl font-bold text-[#4A7C59]">78/100</h3>
+                    <p class="text-gray-500 mt-2">Average Biodiversity Score</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparison" class="mb-24 scroll-mt-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-[#6A5F5A] mb-3">Interactive City Comparison</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">
+                    Select a metric to rank cities and click on a city's bar in the chart to view its detailed profile. This tool allows for a direct comparison of performance across different key indicators.
+                </p>
+            </div>
+            <div class="flex justify-center flex-wrap gap-3 mb-8">
+                <button data-metric="coverage" class="metric-button active bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm font-medium">Green Space %</button>
+                <button data-metric="spending" class="metric-button bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm font-medium">Spending (€/Capita)</button>
+                <button data-metric="biodiversity" class="metric-button bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm font-medium">Biodiversity Score</button>
+                <button data-metric="visitors" class="metric-button bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm font-medium">Visitors (M)</button>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                <div class="lg:col-span-2 bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200/80">
+                    <div class="chart-container">
+                        <canvas id="cityComparisonChart"></canvas>
+                    </div>
+                </div>
+                <div id="cityDetailCard" class="bg-white p-6 rounded-lg shadow-sm border border-gray-200/80 sticky top-24">
+                    <h3 id="detailCityName" class="text-2xl font-bold text-[#6A5F5A] mb-4">Select a City</h3>
+                    <div id="detailContent" class="space-y-3 text-gray-600">
+                        <p>Click on a bar in the chart to see detailed information here.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="themes" class="mb-24 scroll-mt-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-[#6A5F5A] mb-3">Key Themes: Challenges & Benefits</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">
+                    Urban green spaces present a dual narrative. They offer profound benefits to public health and the environment, yet face significant challenges from urbanization and resource constraints. Understanding these themes is crucial for effective urban planning.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200/80">
+                    <h3 class="text-2xl font-bold text-red-800/60 mb-4 flex items-center">
+                        <span class="mr-3 text-3xl">⚠️</span> Challenges
+                    </h3>
+                    <ul class="space-y-3 text-gray-600">
+                        <li class="flex items-start"><span class="mr-3 mt-1">🏙️</span><div><strong>Urban Sprawl:</strong> Increasing pressure on land availability limits the creation of new green areas.</div></li>
+                        <li class="flex items-start"><span class="mr-3 mt-1">💰</span><div><strong>Funding Gaps:</strong> Insufficient municipal budgets for development and long-term maintenance.</div></li>
+                        <li class="flex items-start"><span class="mr-3 mt-1">⚖️</span><div><strong>Equitable Access:</strong> Disparities in the distribution and quality of green spaces across different neighborhoods.</div></li>
+                        <li class="flex items-start"><span class="mr-3 mt-1">💨</span><div><strong>Pollution & Climate Change:</strong> Environmental stressors that degrade plant health and park usability.</div></li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200/80">
+                    <h3 class="text-2xl font-bold text-green-800/70 mb-4 flex items-center">
+                       <span class="mr-3 text-3xl">✅</span> Benefits
+                    </h3>
+                    <ul class="space-y-3 text-gray-600">
+                        <li class="flex items-start"><span class="mr-3 mt-1">😊</span><div><strong>Health & Well-being:</strong> Improved mental and physical health through recreation and stress reduction.</div></li>
+                        <li class="flex items-start"><span class="mr-3 mt-1">🦋</span><div><strong>Biodiversity Hubs:</strong> Essential habitats for flora and fauna, contributing to urban ecological resilience.</div></li>
+                        <li class="flex items-start"><span class="mr-3 mt-1">🤝</span><div><strong>Social Cohesion:</strong> Spaces that foster community interaction and social bonding.</div></li>
+                        <li class="flex items-start"><span class="mr-3 mt-1">🌡️</span><div><strong>Climate Mitigation:</strong> Cooling effect that combats the urban heat island phenomenon and helps manage stormwater.</div></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="types" class="mb-16 scroll-mt-24">
+             <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-[#6A5F5A] mb-3">A Closer Look at Green Space Types</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">
+                    The composition of a city's green infrastructure is diverse. While public parks form the backbone, smaller, innovative spaces like community gardens and green roofs play an increasingly vital role. Click a chart segment to learn more about each type.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200/80">
+                    <div class="chart-container h-80 sm:h-96 max-h-[400px]">
+                        <canvas id="typesDistributionChart"></canvas>
+                    </div>
+                </div>
+                <div id="typeDetailCard" class="bg-white p-6 rounded-lg shadow-sm border border-gray-200/80 min-h-[200px]">
+                     <h3 id="detailTypeName" class="text-2xl font-bold text-[#6A5F5A] mb-4">Select a Type</h3>
+                     <p id="detailTypeDescription" class="text-gray-600">Click on a segment in the donut chart to see a description of that green space type here.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200/80 mt-16">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-500">
+            <p>&copy; 2025 Urban Insights Collective. All data is illustrative for this interactive report.</p>
+            <p class="text-sm mt-2">An interactive visualization of the fictional "State of Urban Green Spaces 2025" report.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cityData = [
+                { name: 'Vienna', coverage: 45.5, spending: 75, biodiversity: 88, visitors: 12.5 },
+                { name: 'Helsinki', coverage: 40.1, spending: 82, biodiversity: 92, visitors: 8.2 },
+                { name: 'Oslo', coverage: 55.2, spending: 95, biodiversity: 94, visitors: 6.5 },
+                { name: 'Berlin', coverage: 38.5, spending: 45, biodiversity: 75, visitors: 22.1 },
+                { name: 'Warsaw', coverage: 27.8, spending: 31, biodiversity: 68, visitors: 15.3 },
+                { name: 'Madrid', coverage: 20.3, spending: 38, biodiversity: 65, visitors: 18.9 },
+                { name: 'Rome', coverage: 15.9, spending: 25, biodiversity: 72, visitors: 25.4 },
+            ];
+
+            const typeData = {
+                labels: ['Public Parks', 'Community Gardens', 'Green Roofs & Walls', 'Urban Forests', 'Other'],
+                percentages: [55, 15, 8, 18, 4],
+                descriptions: {
+                    'Public Parks': 'These are the traditional backbones of urban green infrastructure, offering wide recreational access, large-scale ecological benefits, and significant cultural value to city residents.',
+                    'Community Gardens': 'Smaller, locally-managed plots where residents can grow plants, vegetables, and flowers. They are crucial for food security, education, and fostering tight-knit community bonds.',
+                    'Green Roofs & Walls': 'Innovative solutions that integrate vegetation onto building surfaces. They are highly effective for insulation, air purification, and stormwater management in dense urban cores.',
+                    'Urban Forests': 'Larger, managed woodland areas within or on the periphery of cities. They are vital for biodiversity, large-scale carbon sequestration, and offering immersive nature experiences.',
+                    'Other': 'This category includes a variety of smaller green spaces such as street verges, pocket parks, and landscaped public squares that contribute to the overall green fabric of the city.'
+                }
+            };
+
+            let cityChart;
+            let currentMetric = 'coverage';
+
+            const detailCityName = document.getElementById('detailCityName');
+            const detailContent = document.getElementById('detailContent');
+
+            const updateCityDetails = (city) => {
+                detailCityName.textContent = city.name;
+                detailContent.innerHTML = `
+                    <p><strong>Green Space Coverage:</strong> ${city.coverage}%</p>
+                    <p><strong>Annual Spending:</strong> €${city.spending} per capita</p>
+                    <p><strong>Biodiversity Score:</strong> ${city.biodiversity}/100</p>
+                    <p><strong>Annual Visitors:</strong> ${city.visitors} million</p>
+                `;
+            };
+
+            const initCityChart = () => {
+                const ctx = document.getElementById('cityComparisonChart').getContext('2d');
+                const sortedData = [...cityData].sort((a, b) => b[currentMetric] - a[currentMetric]);
+                
+                const getUnit = (metric) => {
+                    switch(metric) {
+                        case 'coverage': return '%';
+                        case 'spending': return '€';
+                        case 'biodiversity': return ' score';
+                        case 'visitors': return 'M';
+                        default: return '';
+                    }
+                }
+
+                cityChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: sortedData.map(c => c.name),
+                        datasets: [{
+                            label: 'City Performance',
+                            data: sortedData.map(c => c[currentMetric]),
+                            backgroundColor: '#8FB399',
+                            borderColor: '#4A7C59',
+                            borderWidth: 1,
+                            borderRadius: 4,
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.x !== null) {
+                                            label += context.parsed.x + getUnit(currentMetric);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: document.querySelector(`[data-metric="${currentMetric}"]`).textContent,
+                                    font: { size: 14 }
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        onClick: (event, elements) => {
+                            if (elements.length > 0) {
+                                const chartElement = elements[0];
+                                const index = chartElement.index;
+                                const selectedCity = sortedData[index];
+                                updateCityDetails(selectedCity);
+                            }
+                        }
+                    }
+                });
+                updateCityDetails(sortedData[0]);
+            };
+
+            const updateCityChart = (metric) => {
+                currentMetric = metric;
+                const sortedData = [...cityData].sort((a, b) => b[currentMetric] - a[currentMetric]);
+                cityChart.data.labels = sortedData.map(c => c.name);
+                cityChart.data.datasets[0].data = sortedData.map(c => c[currentMetric]);
+                cityChart.options.scales.x.title.text = document.querySelector(`[data-metric="${currentMetric}"]`).textContent;
+                cityChart.update();
+                updateCityDetails(sortedData[0]);
+            };
+
+            document.querySelectorAll('.metric-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelector('.metric-button.active').classList.remove('active');
+                    button.classList.add('active');
+                    updateCityChart(button.dataset.metric);
+                });
+            });
+
+            const initTypesChart = () => {
+                const ctx = document.getElementById('typesDistributionChart').getContext('2d');
+                const detailTypeName = document.getElementById('detailTypeName');
+                const detailTypeDescription = document.getElementById('detailTypeDescription');
+
+                const typesChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: typeData.labels,
+                        datasets: [{
+                            label: 'Distribution of Green Space Types',
+                            data: typeData.percentages,
+                            backgroundColor: ['#4A7C59', '#8FB399', '#D4E2D4', '#6A5F5A', '#A8A29E'],
+                            borderColor: '#FDFBF8',
+                            borderWidth: 4,
+                            hoverOffset: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 20,
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            }
+                        },
+                        onClick: (event, elements) => {
+                            if (elements.length > 0) {
+                                const index = elements[0].index;
+                                const label = typeData.labels[index];
+                                detailTypeName.textContent = label;
+                                detailTypeDescription.textContent = typeData.descriptions[label];
+                            }
+                        }
+                    }
+                });
+            };
+            
+            const setupNavObserver = () => {
+                const sections = document.querySelectorAll('section');
+                const navLinks = document.querySelectorAll('.nav-link');
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            navLinks.forEach(link => {
+                                link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                            });
+                        }
+                    });
+                }, { rootMargin: "-50% 0px -50% 0px" });
+
+                sections.forEach(section => {
+                    observer.observe(section);
+                });
+            };
+
+            initCityChart();
+            initTypesChart();
+            setupNavObserver();
+        });
+    </script>
+</body>
+</html>
