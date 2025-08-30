@@ -13,7 +13,9 @@
             --bg-main: #020010; --surface-1: rgba(10, 2, 30, 0.6); --surface-2: rgba(18, 12, 42, 0.85);
             --border-color: rgba(68, 76, 132, 0.5); --border-glow: rgba(127, 137, 237, 0.7);
             --primary-accent: #f92572; --secondary-accent: #00f5d4; --tertiary-accent: #ae2cf1; --highlight-accent: #f6e652;
-            --text-main: #d8dff; --text-muted: #A09EC7; --text-headings: #ffffff;
+            --text-main: #d8d8ff; /* Poprawiony kolor z #d8dff */
+            --text-muted: #A09EC7; 
+            --text-headings: #ffffff;
         }
         html { scroll-padding-top: 5rem; background-color: var(--bg-main); }
         body { font-family: 'Chakra Petch', sans-serif; background-color: var(--bg-main); color: var(--text-main); }
@@ -21,7 +23,7 @@
         h1 { font-size: 3.5rem; text-shadow: 0 0 2px var(--primary-accent), 0 0 5px var(--primary-accent); }
         h2 { font-size: 2.5rem; border-image: linear-gradient(to right, var(--tertiary-accent), transparent 70%) 1; border-bottom: 2px solid; text-shadow: 0 0 5px var(--tertiary-accent); }
         h3 { font-size: 1.75rem; text-shadow: 0 0 3px var(--secondary-accent); }
-        p { color: var(--text-muted); line-height: 1.7; font-size: 1.1rem; }
+        p, ul { color: var(--text-muted); line-height: 1.7; font-size: 1.1rem; }
         header { position: sticky; top: 0; z-index: 50; background-color: var(--surface-1); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
         header nav a { color: var(--text-muted); transition: all 0.2s ease; font-family: 'VT323', monospace; font-size: 1.25rem; }
         header nav a:hover, header nav a.active { color: var(--primary-accent); text-shadow: 0 0 5px var(--primary-accent); }
@@ -35,6 +37,11 @@
         .copy-btn { position: absolute; top: 1rem; right: 1rem; background-color: var(--surface-1); color: var(--text-muted); border: 1px solid var(--border-color); padding: 0.25rem 0.75rem; cursor: pointer; transition: all 0.2s ease; font-family: 'VT323', monospace; }
         .copy-btn:hover { background-color: var(--primary-accent); color: var(--bg-main); border-color: var(--primary-accent); }
         pre[class*="language-"] { background: rgba(0,0,0,0.3) !important; border: 1px solid var(--border-color); }
+        /* Poprawka czytelności kodu */
+        pre[class*="language-"] code {
+            color: var(--text-main) !important;
+            text-shadow: none !important;
+        }
     </style>
 </head>
 <body>
