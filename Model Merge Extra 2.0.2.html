@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="pl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Przewodnik Połączenia: Projekt 'Nowa Hybryda'</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        /* --- VISUAL OVERHAUL: RETRO SPACE OPERA --- */
+        @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;700&family=VT323&display=swap');
+
+        :root {
+            /* Color Palette: Galactic Neon */
+            --bg-main: #020010;
+            --surface-1: rgba(10, 2, 30, 0.6);
+            --surface-2: rgba(18, 12, 42, 0.85);
+            --border-color: rgba(68, 76, 132, 0.5);
+            --border-glow: rgba(127, 137, 237, 0.7);
+            --shadow-color: #000;
+            --primary-accent: #f92572;   /* Neon Pink */
+            --secondary-accent: #00f5d4; /* Electric Cyan */
+            --tertiary-accent: #ae2cf1; /* Cyber Purple */
+            --highlight-accent: #f6e652; /* Gold */
+            --text-main: #d8d8ff;
+            --text-muted: #A09EC7;
+            --text-headings: #ffffff;
+            --scanline-bg: linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,0.3) 50%);
+            --scanline-size: 2px;
+        }
+
+        /* --- GLOBAL STYLES & ANIMATIONS --- */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes text-glitch {
+            0% { text-shadow: 1px 0 0 var(--primary-accent), -1px 0 0 var(--secondary-accent); transform: translate(-0.5px, 0.5px); }
+            25% { text-shadow: 1.5px 0.5px 0 var(--primary-accent), -1.5px -0.5px 0 var(--secondary-accent); transform: translate(0.5px, -0.5px); }
+            50% { text-shadow: -1px 0.5px 0 var(--primary-accent), 1px -0.5px 0 var(--secondary-accent); transform: translate(0.5px, 0.5px); }
+            75% { text-shadow: -1.5px -0.5px 0 var(--primary-accent), 1.5px 0.5px 0 var(--secondary-accent); transform: translate(-0.5px, 0.5px); }
+            100% { text-shadow: 1px -0.5px 0 var(--primary-accent), -1px 0.5px 0 var(--secondary-accent); transform: translate(0.5px, -0.5px); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px -5px var(--glow-color), inset 0 0 10px -5px var(--glow-color); }
+            50% { box-shadow: 0 0 20px 0px var(--glow-color), inset 0 0 20px 0px var(--glow-color); }
+        }
+
+        html { scroll-padding-top: 5rem; background-color: var(--bg-main); }
+        body {
+            font-family: 'Chakra Petch', sans-serif;
+            background-color: transparent; /* Let canvas show through */
+            color: var(--text-main);
+            overflow-x: hidden;
+            animation: fadeIn 1.5s ease-out forwards;
+        }
+        #shader-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.4; background-color: var(--bg-main); }
+        .content-wrapper { position: relative; z-index: 1; }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3, h4, h5, h6 { font-family: 'VT323', monospace; color: var(--text-headings); text-transform: uppercase; letter-spacing: 0.1em; }
+        h1 { font-size: 3.5rem; line-height: 1.1; text-shadow: 0 0 2px var(--primary-accent), 0 0 5px var(--primary-accent); }
+        h2 { font-size: 2.5rem; line-height: 1.2; padding-bottom: 0.75rem; border-image: linear-gradient(to right, var(--tertiary-accent), transparent 70%) 1; border-bottom: 2px solid; }
+        h3 { font-size: 1.75rem; line-height: 1.3; text-shadow: 0 0 3px var(--secondary-accent); }
+        h4 { font-size: 1.25rem; line-height: 1.4; color: var(--highlight-accent) !important; text-shadow: 0 0 4px var(--highlight-accent); }
+        p, ul, li { color: var(--text-muted); line-height: 1.7; font-size: 1.1rem; }
+        a { color: var(--secondary-accent); text-decoration: none; transition: all 0.2s ease; text-shadow: 0 0 4px var(--secondary-accent); }
+        a:hover { color: #fff; text-shadow: 0 0 8px #fff; }
+        strong { color: var(--text-main); font-weight: 700; }
+        .glitch { animation: text-glitch 0.5s infinite linear alternate-reverse; }
+
+        /* --- HEADER --- */
+        header {
+            position: sticky; top: 0; z-index: 50; width: 100%;
+            background-color: var(--surface-1);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+        }
+        header .font-bold { font-family: 'VT323', monospace; color: var(--text-headings); text-shadow: 0 0 5px var(--secondary-accent); }
+        header nav a {
+            position: relative; color: var(--text-muted); padding: 0.5rem 0.25rem;
+            border-bottom: 2px solid transparent; transition: all 0.2s ease;
+            font-family: 'VT323', monospace; font-size: 1.25rem;
+        }
+        header nav a:hover, header nav a.active { color: var(--primary-accent); }
+        header nav a::after {
+            content: ''; position: absolute; width: 100%; height: 2px;
+            bottom: -2px; left: 0; background-color: var(--primary-accent);
+            transform: scaleX(0); transform-origin: bottom right; transition: transform 0.25s ease-out;
+        }
+        header nav a:hover::after, header nav a.active::after { transform: scaleX(1); transform-origin: bottom left; }
+
+        /* --- UI COMPONENTS --- */
+        .card {
+            background: var(--surface-2); border: 1px solid var(--border-color);
+            position: relative; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .card:hover { transform: translateY(-5px) scale(1.02); border-color: var(--border-glow); box-shadow: 0 5px 25px -5px rgba(0,0,0,0.5); }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; background: var(--scanline-bg);
+            background-size: 100% var(--scanline-size); opacity: 0.2; pointer-events: none;
+        }
+        .info-panel, .dare-panel { border: 1px solid; position: relative; padding: 1.5rem; animation: pulse-glow 4s infinite ease-in-out; }
+        .info-panel { --glow-color: var(--secondary-accent); border-color: var(--secondary-accent); background: radial-gradient(circle at top left, rgba(0, 245, 212, 0.1), transparent 40%); }
+        .dare-panel { --glow-color: var(--tertiary-accent); border-color: var(--tertiary-accent); background: radial-gradient(circle at top left, rgba(174, 44, 241, 0.1), transparent 40%); }
+        .dare-panel h4 { color: var(--tertiary-accent) !important; text-shadow: 0 0 4px var(--tertiary-accent); }
+        
+        .lang-btn {
+            font-family: 'VT323', monospace; background-color: transparent; color: var(--text-muted);
+            border: 2px solid var(--border-color); padding: 0.5rem 1rem; font-size: 1rem;
+            text-transform: uppercase; transition: all 0.2s ease-out; cursor: pointer;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+        .lang-btn:hover { color: var(--bg-main); text-shadow: none; border-color: var(--primary-accent); background-color: var(--primary-accent); }
+        .lang-btn.active { background-color: var(--primary-accent); border-color: var(--primary-accent); color: var(--bg-main); text-shadow: none; box-shadow: 0 0 15px var(--primary-accent); }
+
+        /* --- Table Styles --- */
+        .recipe-table th { font-family: 'VT323', monospace; font-size: 1.2rem; color: var(--secondary-accent); background-color: rgba(0, 245, 212, 0.05); }
+        .recipe-table td, .recipe-table th { padding: 0.75rem 1rem; border: 1px solid var(--border-color); text-align: center; color: var(--text-main); }
+        .recipe-table tbody tr:hover { background-color: rgba(174, 44, 241, 0.1); }
+        .recipe-table .font-mono { font-family: 'VT323', monospace; color: var(--highlight-accent); }
+        .recipe-table .text-left { color: var(--text-muted); }
+        
+        /* --- SCROLL ANIMATIONS --- */
+        section, .card, footer {
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        section.is-visible, .card.is-visible, footer.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* --- Code Block --- */
+        .code-block-container { position: relative; }
+        .copy-btn {
+            position: absolute; top: 1rem; right: 1rem; background-color: var(--surface-1);
+            color: var(--text-muted); border: 1px solid var(--border-color); padding: 0.25rem 0.75rem;
+            cursor: pointer; transition: all 0.2s ease; font-family: 'VT323', monospace;
+        }
+        .copy-btn:hover { background-color: var(--primary-accent); color: var(--bg-main); border-color: var(--primary-accent); }
+        pre[class*="language-"] { background: rgba(0,0,0,0.3) !important; border: 1px solid var(--border-color); }
+        pre[class*="language-"] code { color: var(--text-main) !important; text-shadow: none !important; }
+    </style>
+</head>
+<body>
+    <canvas id="shader-canvas"></canvas>
+    <div class="content-wrapper">
+        <header>
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <span class="font-bold text-xl">PROJEKT 'NOWA HYBRYDA'</span>
+                    <div class="flex items-center space-x-8">
+                        <div id="main-nav" class="hidden md:flex items-center space-x-4 text-sm font-medium">
+                            <a href="#philosophy">Filozofia</a>
+                            <a href="#tool">Narzędzie</a>
+                            <a href="#recipe">Przepis</a>
+                            <a href="#finale">Finalizacja</a>
+                        </div>
+                        <div class="flex items-center">
+                            <button id="low-power-toggle" class="lang-btn" aria-label="Toggle Low Power Mode" aria-pressed="false">Tryb Oszczędny</button>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 space-y-24">
+            <section class="text-center">
+                <h1 class="text-4xl md:text-6xl tracking-tight glitch">Przewodnik Połączenia: Projekt 'Nowa Hybryda'</h1>
+                <p class="mt-6 text-lg max-w-3xl mx-auto">Ewolucja modelu "Hybrydowego Łatania" poprzez fuzję z architekturą V-Prediction modelu New Era 6.3 w celu osiągnięcia nowej estetyki Dark-Retro-Fantasy.</p>
+            </section>
+
+            <section id="philosophy" class="scroll-mt-20">
+                <h2 class="mb-8">Filozofia Połączenia</h2>
+                <div class="card p-8 info-panel">
+                    <p>Twój oryginalny model, stworzony strategią "Hybrydowego Łatania", jest zaawansowaną konstrukcją opartą na architekturze `epsilon-prediction`. Jego siłą jest unikalna mieszanka bazy Pony z precyzyjną "łatką" anatomiczną z modelu SDXL. Jest to fundament o ogromnym potencjale.</p>
+                    <p class="mt-4">Model <a href="https://civitai.com/models/137781/new-era-new-esthetic-retro-anime" target="_blank" class="hover:text-white">New Era 6.3</a> to z kolei model `v-prediction`, znany z wyjątkowo czystego stylu retro anime i doskonałej spójności. Jego architektura, choć inna, idealnie pasuje do celu artystycznego Twojego projektu.</p>
+                    <p class="mt-4"><strong>Cel jest prosty: połączyć to, co najlepsze z obu światów.</strong> Aby to osiągnąć, musimy najpierw przekonwertować Twoją hybrydę z `epsilon` na `v-prediction`. To pozwoli na architektonicznie poprawne i stabilne połączenie. Nowo powstały model połączy siłę kompozycyjną Twojej hybrydy z estetycznym mistrzostwem New Era, tworząc ostateczną wersję modelu do generowania zasobów w stylu Dark-Retro-Fantasy.</p>
+                </div>
+            </section>
+
+            <section id="tool" class="scroll-mt-20">
+                <h2 class="mb-8">Narzędzie: Zaawansowany Konwerter Modeli</h2>
+                <div class="card p-8">
+                     <h3 class="mb-4">AdvancedModelConverter.py (v6)</h3>
+                     <p class="mb-6">Poniżej znajduje się ulepszona wersja skryptu konwertującego. Została zoptymalizowana pod kątem zarządzania pamięcią VRAM (kluczowe przy 8GB) i dodano więcej komunikatów, abyś wiedział, co dzieje się na każdym etapie tego powolnego procesu. Zapisz ten kod jako plik `.py` w folderze `ComfyUI/custom_nodes`.</p>
+                    <div class="code-block-container">
+                        <button class="copy-btn" onclick="copyCode(this)">KOPIUJ</button>
+                        <pre><code class="language-python" id="code-block">
+# Author: AI Research Engineer (Enhanced by Gemini)
+# Node Name: AdvancedModelConverter.py (v6)
+# Description: An advanced, universal, experimental ComfyUI node to perform a one-shot, training-free recalculation 
+#              of a model's UNet state_dict between epsilon and v-prediction, while correctly handling CLIP and VAE.
+#              This version includes memory management optimizations and enhanced logging.
+
+import torch
+import comfy.utils
+import comfy.model_management
+import copy
+import gc
+
+class AdvancedModelConverter:
+    """
+    This node performs a training-free, one-shot recalculation of a model's UNet weights
+    to convert it between epsilon-prediction and v-prediction formats.
+    It takes MODEL, CLIP, and VAE as separate inputs, converts ONLY the UNet,
+    and passes the original CLIP and VAE through, ensuring maximum coherence.
+    The process is experimental, slow, and heuristic-based.
+    v6: Enhanced memory management with gc.collect() and del, plus more verbose logging for user feedback.
+    """
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "model": ("MODEL",),
+                "clip": ("CLIP",),
+                "vae": ("VAE",),
+                "conversion_direction": (["epsilon_to_v", "v_to_epsilon"], {"default": "epsilon_to_v"}),
+                "model_architecture": (["auto", "sd15", "sdxl"], {
+                    "default": "auto",
+                    "tooltip": "Automatycznie wykryj architekturę lub wskaż ją ręcznie (SD1.5/SDXL)."
+                }),
+                "processing_device": (["auto", "CPU", "GPU"], {
+                    "default": "auto",
+                    "tooltip": "Wybierz urządzenie do obliczeń. CPU jest wolniejsze, ale zużywa znacznie mniej VRAM."
+                }),
+                "recalculation_steps": ("INT", {
+                    "default": 12, "min": 1, "max": 100, "step": 1,
+                    "tooltip": "Liczba kroków (różnych poziomów szumu sigma) użytych do uśrednienia rekalkulacji. Więcej = potencjalnie lepsza jakość, ale wolniej."
+                }),
+                "calibration_strength": ("FLOAT", {
+                    "default": 1.0, "min": 0.0, "max": 2.0, "step": 0.05,
+                    "tooltip": "Siła kalibracji (tylko dla Epsilon -> V). 1.0 to pełna korekta. Zmniejsz, jeśli wynik jest zbyt 'przepalony'."
+                }),
+                "recalculation_strength": ("FLOAT", {
+                    "default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01,
+                    "tooltip": "Siła mieszania nowych wag z oryginalnymi. 1.0 to pełna konwersja. Mniejsze wartości zachowują więcej z oryginału."
+                }),
+                "simulation_batch_size": ("INT", {
+                    "default": 4, "min": 1, "max": 32, "step": 1,
+                     "tooltip": "Rozmiar wsadu dla symulacji. Większy może być szybszy, ale zużywa więcej VRAM."
+                }),
+                "optimizer_lr": ("FLOAT", {
+                    "default": 0.01, "min": 0.0001, "max": 0.1, "step": 0.0001,
+                    "tooltip": "Współczynnik uczenia dla optymalizatora warstw konwolucyjnych. Zazwyczaj nie wymaga zmiany."
+                }),
+                "use_fp16": ("BOOLEAN", {
+                    "default": True,
+                    "tooltip": "Użyj precyzji fp16 na GPU. Wyłączenie może nieznacznie poprawić jakość kosztem VRAM i prędkości."
+                }),
+            }
+        }
+
+    RETURN_TYPES = ("MODEL", "CLIP", "VAE",)
+    FUNCTION = "convert_model_holistic"
+    CATEGORY = "model_patches/experimental"
+
+    def _detect_model_arch(self, unet):
+        print("Analizowanie architektury UNet...")
+        arch_details = {'type': 'unknown', 'context_dim': 768, 'num_classes': None}
+        if hasattr(unet, 'num_classes') and unet.num_classes is not None:
+            arch_details['num_classes'] = unet.num_classes
+        
+        for name, param in unet.named_parameters():
+            if "time_embed.2.weight" in name and param.shape[0] == 1280:
+                arch_details.update({'type': 'sdxl', 'context_dim': 2048})
+                if arch_details['num_classes'] is None:
+                   arch_details['num_classes'] = 2816
+                break
+            if "input_blocks.0.0.weight" in name and hasattr(unet, 'in_channels') and unet.in_channels == 4:
+                arch_details.update({'type': 'sd15', 'context_dim': 768})
+                break
+        
+        print(f"--> Wykryta architektura: {arch_details['type'].upper()}, context_dim: {arch_details['context_dim']}, num_classes: {arch_details['num_classes']}")
+        return arch_details
+
+    def get_target_v_pred(self, epsilon_pred, x_t, sigma):
+        alpha_t = torch.rsqrt(sigma.pow(2) + 1.0)
+        return alpha_t * epsilon_pred - sigma * x_t
+
+    def get_target_epsilon_pred(self, v_pred, x_t, sigma):
+        alpha_t = torch.rsqrt(sigma.pow(2) + 1.0)
+        if alpha_t.dtype == torch.float16:
+            alpha_t = torch.max(alpha_t, torch.tensor(0.001, dtype=torch.float16, device=alpha_t.device))
+        return (v_pred + sigma * x_t) / alpha_t
+
+    def calibrate_model(self, model, unet, num_steps, device, dtype, arch_details):
+        print(f"Rozpoczynanie kalibracji modelu ({num_steps} kroków)...")
+        try:
+            sigmas = model.model.model_sampling.sigmas
+            if sigmas is None: raise AttributeError
+        except AttributeError:
+            print("--> Ostrzeżenie: Nie można znaleźć harmonogramu sigma. Kalibracja niemożliwa, zwracam współczynnik 1.0.")
+            return 1.0
+
+        context_dim = arch_details['context_dim']
+        dummy_latent = torch.zeros((1, 4, 64, 64), device=device, dtype=dtype)
+        dummy_context = torch.zeros((1, 77, context_dim), device=device, dtype=dtype)
+        
+        unet_kwargs = {"context": dummy_context}
+        if arch_details['num_classes'] is not None:
+            print(f"--> Wykryto model warunkowany klasą ({arch_details['num_classes']} klas).")
+            try:
+                num_classes = int(arch_details['num_classes'])
+                dummy_y = torch.zeros(1, num_classes, device=device, dtype=dtype)
+                dummy_y[0, 0] = 1.0
+                unet_kwargs['y'] = dummy_y
+            except (ValueError, TypeError):
+                print(f"--> Błąd: Nie można przekonwertować num_classes na int. Kalibracja może się nie udać.")
+                return 1.0
+        
+        measured_stds = []
+        pbar_calib = comfy.utils.ProgressBar(num_steps)
+        
+        for i in range(num_steps):
+            sigma_idx = max(0, min(len(sigmas) - 1, len(sigmas) // 2 + i - num_steps // 2))
+            sigma = sigmas[sigma_idx].to(device, dtype=dtype)
+            noise = torch.randn_like(dummy_latent) * sigma
+            timestep = torch.tensor([sigma.item()], device=device, dtype=dtype)
+
+            with torch.no_grad():
+                prediction = unet(noise, timestep, **unet_kwargs).cpu()
+            
+            measured_stds.append(prediction.std().item())
+            pbar_calib.update(1)
+
+        avg_std = sum(measured_stds) / len(measured_stds) if measured_stds else 1.0
+        correction_factor = 1.0 / avg_std if avg_std != 0 else 1.0
+        
+        print(f"--> Kalibracja zakończona. Średnie odchylenie standardowe: {avg_std:.4f}, Współczynnik korekcyjny: {correction_factor:.4f}")
+        return correction_factor
+
+    def convert_model_holistic(self, model, clip, vae, conversion_direction, model_architecture, processing_device, recalculation_steps, calibration_strength, recalculation_strength, simulation_batch_size, optimizer_lr, use_fp16):
+        if recalculation_strength == 0.0:
+            return (model, clip, vae,)
+
+        print(f"Start: Konwerter Modelu (Holistyczny) - kierunek: {conversion_direction}. To powolny, eksperymentalny proces.")
+        
+        device = comfy.model_management.get_torch_device() if processing_device.lower() == "gpu" else torch.device("cpu")
+        if processing_device.lower() == 'auto':
+            device = model.load_device
+        
+        print(f"Używane urządzenie do obliczeń: {device}")
+
+        model_copy = model.clone()
+        original_sd = model.model.state_dict()
+        recalculated_sd = copy.deepcopy(original_sd)
+        dtype = torch.float16 if use_fp16 and device != torch.device('cpu') else torch.float32
+        
+        unet = model_copy.model.diffusion_model.to(device)
+
+        arch_details = self._detect_model_arch(unet) if model_architecture == 'auto' else \
+                       ({'type': 'sd15', 'context_dim': 768, 'num_classes': None} if model_architecture == 'sd15' else \
+                        {'type': 'sdxl', 'context_dim': 2048, 'num_classes': 2816})
+        
+        if model_architecture != 'auto':
+            print(f"--> Ręczne nadpisanie architektury: {arch_details['type'].upper()}")
+
+        final_correction_factor = 1.0
+        if conversion_direction == "epsilon_to_v":
+            base_correction_factor = self.calibrate_model(model, unet, 15, device, dtype, arch_details)
+            final_correction_factor = 1.0 + (base_correction_factor - 1.0) * calibration_strength
+            if final_correction_factor != 1.0:
+                print(f"Aplikowanie finalnego współczynnika korekcyjnego: {final_correction_factor:.4f}")
+        else:
+            print("Pomijanie kalibracji dla konwersji v -> epsilon.")
+
+        try:
+            sigmas = model.model.model_sampling.sigmas.to(device, dtype=dtype)
+            mid = len(sigmas) // 2
+            selected_sigmas = sigmas[max(0, mid - recalculation_steps // 2) : min(len(sigmas), mid + (recalculation_steps + 1) // 2)]
+        except (AttributeError, TypeError):
+            print("--> Ostrzeżenie: Nie można pobrać harmonogramu sigma. Używam sigm w przestrzeni logarytmicznej.")
+            selected_sigmas = torch.logspace(torch.log10(torch.tensor(0.1)), torch.log10(torch.tensor(10.0)), steps=recalculation_steps).to(device, dtype=dtype)
+
+        print(f"Rekalkulacja będzie przeprowadzona dla {len(selected_sigmas)} wartości sigma.")
+
+        module_list = [m for m in unet.modules() if isinstance(m, (torch.nn.Conv2d, torch.nn.Linear))]
+        pbar = comfy.utils.ProgressBar(len(module_list))
+        
+        for i, (name, module) in enumerate(unet.named_modules()):
+            if not isinstance(module, (torch.nn.Conv2d, torch.nn.Linear)):
+                continue
+
+            weight_key, bias_key = f"{name}.weight", f"{name}.bias"
+            if weight_key not in original_sd: continue
+            
+            print(f"\nPrzetwarzanie modułu {i+1}/{len(module_list)}: {name} ({'Conv2d' if isinstance(module, torch.nn.Conv2d) else 'Linear'})")
+
+            original_weight = original_sd[weight_key].to(device, dtype=dtype)
+            accumulated_recalculated_weight = torch.zeros_like(original_weight)
+            
+            for sigma in selected_sigmas:
+                comfy.model_management.throw_exception_if_processing_interrupted()
+                
+                is_conv = isinstance(module, torch.nn.Conv2d)
+                in_shape = (simulation_batch_size, module.in_channels, 32, 32) if is_conv else (simulation_batch_size, module.in_features)
+                dummy_input = torch.randn(in_shape, device=device, dtype=dtype)
+                
+                module.weight.data.copy_(original_weight)
+                if module.bias is not None and bias_key in original_sd:
+                    module.bias.data.copy_(original_sd[bias_key].to(device, dtype=dtype))
+                
+                with torch.no_grad():
+                    original_pred_output = module(dummy_input)
+                    if conversion_direction == "epsilon_to_v":
+                        original_pred_output *= final_correction_factor
+
+                target_output = self.get_target_v_pred(original_pred_output, dummy_input, sigma) if conversion_direction == "epsilon_to_v" else \
+                                self.get_target_epsilon_pred(original_pred_output, dummy_input, sigma)
+                
+                if is_conv:
+                    temp_module = copy.deepcopy(module).to(device, dtype=dtype)
+                    temp_module.weight.requires_grad_(True)
+                    if temp_module.bias is not None: temp_module.bias.requires_grad_(False)
+                    
+                    optimizer = torch.optim.Adam([temp_module.weight], lr=optimizer_lr)
+                    loss_fn = torch.nn.MSELoss()
+                    
+                    for _ in range(3):
+                        optimizer.zero_grad()
+                        loss = loss_fn(temp_module(dummy_input), target_output)
+                        loss.backward()
+                        optimizer.step()
+                    
+                    recalculated_weight_step = temp_module.weight.detach()
+                    del temp_module, optimizer, loss_fn, loss
+                else:
+                    X = dummy_input.view(simulation_batch_size, -1)
+                    Y_target = target_output.view(simulation_batch_size, -1)
+                    if module.bias is not None: Y_target -= original_sd[bias_key].to(device, dtype=dtype)
+                    try:
+                        W_T = torch.linalg.lstsq(X, Y_target).solution
+                        recalculated_weight_step = W_T
+                    except torch.linalg.LinAlgError:
+                        recalculated_weight_step = original_weight
+
+                accumulated_recalculated_weight += recalculated_weight_step
+                del dummy_input, original_pred_output, target_output, recalculated_weight_step
+            
+            averaged_recalculated_weight = accumulated_recalculated_weight / len(selected_sigmas)
+            final_weight = torch.lerp(original_weight, averaged_recalculated_weight, recalculation_strength)
+            recalculated_sd[weight_key] = final_weight.to('cpu', copy=True)
+            
+            del original_weight, accumulated_recalculated_weight, averaged_recalculated_weight, final_weight
+            if device != torch.device('cpu'):
+                torch.cuda.empty_cache()
+            gc.collect()
+            
+            pbar.update(1)
+
+        print("\n--> Rekalkulacja StateDict zakończona.")
+        unet.to(torch.device("cpu"))
+        model_copy.model.load_state_dict(recalculated_sd)
+        
+        target_prediction_type = "v_prediction" if conversion_direction == "epsilon_to_v" else "epsilon"
+        print(f"--> Ustawianie typu predykcji modelu na: {target_prediction_type}")
+        model_copy.model_options.setdefault('model_config', {}).set_prediction_type(target_prediction_type)
+
+
+        del unet, original_sd, recalculated_sd
+        if device != torch.device('cpu'):
+            torch.cuda.empty_cache()
+        gc.collect()
+
+        return (model_copy, clip, vae,)
+
+NODE_CLASS_MAPPINGS = {
+    "AdvancedModelConverter": AdvancedModelConverter
+}
+NODE_DISPLAY_NAME_MAPPINGS = {
+    "AdvancedModelConverter": "Convert Model (Advanced/Holistic)"
+}
+</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="recipe" class="scroll-mt-20">
+            <h2 class="mb-8">Przepis na Połączenie</h2>
+            <div class="space-y-12">
+                <div class="card p-8 info-panel">
+                    <h3 class="mb-4">Krok 1: Stworzenie i konwersja bazy 'Nowa Hybryda'</h3>
+                    <p class="mb-6">Najpierw, używając oryginalnego przewodnika, stwórz finalny model metodą "Hybrydowego Łatania". Następnie, podłącz go (wraz z jego CLIP i VAE) do nowego węzła `AdvancedModelConverter`. Użyj poniższych ustawień jako punktu wyjścia:</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>conversion_direction:</strong> `epsilon_to_v`</li>
+                        <li><strong>processing_device:</strong> `GPU` (lub `CPU` jeśli VRAM jest problemem)</li>
+                        <li><strong>recalculation_steps:</strong> `12` (dobry kompromis między jakością a czasem)</li>
+                        <li><strong>calibration_strength:</strong> `1.0`</li>
+                        <li><strong>recalculation_strength:</strong> `1.0` (dla pełnej konwersji)</li>
+                    </ul>
+                    <p class="mt-4">Wynikiem będzie Twój model bazowy, teraz w formacie V-Prediction, gotowy do dalszego łączenia. Zapisz go jako `NewHybrid_vpred.safetensors`.</p>
+                </div>
+
+                <div class="card p-8">
+                    <h3 class="mb-4">Krok 2: Precyzyjna Fuzja UNet (Block Weight Merge)</h3>
+                    <p class="mb-6">Teraz nadszedł czas na ostateczną fuzję UNet. Użyj węzła `Merge Models (Block Weighted)` w ComfyUI. Podłącz swój skonwertowany model `NewHybrid_vpred.safetensors` jako Model A, a `New Era 6.3` jako Model B. Poniższa tabela przedstawia zalecany, precyzyjny przepis, który zachowuje strukturę Twojej hybrydy, jednocześnie integrując styl New Era.</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full recipe-table">
+                            <thead>
+                                <tr>
+                                    <th>Blok</th>
+                                    <th>Waga dla New Era (Model B)</th>
+                                    <th>Uzasadnienie</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>BASE</td><td class="font-mono">0.00</td><td>Całkowicie chroni fundamenty z Twojej hybrydy (Model A).</td></tr>
+                                <tr><td>IN00</td><td class="font-mono">0.10</td><td rowspan="6" class="text-left p-4">Minimalny wpływ we wczesnych blokach, aby zachować oryginalną, silną kompozycję i anatomię z Twojej bazy. Stopniowe, delikatne wprowadzanie palety kolorów New Era.</td></tr>
+                                <tr><td>IN01</td><td class="font-mono">0.12</td></tr>
+                                <tr><td>IN02</td><td class="font-mono">0.15</td></tr>
+                                <tr><td>IN03</td><td class="font-mono">0.18</td></tr>
+                                <tr><td>IN04</td><td class="font-mono">0.20</td></tr>
+                                <tr><td>IN05</td><td class="font-mono">0.22</td></tr>
+                                <tr><td>IN06</td><td class="font-mono">0.25</td><td rowspan="6" class="text-left p-4">Płynne zwiększanie wpływu New Era w środkowych blokach enkodera, gdzie styl i bardziej złożone cechy zaczynają być definiowane.</td></tr>
+                                <tr><td>IN07</td><td class="font-mono">0.30</td></tr>
+                                <tr><td>IN08</td><td class="font-mono">0.35</td></tr>
+                                <tr><td>IN09</td><td class="font-mono">0.40</td></tr>
+                                <tr><td>IN10</td><td class="font-mono">0.45</td></tr>
+                                <tr><td>IN11</td><td class="font-mono">0.50</td></tr>
+                                <tr><td>M00</td><td class="font-mono">0.55</td><td>Silne, ale wciąż zbalansowane połączenie w sercu koncepcyjnym modelu.</td></tr>
+                                <tr><td>OUT00</td><td class="font-mono">0.65</td><td rowspan="6" class="text-left p-4">Styl New Era zaczyna wyraźnie dominować w początkowych blokach dekodera, wpływając na detale, oświetlenie i ogólną estetykę.</td></tr>
+                                <tr><td>OUT01</td><td class="font-mono">0.70</td></tr>
+                                <tr><td>OUT02</td><td class="font-mono">0.75</td></tr>
+                                <tr><td>OUT03</td><td class="font-mono">0.75</td></tr>
+                                <tr><td>OUT04</td><td class="font-mono">0.70</td></tr>
+                                <tr><td>OUT05</td><td class="font-mono">0.65</td></tr>
+                                <tr><td>OUT06</td><td class="font-mono">0.60</td><td rowspan="6" class="text-left p-4">Lekkie wycofanie wagi w końcowych blokach, aby finalne, najdrobniejsze detale i tekstury odzyskały trochę z "ostrości" i precyzji Twojej oryginalnej, załatanej hybrydy.</td></tr>
+                                <tr><td>OUT07</td><td class="font-mono">0.55</td></tr>
+                                <tr><td>OUT08</td><td class="font-mono">0.50</td></tr>
+                                <tr><td>OUT09</td><td class="font-mono">0.45</td></tr>
+                                <tr><td>OUT10</td><td class="font-mono">0.40</td></tr>
+                                <tr><td>OUT11</td><td class="font-mono">0.35</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="card p-8 dare-panel">
+                    <h3 class="mb-4" style="text-shadow: 0 0 3px var(--tertiary-accent), 0 0 5px var(--tertiary-accent);">Krok 3: Chirurgiczne Łączenie CLIP (DARE-TIES)</h3>
+                    <p class="mb-6">Proste połączenie lub wybór jednego z enkoderów CLIP jest niewystarczające. Twój `NewHybrid` CLIP jest "trójjęzyczny" (Pony + SDXL + Język naturalny), a CLIP `New Era` jest wysoko wyspecjalizowany. Naiwne połączenie doprowadziłoby do konfliktu i utraty zdolności rozumienia promptów. Dlatego zastosujemy precyzyjną, chirurgiczną metodę DARE-TIES.</p>
+                    <p class="mb-4"><strong>Cel:</strong> Przeszczepienie "rozumienia stylu" z CLIP New Era do Twojego bazowego CLIP, przy minimalnym naruszeniu jego złożonej struktury.</p>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="text-lg">1. Zdefiniuj Role i Wymagania:</h4>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>CLIP A (Host):</strong> CLIP z Twojego `NewHybrid_vpred.safetensors`. To jest baza, którą chcemy wzbogacić.</li>
+                                <li><strong>CLIP B (Donor):</strong> CLIP z `New Era 6.3`. Dawca stylu.</li>
+                                <li><strong>Base Model CLIP (Kluczowe!):</strong> CLIP z oryginalnego `sd_xl_base_1.0.safetensors`. Jest niezbędny do obliczenia "wektorów zadań" (delta-parametrów), na których operuje DARE-TIES.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-lg">2. Użyj węzła `CLIP Merger (DARE)`:</h4>
+                             <p>Ten węzeł znajdziesz w pakiecie `ComfyUI-DareMerge`.</p>
+                        </div>
+                        <div>
+                            <h4 class="text-lg">3. Zalecane Parametry:</h4>
+                             <ul class="list-disc list-inside ml-4">
+                                <li><strong>clip_a:</strong> Podłącz CLIP z `NewHybrid_vpred`.</li>
+                                <li><strong>clip_b:</strong> Podłącz CLIP z `New Era 6.3`.</li>
+                                <li><strong>base_model:</strong> Podłącz CLIP z `sd_xl_base_1.0`.</li>
+                                <li><strong>ratio:</strong> <code class="text-highlight-accent">0.65</code> - Stosunkowo wysoka wartość, aby dać stylowi New Era znaczący wpływ.</li>
+                                <li><strong>drop_rate:</strong> <code class="text-highlight-accent">0.75</code> - Agresywne przerzedzanie. Zachowujemy tylko 25% najważniejszych "instrukcji stylistycznych" z New Era, minimalizując ryzyko konfliktu.</li>
+                                <li><strong>ties:</strong> <code class="text-highlight-accent">on</code> (lub `sum`) - Absolutnie kluczowe. Rozwiązuje konflikty, gdy oba CLIPy chcą modyfikować ten sam parametr w przeciwnych kierunkach.</li>
+                                <li><strong>rescale:</strong> <code class="text-highlight-accent">on</code> - Niezbędne, aby wzmocnić sygnał z 25% zachowanych parametrów.</li>
+                                <li><strong>seed:</strong> Zacznij od stałej wartości (np. 12345), a następnie eksperymentuj z innymi, aby znaleźć najlepszy rezultat.</li>
+                             </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="finale" class="scroll-mt-20">
+            <h2 class="mb-8">Krok 4: Finalizacja i Zapis Modelu</h2>
+            <div class="card p-8">
+                <h3 class="mb-4">Ostateczny Montaż</h3>
+                <p>Po przygotowaniu obu kluczowych komponentów, czas na ich ostateczne połączenie. Użyj węzła `CheckpointSave`.</p>
+                 <ul class="list-disc list-inside space-y-2 mt-4">
+                    <li><strong>MODEL (UNet):</strong> Podłącz wyjście z węzła `Merge Models (Block Weighted)` z Kroku 2.</li>
+                    <li><strong>CLIP:</strong> Podłącz wyjście z węzła `CLIP Merger (DARE)` z Kroku 3.</li>
+                    <li><strong>VAE:</strong> Zdecydowanie użyj VAE z Twojego oryginalnego modelu `NewHybrid_vpred.safetensors`. Ponieważ baza UNet jest wciąż Twoją konstrukcją, jej VAE zapewni najlepszą wierność kolorów.</li>
+                </ul>
+                <p class="mt-6">Nadaj swojemu nowemu dziełu nazwę, np. `DarkHybridEra_v1.safetensors` i zapisz. Jesteś gotowy do generowania! Pamiętaj, że stworzyłeś zupełnie nowy model – kluczem do pełnego wykorzystania jego potencjału jest teraz nowa faza eksperymentów z promptami, aby odkryć, jak najlepiej komunikować się z jego unikalną, połączoną "świadomością".</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t-2 border-dashed border-gray-800 mt-24">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center text-text-muted">
+            <p>Interaktywny Przewodnik Połączenia Stworzony dla Projektu 'Nowa Hybryda'</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- WebGL "Cosmic Rift" Shader ---
+            let gl, program, positionAttributeLocation, resolutionUniformLocation, timeUniformLocation;
+            let animationFrameId = null;
+            let isTabVisible = true;
+            let lowPowerMode = false;
+
+            function stopAnimation() {
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
+            }
+
+            function startAnimation() {
+                stopAnimation();
+                if (!lowPowerMode && isTabVisible && gl) {
+                    animationFrameId = requestAnimationFrame(render);
+                }
+            }
+
+            function initShaderBackground() {
+                const canvas = document.getElementById('shader-canvas');
+                try {
+                    gl = canvas.getContext('webgl', { antialias: false, powerPreference: 'low-power' });
+                    if (!gl) { console.error("WebGL not supported"); return; }
+
+                    const vertexShaderSource = `attribute vec2 a_position; void main() { gl_Position = vec4(a_position, 0.0, 1.0); }`;
+                    const fragmentShaderSource = `
+                        precision highp float;
+                        uniform vec2 u_resolution;
+                        uniform float u_time;
+
+                        float random(vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
+                        float fbm(vec2 st) {
+                            float value = 0.0; float amplitude = 0.5;
+                            for (int i = 0; i < 6; i++) {
+                                value += amplitude * random(st); st *= 2.; amplitude *= 0.5;
+                            }
+                            return value;
+                        }
+
+                        void main() {
+                            vec2 st = gl_FragCoord.xy / u_resolution.xy;
+                            vec2 st_orig = st;
+                            
+                            vec2 center = vec2(0.5, 0.5);
+                            float dist_from_center = distance(st, center);
+                            float barrel_power = 0.1;
+                            st = center + (st - center) * (1.0 - barrel_power * dist_from_center * dist_from_center);
+                            
+                            vec3 color = vec3(0.01, 0.0, 0.06);
+                            float star_density = 0.998;
+                            float rand = random(floor(st * 400.0));
+                            if (rand > star_density) {
+                                float star_twinkle = sin(u_time * 2.0 + rand * 100.0) * 0.5 + 0.5;
+                                vec3 star_color = vec3(0.8, 0.8, 1.0) * star_twinkle;
+                                color += star_color * (1.0 - smoothstep(star_density, 1.0, rand));
+                            }
+                            
+                            vec2 q = vec2(fbm(st + u_time * 0.05), fbm(st + vec2(1.0)));
+                            vec2 r = vec2(fbm(st + q + u_time * 0.1), fbm(st + q + vec2(5.2)));
+                            float f = fbm(st + r);
+                            
+                            vec3 nebula_color1 = vec3(0.9, 0.1, 0.4);
+                            vec3 nebula_color2 = vec3(0.1, 0.4, 0.9);
+                            color += mix(nebula_color1, nebula_color2, smoothstep(0.1, 0.9, f)) * f * 0.5;
+                            
+                            float scanline = sin(st_orig.y * u_resolution.y * 1.5) * 0.1;
+                            color -= scanline;
+                            
+                            float vignette = 1.0 - dist_from_center * 0.8;
+                            color *= vignette;
+                            
+                            if (fract(st_orig.y * 0.1 + u_time * 0.2 + random(vec2(floor(u_time*2.0)))) > 0.995) {
+                                float offset = random(vec2(u_time, st_orig.y)) * 0.1 - 0.05;
+                                color.r = random(st_orig + offset);
+                            }
+                            
+                            gl_FragColor = vec4(color, 1.0);
+                        }`;
+                    
+                    function createShader(type, source) { const shader = gl.createShader(type); gl.shaderSource(shader, source); gl.compileShader(shader); if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) { console.error('Shader error: ' + gl.getShaderInfoLog(shader)); gl.deleteShader(shader); return null; } return shader; }
+                    const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderSource);
+                    const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
+                    program = gl.createProgram(); gl.attachShader(program, vertexShader); gl.attachShader(program, fragmentShader); gl.linkProgram(program);
+                    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) { console.error('Shader program error: ' + gl.getProgramInfoLog(program)); return; }
+                    
+                    positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+                    resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
+                    timeUniformLocation = gl.getUniformLocation(program, "u_time");
+                    
+                    const positionBuffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, 1, 1, -1, -1, 1, -1]), gl.STATIC_DRAW);
+                    gl.useProgram(program);
+                    gl.enableVertexAttribArray(positionAttributeLocation);
+                    gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+                    startAnimation();
+                } catch (e) { console.error("WebGL init error:", e); }
+            }
+            
+            function render(time) {
+                if (!gl) return;
+                time *= 0.0001; 
+                if (gl.canvas.width !== gl.canvas.clientWidth || gl.canvas.height !== gl.canvas.clientHeight) {
+                    gl.canvas.width = gl.canvas.clientWidth;
+                    gl.canvas.height = gl.canvas.clientHeight;
+                    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+                }
+                gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+                gl.uniform1f(timeUniformLocation, time);
+                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+                animationFrameId = requestAnimationFrame(render);
+            }
+
+            document.addEventListener('visibilitychange', () => {
+                isTabVisible = document.visibilityState === 'visible';
+                if (isTabVisible) { startAnimation(); } else { stopAnimation(); }
+            });
+            
+            // --- SCROLL ANIMATIONS ---
+            let scrollObserver;
+            const animatedElements = document.querySelectorAll('section, .card, footer');
+            
+            function enableScrollAnimations() {
+                if (!scrollObserver) {
+                    scrollObserver = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) entry.target.classList.add('is-visible');
+                        });
+                    }, { threshold: 0.1 });
+                }
+                animatedElements.forEach(el => scrollObserver.observe(el));
+            }
+            
+            function disableScrollAnimations() {
+                if (scrollObserver) {
+                    animatedElements.forEach(el => scrollObserver.unobserve(el));
+                }
+            }
+
+            // --- Low power button logic ---
+            document.getElementById('low-power-toggle').addEventListener('click', (e) => {
+                lowPowerMode = !lowPowerMode;
+                const isPressed = lowPowerMode;
+                e.target.classList.toggle('active', isPressed);
+                e.target.setAttribute('aria-pressed', isPressed);
+                
+                const canvas = document.getElementById('shader-canvas');
+                if (lowPowerMode) {
+                    stopAnimation();
+                    canvas.style.display = 'none';
+                    disableScrollAnimations();
+                } else {
+                    canvas.style.display = 'block';
+                    enableScrollAnimations();
+                    startAnimation();
+                }
+            });
+
+            // --- Scroll Spy for Header Navigation ---
+            function initScrollSpy() {
+                const navLinks = document.querySelectorAll('#main-nav a');
+                const sections = Array.from(navLinks).map(link => {
+                    const href = link.getAttribute('href');
+                    try { return href.startsWith('#') ? document.querySelector(href) : null; } catch (e) { return null; }
+                }).filter(s => s);
+
+                if (sections.length === 0) return;
+
+                const navObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const id = entry.target.getAttribute('id');
+                            navLinks.forEach(link => {
+                                link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                            });
+                        }
+                    });
+                }, { rootMargin: "-40% 0px -60% 0px" });
+
+                sections.forEach(section => { if (section) navObserver.observe(section); });
+            }
+            
+            // --- Copy Button Functionality ---
+            window.copyCode = function(button) {
+                const codeBlock = document.getElementById('code-block');
+                const codeText = codeBlock.innerText;
+                navigator.clipboard.writeText(codeText).then(() => {
+                    button.innerText = 'SKOPIOWANO!';
+                    setTimeout(() => { button.innerText = 'KOPIUJ'; }, 2000);
+                }).catch(err => { console.error('Błąd kopiowania: ', err); });
+            }
+
+            // --- Initial State ---
+            initShaderBackground();
+            enableScrollAnimations();
+            initScrollSpy();
+        });
+    </script>
+</body>
+</html>
+
