@@ -179,16 +179,16 @@
             <section id="tool" class="scroll-mt-20">
                 <h2 class="mb-8">Narzędzie: Zaawansowany Konwerter Modeli</h2>
                 <div class="card p-8">
-                     <h3 class="mb-4">AdvancedModelConverter.py (v6)</h3>
+                     <h3 class="mb-4">AdvancedModelConverter.py (v6.1)</h3>
                      <p class="mb-6">Poniżej znajduje się ulepszona wersja skryptu konwertującego. Została zoptymalizowana pod kątem zarządzania pamięcią VRAM (kluczowe przy 8GB) i dodano więcej komunikatów, abyś wiedział, co dzieje się na każdym etapie tego powolnego procesu. Zapisz ten kod jako plik `.py` w folderze `ComfyUI/custom_nodes`.</p>
                     <div class="code-block-container">
                         <button class="copy-btn" onclick="copyCode(this)">KOPIUJ</button>
                         <pre><code class="language-python" id="code-block">
 # Author: AI Research Engineer (Enhanced by Gemini)
-# Node Name: AdvancedModelConverter.py (v6)
-# Description: An advanced, universal, experimental ComfyUI node to perform a one-shot, training-free recalculation 
+# Node Name: AdvancedModelConverter.py (v6.1 - Patched by Gemini)
+# Description: An advanced, universal, experimental ComfyUI node to perform a one-shot, training-free recalculation
 #              of a model's UNet state_dict between epsilon and v-prediction, while correctly handling CLIP and VAE.
-#              This version includes memory management optimizations and enhanced logging.
+#              This version includes a fix for the prediction type setting and memory management optimizations.
 
 import torch
 import comfy.utils
@@ -203,7 +203,7 @@ class AdvancedModelConverter:
     It takes MODEL, CLIP, and VAE as separate inputs, converts ONLY the UNet,
     and passes the original CLIP and VAE through, ensuring maximum coherence.
     The process is experimental, slow, and heuristic-based.
-    v6: Enhanced memory management with gc.collect() and del, plus more verbose logging for user feedback.
+    v6.1: Patched AttributeError when setting the prediction type.
     """
     @classmethod
     def INPUT_TYPES(cls):
@@ -235,7 +235,7 @@ class AdvancedModelConverter:
                 }),
                 "simulation_batch_size": ("INT", {
                     "default": 4, "min": 1, "max": 32, "step": 1,
-                     "tooltip": "Rozmiar wsadu dla symulacji. Większy może być szybszy, ale zużywa więcej VRAM."
+                    "tooltip": "Rozmiar wsadu dla symulacji. Większy może być szybszy, ale zużywa więcej VRAM."
                 }),
                 "optimizer_lr": ("FLOAT", {
                     "default": 0.01, "min": 0.0001, "max": 0.1, "step": 0.0001,
@@ -262,7 +262,7 @@ class AdvancedModelConverter:
             if "time_embed.2.weight" in name and param.shape[0] == 1280:
                 arch_details.update({'type': 'sdxl', 'context_dim': 2048})
                 if arch_details['num_classes'] is None:
-                   arch_details['num_classes'] = 2816
+                    arch_details['num_classes'] = 2816
                 break
             if "input_blocks.0.0.weight" in name and hasattr(unet, 'in_channels') and unet.in_channels == 4:
                 arch_details.update({'type': 'sd15', 'context_dim': 768})
@@ -452,8 +452,20 @@ class AdvancedModelConverter:
         
         target_prediction_type = "v_prediction" if conversion_direction == "epsilon_to_v" else "epsilon"
         print(f"--> Ustawianie typu predykcji modelu na: {target_prediction_type}")
-        model_copy.model_options.setdefault('model_config', {}).set_prediction_type(target_prediction_type)
-
+        
+        # --- FIX START ---
+        # The original line caused an AttributeError because it attempted to call .set_prediction_type()
+        # on a standard Python dictionary returned by .setdefault().
+        # The correct ComfyUI practice is to call this method on the model's 'model_sampling' object,
+        # which is designed to handle this configuration.
+        try:
+            if hasattr(model_copy.model, "model_sampling") and callable(getattr(model_copy.model.model_sampling, "set_prediction_type", None)):
+                model_copy.model.model_sampling.set_prediction_type(target_prediction_type)
+            else:
+                 print("--> WARNING: Could not find 'set_prediction_type' method on model_sampling object. The model's prediction type may not be set correctly.")
+        except Exception as e:
+            print(f"--> WARNING: An error occurred while trying to set the prediction type: {e}")
+        # --- FIX END ---
 
         del unet, original_sd, recalculated_sd
         if device != torch.device('cpu'):
