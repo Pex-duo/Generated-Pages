@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Gamer Demographics (2024-2025)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f7f4;
+            color: #2a2a2a;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+        }
+        .nav-button.active {
+            background-color: #38b2ac;
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .nav-button:not(.active) {
+            background-color: #ffffff;
+            color: #38b2ac;
+            border: 1px solid #38b2ac;
+        }
+        .data-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .data-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        }
+        .stat-number {
+            color: #38b2ac;
+        }
+        .context-toggle {
+            transition: all 0.3s ease;
+        }
+        .context-toggle.active {
+            background-color: #f6ad55;
+            color: #ffffff;
+            border-color: #f6ad55;
+        }
+        .context-toggle:not(.active) {
+            background-color: #ffffff;
+            color: #f6ad55;
+            border: 1px solid #f6ad55;
+        }
+    </style>
+    <!-- Chosen Palette: "Calm Harmony" (Warm Neutrals - bg-f8f7f4, text-2a2a2a; Complimentary - shades of teal #38b2ac; Accent - warm orange #f6ad55) -->
+    <!-- Application Structure Plan: The SPA uses a two-button navigation ("All Gamers", "Mobile Gamers") at the top to toggle between two main views. This directly answers the user's request for a separate mobile breakdown, making comparison easy. Each view displays a large "Total Players" stat, a doughnut chart for Gender, and a bar chart for Race/Ethnicity. This dashboard-like layout is clean and intuitive. The key interaction is a toggle on the Race/Ethnicity charts to switch between "U.S. Market (Proxy)" and "Global Context (Regional)". This was chosen because the research revealed no reliable global race percentage data, only U.S. proxy data and qualitative regional data. This structure honestly and interactively presents the data and its limitations, fulfilling the role of an information architect. -->
+    <!-- Visualization & Content Choices: 
+        1. Total Players (Global & Mobile): Goal: Inform. Method: Large text dynamic statistic (HTML/JS). Interaction: Updates on main view change. Justification: High-impact, clear display of the primary number.
+        2. Gender Demographics (Global & Mobile): Goal: Compare proportions. Method: Doughnut Chart (Chart.js/Canvas). Interaction: Hover tooltips. Justification: Standard, easily understood viz for simple percentages. Library: Chart.js.
+        3. Race/Ethnicity (Global & Mobile): Goal: Show proportions and data limitations. Method: Horizontal Bar Chart (Chart.js/Canvas). Interaction: A toggle ("U.S. Proxy" / "Global Context") updates the chart and its explanatory text. Justification: Bar chart is good for category comparison. The toggle is crucial for handling the data's complexity (US proxy vs. Global regional dominance). Library: Chart.js.
+        4. Contextual Text: Goal: Explain data limitations. Method: HTML paragraphs. Interaction: Text content updates based on the Race/Ethnicity toggle. Justification: Critical for user understanding, as the research revealed data scarcity.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-gray-50 min-h-screen p-4 md:p-8">
+
+    <div class="container mx-auto max-w-7xl">
+        
+        <header class="text-center mb-8 md:mb-12">
+            <h1 class="text-3xl md:text-5xl font-bold text-gray-800 mb-2">Global Gamer Demographics</h1>
+            <p class="text-lg md:text-xl text-gray-600">Interactive Report (2024-2025 Data)</p>
+        </header>
+
+        <nav class="flex justify-center space-x-4 mb-8 md:mb-12">
+            <button id="nav-all" class="nav-button active font-semibold py-3 px-6 rounded-full shadow-md" data-view="all">
+                All Gamers
+            </button>
+            <button id="nav-mobile" class="nav-button font-semibold py-3 px-6 rounded-full shadow-md" data-view="mobile">
+                Mobile Gamers
+            </button>
+        </nav>
+
+        <main id="app-content">
+
+            <!-- View 1: All Gamers (Default) -->
+            <section id="view-all" class="space-y-8">
+                <div class="data-card p-6 md:p-8 text-center">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-2">Total Players Worldwide</h2>
+                    <p class="text-5xl md:text-7xl font-bold stat-number">3.32 Billion</p>
+                    <p class="text-gray-600 mt-2">(As of 2024, across all platforms)</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="data-card p-6 md:p-8">
+                        <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Gender Demographics</h2>
+                        <p class="text-center text-gray-600 mb-6">The global gamer base is approaching an even split, though it still leans slightly male when all platforms are combined.</p>
+                        <div class="chart-container">
+                            <canvas id="all-gender-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="data-card p-6 md:p-8 flex flex-col">
+                        <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Race & Ethnicity</h2>
+                        <div class="flex justify-center space-x-2 mb-4">
+                            <button class="context-toggle active" data-chart="all-race-chart" data-context="proxy">U.S. Proxy Data</button>
+                            <button class="context-toggle" data-chart="all-race-chart" data-context="global">Global Context</button>
+                        </div>
+                        <p id="all-race-context" class="text-center text-gray-600 mb-6 flex-grow">
+                            Reliable global data on race/ethnicity is not available. This chart shows data from the U.S. market as a proxy.
+                        </p>
+                        <div class="chart-container">
+                            <canvas id="all-race-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- View 2: Mobile Gamers (Hidden) -->
+            <section id="view-mobile" class="space-y-8 hidden">
+                <div class="data-card p-6 md:p-8 text-center">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-2">Total Mobile Gamers Worldwide</h2>
+                    <p class="text-5xl md:text-7xl font-bold stat-number">~2.7 Billion</p>
+                    <p class="text-gray-600 mt-2">(Active players as of 2024)</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="data-card p-6 md:p-8">
+                        <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Gender Demographics</h2>
+                        <p class="text-center text-gray-600 mb-6">The mobile gaming sphere tells a different story, with a clear majority of players identifying as female.</p>
+                        <div class="chart-container">
+                            <canvas id="mobile-gender-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="data-card p-6 md:p-8 flex flex-col">
+                        <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Race & Ethnicity</h2>
+                         <div class="flex justify-center space-x-2 mb-4">
+                            <button class="context-toggle active" data-chart="mobile-race-chart" data-context="proxy">U.S. Proxy Data</button>
+                            <button class="context-toggle" data-chart="mobile-race-chart" data-context="global">Global Context</button>
+                        </div>
+                        <p id="mobile-race-context" class="text-center text-gray-600 mb-6 flex-grow">
+                            Reliable global data on race/ethnicity is not available. This chart shows data from the U.S. market as a proxy.
+                        </p>
+                        <div class="chart-container">
+                            <canvas id="mobile-race-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="mt-8 md:mt-12">
+            <section class="data-card p-6 md:p-8">
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Data Sources</h2>
+                <p class="text-center text-gray-600 mb-6">
+                    This report is a synthesis of data from multiple industry analyses. The raw data for race & ethnicity is based on U.S. market reports as a global proxy, while regional data is used for a broader world context.
+                </p>
+                <ul class="list-disc list-inside space-y-3 max-w-4xl mx-auto text-gray-700">
+                    <li>
+                        <a href="https://prioridata.com/number-of-gamers/" target="_blank" rel="noopener noreferrer" class="text-teal-600 hover:text-teal-800 hover:underline">
+                            Priori Data: How Many Gamers Are There in 2025? Latest Stats
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.demandsage.com/gamers-statistics/" target="_blank" rel="noopener noreferrer" class="text-teal-600 hover:text-teal-800 hover:underline">
+                            DemandSage: How Many Gamers Are There? (2025 Statistics)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://explodingtopics.com/blog/number-of-gamers" target="_blank" rel="noopener noreferrer" class="text-teal-600 hover:text-teal-800 hover:underline">
+                            Exploding Topics: How Many Gamers Are There? (New 2025 Statistics)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.answeriq.com/video-gaming-statistics/" target="_blank" rel="noopener noreferrer" class="text-teal-600 hover:text-teal-800 hover:underline">
+                            AnsweriQ: 41 Video Gaming Statistics 2025 (Users & Demographics)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.bankmycell.com/blog/how-many-people-play-video-games" target="_blank" rel="noopener noreferrer" class="text-teal-600 hover:text-teal-800 hover:underline">
+                            BankMyCell: How Many People Play Video Games in the World? (2025)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://techjury.net/industry-analysis/video-game-demographics/" target="_blank" rel="noopener noreferrer" class="text-teal-600 hover:text-teal-800 hover:underline">
+                            TechJury: 2025 Video Game Demographics: Stats & Trends to Know
+                        </a>
+                    </li>
+                    <li>
+                        <a href="httpsa://techjury.net/industry-analysis/mobile-gaming-demographics/" target="_blank" rel="noopener noreferrer" class="text-teal-600 hover:text-teal-800 hover:underline">
+                            TechJury: How Many People Play Mobile Games in 2025?
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.businessofapps.com/data/mobile-game-demographics-data/" target="_blank" rel="noopener noreferrer" class="text-teal-600 hover:text-teal-800 hover:underline">
+                            Business of Apps: Mobile Game Demographics Data (2025)
+                        </a>
+                    </li>
+                </ul>
+            </section>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            Chart.defaults.font.family = 'Inter';
+            Chart.defaults.font.weight = '600';
+            Chart.defaults.color = '#555';
+
+            const chartInstances = {};
+
+            const commonDoughnutOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: { size: 14 }
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: '#2a2a2a',
+                        titleFont: { size: 16 },
+                        bodyFont: { size: 14 },
+                        padding: 12,
+                        cornerRadius: 6,
+                        callbacks: {
+                            label: function(context) {
+                                return ` ${context.label}: ${context.parsed}%`;
+                            }
+                        }
+                    }
+                }
+            };
+            
+            const commonBarOptions = {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false,
+                        },
+                        ticks: {
+                            font: { size: 12 }
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false,
+                        },
+                        ticks: {
+                            font: { size: 14 }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: '#2a2a2a',
+                        titleFont: { size: 16 },
+                        bodyFont: { size: 14 },
+                        padding: 12,
+                        cornerRadius: 6,
+                        callbacks: {
+                            label: function(context) {
+                                return ` ${context.label}: ${context.parsed.x}%`;
+                            }
+                        }
+                    }
+                }
+            };
+
+            const raceData = {
+                proxy: {
+                    labels: ['White', 'Hispanic', 'Black', 'Asian'],
+                    datasets: [{
+                        label: '% of Players (U.S.)',
+                        data: [71, 10, 8, 7],
+                        backgroundColor: ['#4fd1c5', '#f6ad55', '#38b2ac', '#a0aec0'],
+                        borderRadius: 4,
+                    }]
+                },
+                globalAll: {
+                    labels: ['Asia', 'Europe', 'Latin America', 'North America', 'Rest of World'],
+                    datasets: [{
+                        label: 'Players (in Billions)',
+                        data: [1.48, 0.715, 0.42, 0.285, 0.42],
+                        backgroundColor: ['#4fd1c5', '#38b2ac', '#a0aec0', '#f6ad55', '#cbd5e0'],
+                        borderRadius: 4,
+                    }]
+                },
+                globalMobile: {
+                    labels: ['Asia', 'Rest of World'],
+                    datasets: [{
+                        label: '% of Players',
+                        data: [55, 45],
+                        backgroundColor: ['#4fd1c5', '#a0aec0'],
+                        borderRadius: 4,
+                    }]
+                }
+            };
+            
+            const raceContextText = {
+                proxy: "Reliable global data on race/ethnicity is not available. This chart shows data from the U.S. market as a proxy.",
+                globalAll: "Globally, the player base is defined by region. Asia has the largest number of players by a wide margin.",
+                globalMobile: "The mobile market is dominated by the Asia-Pacific region, which accounts for 55% of all mobile gamers. China and India are the two largest markets."
+            };
+
+            function createAllGenderChart() {
+                const ctx = document.getElementById('all-gender-chart').getContext('2d');
+                chartInstances['all-gender-chart'] = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Male', 'Female'],
+                        datasets: [{
+                            data: [52, 48],
+                            backgroundColor: ['#38b2ac', '#f6ad55'],
+                            borderColor: ['#38b2ac', '#f6ad55'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: commonDoughnutOptions
+                });
+            }
+
+            function createMobileGenderChart() {
+                const ctx = document.getElementById('mobile-gender-chart').getContext('2d');
+                chartInstances['mobile-gender-chart'] = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Female', 'Male'],
+                        datasets: [{
+                            data: [63, 37],
+                            backgroundColor: ['#f6ad55', '#38b2ac'],
+                            borderColor: ['#f6ad55', '#38b2ac'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: commonDoughnutOptions
+                });
+            }
+
+            function createAllRaceChart() {
+                const ctx = document.getElementById('all-race-chart').getContext('2d');
+                chartInstances['all-race-chart'] = new Chart(ctx, {
+                    type: 'bar',
+                    data: raceData.proxy,
+                    options: {
+                        ...commonBarOptions,
+                        plugins: {
+                            ...commonBarOptions.plugins,
+                            tooltip: {
+                                ...commonBarOptions.plugins.tooltip,
+                                callbacks: {
+                                    label: function(context) {
+                                        return ` ${context.label}: ${context.parsed.x}%`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            ...commonBarOptions.scales,
+                            x: {
+                                ...commonBarOptions.scales.x,
+                                ticks: {
+                                    ...commonBarOptions.scales.x.ticks,
+                                    callback: function(value) { return value + '%' }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            function createMobileRaceChart() {
+                const ctx = document.getElementById('mobile-race-chart').getContext('2d');
+                chartInstances['mobile-race-chart'] = new Chart(ctx, {
+                    type: 'bar',
+                    data: raceData.proxy,
+                    options: {
+                        ...commonBarOptions,
+                        plugins: {
+                            ...commonBarOptions.plugins,
+                            tooltip: {
+                                ...commonBarOptions.plugins.tooltip,
+                                callbacks: {
+                                    label: function(context) {
+                                        return ` ${context.label}: ${context.parsed.x}%`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            ...commonBarOptions.scales,
+                            x: {
+                                ...commonBarOptions.scales.x,
+                                ticks: {
+                                    ...commonBarOptions.scales.x.ticks,
+                                    callback: function(value) { return value + '%' }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            function updateRaceChart(chartId, context) {
+                const chart = chartInstances[chartId];
+                if (!chart) return;
+
+                let newData;
+                let newContextText;
+                let newXAxisOptions = {
+                    ...commonBarOptions.scales.x,
+                    ticks: {
+                        ...commonBarOptions.scales.x.ticks,
+                        callback: function(value) { return value }
+                    }
+                };
+                let newTooltipCallback = (context) => ` ${context.label}: ${context.parsed.x}`;
+
+                if (context === 'proxy') {
+                    newData = raceData.proxy;
+                    newContextText = raceContextText.proxy;
+                    newXAxisOptions.ticks.callback = function(value) { return value + '%' };
+                    newTooltipCallback = (context) => ` ${context.label}: ${context.parsed.x}%`;
+                } else {
+                    if (chartId === 'all-race-chart') {
+                        newData = raceData.globalAll;
+                        newContextText = raceContextText.globalAll;
+                        newTooltipCallback = (context) => ` ${context.label}: ${context.parsed.x} Billion`;
+                    } else {
+                        newData = raceData.globalMobile;
+                        newContextText = raceContextText.globalMobile;
+                        newXAxisOptions.ticks.callback = function(value) { return value + '%' };
+                        newTooltipCallback = (context) => ` ${context.label}: ${context.parsed.x}%`;
+                    }
+                }
+
+                chart.data = newData;
+                chart.options.scales.x = newXAxisOptions;
+                chart.options.plugins.tooltip.callbacks.label = newTooltipCallback;
+                chart.update();
+
+                const contextElId = chartId === 'all-race-chart' ? 'all-race-context' : 'mobile-race-context';
+                document.getElementById(contextElId).textContent = newContextText;
+            }
+
+            createAllGenderChart();
+            createAllRaceChart();
+            createMobileGenderChart();
+            createMobileRaceChart();
+            
+            const navButtons = document.querySelectorAll('.nav-button');
+            const views = {
+                all: document.getElementById('view-all'),
+                mobile: document.getElementById('view-mobile')
+            };
+
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    const viewToShow = button.dataset.view;
+                    
+                    Object.values(views).forEach(view => view.classList.add('hidden'));
+                    views[viewToShow].classList.remove('hidden');
+                });
+            });
+            
+            const contextToggles = document.querySelectorAll('.context-toggle');
+            contextToggles.forEach(button => {
+                button.addEventListener('click', () => {
+                    const chartId = button.dataset.chart;
+                    const context = button.dataset.context;
+                    
+                    document.querySelectorAll(`.context-toggle[data-chart="${chartId}"]`).forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    updateRaceChart(chartId, context);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
