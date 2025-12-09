@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centrum Dowodzenia Randką | 11.12.2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card-anim {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hidden-content {
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- Container -->
+    <div class="w-full max-w-md bg-slate-800 rounded-xl shadow-2xl border border-slate-700 overflow-hidden card-anim" id="app-container">
+        
+        <!-- Header -->
+        <div class="bg-slate-900 p-4 border-b border-slate-700 flex justify-between items-center">
+            <div>
+                <h1 class="text-lg font-bold text-blue-400"><i class="fas fa-heartbeat mr-2"></i>Randka Commander</h1>
+                <p class="text-xs text-slate-500">Szczecin, 11.12.2025</p>
+            </div>
+            <div id="progress-indicator" class="text-xs font-mono bg-slate-800 px-2 py-1 rounded">Etap 1/5</div>
+        </div>
+
+        <!-- Dynamic Content Area -->
+        <div id="content-area" class="p-6">
+            <!-- Content will be injected here by JS -->
+        </div>
+
+        <!-- Footer / Panic Button -->
+        <div class="bg-slate-900 p-4 border-t border-slate-700 flex justify-between">
+            <button onclick="resetApp()" class="text-slate-500 hover:text-white text-sm">
+                <i class="fas fa-undo"></i> Reset
+            </button>
+            <button onclick="triggerPanic()" class="text-red-500 hover:text-red-400 text-sm font-bold animate-pulse">
+                <i class="fas fa-exclamation-triangle"></i> AWARYJNE
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- BAZA DANYCH ETAPÓW ---
+        const steps = {
+            start: {
+                id: 'start',
+                stepNum: 1,
+                title: "📍 Start: Kawiarnia Mozaika",
+                icon: "fa-mug-hot",
+                desc: "Godzina 12:00 - 13:00. Pijecie kawę, jecie ciasto. Obserwuj sytuację.",
+                address: "Jagiellońska 92, Szczecin",
+                tips: "To kultowe miejsce z neonami. Luźna atmosfera. Nie spinaj się. Pod koniec kawy sprawdź dyskretnie pogodę za oknem i zapytaj, czy ma ochotę na spacer.",
+                choices: [
+                    { label: "Zimno / Deszcz / Szpilki", next: 'willa', icon: "fa-snowflake", color: "bg-blue-600" },
+                    { label: "Ciepło / Chce spaceru", next: 'blonia', icon: "fa-sun", color: "bg-green-600" }
+                ]
+            },
+            willa: {
+                id: 'willa',
+                stepNum: 2,
+                title: "🏛️ Opcja VIP: Willa Lentza",
+                icon: "fa-landmark",
+                desc: "Willa jest tuż za rogiem. Idealna ucieczka przed zimnem w luksus.",
+                address: "Al. Wojska Polskiego 84",
+                tips: "Powiedz: 'Słuchaj, dosłownie obok jest najpiękniejsza willa w Szczecinie, wejdźmy zobaczyć wnętrza'. W czwartki zwiedzanie o 12:00 i 14:00. Wnętrza robią efekt WOW.",
+                choices: [
+                    { label: "Zwiedzone, głodni!", next: 'food_decision', icon: "fa-utensils", color: "bg-emerald-600" }
+                ]
+            },
+            blonia: {
+                id: 'blonia',
+                stepNum: 2,
+                title: "🌳 Opcja Spacer: Jasne Błonia",
+                icon: "fa-tree",
+                desc: "Klasyk. Spacer aleją platanów pod Pomnik Trzech Orłów.",
+                address: "Jasne Błonia im. Jana Pawła II",
+                tips: "Idźcie w stronę Urzędu Miasta. Temat do rozmowy: platany (największe skupisko w Polsce). Zróbcie pętlę i kierujcie się w dół do centrum.",
+                choices: [
+                    { label: "Spacer zrobiony, głodni!", next: 'food_decision', icon: "fa-utensils", color: "bg-emerald-600" }
+                ]
+            },
+            food_decision: {
+                id: 'food_decision',
+                stepNum: 3,
+                title: "🍽️ Decyzja Gastro",
+                icon: "fa-question-circle",
+                desc: "Czas na obiad. Schodzicie w dół Al. Wojska Polskiego/Piłsudskiego. Zapytaj na co ma ochotę.",
+                address: "Okolice Placu Grunwaldzkiego",
+                tips: "Nie pytaj 'gdzie idziemy?', daj wybór: 'Wolisz coś rozgrzewającego z Azji czy włoski klasyk?'",
+                choices: [
+                    { label: "Azja (Elegancko)", next: 'jindu', icon: "fa-bowl-rice", color: "bg-red-700" },
+                    { label: "Sushi (Modnie)", next: 'unagi', icon: "fa-fish", color: "bg-slate-700" },
+                    { label: "Włoskie (Przytulnie)", next: 'pecorino', icon: "fa-pizza-slice", color: "bg-orange-600" }
+                ]
+            },
+            jindu: {
+                id: 'jindu',
+                stepNum: 4,
+                title: "🥢 Jin Du (Chińska)",
+                icon: "fa-yin-yang",
+                desc: "Klasyczna chińska restauracja, białe obrusy, spokojnie.",
+                address: "Al. Papieża Jana Pawła II 17",
+                tips: "Zamówcie kaczkę albo coś do podziału na środek stołu. To buduje intymność.",
+                choices: [
+                    { label: "Najedzeni, co dalej?", next: 'culture_decision', icon: "fa-arrow-right", color: "bg-blue-600" }
+                ]
+            },
+            unagi: {
+                id: 'unagi',
+                stepNum: 4,
+                title: "🍣 Unagi Sushi",
+                icon: "fa-fish",
+                desc: "Mroczny, klimatyczny lokal. Bardzo nowoczesny vibe.",
+                address: "ul. Rayskiego 18",
+                tips: "Rayskiego to teraz najmodniejsza ulica. Lokal jest świetny na randkę przez oświetlenie.",
+                choices: [
+                    { label: "Najedzeni, co dalej?", next: 'culture_decision', icon: "fa-arrow-right", color: "bg-blue-600" }
+                ]
+            },
+            pecorino: {
+                id: 'pecorino',
+                stepNum: 4,
+                title: "🍝 Pecorino (Włoska)",
+                icon: "fa-wine-glass",
+                desc: "Mała, przytulna knajpka. Obrusy w kratę. Domowy makaron.",
+                address: "ul. Piłsudskiego 20",
+                tips: "Bezpieczna opcja, jeśli ona nie lubi eksperymentów. Dobre wino.",
+                choices: [
+                    { label: "Najedzeni, co dalej?", next: 'culture_decision', icon: "fa-arrow-right", color: "bg-blue-600" }
+                ]
+            },
+            culture_decision: {
+                id: 'culture_decision',
+                stepNum: 4,
+                title: "🎭 Decyzja Kulturalna",
+                icon: "fa-masks-theater",
+                desc: "Jesteście blisko Odry. Jest ok. 15:30-16:00. Zbadaj jej nastrój.",
+                address: "Centrum",
+                tips: "Jeśli jest 'ę-ą' -> Muzeum. Jeśli nowoczesna -> Trafo. Jeśli chce luzu -> Jarmark.",
+                choices: [
+                    { label: "Sztuka (Performance 16:30)", next: 'muzeum', icon: "fa-eye", color: "bg-purple-600" },
+                    { label: "Nowoczesność (TRAFO)", next: 'trafo', icon: "fa-cube", color: "bg-gray-600" },
+                    { label: "Tylko Jarmark (Luz)", next: 'jarmark', icon: "fa-candy-cane", color: "bg-yellow-600" }
+                ]
+            },
+            muzeum: {
+                id: 'muzeum',
+                stepNum: 5,
+                title: "🖼️ Muzeum Narodowe",
+                icon: "fa-palette",
+                desc: "Performance: 'We can't build what we can't imagine'.",
+                address: "ul. Staromłyńska 1",
+                tips: "Start 16:30. To opcja dla odważnych/ciekawych świata. Po wyjściu jesteście 50m od Jarmarku.",
+                choices: [
+                    { label: "Finał na Jarmarku", next: 'jarmark', icon: "fa-star", color: "bg-yellow-500" }
+                ]
+            },
+            trafo: {
+                id: 'trafo',
+                stepNum: 5,
+                title: "🧱 TRAFO Trafostacja",
+                icon: "fa-industry",
+                desc: "Sztuka w starej transformatorowni.",
+                address: "ul. Św. Ducha 4",
+                tips: "Niesamowity budynek. Wystawy bywają kontrowersyjne - dobry temat do dyskusji.",
+                choices: [
+                    { label: "Finał na Jarmarku", next: 'jarmark', icon: "fa-star", color: "bg-yellow-500" }
+                ]
+            },
+            jarmark: {
+                id: 'jarmark',
+                stepNum: 6,
+                title: "🎄 FINAŁ: Jarmark",
+                icon: "fa-gift",
+                desc: "Aleja Kwiatowa / Plac Żołnierza / Plac Adamowicza.",
+                address: "Aleja Kwiatowa",
+                tips: "1. Kup grzańca. 2. Przejdźcie się zobaczyć iluminacje. 3. Jeśli głodni - pierniki/pasztecik. To koniec zaplanowanej części - pełen spontan.",
+                choices: [
+                    { label: "Misja Zakończona Sukcesem", next: 'end', icon: "fa-flag-checkered", color: "bg-green-500" }
+                ]
+            },
+            end: {
+                id: 'end',
+                stepNum: 6,
+                title: "🏆 Gratulacje!",
+                icon: "fa-glass-cheers",
+                desc: "Plan wykonany. Reszta zależy od Ciebie.",
+                address: "",
+                tips: "Odprowadź ją, zamów taksówkę lub idźcie dalej na drinka na Podzamcze.",
+                choices: [] // Koniec
+            },
+            panic: {
+                id: 'panic',
+                stepNum: 99,
+                title: "🚨 Opcja Awaryjna",
+                icon: "fa-ambulance",
+                desc: "Coś poszło nie tak? Deszcz? Foch? Nuda?",
+                address: "Al. Wojska Polskiego 2",
+                tips: "Jedźcie do Kina Pionier (Kiniarnia). Zejdźcie do podziemia, zamów wino, usiądźcie przy pianinie. Tam jest tak klimatycznie, że uratuje każdą randkę.",
+                choices: [
+                    { label: "Powrót do planu", next: 'start', icon: "fa-undo", color: "bg-slate-600" }
+                ]
+            }
+        };
+
+        // --- RENDEROWANIE ---
+        function renderStep(stepKey) {
+            const step = steps[stepKey];
+            const contentDiv = document.getElementById('content-area');
+            const progressDiv = document.getElementById('progress-indicator');
+
+            // Aktualizacja paska postępu
+            if(step.stepNum < 90) {
+                progressDiv.innerText = `Etap ${step.stepNum}/5`;
+                progressDiv.classList.remove('text-red-500');
+            } else {
+                progressDiv.innerText = `AWARYJNE`;
+                progressDiv.classList.add('text-red-500');
+            }
+
+            // Budowanie HTML
+            let choicesHtml = '';
+            if (step.choices && step.choices.length > 0) {
+                choicesHtml = `<div class="grid gap-3 mt-6">` + 
+                    step.choices.map(choice => `
+                        <button onclick="renderStep('${choice.next}')" 
+                                class="w-full ${choice.color} hover:opacity-90 text-white font-bold py-3 px-4 rounded-lg shadow-lg flex items-center justify-center transition transform active:scale-95">
+                            <i class="fas ${choice.icon} mr-2"></i> ${choice.label}
+                        </button>
+                    `).join('') + 
+                    `</div>`;
+            }
+
+            let mapButton = '';
+            if (step.address) {
+                const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(step.address)}`;
+                mapButton = `<a href="${mapLink}" target="_blank" class="text-blue-400 text-sm hover:text-blue-300 mt-1 block">
+                    <i class="fas fa-map-marker-alt"></i> ${step.address} (Pokaż mapę)
+                </a>`;
+            }
+
+            const html = `
+                <div class="card-anim">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center text-2xl text-blue-400 mr-4 shadow-inner">
+                            <i class="fas ${step.icon}"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-white leading-tight">${step.title}</h2>
+                            ${mapButton}
+                        </div>
+                    </div>
+                    
+                    <p class="text-slate-300 text-lg mb-4 leading-relaxed border-l-4 border-slate-600 pl-4 bg-slate-800/50 py-2">
+                        ${step.desc}
+                    </p>
+
+                    ${step.tips ? `
+                        <div class="mt-4">
+                            <button onclick="toggleTips()" class="text-xs uppercase tracking-wide text-slate-500 font-bold hover:text-slate-300 focus:outline-none flex items-center">
+                                <i class="fas fa-user-secret mr-1"></i> Ściąga / Bajer (Kliknij)
+                            </button>
+                            <div id="tips-box" class="hidden-content mt-2 p-3 bg-yellow-900/20 border border-yellow-700/50 rounded text-yellow-100 text-sm italic">
+                                "${step.tips}"
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${choicesHtml}
+                </div>
+            `;
+
+            contentDiv.innerHTML = html;
+        }
+
+        // --- FUNKCJE POMOCNICZE ---
+        function toggleTips() {
+            const box = document.getElementById('tips-box');
+            if (box.style.display === 'block') {
+                box.style.display = 'none';
+            } else {
+                box.style.display = 'block';
+            }
+        }
+
+        function triggerPanic() {
+            renderStep('panic');
+        }
+
+        function resetApp() {
+            renderStep('start');
+        }
+
+        // --- INICJALIZACJA ---
+        renderStep('start');
+
+    </script>
+</body>
+</html>
