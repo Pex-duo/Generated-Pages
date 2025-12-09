@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Operacyjny Randki - 11.12.2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f3f4f6; /* Szary na ekranie */
+            color: #1f2937;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        .paper-sheet {
+            background-color: white;
+            max-width: 210mm; /* A4 width */
+            margin: 20px auto;
+            padding: 40px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .connector-line {
+            width: 2px;
+            background-color: #cbd5e1;
+            height: 20px;
+            margin: 0 auto;
+        }
+
+        .choice-badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .tip-box {
+            background-color: #fef9c3;
+            border-left: 3px solid #ca8a04;
+            padding: 8px;
+            font-size: 0.8rem;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .paper-sheet {
+                box-shadow: none;
+                margin: 0;
+                padding: 10px;
+                max-width: 100%;
+            }
+            .no-print {
+                display: none !important;
+            }
+            /* Wymuszamy podział stron jeśli trzeba, ale staramy się zmieścić */
+            .page-break { 
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Pasek narzędzi (tylko ekran) -->
+    <div class="no-print fixed top-4 right-4 z-50 flex gap-2">
+        <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow flex items-center">
+            <i class="fas fa-print mr-2"></i> Drukuj Plan
+        </button>
+    </div>
+
+    <!-- Arkusz A4 -->
+    <div class="paper-sheet">
+        
+        <!-- Header -->
+        <div class="border-b-4 border-slate-800 pb-4 mb-6 flex justify-between items-end">
+            <div>
+                <h1 class="text-3xl font-bold uppercase tracking-wider">Plan Operacyjny: Randka</h1>
+                <p class="text-slate-500 mono">DATA: 11.12.2025 | MIEJSCE: SZCZECIN | START: 12:00</p>
+            </div>
+            <div class="text-right">
+                <div class="text-4xl font-bold text-slate-200"><i class="fas fa-map-signs"></i></div>
+            </div>
+        </div>
+
+        <!-- ETAP 1: START -->
+        <div class="page-break mb-4">
+            <div class="flex items-center justify-center">
+                <div class="border-2 border-slate-800 p-4 rounded-lg w-full max-w-md bg-slate-50 relative">
+                    <div class="absolute -top-3 left-4 bg-slate-800 text-white px-2 text-xs font-bold uppercase">Etap 1: Start (12:00)</div>
+                    <h3 class="font-bold text-xl"><i class="fas fa-mug-hot text-amber-700 mr-2"></i>Kawiarnia Mozaika</h3>
+                    <p class="text-sm text-slate-600"><i class="fas fa-map-marker-alt mr-1"></i>Jagiellońska 92</p>
+                    <div class="tip-box">
+                        <i class="fas fa-lightbulb mr-1"></i> Wskazówka: Luźna kawa. Pod koniec sprawdź pogodę za oknem i zadaj pytanie o spacer.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strzałki Rozdzielające -->
+        <div class="flex justify-center my-2 text-slate-300">
+            <i class="fas fa-arrow-down"></i>
+        </div>
+
+        <!-- ETAP 2: ROZWIDLENIE -->
+        <div class="grid grid-cols-2 gap-4 mb-6 page-break">
+            <!-- Opcja A -->
+            <div class="border border-slate-300 p-4 rounded bg-blue-50">
+                <div class="choice-badge bg-blue-100 text-blue-800">Warunek: Zimno / Deszcz</div>
+                <h3 class="font-bold text-lg"><i class="fas fa-landmark text-blue-600 mr-2"></i>Willa Lentza</h3>
+                <p class="text-sm mb-2">Al. Wojska Polskiego 84</p>
+                <p class="text-xs text-slate-600 mb-2">Ucieczka w luksus. Zwiedzanie o 12:00/14:00.</p>
+                <div class="tip-box text-xs">
+                    "Tuż obok jest piękna willa, wejdźmy się ogrzać."
+                </div>
+            </div>
+
+            <!-- Opcja B -->
+            <div class="border border-slate-300 p-4 rounded bg-green-50">
+                <div class="choice-badge bg-green-100 text-green-800">Warunek: Słońce / Spacer</div>
+                <h3 class="font-bold text-lg"><i class="fas fa-tree text-green-600 mr-2"></i>Jasne Błonia</h3>
+                <p class="text-sm mb-2">Aleja Platanów</p>
+                <p class="text-xs text-slate-600 mb-2">Klasyczny spacer pod pomnik Jana Pawła II.</p>
+                <div class="tip-box text-xs">
+                    "Przejdźmy się, platany wyglądają super."
+                </div>
+            </div>
+        </div>
+
+        <!-- Łącznik -->
+        <div class="text-center mb-2">
+            <span class="bg-slate-800 text-white px-3 py-1 text-xs rounded-full mono">ZBIÓRKA: SCHODZIMY W DÓŁ DO CENTRUM</span>
+            <div class="connector-line h-6"></div>
+        </div>
+
+        <!-- ETAP 3: GASTRO (3 Opcje) -->
+        <div class="relative border-t-2 border-slate-200 pt-4 mb-6 page-break">
+            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-white px-2 text-slate-500 text-xs font-bold">ETAP 2: OBIAD (ok. 14:30)</div>
+            
+            <div class="grid grid-cols-3 gap-3">
+                <!-- Food 1 -->
+                <div class="border border-slate-200 p-3 rounded hover:bg-slate-50">
+                    <div class="choice-badge bg-red-100 text-red-800">Klasyka</div>
+                    <h4 class="font-bold">Jin Du (Chiny)</h4>
+                    <p class="text-xs text-slate-500">Al. Jana Pawła II 17</p>
+                    <p class="text-xs mt-2">Elegancko, białe obrusy, cisza.</p>
+                </div>
+                
+                <!-- Food 2 -->
+                <div class="border border-slate-200 p-3 rounded hover:bg-slate-50">
+                    <div class="choice-badge bg-slate-200 text-slate-800">Modnie</div>
+                    <h4 class="font-bold">Unagi Sushi</h4>
+                    <p class="text-xs text-slate-500">ul. Rayskiego 18</p>
+                    <p class="text-xs mt-2">Ciemniej, klimatycznie, intymnie.</p>
+                </div>
+
+                <!-- Food 3 -->
+                <div class="border border-slate-200 p-3 rounded hover:bg-slate-50">
+                    <div class="choice-badge bg-orange-100 text-orange-800">Bezpiecznie</div>
+                    <h4 class="font-bold">Pecorino (Włochy)</h4>
+                    <p class="text-xs text-slate-500">ul. Piłsudskiego 20</p>
+                    <p class="text-xs mt-2">Przytulnie, domowe makarony.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Łącznik -->
+        <div class="text-center mb-2">
+             <i class="fas fa-arrow-down text-slate-300"></i>
+        </div>
+
+        <!-- ETAP 4: KULTURA (Decyzja) -->
+        <div class="relative border-t-2 border-slate-200 pt-4 mb-6 page-break">
+            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-white px-2 text-slate-500 text-xs font-bold">ETAP 3: KULTURA (ok. 16:00)</div>
+
+            <div class="grid grid-cols-3 gap-3">
+                <!-- Kultura 1 -->
+                <div class="border-2 border-purple-100 p-3 rounded bg-purple-50">
+                    <h4 class="font-bold text-purple-900"><i class="fas fa-eye mr-1"></i> Muzeum</h4>
+                    <p class="text-xs font-bold">Performance 16:30</p>
+                    <p class="text-xs text-slate-600 mt-1">ul. Staromłyńska 1</p>
+                    <div class="tip-box text-xs mt-2">"Coś ambitnego/dziwnego dla ciekawskich."</div>
+                </div>
+
+                <!-- Kultura 2 -->
+                <div class="border-2 border-slate-200 p-3 rounded">
+                    <h4 class="font-bold text-slate-700"><i class="fas fa-cube mr-1"></i> TRAFO</h4>
+                    <p class="text-xs font-bold">Sztuka Nowoczesna</p>
+                    <p class="text-xs text-slate-600 mt-1">ul. Św. Ducha 4</p>
+                    <div class="tip-box text-xs mt-2">"Wielka hala, industrialny klimat."</div>
+                </div>
+
+                <!-- Kultura 3 -->
+                <div class="border-2 border-yellow-100 p-3 rounded bg-yellow-50">
+                    <h4 class="font-bold text-yellow-800"><i class="fas fa-candy-cane mr-1"></i> Tylko Jarmark</h4>
+                    <p class="text-xs font-bold">Wersja "Luz"</p>
+                    <p class="text-xs text-slate-600 mt-1">Aleja Kwiatowa</p>
+                    <div class="tip-box text-xs mt-2">"Odpuśćmy muzea, idziemy na grzańca."</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ETAP 5: FINAŁ -->
+        <div class="bg-slate-800 text-white p-6 rounded-lg text-center mb-8 shadow-lg print:bg-slate-800 print:text-white">
+            <h2 class="text-2xl font-bold mb-2"><i class="fas fa-gift text-yellow-400 mr-2"></i>FINAŁ: JARMARK BOŻONARODZENIOWY</h2>
+            <p class="text-slate-300 text-sm">Lokacja: Aleja Kwiatowa / Plac Żołnierza / Plac Adamowicza</p>
+            <div class="grid grid-cols-3 gap-4 mt-4 text-center">
+                <div><i class="fas fa-wine-glass-alt text-red-400"></i><br><span class="text-xs">Grzane Wino</span></div>
+                <div><i class="fas fa-lightbulb text-yellow-400"></i><br><span class="text-xs">Iluminacje</span></div>
+                <div><i class="fas fa-camera text-blue-400"></i><br><span class="text-xs">Wspólne Foto</span></div>
+            </div>
+        </div>
+
+        <!-- AWARYJNE -->
+        <div class="border-2 border-red-500 border-dashed p-4 rounded bg-red-50 mt-4">
+            <div class="flex items-start">
+                <div class="text-3xl text-red-600 mr-4"><i class="fas fa-ambulance"></i></div>
+                <div>
+                    <h3 class="font-bold text-red-700 uppercase">Plan Awaryjny (Panic Button)</h3>
+                    <p class="text-sm font-bold mt-1">Gdy leje deszcz / jest nudno / foch:</p>
+                    <p class="text-sm mt-1">Jedźcie TAXI do <span class="font-bold">KINA PIONIER (Al. Wojska Polskiego 2)</span>.</p>
+                    <p class="text-xs italic mt-1">Wejdźcie do "Kiniarni" (w piwnicy), zamówcie wino przy pianinie. To zawsze działa.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
