@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Żywieniowy - Wsparcie Psychodietetyczne</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Print specific styles */
+        @media print {
+            body {
+                background-color: white;
+                color: black;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-break {
+                page-break-inside: avoid;
+            }
+            .print-header {
+                border-bottom: 2px solid #333;
+                margin-bottom: 20px;
+            }
+            .card-print {
+                border: 1px solid #ddd;
+                box-shadow: none;
+                margin-bottom: 10px;
+            }
+            a {
+                text-decoration: none;
+                color: black;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navbar / Header (Interactive) -->
+    <nav class="bg-teal-700 text-white p-4 shadow-lg no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-seedling text-2xl"></i>
+                <div>
+                    <h1 class="text-xl font-bold">Karta Dietetyczna</h1>
+                    <p class="text-xs opacity-80">Wersja robocza przed wizytą lekarską</p>
+                </div>
+            </div>
+            <button onclick="window.print()" class="bg-white text-teal-800 px-4 py-2 rounded-lg font-semibold hover:bg-teal-50 transition shadow-md flex items-center gap-2">
+                <i class="fas fa-print"></i> Drukuj Plan
+            </button>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+
+        <!-- Patient Info Section -->
+        <header class="mb-8 print-header">
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-teal-600 card-print">
+                <div class="flex justify-between items-start flex-wrap">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2">Profil Pacjenta</h2>
+                        <ul class="text-sm space-y-1 text-slate-600">
+                            <li><strong>Płeć/Wiek:</strong> Mężczyzna, 35 lat</li>
+                            <li><strong>Parametry:</strong> 172 cm, 105 kg (BMI: ~35.5)</li>
+                            <li><strong>Cel:</strong> Redukcja wagi, poprawa nastroju, redukcja napięcia mięśniowego.</li>
+                            <li><strong>Dieta:</strong> ~2000-2100 kcal | Przeciwzapalna | Wspierająca układ nerwowy.</li>
+                        </ul>
+                    </div>
+                    <div class="mt-4 md:mt-0 bg-yellow-50 p-3 rounded-lg border border-yellow-200 text-xs text-yellow-800 max-w-xs">
+                        <strong>Uwaga:</strong> To jest przykładowy plan teoretyczny. Nie zastępuje porady lekarskiej. Wizyta kontrolna: 15.01.2026.
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Core Habits -->
+        <section class="mb-8 print-break">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-check-circle text-teal-600"></i> Fundamenty Dnia
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 card-print">
+                    <h4 class="font-bold text-blue-800 mb-2"><i class="fas fa-tint"></i> Nawodnienie</h4>
+                    <p class="text-sm">Minimum 3 litry wody dziennie. Wybieraj wody wysokozmineralizowane (Muszynianka, Piwniczanka) dla uzupełnienia <strong>Magnezu</strong>.</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg border border-green-100 card-print">
+                    <h4 class="font-bold text-green-800 mb-2"><i class="fas fa-clock"></i> Rytm Posiłków</h4>
+                    <p class="text-sm">Śniadanie do 1h po wstaniu. Jedz regularnie co 3-4 godziny, aby uniknąć spadków cukru (co pogarsza nastrój).</p>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-lg border border-purple-100 card-print">
+                    <h4 class="font-bold text-purple-800 mb-2"><i class="fas fa-brain"></i> Psychodietetyka</h4>
+                    <p class="text-sm">Dieta bogata w Omega-3 i Tryptofan. Unikaj cukrów prostych, które powodują "huśtawkę nastrojów".</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Meal Plan -->
+        <section>
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-utensils text-teal-600"></i> Jadłospis (Wybierz 1 opcję na posiłek)
+            </h3>
+
+            <!-- Breakfast -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-teal-600 text-white text-xs font-bold px-2 py-1 rounded">I Śniadanie</span>
+                    <h4 class="font-bold text-lg">Paliwo Startowe (Węglowodany Złożone + Białko)</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option A -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-teal-700 mb-2">Opcja A: Owsianka "Anty-Stres"</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>50g płatków owsianych górskich</li>
+                            <li>200ml mleka 1.5% lub napoju roślinnego</li>
+                            <li>20g orzechów włoskich (Omega-3!)</li>
+                            <li>1 banan (Potas na mięśnie)</li>
+                            <li>Szczypta kakao</li>
+                        </ul>
+                    </div>
+                    <!-- Option B -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-teal-700 mb-2">Opcja B: Królewska Jajecznica</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>3 jajka (źródło choliny dla mózgu)</li>
+                            <li>Garść szpinaku (kwas foliowy)</li>
+                            <li>10g masła klarowanego do smażenia</li>
+                            <li>2 kromki chleba żytniego na zakwasie</li>
+                            <li>Pomidor</li>
+                        </ul>
+                    </div>
+                    <!-- Option C -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-teal-700 mb-2">Opcja C: Kanapki z Awokado</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>2 duże kromki chleba razowego</li>
+                            <li>1/2 dojrzałego awokado (zdrowe tłuszcze)</li>
+                            <li>Plastry chudej wędliny drobiowej (4-5 szt.)</li>
+                            <li>Ogórek kiszony (probiotyk)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- II Breakfast -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-teal-600 text-white text-xs font-bold px-2 py-1 rounded">II Śniadanie</span>
+                    <h4 class="font-bold text-lg">Wsparcie Jelit (Serotonina)</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option A -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-teal-700 mb-2">Opcja A: Koktajl Jagodowy</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>250ml Kefiru/Maślanki</li>
+                            <li>Garść jagód/borówek (antyoksydanty)</li>
+                            <li>1 łyżka siemienia lnianego (świeżo zmielone)</li>
+                        </ul>
+                    </div>
+                    <!-- Option B -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-teal-700 mb-2">Opcja B: Twarożek z rzodkiewką</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>150g twarogu półtłustego</li>
+                            <li>3 łyżki jogurtu naturalnego</li>
+                            <li>Pęczek rzodkiewki i szczypiorek</li>
+                            <li>Zjedz solo lub z 1 wafla ryżowego</li>
+                        </ul>
+                    </div>
+                    <!-- Option C -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-teal-700 mb-2">Opcja C: Orzechowe Jabłko</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>1 duże jabłko pokrojone w cząstki</li>
+                            <li>1 łyżka masła orzechowego (100% orzechów)</li>
+                            <li>Szczypta cynamonu (reguluje cukier)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lunch -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-teal-600 text-white text-xs font-bold px-2 py-1 rounded">Obiad</span>
+                    <h4 class="font-bold text-lg">Główna Energia (Tryptofan i Magnez)</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option A -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-teal-700 mb-2">Opcja A: Indyk z Kaszą</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>180g piersi indyka (pieczona/duszona)</li>
+                            <li>50g (suchej) kaszy gryczanej niepalonej</li>
+                            <li>250g brokułów na parze</li>
+                            <li>Łyżka oliwy z oliwek do polania</li>
+                        </ul>
+                    </div>
+                    <!-- Option B -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-teal-700 mb-2">Opcja B: Ryba i Kiszonki</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>180g Dorsza lub Mintaja (pieczony)</li>
+                            <li>2-3 średnie ziemniaki (z wody, nie puree)</li>
+                            <li>Duża porcja kapusty kiszonej z marchewką</li>
+                            <li>Łyżka oleju rzepakowego na zimno</li>
+                        </ul>
+                    </div>
+                    <!-- Option C -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-teal-700 mb-2">Opcja C: Miska Mocy (Wege)</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Szklanka ugotowanej soczewicy lub ciecierzycy</li>
+                            <li>50g komosy ryżowej (quinoa) lub ryżu brązowego</li>
+                            <li>Pieczona papryka i cukinia</li>
+                            <li>Sos: jogurt naturalny + czosnek + zioła</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Snack -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-teal-600 text-white text-xs font-bold px-2 py-1 rounded">Podwieczorek</span>
+                    <h4 class="font-bold text-lg">Redukcja Napięcia (Magnez)</h4>
+                </div>
+                <div class="bg-orange-50 p-4 rounded-lg border border-orange-100 card-print">
+                    <p class="mb-2 text-sm italic">Wybierz jedną z poniższych przekąsek, gdy poczujesz popołudniowy spadek energii (ok. 16:00-17:00):</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="text-sm font-semibold text-slate-700">• 30g Pestek Dyni + 2 kostki gorzkiej czekolady (70%+)</div>
+                        <div class="text-sm font-semibold text-slate-700">• Garść migdałów (ok 30g) + 1 Pomarańcza</div>
+                        <div class="text-sm font-semibold text-slate-700">• Koktajl: 1 Banan + garść szpinaku + woda + cytryna</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dinner -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-teal-600 text-white text-xs font-bold px-2 py-1 rounded">Kolacja</span>
+                    <h4 class="font-bold text-lg">Regeneracja (Lekkostrawnie)</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option A -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-teal-700 mb-2">Opcja A: Sałatka z Makrelą</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>100g Wędzonej makreli (Omega-3)</li>
+                            <li>Mix sałat, pomidor, ogórek</li>
+                            <li>1 kromka chleba żytniego</li>
+                            <li>Skropić sokiem z cytryny</li>
+                        </ul>
+                    </div>
+                    <!-- Option B -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-teal-700 mb-2">Opcja B: Krem z Dyni/Warzyw</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Talerz gęstej zupy krem (dynia/pomidor/cukinia)</li>
+                            <li>Posypana pestkami słonecznika (1 łyżka)</li>
+                            <li>Można dodać łyżkę jogurtu greckiego</li>
+                            <li>Bez ciężkich grzanek, ewentualnie 1 kromka razowa</li>
+                        </ul>
+                    </div>
+                    <!-- Option C -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-teal-700 mb-2">Opcja C: Caprese na Razowo</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>1 kula Mozzarelli light (125g)</li>
+                            <li>2 duże pomidory</li>
+                            <li>Bazylia, odrobina oliwy</li>
+                            <li>2 kromki pieczywa chrupkiego żytniego</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Supplementation Note -->
+        <section class="mt-8 pt-6 border-t border-slate-300 print-break">
+            <h4 class="font-bold text-lg mb-2">📝 Tematy do rozmowy z lekarzem (15.01.2026):</h4>
+            <div class="bg-white border border-slate-200 rounded p-4 text-sm">
+                <ul class="list-decimal list-inside space-y-1">
+                    <li><strong>Witamina D3:</strong> Poprosić o skierowanie na badanie poziomu 25(OH)D3. Kluczowa przy depresji.</li>
+                    <li><strong>Magnez:</strong> Zgłosić napięcie mięśniowe. Zapytać o celowaną suplementację (np. cytrynian magnezu).</li>
+                    <li><strong>Tarczyca:</strong> Upewnić się, że TSH, fT3 i fT4 są w normie (mają wpływ na wagę i nastrój).</li>
+                    <li><strong>Kortyzol:</strong> Zapytać o wpływ stresu na metabolizm.</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer class="mt-12 text-center text-xs text-slate-500 pb-8">
+            <p>&copy; 2025 Wygenerowano przez Asystenta AI. Dokument ma charakter informacyjny.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // Simple script to confirm print action
+        window.onbeforeprint = function() {
+            console.log("Przygotowywanie do druku...");
+        };
+    </script>
+</body>
+</html>
