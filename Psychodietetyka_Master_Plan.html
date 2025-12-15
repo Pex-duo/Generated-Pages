@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Plan Psychodietetyczny</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap');
+        
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        /* --- STYLE SPECJALNE DO DRUKU (A4 COMPACT) --- */
+        @media print {
+            @page {
+                size: A4;
+                margin: 0.8cm;
+            }
+            body {
+                background-color: white;
+                font-size: 10pt; /* Mniejsza czcionka, żeby zmieścić więcej */
+                line-height: 1.3;
+            }
+            .no-print { display: none !important; }
+            .print-container {
+                width: 100%;
+                max-width: none;
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+            }
+            .meal-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* Dwie kolumny na papierze */
+                gap: 15px;
+            }
+            .card-section {
+                border: 1px solid #ccc;
+                break-inside: avoid;
+                margin-bottom: 10px;
+                background-color: white !important;
+            }
+            h2, h3 { 
+                page-break-after: avoid; 
+                color: #000 !important;
+            }
+            .bg-header { background-color: #f1f5f9 !important; border-bottom: 2px solid #334155; }
+            .tag-print { border: 1px solid #999; padding: 1px 4px; border-radius: 4px; font-size: 8pt; }
+            
+            /* Kolorowanie delikatne w druku dla orientacji */
+            .row-bf { border-left: 4px solid #14b8a6 !important; } /* Teal */
+            .row-ln { border-left: 4px solid #f97316 !important; } /* Orange */
+            .row-dn { border-left: 4px solid #6366f1 !important; } /* Indigo */
+            
+            a { text-decoration: none; color: black; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PASEK NARZĘDZI (EKRAN) -->
+    <nav class="bg-slate-900 text-white p-3 shadow-md no-print sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-brain text-teal-400 text-xl"></i>
+                <div class="leading-tight">
+                    <h1 class="font-bold text-lg">Psychodietetyka: Karta Operacyjna</h1>
+                    <p class="text-xs text-slate-400">Pacjent: 35 lat | 105 kg | Cel: Redukcja & Anty-Stres</p>
+                </div>
+            </div>
+            <button onclick="window.print()" class="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded text-sm font-bold uppercase tracking-wide transition flex items-center gap-2">
+                <i class="fas fa-print"></i> Drukuj A4
+            </button>
+        </div>
+    </nav>
+
+    <div class="print-container max-w-6xl mx-auto p-4 md:p-8 bg-white my-4 shadow-xl print:my-0">
+
+        <!-- SEKCJA 1: ZEGAR BIOLOGICZNY (HEADER) -->
+        <header class="bg-header bg-slate-100 p-4 rounded-lg mb-6 flex flex-wrap gap-6 items-center border border-slate-200">
+            <div class="flex-1 min-w-[200px]">
+                <h2 class="text-xl font-bold uppercase mb-1 border-b-2 border-teal-600 inline-block">Protokół Czasowy</h2>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm mt-2">
+                    <div><i class="fas fa-sun text-orange-500 w-5"></i> <strong>Pobudka:</strong> Szklanka wody z cytryną.</div>
+                    <div><i class="fas fa-utensils text-teal-600 w-5"></i> <strong>Śniadanie:</strong> Do 60 min po wstaniu.</div>
+                    <div><i class="fas fa-hourglass-half text-blue-600 w-5"></i> <strong>Odstępy:</strong> 3.5 - 4 godziny.</div>
+                    <div><i class="fas fa-moon text-indigo-600 w-5"></i> <strong>Kolacja:</strong> Min. 3h przed snem.</div>
+                </div>
+            </div>
+            <div class="flex-1 min-w-[200px] border-l-2 border-slate-300 pl-4 print:border-l-0 print:pl-0 print:mt-4">
+                <h2 class="text-xl font-bold uppercase mb-1 border-b-2 border-orange-500 inline-block">Fundamenty</h2>
+                <div class="text-sm mt-2 space-y-1">
+                    <p>💧 <strong>Woda:</strong> 3L dziennie (Szklanka co 1.5h).</p>
+                    <p>🚶 <strong>Ruch:</strong> Spacer codzienny (redukcja kortyzolu).</p>
+                    <p>💊 <strong>Suplementacja:</strong> Wg zaleceń lekarza (Omega-3, D3, Magnez).</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- SEKCJA 2: MASTER LISTA POSIŁKÓW -->
+        <div class="meal-grid">
+            
+            <!-- KOLUMNA 1: ŚNIADANIA & II ŚNIADANIA -->
+            <div class="space-y-4">
+                
+                <!-- ŚNIADANIA -->
+                <section class="card-section p-4 rounded-lg row-bf border-l-4 border-teal-500">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-lg text-teal-900 uppercase"><i class="fas fa-coffee mr-2"></i>I Śniadanie</h3>
+                        <span class="text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded font-bold">Białko + Tłuszcz + Wolne Węgle</span>
+                    </div>
+                    <ul class="text-sm space-y-2 list-none">
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>A. Klasyczna Jajecznica (3 jaja):</strong> Na maśle klarowanym, ze szpinakiem i pomidorem + 1 kromka żytnia.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>B. Owsianka "Mózg":</strong> 50g płatków, orzechy włoskie, borówki, łyżeczka kakao (Magnez!).
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>C. Tosty Rybne:</strong> Pasta z makreli/tuńczyka (z jogurtem i ogórkiem) na 2 kromkach razowych.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>D. Szakszuka:</strong> Jajka sadzone w pomidorach z puszki, papryce, kmin rzymski + pieczywo.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>E. Talerz Rozmaitości:</strong> 2 jajka na twardo, pół awokado, pomidor, kromka chleba, plaster szynki.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>F. Placuszki Bananowe:</strong> 2 jajka, 1 banan, 2 łyżki mąki owsianej - smażone bez tłuszczu + jogurt.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>G. Twarożek na Wytrawnie:</strong> Półtłusty twaróg, rzodkiewka, szczypiorek, oliwa + pieczywo.
+                        </li>
+                        <li>
+                            <strong>H. Szybki Skyr:</strong> Skyr naturalny, banan, masło orzechowe, garść płatków migdałowych.
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- II ŚNIADANIA / PRZEKĄSKI -->
+                <section class="card-section p-4 rounded-lg border-l-4 border-yellow-500">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-lg text-yellow-900 uppercase"><i class="fas fa-apple-alt mr-2"></i>Przekąski (SOS)</h3>
+                        <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-bold">Gdy spada energia</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        <div class="bg-slate-50 p-2 rounded border">
+                            <strong>Zestaw Orzechowy</strong><br>
+                            1 jabłko + 1 łyżka masła orzechowego.
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border">
+                            <strong>Antystres</strong><br>
+                            3 kostki gorzkiej czekolady + 10 migdałów.
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border">
+                            <strong>Płynne Złoto</strong><br>
+                            Szklanka Kefiru/Maślanki + łyżka siemienia.
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border">
+                            <strong>Chrupacz</strong><br>
+                            Słupki marchewki/selera z hummusem.
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border">
+                            <strong>Serek</strong><br>
+                            Serek wiejski lekki + pomidorki.
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border">
+                            <strong>Koktajl</strong><br>
+                            Szpinak, banan, woda, cytryna.
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- KOLUMNA 2: OBIADY & KOLACJE -->
+            <div class="space-y-4">
+                
+                <!-- OBIADY -->
+                <section class="card-section p-4 rounded-lg row-ln border-l-4 border-orange-500">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-lg text-orange-900 uppercase"><i class="fas fa-drumstick-bite mr-2"></i>Obiad (Baza Energii)</h3>
+                        <span class="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded font-bold">Białko + Magnez + Błonnik</span>
+                    </div>
+                    <ul class="text-sm space-y-2 list-none">
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>A. Indyk w Ziołach:</strong> Pierś duszona, Kasza Gryczana (Magnez!), Kiszonki (Jelita!).
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>B. Pieczony Łosoś/Pstrąg:</strong> Ziemniaki z wody (skrobia oporna), brokuły na parze.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>C. Wątróbka z Jabłkiem:</strong> Drobiowa (żelazo na zmęczenie), cebulka, ogórek kiszony, ziemniaki.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>D. Bowl z Kurczakiem:</strong> Ryż brązowy, kurczak grillowany, kukurydza, papryka, sos jogurtowy.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>E. Spaghetti Pełnoziarniste:</strong> Sos pomidorowy (likopen), mielone z indyka/chudej wołowiny.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>F. Gulasz Warzywno-Mięsny:</strong> Chude mięso duszone z dużą ilością warzyw korzeniowych + kasza pęczak.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>G. Dorsz w Warzywach:</strong> Ryba duszona w "włoszczyźnie" (ryba po grecku light) + ryż.
+                        </li>
+                        <li>
+                            <strong>H. Chili con Carne (Chude):</strong> Mielone, fasola czerwona (błonnik!), pomidory, ryż.
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- KOLACJE -->
+                <section class="card-section p-4 rounded-lg row-dn border-l-4 border-indigo-500">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-lg text-indigo-900 uppercase"><i class="fas fa-moon mr-2"></i>Kolacja (Regeneracja)</h3>
+                        <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded font-bold">Lekkostrawne + Tryptofan</span>
+                    </div>
+                    <ul class="text-sm space-y-2 list-none">
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>A. Sałatka z Tuńczykiem:</strong> Mix sałat, tuńczyk w sosie własnym, oliwki, grzanka razowa.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>B. Zupa Krem (Dynia/Pomidor):</strong> Z pestkami dyni (tryptofan na sen) i łyżką mozzarelli.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>C. Caprese Light:</strong> Mozzarella light, pomidory, bazylia, oliwa, 2 kromki chrupkie.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>D. Carpaccio z Buraka:</strong> Pieczone buraki, ser feta, rukola, orzechy włoskie + grzanka.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>E. Twarożek Wiejski:</strong> Serek wiejski, szczypiorek, rzodkiewka, pieczywo razowe.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>F. Kanapki z Pastą Jajeczną:</strong> Jajko, łyżeczka majonezu light/jogurtu, szczypiorek.
+                        </li>
+                        <li class="border-b border-dashed border-slate-300 pb-1">
+                            <strong>G. Ryż z Jabłkiem (Na ciepło):</strong> Ryż, duszone jabłko, cynamon, jogurt (gdy ochota na słodkie).
+                        </li>
+                        <li>
+                            <strong>H. Sałatka z Wędzonym Kurczakiem:</strong> Sałata, kurczak, pestki słonecznika, sos winegret.
+                        </li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+
+        <!-- SEKCJA 3: ŚCIĄGA KOMPOZYCJI (FOOTER) -->
+        <footer class="mt-4 p-4 bg-slate-50 rounded-lg border border-slate-300 print:mt-2">
+            <h3 class="font-bold text-slate-800 uppercase text-sm mb-2 border-b border-slate-300 pb-1">
+                🔧 Nie masz składników? Zbuduj posiłek sam (Wzór Psychodietetyczny):
+            </h3>
+            <div class="grid grid-cols-4 gap-2 text-xs">
+                <div>
+                    <strong class="text-teal-700 block">1. Baza Białkowa (Wybierz 1):</strong>
+                    Jajka (2-3), Ryba (150g), Indyk/Kurczak (150g), Twaróg (150g), Strączki (1 szklanka).
+                </div>
+                <div>
+                    <strong class="text-orange-700 block">2. Energia Złożona (Wybierz 1):</strong>
+                    Kasza gryczana/pęczak (50g), Ryż brązowy (50g), Ziemniaki (2-3), Chleb Żytni (2 kr.).
+                </div>
+                <div>
+                    <strong class="text-indigo-700 block">3. Tłuszcze dla Mózgu (Wybierz 1):</strong>
+                    Oliwa (1 łyżka), Orzechy (mała garść), Awokado (1/2), Pestki dyni (1 łyżka), Masło (płaska łyżeczka).
+                </div>
+                <div>
+                    <strong class="text-green-700 block">4. Ochrona (Bez limitu):</strong>
+                    Szpinak, Sałata, Ogórki, Pomidory, Papryka, Kapusta Kiszona, Brokuły.
+                </div>
+            </div>
+            <div class="mt-3 text-[10px] text-slate-500 text-center uppercase tracking-wider print:mt-1">
+                Plan Przedkliniczny v2.0 • Data Wizyty: 15.01.2026 • Wygenerowano: 2025
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>
