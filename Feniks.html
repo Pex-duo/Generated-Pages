@@ -1,417 +1,460 @@
-import React, { useState } from 'react';
-import { 
-  Flame, 
-  Brain, 
-  Activity, 
-  ShieldCheck, 
-  Wind, 
-  Zap, 
-  Heart, 
-  Anchor,
-  AlertTriangle,
-  Coffee,
-  Wine,
-  Cigarette,
-  CheckCircle2,
-  Lock,
-  Unlock,
-  Play
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FENIKS: Protokół Suwerenności</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-// --- Komponenty UI ---
+    <style>
+        /* Custom scrollbar hiding for the tab navigation */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body {
+            background-color: #020617; /* slate-950 */
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
 
-const Card = ({ children, className = "" }) => (
-  <div className={`bg-slate-900/80 backdrop-blur-md border border-slate-700/50 rounded-xl p-6 shadow-xl ${className}`}>
-    {children}
-  </div>
-);
+    <script type="text/babel">
+        const { useState } = React;
 
-const SectionHeader = ({ icon: Icon, title, subtitle, color = "text-orange-400" }) => (
-  <div className="flex items-start gap-4 mb-6 animate-in fade-in slide-in-from-left-4 duration-500">
-    <div className={`p-3 rounded-xl bg-slate-800 border border-slate-700 ${color} shadow-lg shadow-${color}/10`}>
-      <Icon className="w-6 h-6" />
-    </div>
-    <div>
-      <h2 className="text-xl font-bold text-slate-100">{title}</h2>
-      <p className="text-slate-400 text-sm mt-1 leading-relaxed max-w-lg">{subtitle}</p>
-    </div>
-  </div>
-);
-
-const ProgressBar = ({ value, max = 100, label, color = "bg-orange-500" }) => (
-  <div className="mb-4">
-    <div className="flex justify-between text-xs mb-1 font-medium text-slate-400">
-      <span>{label}</span>
-      <span>{value}%</span>
-    </div>
-    <div className="h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
-      <div 
-        className={`h-full ${color} transition-all duration-1000 ease-out`} 
-        style={{ width: `${(value / max) * 100}%` }}
-      ></div>
-    </div>
-  </div>
-);
-
-// --- Widoki Aplikacji ---
-
-const ScienceView = () => (
-  <div className="space-y-6">
-    <div className="bg-gradient-to-br from-indigo-900/40 to-slate-900 p-6 rounded-xl border-l-4 border-indigo-500">
-      <h3 className="font-bold text-lg text-indigo-200 mb-2">Mechanizm: Wielka Desynchronizacja</h3>
-      <p className="text-slate-300 text-sm leading-relaxed">
-        Według badań (Siegel et al., 2024, <i>Cell</i>), psylocybina nie tyle "łączy" mózg, co go "rozłącza". 
-        Rozbija sztywne połączenia DMN (Default Mode Network) – sieci odpowiedzialnej za Twoje "Ja", ruminacje (roztrząsanie przeszłości) i głód nałogowy.
-      </p>
-    </div>
-
-    <div className="grid md:grid-cols-2 gap-4">
-      <Card className="relative overflow-hidden group">
-        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-          <Lock className="w-24 h-24" />
-        </div>
-        <h4 className="font-bold text-slate-200 mb-2">Przed (Stan Obecny)</h4>
-        <ul className="text-sm text-slate-400 space-y-2">
-          <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5"></div>Sztywne myślenie ("Muszę zapalić", "Jestem sama").</li>
-          <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5"></div>ADHD: Chaos, ale w tych samych koleinach.</li>
-          <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5"></div>DMN silnie połączone z Hipokampem (Wspomnienia o Ex bolą).</li>
-        </ul>
-      </Card>
-
-      <Card className="relative overflow-hidden group border-indigo-500/30">
-        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-          <Unlock className="w-24 h-24 text-indigo-400" />
-        </div>
-        <h4 className="font-bold text-indigo-300 mb-2">Po (Okno Plastyczności)</h4>
-        <ul className="text-sm text-slate-400 space-y-2">
-          <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5"></div>Desynchronizacja: Mózg jest jak wstrząśnięta kula śnieżna.</li>
-          <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5"></div>Koniec "automata": Sięgasz po papierosa, ale ręka zastyga. Masz wybór.</li>
-          <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5"></div>Reset "Ja": Możesz zbudować nową tożsamość niezależną od partnera.</li>
-        </ul>
-      </Card>
-    </div>
-  </div>
-);
-
-const AddictionView = () => (
-  <div className="space-y-6">
-    <div className="bg-slate-800/50 p-4 rounded-lg border border-red-900/30 flex gap-4 items-center">
-      <AlertTriangle className="text-red-500 flex-shrink-0" />
-      <p className="text-xs text-red-200">
-        <strong>Zasada Kardynalna:</strong> Nie łącz psylocybiny z alkoholem ani marihuaną. 
-        Marihuana przy ADHD i lęku może wywołać paranoję w trakcie sesji. Alkohol stępi neuroplastyczność.
-      </p>
-    </div>
-
-    <h3 className="text-lg font-bold text-white mb-2">Substytucja Dopaminy</h3>
-    <p className="text-sm text-slate-400 mb-4">ADHD nienawidzi nudy. Musisz "oszukać" mózg, dając mu inną stymulację zamiast używek.</p>
-
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <Card className="border-red-500/20 hover:border-red-500/40 transition-colors cursor-pointer">
-        <div className="flex justify-between items-start mb-3">
-          <h4 className="font-bold text-slate-200">Nikotyna</h4>
-          <Cigarette className="w-5 h-5 text-slate-600" />
-        </div>
-        <p className="text-xs text-slate-500 mb-3">Stymulant. Daje złudne skupienie.</p>
-        <div className="bg-slate-800 p-2 rounded text-xs text-orange-300">
-          <strong>Zamiennik:</strong> Oddech Wima Hofa (3 rundy). Daje "haju" tlenowego i mrowienia podobnego do nikotyny.
-        </div>
-      </Card>
-
-      <Card className="border-green-500/20 hover:border-green-500/40 transition-colors cursor-pointer">
-        <div className="flex justify-between items-start mb-3">
-          <h4 className="font-bold text-slate-200">Marihuana</h4>
-          <Wind className="w-5 h-5 text-green-700" />
-        </div>
-        <p className="text-xs text-slate-500 mb-3">Ucieczka od chaosu ADHD. Spowalniacz.</p>
-        <div className="bg-slate-800 p-2 rounded text-xs text-orange-300">
-          <strong>Zamiennik:</strong> Olejek CBD (Full Spectrum) + Zimny Prysznic (szok dopaminowy).
-        </div>
-      </Card>
-
-      <Card className="border-blue-500/20 hover:border-blue-500/40 transition-colors cursor-pointer">
-        <div className="flex justify-between items-start mb-3">
-          <h4 className="font-bold text-slate-200">Alkohol</h4>
-          <Wine className="w-5 h-5 text-purple-700" />
-        </div>
-        <p className="text-xs text-slate-500 mb-3">Znieczulacz emocji (rozstanie).</p>
-        <div className="bg-slate-800 p-2 rounded text-xs text-orange-300">
-          <strong>Zamiennik:</strong> Kava Kava lub Ashwagandha. Intensywny wysiłek fizyczny do upadłego.
-        </div>
-      </Card>
-    </div>
-  </div>
-);
-
-const ProtocolView = () => {
-  const [activeDose, setActiveDose] = useState('micro');
-
-  return (
-    <div className="space-y-6">
-      <div className="flex gap-2 bg-slate-800 p-1 rounded-lg w-full md:w-fit">
-        <button 
-          onClick={() => setActiveDose('micro')}
-          className={`flex-1 md:flex-none px-4 py-2 rounded-md text-sm font-medium transition-all ${activeDose === 'micro' ? 'bg-orange-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
-        >
-          Mikrodozowanie (Bezpieczne)
-        </button>
-        <button 
-          onClick={() => setActiveDose('macro')}
-          className={`flex-1 md:flex-none px-4 py-2 rounded-md text-sm font-medium transition-all ${activeDose === 'macro' ? 'bg-purple-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
-        >
-          Makro (Tylko z opiekunem/trip sitterem)
-        </button>
-      </div>
-
-      {activeDose === 'micro' ? (
-        <div className="animate-in fade-in duration-300 space-y-4">
-          <Card className="border-orange-500/30">
-            <h3 className="font-bold text-orange-300 mb-2">Protokół "Czysty Umysł" (Fadiman)</h3>
-            <p className="text-sm text-slate-300 mb-4">
-              Dla ADHD najlepsze jest **1 dzień dawki, 2 dni przerwy**. Pozwala to uniknąć tolerancji i obserwować zmiany w skupieniu.
-            </p>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between bg-slate-800/50 p-3 rounded">
-                <span className="text-sm text-slate-300">Dawka</span>
-                <span className="font-mono text-orange-400 font-bold">0.1g - 0.2g</span>
-              </div>
-              <div className="flex items-center justify-between bg-slate-800/50 p-3 rounded">
-                <span className="text-sm text-slate-300">Cel</span>
-                <span className="text-right text-xs text-slate-400">Flow, Kreatywność, mniejsza impulsywność</span>
-              </div>
-            </div>
-          </Card>
-          
-          <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-             <h4 className="text-white font-bold mb-3 flex items-center gap-2">
-               <Zap className="w-4 h-4 text-yellow-400" />
-               ADHD Stack (Suplementacja)
-             </h4>
-             <ul className="space-y-2 text-sm text-slate-400">
-               <li><strong>Soplówka (Lion's Mane):</strong> 1-2g dziennie. Klucz do neurogenezy.</li>
-               <li><strong>L-Teanina:</strong> 200mg. Wycisza "elektryczność" kofeiny/ADHD bez usypiania.</li>
-               <li><strong>Omega-3 (EPA/DHA):</strong> Wysokie dawki (2g+). "Smar" dla mózgu.</li>
-             </ul>
-          </div>
-        </div>
-      ) : (
-        <div className="animate-in fade-in duration-300 space-y-4">
-           <div className="bg-red-900/20 border border-red-500/50 p-4 rounded-lg flex gap-3">
-             <ShieldCheck className="w-6 h-6 text-red-400 flex-shrink-0" />
-             <div className="text-xs text-red-200">
-               <strong className="block mb-1 text-sm text-red-400">Ostrzeżenie o Samotności</strong>
-               Ponieważ robisz to sama (bez opieki), odradzam pełną dawkę "bohaterską" (3g+). 
-               Ryzyko wpadnięcia w pętlę myślową o Ex lub lęk jest duże.
-               <br/><br/>
-               Zalecam <strong>"Museum Dose" (0.5g - 1.0g)</strong>. To dawka, na której czujesz "magię" i masz wglądy, ale wciąż panujesz nad ciałem i rzeczywistością.
-             </div>
-           </div>
-           
-           <Card>
-             <h4 className="font-bold text-purple-300 mb-2">Zasady Bezpieczeństwa Solo</h4>
-             <ul className="space-y-2 text-sm text-slate-400 list-disc list-inside">
-               <li>Przygotuj playlistę (muzyka bez słów) na 4 godziny.</li>
-               <li>Telefon w tryb samolotowy (zakaz pisania do Ex!).</li>
-               <li>Przygotuj kartkę z napisem: <strong>"Wziąłaś substancję. To minie. Jesteś bezpieczna."</strong></li>
-               <li>Jeśli przyjdzie lęk: Zmień muzykę, zmień pokój, śpiewaj.</li>
-             </ul>
-           </Card>
-        </div>
-      )}
-    </div>
-  );
-};
-
-const FocusView = () => (
-  <div className="space-y-6">
-    <div className="bg-slate-800 p-6 rounded-xl text-center">
-      <Brain className="w-12 h-12 text-teal-400 mx-auto mb-4" />
-      <h3 className="text-xl font-bold text-white mb-2">ADHD & Kreatywność</h3>
-      <p className="text-slate-400 text-sm max-w-md mx-auto">
-        Twoim wrogiem nie jest brak pomysłów, ale brak wykonania (Executive Dysfunction).
-        W trakcie protokołu (okna plastyczności) Twoim zadaniem jest **Działanie**, nie myślenie.
-      </p>
-    </div>
-
-    <div className="space-y-4">
-      <Card className="border-teal-500/20">
-        <h4 className="font-bold text-teal-200 mb-2">Technika 1: Dopaminowe Menu</h4>
-        <p className="text-xs text-slate-400 mb-3">Zamiast sięgać po telefon/używkę, wybierz z menu:</p>
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="bg-slate-900 p-2 rounded text-slate-300 border border-slate-700">Przystawka (5 min):<br/><span className="text-teal-400">5 pajacyków, zimna woda</span></div>
-          <div className="bg-slate-900 p-2 rounded text-slate-300 border border-slate-700">Danie Główne (30 min):<br/><span className="text-teal-400">Rysowanie, Pisanie, Taniec</span></div>
-        </div>
-      </Card>
-
-      <Card className="border-teal-500/20">
-        <h4 className="font-bold text-teal-200 mb-2">Technika 2: Timer Wizualny</h4>
-        <p className="text-sm text-slate-300">
-          Użyj fizycznego timera (nie w telefonie!). Ustaw 25 min pracy nad projektem kreatywnym.
-          Jeśli poczujesz chęć ucieczki (bòl istnienia) – powiedz sobie: "OK, pocierpię, ale dopiero jak zadzwoni dzwonek".
-        </p>
-      </Card>
-    </div>
-  </div>
-);
-
-const HeartView = () => (
-  <div className="space-y-6 animate-in fade-in duration-500">
-    <div className="relative p-6 bg-slate-900 rounded-xl border border-rose-900 overflow-hidden">
-      <div className="absolute -right-10 -top-10 w-40 h-40 bg-rose-500/10 rounded-full blur-3xl"></div>
-      <h3 className="text-xl font-bold text-rose-200 mb-2">Samotność jako Siła</h3>
-      <p className="text-slate-300 text-sm italic">
-        "Nie szukasz połówki. Jesteś całością, która z czasem może zaprosi gościa do swojego domu."
-      </p>
-    </div>
-
-    <div className="space-y-4">
-      <div className="bg-slate-800/50 p-4 rounded-lg">
-        <h4 className="font-bold text-slate-200 text-sm mb-3 uppercase tracking-wider">Ćwiczenie: Rozcięcie Więzi</h4>
-        <p className="text-xs text-slate-400 mb-4">
-          W dniach zwiększonej plastyczności (po mikrodozie), wykonaj wizualizację.
-        </p>
-        <ul className="text-sm text-slate-300 space-y-2">
-          <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500" /> Wyobraź sobie linę łączącą Twój splot słoneczny z Ex.</li>
-          <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500" /> Poczuj, jak tą liną ucieka Twoja energia.</li>
-          <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500" /> Użyj złotych nożyc (metaforycznie) i przetnij ją.</li>
-          <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500" /> Zobacz, jak ten koniec liny wraca do Ciebie. Odzyskujesz energię.</li>
-        </ul>
-      </div>
-
-      <Card>
-        <h4 className="font-bold text-rose-300 mb-2">Gotowość na Nowe</h4>
-        <p className="text-sm text-slate-400">
-          Nie zmuszaj się do randkowania. Twoim celem jest teraz **Satysfakcja z samej siebie**. 
-          Atrakcyjność to skutek uboczny pasji. Kiedy będziesz zajęta tworzeniem (malowaniem, pisaniem, biznesem),
-          właściwa osoba pojawi się, by podziwiać Twoje dzieło, a nie by Cię "naprawiać".
-        </p>
-      </Card>
-    </div>
-  </div>
-);
-
-// --- Główny Widok ---
-
-const App = () => {
-  const [activeTab, setActiveTab] = useState('science');
-
-  const tabs = [
-    { id: 'science', icon: Brain, label: 'Reset (Nauka)', color: 'text-indigo-400' },
-    { id: 'addiction', icon: ShieldCheck, label: 'Detoks', color: 'text-red-400' },
-    { id: 'protocol', icon: Activity, label: 'Protokół', color: 'text-orange-400' },
-    { id: 'focus', icon: Zap, label: 'ADHD / Flow', color: 'text-teal-400' },
-    { id: 'heart', icon: Heart, label: 'Serce', color: 'text-rose-400' },
-  ];
-
-  return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-orange-500/30 pb-12">
-      <div className="max-w-2xl mx-auto px-4 py-8">
+        // --- Ikony SVG (Zastępstwo za lucide-react dla wersji przeglądarkowej) ---
         
-        {/* Header */}
-        <div className="text-center mb-10 animate-in fade-in slide-in-from-top-4 duration-700">
-          <div className="inline-flex p-4 bg-gradient-to-tr from-orange-600 to-rose-600 rounded-full shadow-2xl shadow-orange-500/20 mb-4">
-            <Flame className="w-10 h-10 text-white" />
-          </div>
-          <h1 className="text-4xl font-black tracking-tight text-white mb-2">FENIKS</h1>
-          <p className="text-orange-200/60 font-medium tracking-wide text-sm uppercase">Protokół Suwerenności Wewnętrznej</p>
-        </div>
+        const IconBase = ({ d, className, color }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                {d}
+            </svg>
+        );
 
-        {/* Tab Navigation */}
-        <div className="flex overflow-x-auto gap-2 mb-8 pb-2 scrollbar-hide snap-x">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all border snap-center
-                ${activeTab === tab.id 
-                  ? 'bg-slate-800 border-slate-600 text-white shadow-lg scale-105' 
-                  : 'bg-transparent border-transparent text-slate-500 hover:bg-slate-900 hover:text-slate-300'}`}
-            >
-              <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? tab.color : ''}`} />
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        // Poprawione ikony z użyciem fragmentów <>...</> dla wielu ścieżek
+        const Flame = (props) => <IconBase {...props} d={<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>} />;
+        
+        const Brain = (props) => <IconBase {...props} d={<><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></>} />;
+        
+        const Activity = (props) => <IconBase {...props} d={<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>} />;
+        
+        const ShieldCheck = (props) => <IconBase {...props} d={<><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></>} />;
+        
+        const Wind = (props) => <IconBase {...props} d={<><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></>} />;
+        
+        const Zap = (props) => <IconBase {...props} d={<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14H4z"/>} />;
+        
+        const Heart = (props) => <IconBase {...props} d={<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>} />;
+        
+        const AlertTriangle = (props) => <IconBase {...props} d={<><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></>} />;
+        
+        const Cigarette = (props) => <IconBase {...props} d={<><path d="M18 12H2v4h16"/><path d="M22 12v4"/><path d="M18 12c0-2.5-2-2.5-2-5"/><path d="M22 13c0-2.5-2-2.5-2-5"/></>} />;
+        
+        const Wine = (props) => <IconBase {...props} d={<><path d="M8 22h8"/><path d="M7 10h10"/><path d="M12 15v7"/><path d="M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"/></>} />;
+        
+        const Lock = (props) => <IconBase {...props} d={<><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></>} />;
+        
+        const Unlock = (props) => <IconBase {...props} d={<><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></>} />;
+        
+        const CheckCircle2 = (props) => <IconBase {...props} d={<><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></>} />;
 
-        {/* Main Content */}
-        <main className="min-h-[400px] relative">
-          {activeTab === 'science' && (
-            <div className="animate-in slide-in-from-bottom-4 duration-500">
-              <SectionHeader 
-                icon={Brain} 
-                title="Nauka: Twardy Reset" 
-                subtitle="Jak psylocybina desynchronizuje DMN, dając Ci szansę na ucieczkę z pętli nawyków i smutku."
-                color="border-indigo-500 text-indigo-400"
-              />
-              <ScienceView />
+        // --- Komponenty UI ---
+
+        const Card = ({ children, className = "" }) => (
+            <div className={`bg-slate-900/80 backdrop-blur-md border border-slate-700/50 rounded-xl p-6 shadow-xl ${className}`}>
+                {children}
             </div>
-          )}
+        );
 
-          {activeTab === 'addiction' && (
-            <div className="animate-in slide-in-from-bottom-4 duration-500">
-              <SectionHeader 
-                icon={ShieldCheck} 
-                title="Detoks: Czyste Pole" 
-                subtitle="Nie możesz budować na bagnie. Zarządzanie dopaminą bez alkoholu i nikotyny."
-                color="border-red-500 text-red-400"
-              />
-              <AddictionView />
+        const SectionHeader = ({ icon: Icon, title, subtitle, color = "text-orange-400" }) => (
+            <div className="flex items-start gap-4 mb-6 animate-in fade-in slide-in-from-left-4 duration-500">
+                <div className={`p-3 rounded-xl bg-slate-800 border border-slate-700 ${color} shadow-lg shadow-${color}/10`}>
+                    <Icon className="w-6 h-6" />
+                </div>
+                <div>
+                    <h2 className="text-xl font-bold text-slate-100">{title}</h2>
+                    <p className="text-slate-400 text-sm mt-1 leading-relaxed max-w-lg">
+                        {subtitle}
+                    </p>
+                </div>
             </div>
-          )}
+        );
 
-          {activeTab === 'protocol' && (
-            <div className="animate-in slide-in-from-bottom-4 duration-500">
-              <SectionHeader 
-                icon={Activity} 
-                title="Protokół Działania" 
-                subtitle="Twoja instrukcja obsługi. Wybierz bezpieczną ścieżkę mikrodozowania lub ostrożną makro."
-                color="border-orange-500 text-orange-400"
-              />
-              <ProtocolView />
+        // --- Widoki Aplikacji ---
+
+        const ScienceView = () => (
+            <div className="space-y-6">
+                <div className="bg-gradient-to-br from-indigo-900/40 to-slate-900 p-6 rounded-xl border-l-4 border-indigo-500">
+                    <h3 className="font-bold text-lg text-indigo-200 mb-2">Mechanizm: Wielka Desynchronizacja</h3>
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                        Według badań (Siegel et al., 2024, <i>Cell</i>), psylocybina nie tyle "łączy" mózg, co go "rozłącza". 
+                        Rozbija sztywne połączenia DMN (Default Mode Network) – sieci odpowiedzialnej za Twoje "Ja", ruminacje (roztrząsanie przeszłości) i głód nałogowy.
+                    </p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                    <Card className="relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <Lock className="w-24 h-24" />
+                        </div>
+                        <h4 className="font-bold text-slate-200 mb-2">Przed (Stan Obecny)</h4>
+                        <ul className="text-sm text-slate-400 space-y-2">
+                            <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 flex-shrink-0"></div><span>Sztywne myślenie ("Muszę zapalić", "Jestem sama").</span></li>
+                            <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 flex-shrink-0"></div><span>ADHD: Chaos, ale w tych samych koleinach.</span></li>
+                            <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 flex-shrink-0"></div><span>DMN silnie połączone z Hipokampem (Wspomnienia o Ex bolą).</span></li>
+                        </ul>
+                    </Card>
+
+                    <Card className="relative overflow-hidden group border-indigo-500/30">
+                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <Unlock className="w-24 h-24 text-indigo-400" />
+                        </div>
+                        <h4 className="font-bold text-indigo-300 mb-2">Po (Okno Plastyczności)</h4>
+                        <ul className="text-sm text-slate-400 space-y-2">
+                            <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 flex-shrink-0"></div><span>Desynchronizacja: Mózg jest jak wstrząśnięta kula śnieżna.</span></li>
+                            <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 flex-shrink-0"></div><span>Koniec "automata": Sięgasz po papierosa, ale ręka zastyga. Masz wybór.</span></li>
+                            <li className="flex gap-2"><div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 flex-shrink-0"></div><span>Reset "Ja": Możesz zbudować nową tożsamość niezależną od partnera.</span></li>
+                        </ul>
+                    </Card>
+                </div>
             </div>
-          )}
+        );
 
-          {activeTab === 'focus' && (
-            <div className="animate-in slide-in-from-bottom-4 duration-500">
-              <SectionHeader 
-                icon={Zap} 
-                title="ADHD & Flow" 
-                subtitle="Narzędzia, które pomogą Ci przelać chaos w sztukę. Walka z brakiem motywacji."
-                color="border-teal-500 text-teal-400"
-              />
-              <FocusView />
+        const AddictionView = () => (
+            <div className="space-y-6">
+                <div className="bg-slate-800/50 p-4 rounded-lg border border-red-900/30 flex gap-4 items-center">
+                    <AlertTriangle className="text-red-500 flex-shrink-0 w-6 h-6" />
+                    <p className="text-xs text-red-200">
+                        <strong>Zasada Kardynalna:</strong> Nie łącz psylocybiny z alkoholem ani marihuaną. 
+                        Marihuana przy ADHD i lęku może wywołać paranoję w trakcie sesji. Alkohol stępi neuroplastyczność.
+                    </p>
+                </div>
+
+                <h3 className="text-lg font-bold text-white mb-2">Substytucja Dopaminy</h3>
+                <p className="text-sm text-slate-400 mb-4">ADHD nienawidzi nudy. Musisz "oszukać" mózg, dając mu inną stymulację zamiast używek.</p>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Card className="border-red-500/20 hover:border-red-500/40 transition-colors cursor-pointer">
+                        <div className="flex justify-between items-start mb-3">
+                            <h4 className="font-bold text-slate-200">Nikotyna</h4>
+                            <Cigarette className="w-5 h-5 text-slate-600" />
+                        </div>
+                        <p className="text-xs text-slate-500 mb-3">Stymulant. Daje złudne skupienie.</p>
+                        <div className="bg-slate-800 p-2 rounded text-xs text-orange-300">
+                            <strong>Zamiennik:</strong> Oddech Wima Hofa (3 rundy). Daje "haju" tlenowego i mrowienia podobnego do nikotyny.
+                        </div>
+                    </Card>
+
+                    <Card className="border-green-500/20 hover:border-green-500/40 transition-colors cursor-pointer">
+                        <div className="flex justify-between items-start mb-3">
+                            <h4 className="font-bold text-slate-200">Marihuana</h4>
+                            <Wind className="w-5 h-5 text-green-700" />
+                        </div>
+                        <p className="text-xs text-slate-500 mb-3">Ucieczka od chaosu ADHD. Spowalniacz.</p>
+                        <div className="bg-slate-800 p-2 rounded text-xs text-orange-300">
+                            <strong>Zamiennik:</strong> Olejek CBD (Full Spectrum) + Zimny Prysznic (szok dopaminowy).
+                        </div>
+                    </Card>
+
+                    <Card className="border-blue-500/20 hover:border-blue-500/40 transition-colors cursor-pointer">
+                        <div className="flex justify-between items-start mb-3">
+                            <h4 className="font-bold text-slate-200">Alkohol</h4>
+                            <Wine className="w-5 h-5 text-purple-700" />
+                        </div>
+                        <p className="text-xs text-slate-500 mb-3">Znieczulacz emocji (rozstanie).</p>
+                        <div className="bg-slate-800 p-2 rounded text-xs text-orange-300">
+                            <strong>Zamiennik:</strong> Kava Kava lub Ashwagandha. Intensywny wysiłek fizyczny do upadłego.
+                        </div>
+                    </Card>
+                </div>
             </div>
-          )}
+        );
 
-          {activeTab === 'heart' && (
-            <div className="animate-in slide-in-from-bottom-4 duration-500">
-              <SectionHeader 
-                icon={Heart} 
-                title="Serce i Niezależność" 
-                subtitle="Transformacja bólu w siłę. Budowanie tożsamości, która nie potrzebuje 'drugiej połówki', by stać prosto."
-                color="border-rose-500 text-rose-400"
-              />
-              <HeartView />
+        const ProtocolView = () => {
+            const [activeDose, setActiveDose] = useState('micro');
+
+            return (
+                <div className="space-y-6">
+                    <div className="flex gap-2 bg-slate-800 p-1 rounded-lg w-full md:w-fit">
+                        <button 
+                            onClick={() => setActiveDose('micro')}
+                            className={`flex-1 md:flex-none px-4 py-2 rounded-md text-sm font-medium transition-all ${activeDose === 'micro' ? 'bg-orange-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
+                        >
+                            Mikrodozowanie (Bezpieczne)
+                        </button>
+                        <button 
+                            onClick={() => setActiveDose('macro')}
+                            className={`flex-1 md:flex-none px-4 py-2 rounded-md text-sm font-medium transition-all ${activeDose === 'macro' ? 'bg-purple-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
+                        >
+                            Makro (Tylko z opiekunem)
+                        </button>
+                    </div>
+
+                    {activeDose === 'micro' ? (
+                        <div className="animate-in fade-in duration-300 space-y-4">
+                            <Card className="border-orange-500/30">
+                                <h3 className="font-bold text-orange-300 mb-2">Protokół "Czysty Umysł" (Fadiman)</h3>
+                                <p className="text-sm text-slate-300 mb-4">
+                                    Dla ADHD najlepsze jest <strong>1 dzień dawki, 2 dni przerwy</strong>. Pozwala to uniknąć tolerancji i obserwować zmiany w skupieniu.
+                                </p>
+                                <div className="space-y-3">
+                                    <div className="flex items-center justify-between bg-slate-800/50 p-3 rounded">
+                                        <span className="text-sm text-slate-300">Dawka</span>
+                                        <span className="font-mono text-orange-400 font-bold">0.1g - 0.2g</span>
+                                    </div>
+                                    <div className="flex items-center justify-between bg-slate-800/50 p-3 rounded">
+                                        <span className="text-sm text-slate-300">Cel</span>
+                                        <span className="text-right text-xs text-slate-400">Flow, Kreatywność, mniejsza impulsywność</span>
+                                    </div>
+                                </div>
+                            </Card>
+                            
+                            <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                                <h4 className="text-white font-bold mb-3 flex items-center gap-2">
+                                    <Zap className="w-4 h-4 text-yellow-400" />
+                                    ADHD Stack (Suplementacja)
+                                </h4>
+                                <ul className="space-y-2 text-sm text-slate-400">
+                                    <li><strong>Soplówka (Lion's Mane):</strong> 1-2g dziennie. Klucz do neurogenezy.</li>
+                                    <li><strong>L-Teanina:</strong> 200mg. Wycisza "elektryczność" kofeiny/ADHD bez usypiania.</li>
+                                    <li><strong>Omega-3 (EPA/DHA):</strong> Wysokie dawki (2g+). "Smar" dla mózgu.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="animate-in fade-in duration-300 space-y-4">
+                            <div className="bg-red-900/20 border border-red-500/50 p-4 rounded-lg flex gap-3">
+                                <ShieldCheck className="w-6 h-6 text-red-400 flex-shrink-0" />
+                                <div className="text-xs text-red-200">
+                                    <strong className="block mb-1 text-sm text-red-400">Ostrzeżenie o Samotności</strong>
+                                    Ponieważ robisz to sama (bez opieki), odradzam pełną dawkę "bohaterską" (3g+). 
+                                    Ryzyko wpadnięcia w pętlę myślową o Ex lub lęk jest duże.
+                                    <br/><br/>
+                                    Zalecam <strong>"Museum Dose" (0.5g - 1.0g)</strong>. To dawka, na której czujesz "magię" i masz wglądy, ale wciąż panujesz nad ciałem i rzeczywistością.
+                                </div>
+                            </div>
+                            
+                            <Card>
+                                <h4 className="font-bold text-purple-300 mb-2">Zasady Bezpieczeństwa Solo</h4>
+                                <ul className="space-y-2 text-sm text-slate-400 list-disc list-inside">
+                                    <li>Przygotuj playlistę (muzyka bez słów) na 4 godziny.</li>
+                                    <li>Telefon w tryb samolotowy (zakaz pisania do Ex!).</li>
+                                    <li>Przygotuj kartkę z napisem: <strong>"Wziąłaś substancję. To minie. Jesteś bezpieczna."</strong></li>
+                                    <li>Jeśli przyjdzie lęk: Zmień muzykę, zmień pokój, śpiewaj.</li>
+                                </ul>
+                            </Card>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const FocusView = () => (
+            <div className="space-y-6">
+                <div className="bg-slate-800 p-6 rounded-xl text-center">
+                    <Brain className="w-12 h-12 text-teal-400 mx-auto mb-4" />
+                    <h3 className="text-xl font-bold text-white mb-2">ADHD & Kreatywność</h3>
+                    <p className="text-slate-400 text-sm max-w-md mx-auto">
+                        Twoim wrogiem nie jest brak pomysłów, ale brak wykonania (Executive Dysfunction).
+                        W trakcie protokołu (okna plastyczności) Twoim zadaniem jest <strong>Działanie</strong>, nie myślenie.
+                    </p>
+                </div>
+
+                <div className="space-y-4">
+                    <Card className="border-teal-500/20">
+                        <h4 className="font-bold text-teal-200 mb-2">Technika 1: Dopaminowe Menu</h4>
+                        <p className="text-xs text-slate-400 mb-3">Zamiast sięgać po telefon/używkę, wybierz z menu:</p>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                            <div className="bg-slate-900 p-2 rounded text-slate-300 border border-slate-700">Przystawka (5 min):<br/><span className="text-teal-400">5 pajacyków, zimna woda</span></div>
+                            <div className="bg-slate-900 p-2 rounded text-slate-300 border border-slate-700">Danie Główne (30 min):<br/><span className="text-teal-400">Rysowanie, Pisanie, Taniec</span></div>
+                        </div>
+                    </Card>
+
+                    <Card className="border-teal-500/20">
+                        <h4 className="font-bold text-teal-200 mb-2">Technika 2: Timer Wizualny</h4>
+                        <p className="text-sm text-slate-300">
+                            Użyj fizycznego timera (nie w telefonie!). Ustaw 25 min pracy nad projektem kreatywnym.
+                            Jeśli poczujesz chęć ucieczki (bòl istnienia) – powiedz sobie: "OK, pocierpię, ale dopiero jak zadzwoni dzwonek".
+                        </p>
+                    </Card>
+                </div>
             </div>
-          )}
-        </main>
+        );
 
-        {/* Footer */}
-        <footer className="mt-16 pt-8 border-t border-slate-800 text-center">
-          <p className="text-xs text-slate-600 mb-2">
-            Aplikacja ma charakter edukacyjny i opiera się na zasadach redukcji szkód. 
-            Psylocybina jest substancją nielegalną w Polsce.
-          </p>
-          <div className="flex justify-center gap-4 text-slate-700 text-xs font-mono">
-             <span>Ref: Cell S0092-8674(25)01305-4</span>
-             <span>•</span>
-             <span>Ver: 2.0 Phoenix</span>
-          </div>
-        </footer>
+        const HeartView = () => (
+            <div className="space-y-6 animate-in fade-in duration-500">
+                <div className="relative p-6 bg-slate-900 rounded-xl border border-rose-900 overflow-hidden">
+                    <div className="absolute -right-10 -top-10 w-40 h-40 bg-rose-500/10 rounded-full blur-3xl"></div>
+                    <h3 className="text-xl font-bold text-rose-200 mb-2">Samotność jako Siła</h3>
+                    <p className="text-slate-300 text-sm italic">
+                        "Nie szukasz połówki. Jesteś całością, która z czasem może zaprosi gościa do swojego domu."
+                    </p>
+                </div>
 
-      </div>
-    </div>
-  );
-};
+                <div className="space-y-4">
+                    <div className="bg-slate-800/50 p-4 rounded-lg">
+                        <h4 className="font-bold text-slate-200 text-sm mb-3 uppercase tracking-wider">Ćwiczenie: Rozcięcie Więzi</h4>
+                        <p className="text-xs text-slate-400 mb-4">
+                            W dniach zwiększonej plastyczności (po mikrodozie), wykonaj wizualizację.
+                        </p>
+                        <ul className="text-sm text-slate-300 space-y-2">
+                            <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500" /> <span>Wyobraź sobie linę łączącą Twój splot słoneczny z Ex.</span></li>
+                            <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500" /> <span>Poczuj, jak tą liną ucieka Twoja energia.</span></li>
+                            <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500" /> <span>Użyj złotych nożyc (metaforycznie) i przetnij ją.</span></li>
+                            <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-rose-500" /> <span>Zobacz, jak ten koniec liny wraca do Ciebie. Odzyskujesz energię.</span></li>
+                        </ul>
+                    </div>
 
-export default App;
+                    <Card>
+                        <h4 className="font-bold text-rose-300 mb-2">Gotowość na Nowe</h4>
+                        <p className="text-sm text-slate-400">
+                            Nie zmuszaj się do randkowania. Twoim celem jest teraz <strong>Satysfakcja z samej siebie</strong>. 
+                            Atrakcyjność to skutek uboczny pasji. Kiedy będziesz zajęta tworzeniem (malowaniem, pisaniem, biznesem),
+                            właściwa osoba pojawi się, by podziwiać Twoje dzieło, a nie by Cię "naprawiać".
+                        </p>
+                    </Card>
+                </div>
+            </div>
+        );
+
+        // --- Główny Widok ---
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('science');
+
+            const tabs = [
+                { id: 'science', icon: Brain, label: 'Reset (Nauka)', color: 'text-indigo-400' },
+                { id: 'addiction', icon: ShieldCheck, label: 'Detoks', color: 'text-red-400' },
+                { id: 'protocol', icon: Activity, label: 'Protokół', color: 'text-orange-400' },
+                { id: 'focus', icon: Zap, label: 'ADHD / Flow', color: 'text-teal-400' },
+                { id: 'heart', icon: Heart, label: 'Serce', color: 'text-rose-400' },
+            ];
+
+            return (
+                <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-orange-500/30 pb-12">
+                    <div className="max-w-2xl mx-auto px-4 py-8">
+                        
+                        {/* Header */}
+                        <div className="text-center mb-10 animate-in fade-in slide-in-from-top-4 duration-700">
+                            <div className="inline-flex p-4 bg-gradient-to-tr from-orange-600 to-rose-600 rounded-full shadow-2xl shadow-orange-500/20 mb-4">
+                                <Flame className="w-10 h-10 text-white" />
+                            </div>
+                            <h1 className="text-4xl font-black tracking-tight text-white mb-2">FENIKS</h1>
+                            <p className="text-orange-200/60 font-medium tracking-wide text-sm uppercase">Protokół Suwerenności Wewnętrznej</p>
+                        </div>
+
+                        {/* Tab Navigation */}
+                        <div className="flex overflow-x-auto gap-2 mb-8 pb-2 scrollbar-hide snap-x">
+                            {tabs.map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all border snap-center
+                                        ${activeTab === tab.id 
+                                            ? 'bg-slate-800 border-slate-600 text-white shadow-lg scale-105' 
+                                            : 'bg-transparent border-transparent text-slate-500 hover:bg-slate-900 hover:text-slate-300'}`}
+                                >
+                                    <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? tab.color : ''}`} />
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Main Content */}
+                        <main className="min-h-[400px] relative">
+                            {activeTab === 'science' && (
+                                <div className="animate-in slide-in-from-bottom-4 duration-500">
+                                    <SectionHeader 
+                                        icon={Brain} 
+                                        title="Nauka: Twardy Reset" 
+                                        subtitle="Jak psylocybina desynchronizuje DMN, dając Ci szansę na ucieczkę z pętli nawyków i smutku."
+                                        color="border-indigo-500 text-indigo-400"
+                                    />
+                                    <ScienceView />
+                                </div>
+                            )}
+
+                            {activeTab === 'addiction' && (
+                                <div className="animate-in slide-in-from-bottom-4 duration-500">
+                                    <SectionHeader 
+                                        icon={ShieldCheck} 
+                                        title="Detoks: Czyste Pole" 
+                                        subtitle="Nie możesz budować na bagnie. Zarządzanie dopaminą bez alkoholu i nikotyny."
+                                        color="border-red-500 text-red-400"
+                                    />
+                                    <AddictionView />
+                                </div>
+                            )}
+
+                            {activeTab === 'protocol' && (
+                                <div className="animate-in slide-in-from-bottom-4 duration-500">
+                                    <SectionHeader 
+                                        icon={Activity} 
+                                        title="Protokół Działania" 
+                                        subtitle="Twoja instrukcja obsługi. Wybierz bezpieczną ścieżkę mikrodozowania lub ostrożną makro."
+                                        color="border-orange-500 text-orange-400"
+                                    />
+                                    <ProtocolView />
+                                </div>
+                            )}
+
+                            {activeTab === 'focus' && (
+                                <div className="animate-in slide-in-from-bottom-4 duration-500">
+                                    <SectionHeader 
+                                        icon={Zap} 
+                                        title="ADHD & Flow" 
+                                        subtitle="Narzędzia, które pomogą Ci przelać chaos w sztukę. Walka z brakiem motywacji."
+                                        color="border-teal-500 text-teal-400"
+                                    />
+                                    <FocusView />
+                                </div>
+                            )}
+
+                            {activeTab === 'heart' && (
+                                <div className="animate-in slide-in-from-bottom-4 duration-500">
+                                    <SectionHeader 
+                                        icon={Heart} 
+                                        title="Serce i Niezależność" 
+                                        subtitle="Transformacja bólu w siłę. Budowanie tożsamości, która nie potrzebuje 'drugiej połówki', by stać prosto."
+                                        color="border-rose-500 text-rose-400"
+                                    />
+                                    <HeartView />
+                                </div>
+                            )}
+                        </main>
+
+                        {/* Footer */}
+                        <footer className="mt-16 pt-8 border-t border-slate-800 text-center">
+                            <p className="text-xs text-slate-600 mb-2">
+                                Aplikacja ma charakter edukacyjny i opiera się na zasadach redukcji szkód. 
+                                Psylocybina jest substancją nielegalną w Polsce.
+                            </p>
+                            <div className="flex justify-center gap-4 text-slate-700 text-xs font-mono">
+                                <span>Ref: Cell S0092-8674(25)01305-4</span>
+                                <span>•</span>
+                                <span>Ver: 2.2 Phoenix HTML Fix</span>
+                            </div>
+                        </footer>
+
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
