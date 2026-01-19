@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain & Body (Extra) - Desery Terapeutyczne</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Print specific styles */
+        @media print {
+            body {
+                background-color: white;
+                color: black;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-break {
+                page-break-inside: avoid;
+            }
+            .print-header {
+                border-bottom: 2px solid #333;
+                margin-bottom: 20px;
+            }
+            .card-print {
+                border: 1px solid #ddd;
+                box-shadow: none;
+                margin-bottom: 10px;
+            }
+            a {
+                text-decoration: none;
+                color: black;
+            }
+            /* Force background colors print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navbar / Header (Interactive) -->
+    <nav class="bg-amber-700 text-white p-4 shadow-lg no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-cookie-bite text-2xl"></i>
+                <div>
+                    <h1 class="text-xl font-bold">Protokół: Brain & Body (Extra)</h1>
+                    <p class="text-xs opacity-80">Desery Terapeutyczne & Regeneracja Mentalna</p>
+                </div>
+            </div>
+            <button onclick="window.print()" class="bg-white text-amber-900 px-4 py-2 rounded-lg font-semibold hover:bg-amber-50 transition shadow-md flex items-center gap-2">
+                <i class="fas fa-print"></i> Drukuj Przepisy
+            </button>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+
+        <!-- Header -->
+        <header class="mb-8 print-header">
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-amber-600 card-print">
+                <div class="flex justify-between items-start flex-wrap">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2">Strefa Przyjemności Kontrolowanej</h2>
+                        <ul class="text-sm space-y-1 text-slate-600">
+                            <li><strong>Zasada:</strong> Stosuj 1-2 razy w tygodniu (np. w weekend).</li>
+                            <li><strong>Cel:</strong> Satysfakcja psychiczna bez skoków insuliny i uczucia "wypchania".</li>
+                            <li><strong>Składniki:</strong> Brak cukru (używamy erytrytolu/banana), brak białej mąki, zdrowe tłuszcze.</li>
+                        </ul>
+                    </div>
+                    <div class="mt-4 md:mt-0 bg-amber-50 p-3 rounded-lg border border-amber-200 text-xs text-amber-900 max-w-xs">
+                        <strong>Dlaczego to działa?</strong> Te desery są bogate w kakao (magnez), tłuszcze (mózg) i błonnik, dzięki czemu nie powodują senności po jedzeniu.
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Recipes Section -->
+        <section>
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-star text-amber-600"></i> Przepisy Premium
+            </h3>
+
+            <!-- Recipe 1: Tomato Brownie -->
+            <div class="mb-8 print-break bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-print">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h4 class="text-xl font-bold text-amber-800">1. Pikantne Brownie Pomidorowe (Mocno Czekoladowe)</h4>
+                        <p class="text-sm text-slate-500">Hit dietetyczny. Pomidorów nie czuć w ogóle – nadają ciastu niesamowitą wilgotność bez użycia tony masła.</p>
+                    </div>
+                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">Niski IG</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h5 class="font-bold text-sm mb-2 uppercase text-slate-400">Składniki (na małą keksówkę):</h5>
+                        <ul class="list-disc list-inside text-sm space-y-1">
+                            <li>1 puszka pomidorów krojonych (zblendowana na gładko)</li>
+                            <li>1 dojrzały banan (słodycz i konsystencja)</li>
+                            <li>1/2 szklanki mąki owsianej lub migdałowej</li>
+                            <li>1/2 szklanki gorzkiego kakao (dobrej jakości!)</li>
+                            <li>4 łyżki erytrytolu (lub ksylitolu)</li>
+                            <li>1 jajko (lub łyżka siemienia lnianego zalanego wrzątkiem)</li>
+                            <li>1/2 łyżeczki cynamonu i szczypta chili (podkręca metabolizm)</li>
+                            <li>Łyżeczka proszku do pieczenia</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-sm mb-2 uppercase text-slate-400">Przygotowanie:</h5>
+                        <ol class="list-decimal list-inside text-sm space-y-2">
+                            <li>Zblenduj pomidory z bananem na gładką masę.</li>
+                            <li>W misce wymieszaj suche składniki (mąkę, kakao, erytrytol, przyprawy).</li>
+                            <li>Połącz masę mokrą z suchą, wbij jajko i wymieszaj łyżką.</li>
+                            <li>Przelej do keksówki wyłożonej papierem.</li>
+                            <li>Piecz ok. 40-45 min w 180°C (do suchego patyczka).</li>
+                            <li>Podawaj całkowicie wystudzone (wtedy smakuje najlepiej).</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recipe 2: Avocado Mousse -->
+            <div class="mb-8 print-break bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-print">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h4 class="text-xl font-bold text-emerald-800">2. "Mózgowe" Trufle / Mus z Awokado</h4>
+                        <p class="text-sm text-slate-500">Czyste zdrowe tłuszcze. Działa jak bomba regeneracyjna dla układu nerwowego. Gotowe w 3 minuty.</p>
+                    </div>
+                    <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">Keto / Low Carb</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h5 class="font-bold text-sm mb-2 uppercase text-slate-400">Składniki (1-2 porcje):</h5>
+                        <ul class="list-disc list-inside text-sm space-y-1">
+                            <li>1 bardzo dojrzałe awokado (miękkie)</li>
+                            <li>2 czubate łyżki kakao</li>
+                            <li>2 łyżki erytrytolu (zmielonego na puder) lub miodu</li>
+                            <li>Opcjonalnie: Łyżka masła orzechowego</li>
+                            <li>Do posypania: Wiórki kokosowe lub orzechy</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-sm mb-2 uppercase text-slate-400">Przygotowanie:</h5>
+                        <ol class="list-decimal list-inside text-sm space-y-2">
+                            <li>Wszystkie składniki wrzuć do blendera (lub użyj widelca, jeśli awokado jest bardzo miękkie).</li>
+                            <li>Zblenduj na idealnie gładki krem.</li>
+                            <li><strong>Wersja Mus:</strong> Przełóż do pucharka, schłodź 30 min w lodówce.</li>
+                            <li><strong>Wersja Trufle:</strong> Dodaj więcej kakao/mąki kokosowej, ulep kulki i obtocz w orzechach.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recipe 3: Bean Cake -->
+            <div class="mb-8 print-break bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-print">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h4 class="text-xl font-bold text-amber-800">3. "Czekoladowa Fasola" (High Fiber)</h4>
+                        <p class="text-sm text-slate-500">Alternatywa dla wersji pomidorowej. Dzięki fasoli ciasto jest sycące i świetnie działa na perystaltykę (błonnik).</p>
+                    </div>
+                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">Wysoki Błonnik</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h5 class="font-bold text-sm mb-2 uppercase text-slate-400">Składniki:</h5>
+                        <ul class="list-disc list-inside text-sm space-y-1">
+                            <li>1 puszka czerwonej fasoli (bardzo dokładnie wypłukana!)</li>
+                            <li>1 banan</li>
+                            <li>2 jajka</li>
+                            <li>2 łyżki kakao</li>
+                            <li>1 łyżka oleju kokosowego lub masła</li>
+                            <li>Łyżeczka proszku do pieczenia</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-sm mb-2 uppercase text-slate-400">Przygotowanie:</h5>
+                        <ol class="list-decimal list-inside text-sm space-y-2">
+                            <li>Fasolę płucz na sitku tak długo, aż zniknie piana (kluczowe dla smaku!).</li>
+                            <li>Zblenduj fasolę z bananem i jajkami na gładką masę.</li>
+                            <li>Dodaj resztę składników i wymieszaj.</li>
+                            <li>Przelej do małej formy. Możesz posypać gorzką czekoladą.</li>
+                            <li>Piecz 45 min w 180°C.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recipe 4: Rafaello -->
+            <div class="mb-8 print-break bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-print">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h4 class="text-xl font-bold text-slate-700">4. Domowe "Rafaello" (Bez Cukru)</h4>
+                        <p class="text-sm text-slate-500">Błyskawiczna przekąska tłuszczowa. Idealna do kawy.</p>
+                    </div>
+                    <span class="bg-slate-100 text-slate-800 text-xs font-bold px-3 py-1 rounded-full">Keto</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h5 class="font-bold text-sm mb-2 uppercase text-slate-400">Składniki:</h5>
+                        <ul class="list-disc list-inside text-sm space-y-1">
+                            <li>100g sera mascarpone (lub gęstej części mleczka kokosowego)</li>
+                            <li>1 szklanka wiórków kokosowych</li>
+                            <li>2 łyżki erytrytolu pudru</li>
+                            <li>Migdały (całe, blanszowane) do środka</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-sm mb-2 uppercase text-slate-400">Przygotowanie:</h5>
+                        <ol class="list-decimal list-inside text-sm space-y-2">
+                            <li>Wymieszaj mascarpone z wiórkami i słodzikiem. Masa powinna być gęsta.</li>
+                            <li>Wstaw do lodówki na 20 min (łatwiej lepić).</li>
+                            <li>Bierz porcję masy, spłaszcz w dłoni, włóż migdał i uformuj kulkę.</li>
+                            <li>Obtocz w dodatkowych wiórkach. Trzymaj w lodówce.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <footer class="mt-12 text-center text-xs text-slate-500 pb-8">
+            <p>&copy; 2026 Brain & Body (Extra). Pamiętaj: Ciesz się każdym kęsem bez wyrzutów sumienia.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        window.onbeforeprint = function() {
+            console.log("Przygotowywanie do druku...");
+        };
+    </script>
+</body>
+</html>
