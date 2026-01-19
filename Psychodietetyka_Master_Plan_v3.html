@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Żywieniowy - Protokół Low Carb</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Print specific styles */
+        @media print {
+            body {
+                background-color: white;
+                color: black;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-break {
+                page-break-inside: avoid;
+            }
+            .print-header {
+                border-bottom: 2px solid #333;
+                margin-bottom: 20px;
+            }
+            .card-print {
+                border: 1px solid #ddd;
+                box-shadow: none;
+                margin-bottom: 10px;
+            }
+            a {
+                text-decoration: none;
+                color: black;
+            }
+            /* Force background colors print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navbar / Header (Interactive) -->
+    <nav class="bg-indigo-900 text-white p-4 shadow-lg no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-dumbbell text-2xl"></i>
+                <div>
+                    <h1 class="text-xl font-bold">Protokół Białkowo-Tłuszczowy</h1>
+                    <p class="text-xs opacity-80">Edycja Specjalna: Preferencje Pacjenta</p>
+                </div>
+            </div>
+            <button onclick="window.print()" class="bg-white text-indigo-900 px-4 py-2 rounded-lg font-semibold hover:bg-indigo-50 transition shadow-md flex items-center gap-2">
+                <i class="fas fa-print"></i> Drukuj Plan
+            </button>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+
+        <!-- Patient Info Section -->
+        <header class="mb-8 print-header">
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-indigo-600 card-print">
+                <div class="flex justify-between items-start flex-wrap">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2">Profil Pacjenta: Rafał Suchodolski</h2>
+                        <ul class="text-sm space-y-1 text-slate-600">
+                            <li><strong>Parametry:</strong> 35 lat | 173.5 cm | 100.5 kg (Aktualizacja 13.01.2026)</li>
+                            <li><strong>Cel:</strong> Redukcja wagi, stabilizacja nastroju, brak wzdęć/ociężałości.</li>
+                            <li><strong>Model:</strong> Low Carb / Białkowo-Tłuszczowy (Mała objętość, wysoka gęstość).</li>
+                            <li><strong>Medyczne:</strong> Depresja (leki: Axyven, Sulpiryd), skłonność do zgagi i zaparć.</li>
+                        </ul>
+                    </div>
+                    <div class="mt-4 md:mt-0 bg-red-50 p-3 rounded-lg border border-red-200 text-xs text-red-800 max-w-xs">
+                        <strong>Oświadczenie:</strong> Plan zmodyfikowany na wyraźne życzenie pacjenta (preferencja tłuszczowa, nietolerancja dużej ilości węglowodanów).
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Core Habits -->
+        <section class="mb-8 print-break">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-cogs text-indigo-600"></i> Zasady Nowego Systemu
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 card-print">
+                    <h4 class="font-bold text-blue-800 mb-2"><i class="fas fa-tint"></i> Płyny i Elektrolity</h4>
+                    <p class="text-sm">Przy diecie tłuszczowej tracisz wodę szybciej. Pij min. 3L wody. <strong>Sól potrawy!</strong> Sód jest kluczowy przy niskich węglowodanach, by uniknąć bólu głowy.</p>
+                </div>
+                <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100 card-print">
+                    <h4 class="font-bold text-indigo-800 mb-2"><i class="fas fa-clock"></i> Stałe Okna</h4>
+                    <p class="text-sm">Jemy o: <strong>7:00, 11:00, 15:00, 19:00</strong>. Żadnego podjadania między. Dajemy jelitom czas na "autoczyszczenie".</p>
+                </div>
+                <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100 card-print">
+                    <h4 class="font-bold text-emerald-800 mb-2"><i class="fas fa-leaf"></i> Błonnik i Trawienie</h4>
+                    <p class="text-sm">Przy zaparciach: warzywa liściaste, kiszonki i awokado to podstawa. Jeśli wystąpi zgaga - unikaj kawy na czczo.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Meal Plan -->
+        <section>
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-utensils text-indigo-600"></i> Jadłospis Białkowo-Tłuszczowy
+            </h3>
+
+            <!-- 7:00 Breakfast -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded">07:00</span>
+                    <h4 class="font-bold text-lg">Śniadanie: Rozruch (Mała objętość, dużo energii)</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option A -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja A: Jajka z Awokado</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>2 jajka gotowane na miękko lub sadzone na maśle</li>
+                            <li>1/2 awokado (oprószone solą i pieprzem)</li>
+                            <li>Kilka pomidorków koktajlowych</li>
+                            <li><em>Bez chleba - czysta energia tłuszczowa.</em></li>
+                        </ul>
+                    </div>
+                    <!-- Option B -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja B: Talerz Rybny</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>100g Wędzonej makreli lub łososia</li>
+                            <li>Garść oliwek (zielonych lub czarnych)</li>
+                            <li>Ogórek kiszony (wsparcie kwasu żołądkowego)</li>
+                        </ul>
+                    </div>
+                    <!-- Option C -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja C: Kabanosy Premium</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>3-4 kabanosy z dobrym składem (100% mięsa)</li>
+                            <li>Garść orzechów (włoskie lub makadamia)</li>
+                            <li>Kilka rzodkiewek do chrupania</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11:00 Lunch -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded">11:00</span>
+                    <h4 class="font-bold text-lg">Obiad: Konkret (Mniej jedzenia, więcej nasycenia)</h4>
+                </div>
+                <p class="text-sm text-slate-500 mb-3 italic">Cel: 50% mniejsza objętość niż w starej diecie, ale z dodatkiem zdrowego tłuszczu.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option A -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja A: Udko Pieczone</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>1 całe udko z kurczaka pieczone <strong>ze skórą</strong> (tłuszcz = sytość)</li>
+                            <li>Brokuły na parze (mała porcja) polane hojnie oliwą z oliwek</li>
+                            <li>Opcjonalnie: Łyżka pestek dyni</li>
+                        </ul>
+                    </div>
+                    <!-- Option B -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja B: Wołowina/Wieprzowina</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>150g Gulaszu wołowego lub pieczeni wieprzowej (bez zagęszczania mąką)</li>
+                            <li>Ogórek kiszony lub kapusta kiszona (enzymy)</li>
+                            <li>1/2 pieczonego batata (jeśli czujesz potrzebę węglowodanów)</li>
+                        </ul>
+                    </div>
+                    <!-- Option C -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja C: Sałatka z Wątróbką</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>150g Wątróbki drobiowej smażonej na maśle z cebulką</li>
+                            <li>Garść rukoli skropionej octem jabłkowym</li>
+                            <li>Jabłko (ćwiartka) duszone z wątróbką dla smaku</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 15:00 Snack -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded">15:00</span>
+                    <h4 class="font-bold text-lg">Podwieczorek: Paliwo Przedtreningowe</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option A -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja A: Mix Orzechowy</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>30g Orzechów (Włoskie, Laskowe lub Migdały)</li>
+                            <li>2 kostki Gorzkiej Czekolady (min. 80%)</li>
+                        </ul>
+                    </div>
+                    <!-- Option B -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja B: Caprese "w rękę"</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Kilka kulek mozzarelli mini</li>
+                            <li>Kilka pomidorków koktajlowych</li>
+                            <li>Kilka listków bazylii</li>
+                        </ul>
+                    </div>
+                    <!-- Option C -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja C: Szybkie Białko</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Plastry dobrej wędliny (szynka parmeńska lub polędwica) zwinięte z kawałkiem papryki w środku</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 19:00 Dinner (Liquid) -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded">19:00</span>
+                    <h4 class="font-bold text-lg">Kolacja Płynna (Odpoczynek dla żołądka)</h4>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-lg border border-purple-100 card-print mb-4">
+                    <p class="text-sm font-semibold text-purple-800">Zasada: Blendujemy na gładko. Uzupełniamy witaminy i białko, ale nie obciążamy trawienia kawałkami pokarmu.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option A -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja A: Zielony Detox</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Miarka odżywki białkowej (izolat - lżejszy dla brzucha)</li>
+                            <li>Garść szpinaku (nie czuć smaku, a są witaminy)</li>
+                            <li>1/2 małego awokado (kremowa konsystencja)</li>
+                            <li>Woda + Sok z cytryny</li>
+                        </ul>
+                    </div>
+                    <!-- Option B -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja B: Leśny Regenerator</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Miarka odżywki białkowej (smak wanilia/naturalny)</li>
+                            <li>Garść mrożonych jagód/borówek (polifenole na stres)</li>
+                            <li>Łyżeczka oleju MCT lub oleju kokosowego (energia dla mózgu)</li>
+                            <li>Woda lub mleko migdałowe</li>
+                        </ul>
+                    </div>
+                    <!-- Option C -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja C: Krem Warzywny (Na ciepło)</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Zblendowane na krem warzywa (np. cukinia, dynia lub brokuł)</li>
+                            <li>Dodana po gotowaniu miarka białka (neutralnego) LUB 2 łyżki kolagenu</li>
+                            <li>Łyżka oliwy z oliwek dodana na talerz</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Doctor/Medication Note -->
+        <section class="mt-8 pt-6 border-t border-slate-300 print-break">
+            <h4 class="font-bold text-lg mb-2 text-red-700">⚠️ Ważne uwagi do monitorowania:</h4>
+            <div class="bg-white border border-red-100 rounded p-4 text-sm">
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Leki a Tłuszcze:</strong> Przyjmujesz Axyven i Sulpiryd. Dieta wysokotłuszczowa może wpływać na metabolizm leków. Obserwuj reakcję organizmu przez pierwsze 2 tygodnie (senność vs pobudzenie).</li>
+                    <li><strong>Zgaga (Refluks):</strong> Wyeliminowaliśmy smażone panierki (z PDFu), ale uważaj na kawę i kwaśne soki na czczo. Płynna kolacja powinna znacząco pomóc w nocnych wybudzeniach.</li>
+                    <li><strong>Woda:</strong> Przy braku węglowodanów (które trzymają wodę), musisz pić jeszcze więcej. Jeśli poczujesz "ciężką głowę" - wypij szklankę wody ze szczyptą soli.</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer class="mt-12 text-center text-xs text-slate-500 pb-8">
+            <p>&copy; 2026 Plan Indywidualny. Wygenerowano na bazie konsultacji i dokumentacji medycznej.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        window.onbeforeprint = function() {
+            console.log("Przygotowywanie do druku...");
+        };
+    </script>
+</body>
+</html>
