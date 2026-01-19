@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Żywieniowy - Protokół Hybrydowy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Print specific styles */
+        @media print {
+            body {
+                background-color: white;
+                color: black;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-break {
+                page-break-inside: avoid;
+            }
+            .print-header {
+                border-bottom: 2px solid #333;
+                margin-bottom: 20px;
+            }
+            .card-print {
+                border: 1px solid #ddd;
+                box-shadow: none;
+                margin-bottom: 10px;
+            }
+            a {
+                text-decoration: none;
+                color: black;
+            }
+            /* Force background colors print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navbar / Header (Interactive) -->
+    <nav class="bg-indigo-900 text-white p-4 shadow-lg no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-brain text-2xl"></i>
+                <div>
+                    <h1 class="text-xl font-bold">Protokół: Brain & Body</h1>
+                    <p class="text-xs opacity-80">Edycja: Smart Carbs (Max 1/4 talerza)</p>
+                </div>
+            </div>
+            <button onclick="window.print()" class="bg-white text-indigo-900 px-4 py-2 rounded-lg font-semibold hover:bg-indigo-50 transition shadow-md flex items-center gap-2">
+                <i class="fas fa-print"></i> Drukuj Plan
+            </button>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+
+        <!-- Patient Info Section -->
+        <header class="mb-8 print-header">
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-indigo-600 card-print">
+                <div class="flex justify-between items-start flex-wrap">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2">Profil Pacjenta: Rafał Suchodolski</h2>
+                        <ul class="text-sm space-y-1 text-slate-600">
+                            <li><strong>Parametry:</strong> 35 lat | 173.5 cm | 100.5 kg (Aktualizacja 13.01.2026)</li>
+                            <li><strong>Cel:</strong> Regeneracja mózgu, stabilna energia, brak uczucia "wypchania".</li>
+                            <li><strong>Model:</strong> Low Carb z rotacją węglowodanów złożonych (Zasada 1/4).</li>
+                            <li><strong>Medyczne:</strong> Wsparcie przy depresji (Axyven, Sulpiryd).</li>
+                        </ul>
+                    </div>
+                    <div class="mt-4 md:mt-0 bg-emerald-50 p-3 rounded-lg border border-emerald-200 text-xs text-emerald-800 max-w-xs">
+                        <strong>Strategia "Smart Carbs":</strong> Węglowodany tylko jako dodatek (max 25%) wspierający produkcję serotoniny i regenerację, bez zwiększania objętości posiłku.
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Core Habits -->
+        <section class="mb-8 print-break">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-cogs text-indigo-600"></i> Zasady Nowego Systemu
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 card-print">
+                    <h4 class="font-bold text-blue-800 mb-2"><i class="fas fa-tint"></i> Płyny i Elektrolity</h4>
+                    <p class="text-sm">Przy diecie z małą ilością węglowodanów pij min. 3L wody. Jeśli czujesz ból głowy/zmęczenie - szczypta soli do wody (elektrolity).</p>
+                </div>
+                <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100 card-print">
+                    <h4 class="font-bold text-indigo-800 mb-2"><i class="fas fa-chart-pie"></i> Zasada 1/4 (Mózg)</h4>
+                    <p class="text-sm">Węglowodany (kasza, batat, chleb żytni) to max <strong>1/4 talerza</strong>. Służą jako "katalizator" dla mózgu, a nie jako wypełniacz żołądka.</p>
+                </div>
+                <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100 card-print">
+                    <h4 class="font-bold text-emerald-800 mb-2"><i class="fas fa-clock"></i> Rytm Dobowy</h4>
+                    <p class="text-sm">Posiłki: <strong>7:00, 11:00, 15:00, 19:00</strong>. Regularność uspokaja układ nerwowy i zmniejsza wyrzuty kortyzolu.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Meal Plan -->
+        <section>
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-utensils text-indigo-600"></i> Jadłospis Brain & Body
+            </h3>
+
+            <!-- 7:00 Breakfast -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded">07:00</span>
+                    <h4 class="font-bold text-lg">Śniadanie: Rozruch (Białko + Tłuszcz + Odrobina "Dobrego" Węglowodanu)</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option A -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja A: Jajka z Żytnim Wsparciem</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>2 jajka (gotowane/sadzone) - źródło choliny dla mózgu</li>
+                            <li>1/2 awokado (tłuszcze dla osłonek nerwowych)</li>
+                            <li><strong>1 mała kromka chleba żytniego na zakwasie</strong> (max 1/5 posiłku)</li>
+                            <li>Pomidorki koktajlowe</li>
+                        </ul>
+                    </div>
+                    <!-- Option B -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja B: Talerz Rybny</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>100g Wędzonej makreli/łososia (Omega-3!)</li>
+                            <li>Garść oliwek i ogórek kiszony</li>
+                            <li><strong>3 łyżki kaszy gryczanej</strong> (magnez na stres) wymieszanej z rybą</li>
+                        </ul>
+                    </div>
+                    <!-- Option C -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja C: Kabanosy Premium</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>3-4 kabanosy (dobrej jakości)</li>
+                            <li>Garść orzechów włoskich (kształt mózgu nieprzypadkowy - wsparcie pamięci)</li>
+                            <li>1 mały ogórek gruntowy do chrupania</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11:00 Lunch -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded">11:00</span>
+                    <h4 class="font-bold text-lg">Obiad: Konkret (Mała objętość, Gęstość Odżywcza)</h4>
+                </div>
+                <p class="text-sm text-slate-500 mb-3 italic">Cel: Zjedzenie węglowodanów złożonych (magnez, witaminy B) w małej ilości, aby nie powodować senności.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option A -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja A: Udko i Kasza</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>1 całe udko z kurczaka pieczone ze skórą</li>
+                            <li>Brokuły na parze z oliwą z oliwek</li>
+                            <li><strong>3 łyżki kaszy gryczanej lub pęczaku</strong> (max 1/4 talerza)</li>
+                        </ul>
+                    </div>
+                    <!-- Option B -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja B: Wołowina z Batatem</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>150g Gulaszu/Pieczeni (dostarcza żelaza i B12)</li>
+                            <li>Ogórek kiszony (probiotyk)</li>
+                            <li><strong>1/2 średniego pieczonego batata</strong> (węglowodany złożone, beta-karoten)</li>
+                        </ul>
+                    </div>
+                    <!-- Option C -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja C: Wątróbka (Superfood)</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>150g Wątróbki (drobiowa/wołowa) - bomba witaminowa dla mózgu</li>
+                            <li>Smażona na maśle z cebulką</li>
+                            <li><strong>1 mały ziemniak</strong> gotowany w mundurku (potas) lub kromka chleba razowego</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 15:00 Snack -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded">15:00</span>
+                    <h4 class="font-bold text-lg">Podwieczorek: Paliwo Przedtreningowe</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option A -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja A: Mix Orzechowy</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>30g Orzechów (Włoskie, Laskowe lub Migdały)</li>
+                            <li>2 kostki Gorzkiej Czekolady (min. 80%) - magnez i poprawa nastroju</li>
+                        </ul>
+                    </div>
+                    <!-- Option B -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja B: Caprese "w rękę"</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Kilka kulek mozzarelli mini</li>
+                            <li>Kilka pomidorków koktajlowych</li>
+                            <li>Oliwa i bazylia</li>
+                        </ul>
+                    </div>
+                    <!-- Option C -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja C: Szybkie Białko</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Plastry dobrej wędliny zwinięte z kawałkiem papryki</li>
+                            <li>Kawałek sera żółtego (wapń)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 19:00 Dinner (Liquid) -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded">19:00</span>
+                    <h4 class="font-bold text-lg">Kolacja Płynna (Regeneracja Nocna)</h4>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-lg border border-purple-100 card-print mb-4">
+                    <p class="text-sm font-semibold text-purple-800">Składniki dobrane pod kątem wyciszenia, regeneracji układu nerwowego i nieobciążania żołądka.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option A -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja A: Zielony Neuro-Detox</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Miarka odżywki białkowej (izolat)</li>
+                            <li>Garść szpinaku/jarmużu (kwas foliowy)</li>
+                            <li>1/2 awokado (zdrowe tłuszcze)</li>
+                            <li>Woda + Sok z cytryny</li>
+                        </ul>
+                    </div>
+                    <!-- Option B -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja B: Fioletowa Regeneracja</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Miarka odżywki białkowej</li>
+                            <li>Garść jagód/borówek (antyoksydanty chroniące mózg)</li>
+                            <li>Łyżeczka oleju MCT lub lnianego (Omega-3)</li>
+                            <li>Woda/Mleko migdałowe</li>
+                        </ul>
+                    </div>
+                    <!-- Option C -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-indigo-700 mb-2">Opcja C: Krem Warzywny (Na ciepło)</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Zblendowane na krem warzywa (cukinia/dynia/brokuł)</li>
+                            <li>Dodane białko (kolagen lub odżywka bezsmakowa)</li>
+                            <li>Łyżka oliwy z oliwek + pestki dyni (cynk)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Doctor/Medication Note -->
+        <section class="mt-8 pt-6 border-t border-slate-300 print-break">
+            <h4 class="font-bold text-lg mb-2 text-red-700">⚠️ Ważne uwagi do monitorowania:</h4>
+            <div class="bg-white border border-red-100 rounded p-4 text-sm">
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Smart Carbs:</strong> Wprowadziliśmy węglowodany (kasza, batat, chleb żytni) w małych ilościach. Obserwuj, czy po nich nie masz "zjazdu". Jeśli tak - zmniejsz porcję o połowę, ale nie rezygnuj całkowicie (potrzebujesz ich do leków i serotoniny).</li>
+                    <li><strong>Leki a Tłuszcze:</strong> Przy Axyven i Sulpiryd stabilny poziom cukru jest kluczowy. Unikaj cukrów prostych (słodyczy), które zaburzają działanie leków.</li>
+                    <li><strong>Płyny:</strong> Kontynuuj picie dużej ilości wody. Płynna kolacja powinna pomóc w nocnej regeneracji bez zgagi.</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer class="mt-12 text-center text-xs text-slate-500 pb-8">
+            <p>&copy; 2026 Plan Indywidualny. Wygenerowano na bazie konsultacji i dokumentacji medycznej.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        window.onbeforeprint = function() {
+            console.log("Przygotowywanie do druku...");
+        };
+    </script>
+</body>
+</html>
