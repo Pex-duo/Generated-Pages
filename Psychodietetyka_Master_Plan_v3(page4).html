@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Żywieniowy Cz. 4 - Culinary Challenge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Print specific styles */
+        @media print {
+            body {
+                background-color: white;
+                color: black;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-break {
+                page-break-inside: avoid;
+            }
+            .print-header {
+                border-bottom: 2px solid #333;
+                margin-bottom: 20px;
+            }
+            .card-print {
+                border: 1px solid #ddd;
+                box-shadow: none;
+                margin-bottom: 10px;
+            }
+            a {
+                text-decoration: none;
+                color: black;
+            }
+            /* Force background colors print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navbar / Header (Interactive) -->
+    <nav class="bg-rose-900 text-white p-4 shadow-lg no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-trophy text-2xl"></i>
+                <div>
+                    <h1 class="text-xl font-bold">Protokół: Brain & Body (Część 4)</h1>
+                    <p class="text-xs opacity-80">Edycja: Culinary Challenge (Technika & Smak)</p>
+                </div>
+            </div>
+            <button onclick="window.print()" class="bg-white text-rose-900 px-4 py-2 rounded-lg font-semibold hover:bg-rose-50 transition shadow-md flex items-center gap-2">
+                <i class="fas fa-print"></i> Drukuj Część 4
+            </button>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+
+        <!-- Header -->
+        <header class="mb-8 print-header">
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-rose-600 card-print">
+                <div class="flex justify-between items-start flex-wrap">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2">Eksperymenty Kulinarne</h2>
+                        <ul class="text-sm space-y-1 text-slate-600">
+                            <li><strong>Poziom trudności:</strong> Masterclass (Wysoki).</li>
+                            <li><strong>Wymagania:</strong> Cierpliwość, dobrej jakości składniki, chęć zabawy smakiem.</li>
+                            <li><strong>Cel:</strong> Głęboka satysfakcja z jedzenia, która zastępuje potrzebę "objadania się" ilościowego.</li>
+                        </ul>
+                    </div>
+                    <div class="mt-4 md:mt-0 bg-red-50 p-3 rounded-lg border border-red-200 text-xs text-red-900 max-w-xs">
+                        <strong>Zasada Szefa Kuchni:</strong> "Jemy oczami". Staraj się, aby te dania wyglądały na talerzu jak z najlepszej restauracji. Estetyka wpływa na sytość.
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Meal Plan Part 4 -->
+        <section>
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-utensils text-rose-700"></i> Menu Degustacyjne
+            </h3>
+
+            <!-- 7:00 Breakfast -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-rose-700 text-white text-xs font-bold px-2 py-1 rounded">07:00</span>
+                    <h4 class="font-bold text-lg">Śniadanie: Wyższa Szkoła Jazdy</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option J -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-rose-800 mb-2">Opcja J: Omlet "Soufflé" z Wędzonym Pstrągiem</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li><strong>Technika:</strong> Białka ubite na sztywną pianę, delikatnie wymieszane z żółtkami i pieczone w piekarniku (tekstura chmurki).</li>
+                            <li>W środku: Kawałki wędzonego pstrąga i świeży koperek.</li>
+                            <li>Podane z rukolą skropioną oliwą truflową.</li>
+                        </ul>
+                    </div>
+                    <!-- Option K -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-rose-800 mb-2">Opcja K: "Awokado Niespodzianka" (Baked Avocado)</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Dojrzałe awokado przekrojone, z wbitym w środek jajkiem.</li>
+                            <li>Całość owinięta plastrami szynki parmeńskiej (Prosciutto).</li>
+                            <li>Zapieczone w piekarniku, aż białko się zetnie, a szynka zrobi chrupiąca.</li>
+                            <li>Posypane płatkami chili.</li>
+                        </ul>
+                    </div>
+                    <!-- Option L -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-rose-800 mb-2">Opcja L: Domowy Pasztet Drobiowy (Bez bułki)</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Pasztet pieczony samodzielnie z wątróbki i udka (zmielone 3 razy), wiązany jajkiem (bez mąki).</li>
+                            <li>Dodatek gałki muszkatołowej i koniaku (do smaku, alkohol odparuje).</li>
+                            <li>Podany z domowymi piklami (ogórek, rzodkiewka).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11:00 Lunch -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-rose-700 text-white text-xs font-bold px-2 py-1 rounded">11:00</span>
+                    <h4 class="font-bold text-lg">Obiad: Slow & Low (Cierpliwość popłaca)</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option J -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-rose-800 mb-2">Opcja J: Policzki Wołowe (Confit)</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li><strong>Technika:</strong> Policzki duszone 4-5h w niskiej temperaturze w bulionie i czerwonym winie, aż będą rozpadać się pod widelcem.</li>
+                            <li>Sos zredukowany do konsystencji syropu (demi-glace).</li>
+                            <li>Dodatek: Puree z selera korzeniowego z palonym masłem.</li>
+                        </ul>
+                    </div>
+                    <!-- Option K -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-rose-800 mb-2">Opcja K: Saltimbocca z Indyka</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Cienkie sznycle z indyka, na każdym liść szałwii i plaster szynki parmeńskiej.</li>
+                            <li>Spięte wykałaczką, smażone krótko na maśle klarowanym.</li>
+                            <li>Podlane białym winem (deglasowanie patelni).</li>
+                            <li>Podane z fasolką szparagową z bułką tartą (symbolicznie) lub migdałami.</li>
+                        </ul>
+                    </div>
+                    <!-- Option L -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-rose-800 mb-2">Opcja L: Stek z Tuńczyka w Sezamie</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Gruby stek z tuńczyka obtoczony w czarnym i białym sezamie.</li>
+                            <li>Smażony po 1 minucie z każdej strony (w środku surowy/różowy - tataki).</li>
+                            <li><strong>Smart Carb:</strong> Salsa z mango, awokado, kolendry i limonki (orzeźwienie).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 15:00 Snack -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-rose-700 text-white text-xs font-bold px-2 py-1 rounded">15:00</span>
+                    <h4 class="font-bold text-lg">Podwieczorek: Wykwintne Przekąski</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option J -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-rose-800 mb-2">Opcja J: Tatar Wołowy (Klasyk)</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Dobrej jakości polędwica lub ligawa, własnoręcznie siekana (nie mielona!).</li>
+                            <li>Żółtko, posiekana szalotka, ogórek, grzybki marynowane.</li>
+                            <li>Doprawiony maggi, musztardą i pieprzem. Bez chleba, czyste białko.</li>
+                        </ul>
+                    </div>
+                    <!-- Option K -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-rose-800 mb-2">Opcja K: "Keto" Tempura</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>3-4 Krewetki tygrysie w cieście z mąki kokosowej i wody gazowanej (bardzo zimnej).</li>
+                            <li>Smażone na głębokim oleju kokosowym (krótko).</li>
+                            <li>Sos: Majonez wymieszany z odrobiną wasabi.</li>
+                        </ul>
+                    </div>
+                    <!-- Option L -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-rose-800 mb-2">Opcja L: Terrina Warzywna z Kozim Serem</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Warstwy grillowanej cukinii, bakłażana i papryki przekładane kremowym kozim serem.</li>
+                            <li>Przygotowana dzień wcześniej, schłodzona, krojona w plastry jak ciasto.</li>
+                            <li>Wygląda obłędnie, smakuje jeszcze lepiej.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 19:00 Dinner (Liquid) -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-rose-700 text-white text-xs font-bold px-2 py-1 rounded">19:00</span>
+                    <h4 class="font-bold text-lg">Kolacja Płynna: Aksamit i Głębia</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option J -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-rose-800 mb-2">Opcja J: Krem z Pieczonego Czosnku</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>2 główki czosnku upieczone w łupinach (stają się słodkie i kremowe).</li>
+                            <li>Wycisnięte do bulionu warzywnego, gotowane z kalafiorem.</li>
+                            <li>Zblendowane z odrobiną śmietanki 30%. Smak jest łagodny, nie ostry!</li>
+                        </ul>
+                    </div>
+                    <!-- Option K -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-rose-800 mb-2">Opcja K: Gazpacho Andaluzyjskie (Chłodnik)</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Surowe pomidory, ogórek, papryka, czosnek, ocet sherry i duuużo dobrej oliwy.</li>
+                            <li>Zblendowane i przetarte przez sito dla idealnej gładkości.</li>
+                            <li>Podawane mocno schłodzone. Bomba witaminowa.</li>
+                        </ul>
+                    </div>
+                    <!-- Option L -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-rose-800 mb-2">Opcja L: "Szarlotka" w Płynie (Na ciepło)</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Jabłko ugotowane w niewielkiej ilości wody z cynamonem i goździkami.</li>
+                            <li>Zblendowane z ciepłym mlekiem migdałowym i miarką białka waniliowego.</li>
+                            <li>Posypane odrobiną gałki muszkatołowej.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <footer class="mt-12 text-center text-xs text-slate-500 pb-8">
+            <p>&copy; 2026 Brain & Body (Część 4). Gotowanie to sztuka dbania o siebie.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        window.onbeforeprint = function() {
+            console.log("Przygotowywanie do druku...");
+        };
+    </script>
+</body>
+</html>
