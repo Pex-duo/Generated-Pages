@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protokół: Brain & Body (Rdzeń) - Instrukcja Obsługi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Print specific styles */
+        @media print {
+            body {
+                background-color: white;
+                color: black;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-break {
+                page-break-inside: avoid;
+            }
+            .print-header {
+                border-bottom: 2px solid #333;
+                margin-bottom: 20px;
+            }
+            .card-print {
+                border: 1px solid #ddd;
+                box-shadow: none;
+                margin-bottom: 10px;
+            }
+            a {
+                text-decoration: none;
+                color: black;
+            }
+            /* Force background colors print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .bg-slate-800 {
+                background-color: #1e293b !important;
+                color: white !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navbar / Header (Interactive) -->
+    <nav class="bg-slate-800 text-white p-4 shadow-lg no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-compass text-2xl"></i>
+                <div>
+                    <h1 class="text-xl font-bold">Protokół: Brain & Body (Rdzeń)</h1>
+                    <p class="text-xs opacity-80">Manual Operacyjny: Decyzje & Strategie</p>
+                </div>
+            </div>
+            <button onclick="window.print()" class="bg-white text-slate-900 px-4 py-2 rounded-lg font-semibold hover:bg-slate-200 transition shadow-md flex items-center gap-2">
+                <i class="fas fa-print"></i> Drukuj Instrukcję
+            </button>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+
+        <!-- Header -->
+        <header class="mb-8 print-header">
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-slate-600 card-print">
+                <div class="flex justify-between items-start flex-wrap">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2">Jak używać tego systemu?</h2>
+                        <ul class="text-sm space-y-1 text-slate-600">
+                            <li>To nie jest dieta z kartki. To zbiór zasad, które pozwalają Ci jeść wszędzie.</li>
+                            <li><strong>Cel:</strong> Utrzymać stabilną energię i uniknąć "zamulenia" węglowodanowego.</li>
+                            <li><strong>Klucz:</strong> Jeśli rozumiesz "Algorytm Talerza", poradzisz sobie w każdej kuchni świata.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Section 1: The Plate Algorithm -->
+        <section class="mb-8 print-break">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-layer-group text-slate-600"></i> 1. Algorytm Talerza (Budowanie z resztek)
+            </h3>
+            <p class="text-sm mb-4">Otwierasz lodówkę. Widzisz chaos. Jak złożyć z tego posiłek Brain & Body? Musisz odhaczyć 3 punkty:</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Step 1: Protein -->
+                <div class="bg-red-50 p-4 rounded-lg border border-red-100 card-print">
+                    <h4 class="font-bold text-red-800 mb-2">KROK 1: BAZA (Białko)</h4>
+                    <p class="text-xs font-bold uppercase text-red-600 mb-2">Musi być w każdym posiłku!</p>
+                    <p class="text-sm">Szukaj: Jajek, kawałka mięsa z wczoraj, ryby w puszce, twarogu, kabanosów, sera żółtego.</p>
+                    <p class="text-sm mt-2 italic">Brak? Posiłek nie zaliczony. Zjedz chociaż serek wiejski ze sklepu.</p>
+                </div>
+
+                <!-- Step 2: Fat -->
+                <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100 card-print">
+                    <h4 class="font-bold text-yellow-800 mb-2">KROK 2: PALIWO (Tłuszcz)</h4>
+                    <p class="text-xs font-bold uppercase text-yellow-600 mb-2">Daje sytość na 4 godziny.</p>
+                    <p class="text-sm">Jeśli białko jest chude (kurczak, tuńczyk) -> <strong>DODAJ TŁUSZCZ</strong>.</p>
+                    <p class="text-sm mt-2">Szukaj: Oliwy z oliwek, masła, orzechów, awokado, pestek dyni, majonezu (dobrego składu).</p>
+                </div>
+
+                <!-- Step 3: Filler & Brain -->
+                <div class="bg-green-50 p-4 rounded-lg border border-green-100 card-print">
+                    <h4 class="font-bold text-green-800 mb-2">KROK 3: OBJĘTOŚĆ + MÓZG</h4>
+                    <p class="text-xs font-bold uppercase text-green-600 mb-2">Warzywa + Opcjonalny Węglowodan.</p>
+                    <p class="text-sm"><strong>Warzywa (Ile chcesz):</strong> Pomidor, ogórek, sałata, mrożonki na patelnię.</p>
+                    <p class="text-sm mt-2"><strong>Smart Carb (Max 1/4):</strong> 1 kromka chleba, 3 łyżki kaszy/fasoli. <em>Jeśli nie masz ochoty - pomiń.</em></p>
+                </div>
+            </div>
+            
+            <div class="mt-4 p-4 bg-slate-100 rounded text-sm italic border-l-4 border-slate-400">
+                <strong>Przykład z życia:</strong> Znalazłeś 2 parówki i pół pomidora. <br>
+                1. Białko: Parówki (jest ok). <br>
+                2. Tłuszcz: Parówki są tłuste (jest ok). <br>
+                3. Warzywa: Pomidor. <br>
+                4. Brakuje węglowodana? Zjedz pół kajzerki albo wcale. <br>
+                <strong>Werdykt:</strong> To jest akceptowalny posiłek awaryjny.
+            </div>
+        </section>
+
+        <!-- Section 2: Family & Social Events -->
+        <section class="mb-8 print-break">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-users text-slate-600"></i> 2. Strategia "W Gościach" (Niedzielny Obiad)
+            </h3>
+            <p class="text-sm mb-4">Tradycyjna polska gościna to: Schabowy (panierka), Ziemniaki (dużo), Ciasto. Jak przeżyć i nie urazić babci?</p>
+
+            <div class="space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 flex gap-4 items-start card-print">
+                    <div class="bg-slate-200 p-2 rounded-full min-w-[40px] text-center"><i class="fas fa-shield-alt"></i></div>
+                    <div>
+                        <h4 class="font-bold">Taktyka "Selekcja na Talerzu"</h4>
+                        <p class="text-sm">Nałóż sobie wszystkiego, ale w zmienionych proporcjach:</p>
+                        <ul class="list-disc list-inside text-sm mt-1 text-slate-600">
+                            <li><strong>Mięso:</strong> Zjedz całe. Jeśli panierka jest gruba i nasiąknięta tłuszczem - postaraj się ją "niechcący" zostawić lub zjedz tylko połowę.</li>
+                            <li><strong>Ziemniaki:</strong> Nałóż jedną małą łyżkę (dla smaku i tradycji). Zjedz jako ostatnie.</li>
+                            <li><strong>Surówki:</strong> Zjedz podwójną porcję. Powiedz: "Te buraczki są genialne, poproszę dokładkę buraczków zamiast ziemniaków". Gospodyni będzie zachwycona.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 flex gap-4 items-start card-print">
+                    <div class="bg-slate-200 p-2 rounded-full min-w-[40px] text-center"><i class="fas fa-wine-glass-alt"></i></div>
+                    <div>
+                        <h4 class="font-bold">Problem "Ciasto i Alkohol"</h4>
+                        <p class="text-sm">To węglowodany proste. Najgorsze dla Twojego samopoczucia.</p>
+                        <ul class="list-disc list-inside text-sm mt-1 text-slate-600">
+                            <li><strong>Ciasto:</strong> Poproś o "bardzo cienki kawałek, bo dbam o linię, ale muszę spróbować". Zjedz dwa kęsy, resztę zostaw. Cukier usypia.</li>
+                            <li><strong>Alkohol:</strong> Wytrawne wino lub czysta wódka są lepsze niż piwo/kolorowe drinki. Ale pamiętaj - alkohol hamuje spalanie tłuszczu na 24-48h.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Survival Guide (On the Go) -->
+        <section class="mb-8 print-break">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-car text-slate-600"></i> 3. Survival Kit (Miasto / Trasa)
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Gas Station -->
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                    <h4 class="font-bold text-slate-700 mb-2"><i class="fas fa-gas-pump"></i> Stacja Paliw / Żabka</h4>
+                    <ul class="text-sm space-y-2">
+                        <li class="flex items-center gap-2">
+                            <i class="fas fa-check text-green-600"></i>
+                            <span><strong>Kabanosy:</strong> Najlepszy przyjaciel kierowcy. Szukaj takich z krótkim składem.</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fas fa-check text-green-600"></i>
+                            <span><strong>Orzechy:</strong> Paczka nerkowców lub migdałów (niesolonych).</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fas fa-check text-green-600"></i>
+                            <span><strong>Hot-Dog (Hacker):</strong> Poproś o hot-doga, zjedz parówkę, wyrzuć bułkę (lub zjedz 1/3 bułki).</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fas fa-times text-red-500"></i>
+                            <span class="line-through text-slate-400">Batoniki, Rogale, Kanapki trójkątne (chyba że w ostateczności).</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Restaurant -->
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                    <h4 class="font-bold text-slate-700 mb-2"><i class="fas fa-utensils"></i> Restauracja / Fast Food</h4>
+                    <ul class="text-sm space-y-2">
+                        <li class="flex items-center gap-2">
+                            <i class="fas fa-check text-green-600"></i>
+                            <span><strong>Burgerownia:</strong> Burger bez bułki (w sałacie) lub zjedz tylko dolną cześć bułki. Frytki oddaj towarzyszowi.</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fas fa-check text-green-600"></i>
+                            <span><strong>Kebab:</strong> "Poproszę kebab na talerzu, samo mięso + surówki, BEZ frytek". Sos mieszany.</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fas fa-check text-green-600"></i>
+                            <span><strong>Pizzeria:</strong> Zjedz wierzch pizzy (ser, sos, mięso), zostaw grube ranty ciasta.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Emergency Fixes -->
+        <section class="print-break">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-first-aid text-slate-600"></i> 4. Co robić, gdy "popłyniesz"?
+            </h3>
+            <div class="bg-orange-50 p-4 rounded-lg border border-orange-100 card-print">
+                <p class="text-sm mb-2">Zjadłeś pizzę, lody i popiłeś piwem. Czujesz się źle, brzuch wywalony, mrowienie w ustach. Co teraz?</p>
+                <ol class="list-decimal list-inside text-sm font-semibold space-y-2">
+                    <li><strong>Nie panikuj.</strong> Jeden zły posiłek nie sprawi, że przytyjesz 5 kg. To tylko woda i glikogen.</li>
+                    <li><strong>Nawodnienie:</strong> Wypij 2 szklanki wody z cytryną. Cukier wiąże wodę, musisz ją przepłukać.</li>
+                    <li><strong>Post przerywany:</strong> Nie jedz nic do następnego dnia do 11:00 lub 12:00. Daj jelitom czas na posprzątanie bałaganu.</li>
+                    <li><strong>Spacer:</strong> Idź na 20 min spaceru OD RAZU po jedzeniu. To obniży skok cukru drastycznie.</li>
+                </ol>
+            </div>
+        </section>
+
+        <footer class="mt-12 text-center text-xs text-slate-500 pb-8">
+            <p>&copy; 2026 Brain & Body (Rdzeń). Wydrukuj to i miej w telefonie.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        window.onbeforeprint = function() {
+            console.log("Przygotowywanie do druku...");
+        };
+    </script>
+</body>
+</html>
