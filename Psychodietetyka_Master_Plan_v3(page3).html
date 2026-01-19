@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Żywieniowy Cz. 3 - Wersja Gourmet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Print specific styles */
+        @media print {
+            body {
+                background-color: white;
+                color: black;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-break {
+                page-break-inside: avoid;
+            }
+            .print-header {
+                border-bottom: 2px solid #333;
+                margin-bottom: 20px;
+            }
+            .card-print {
+                border: 1px solid #ddd;
+                box-shadow: none;
+                margin-bottom: 10px;
+            }
+            a {
+                text-decoration: none;
+                color: black;
+            }
+            /* Force background colors print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navbar / Header (Interactive) -->
+    <nav class="bg-amber-900 text-white p-4 shadow-lg no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-chef text-2xl"></i>
+                <div>
+                    <h1 class="text-xl font-bold">Protokół: Brain & Body (Część 3)</h1>
+                    <p class="text-xs opacity-80">Edycja: Gourmet / Slow Food (Wymagające)</p>
+                </div>
+            </div>
+            <button onclick="window.print()" class="bg-white text-amber-900 px-4 py-2 rounded-lg font-semibold hover:bg-amber-50 transition shadow-md flex items-center gap-2">
+                <i class="fas fa-print"></i> Drukuj Część 3
+            </button>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+
+        <!-- Header -->
+        <header class="mb-8 print-header">
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-amber-600 card-print">
+                <div class="flex justify-between items-start flex-wrap">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2">Kulinarna Stymulacja Mózgu</h2>
+                        <ul class="text-sm space-y-1 text-slate-600">
+                            <li><strong>Poziom trudności:</strong> Zaawansowany / Czasochłonny.</li>
+                            <li><strong>Zastosowanie:</strong> Weekendy lub dni wolne, gdy gotowanie jest formą relaksu.</li>
+                            <li><strong>Cel:</strong> Satysfakcja sensoryczna (smak, zapach, tekstura) przy zachowaniu reżimu Low Carb.</li>
+                        </ul>
+                    </div>
+                    <div class="mt-4 md:mt-0 bg-orange-50 p-3 rounded-lg border border-orange-200 text-xs text-orange-900 max-w-xs">
+                        <strong>Chef's Note:</strong> Te dania wymagają przygotowania (marynowanie, pieczenie, redukcja sosów). Nie śpiesz się. Celebruj proces.
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Meal Plan Part 3 -->
+        <section>
+            <h3 class="text-xl font-bold mb-6 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-utensils text-amber-700"></i> Menu "Restauracyjne"
+            </h3>
+
+            <!-- 7:00 Breakfast -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-amber-700 text-white text-xs font-bold px-2 py-1 rounded">07:00</span>
+                    <h4 class="font-bold text-lg">Śniadanie: Wykwintny Start</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option G -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-amber-800 mb-2">Opcja G: Jaja po Benedyktyńsku "Low Carb"</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>2 jajka w koszulce (wymaga techniki gotowania w occie)</li>
+                            <li>Zamiast bułki: 2 duże kapelusze pieczarek Portobello (zapieczone z ziołami)</li>
+                            <li>Domowy sos Holenderski (żółtka ucierane z masłem i cytryną na parze)</li>
+                            <li>Szynka parmeńska</li>
+                        </ul>
+                    </div>
+                    <!-- Option H -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-amber-800 mb-2">Opcja H: Tatar ze Śledzia a'la Matjas</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Wymoczone płaty śledziowe siekane w drobną kostkę</li>
+                            <li>Dodatki: kwaśne jabłko, cebula szalotka, ogórek kiszony (wszystko drobno siekane)</li>
+                            <li>Sos: Śmietana 18% z odrobiną musztardy francuskiej</li>
+                            <li>Podane na liściach cykorii (zamiast chleba)</li>
+                        </ul>
+                    </div>
+                    <!-- Option I -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-amber-800 mb-2">Opcja I: Frittata z Kozim Serem i Szpinakiem</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Masa jajeczna ubita ze śmietanką</li>
+                            <li>Karmelizowana na maśle czerwona cebula (duszone powoli)</li>
+                            <li>Zapiekana w piekarniku z krążkami sera koziego i świeżym tymiankiem</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11:00 Lunch -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-amber-700 text-white text-xs font-bold px-2 py-1 rounded">11:00</span>
+                    <h4 class="font-bold text-lg">Obiad: Slow Cooking (Głębia Smaku)</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option G -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-amber-800 mb-2">Opcja G: Wołowina po Burgundzku (Bez mąki)</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Wołowina duszona przez 3h w czerwonym winie wytrawnym (alkohol odparowuje, smak zostaje)</li>
+                            <li>Pieczarki, cebulki perłowe, boczek wędzony</li>
+                            <li>Zamiast ziemniaków: <strong>Puree z kalafiora</strong> z dużą ilością masła i gałką muszkatołową</li>
+                        </ul>
+                    </div>
+                    <!-- Option H -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-amber-800 mb-2">Opcja H: Kaczka z sosem Żurawinowym</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Pierś z kaczki smażona od zimnej patelni (wytapianie tłuszczu) na różowo</li>
+                            <li>Sos: Świeża żurawina duszona z erytrytolem, rozmarynem i odrobiną octu balsamicznego</li>
+                            <li>Dodatek: Pieczona modra kapusta (ćwiartki) skropiona oliwą</li>
+                        </ul>
+                    </div>
+                    <!-- Option I -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-amber-800 mb-2">Opcja I: Dorsz "En Papillote" (W Papilocie)</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Polędwica z dorsza zawinięta w pergamin z warzywami julienne (marchew, por, seler)</li>
+                            <li>Dodatek masła czosnkowego i białego wina do środka</li>
+                            <li>Pieczone 20 min - ryba gotuje się we własnym sosie (nieziemsko delikatna)</li>
+                            <li><strong>3 łyżki czarnej soczewicy</strong> (jako Smart Carb)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 15:00 Snack -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-amber-700 text-white text-xs font-bold px-2 py-1 rounded">15:00</span>
+                    <h4 class="font-bold text-lg">Podwieczorek: Finger Food</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option G -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-amber-800 mb-2">Opcja G: Faszerowane Papryczki</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Małe papryczki (pimientos lub zwykłe mini)</li>
+                            <li>Farsz: Serek śmietankowy wymieszany z wędzonym łososiem i koperkiem</li>
+                            <li>Zapieczone w piekarniku przez 10 min</li>
+                        </ul>
+                    </div>
+                    <!-- Option H -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-amber-800 mb-2">Opcja H: Krewetki Cocktail</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>6-8 krewetek tygrysich gotowanych krótko w bulionie</li>
+                            <li>Domowy sos różowy: Jogurt grecki, koncentrat pomidorowy, chrzan, kropla tabasco i brandy</li>
+                            <li>Podane w pucharku z selerem naciowym</li>
+                        </ul>
+                    </div>
+                    <!-- Option I -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-amber-800 mb-2">Opcja I: Carpaccio z Buraka (Smart Carb)</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Cienko pokrojony pieczony burak (użyj mandoliny)</li>
+                            <li>Posypany prażonymi orzechami włoskimi, rukolą i serem feta</li>
+                            <li>Dresing: Oliwa, miód (odrobina), ocet balsamiczny</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 19:00 Dinner (Liquid) -->
+            <div class="mb-8 print-break">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-amber-700 text-white text-xs font-bold px-2 py-1 rounded">19:00</span>
+                    <h4 class="font-bold text-lg">Kolacja Płynna: Egzotyka i Kremowość</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Option G -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-amber-800 mb-2">Opcja G: Tajska Zupa Kokosowa (Tom Kha)</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Bulion drobiowy gotowany z trawą cytrynową, imbirem i liśćmi limonki (odcedzony)</li>
+                            <li>Dodane mleczko kokosowe (tłuste)</li>
+                            <li>Zblendowane na gładko z kawałkiem gotowanego kurczaka (dla białka)</li>
+                            <li>Aromat kolendry</li>
+                        </ul>
+                    </div>
+                    <!-- Option H -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-amber-800 mb-2">Opcja H: Krem z Pieczonej Papryki (Muhammara)</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Papryki pieczone w całości w piekarniku aż skórka sczernieje (potem obranie ze skórki - to daje dymny smak)</li>
+                            <li>Zblendowane z orzechami włoskimi, oliwą i odrobiną kminu</li>
+                            <li>Dodana miarka białka neutralnego</li>
+                        </ul>
+                    </div>
+                    <!-- Option I -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 card-print">
+                        <h5 class="font-bold text-amber-800 mb-2">Opcja I: "Złote Mleko" Smoothie Bowl</h5>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>Napój migdałowy podgrzany z pastą kurkumową (kurkuma, pieprz, cynamon, imbir)</li>
+                            <li>Zblendowane z połową awokado i miarką białka waniliowego</li>
+                            <li>Podane na ciepło w miseczce (bardzo kojące na noc)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <footer class="mt-12 text-center text-xs text-slate-500 pb-8">
+            <p>&copy; 2026 Brain & Body (Część 3). Dobre jedzenie wymaga czasu. Smacznego.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        window.onbeforeprint = function() {
+            console.log("Przygotowywanie do druku...");
+        };
+    </script>
+</body>
+</html>
