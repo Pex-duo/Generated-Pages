@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luksemburg: Panel Kalkulacji i Legalizacji</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Roboto', sans-serif; }
+        
+        /* Stylizacja dla wydruku */
+        @media print {
+            body { background-color: white; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            .page-break { page-break-before: always; }
+            .shadow-lg, .shadow-sm { box-shadow: none !important; }
+            .border { border: 1px solid #ddd !important; }
+            #main-container { width: 100%; max-width: 100%; margin: 0; padding: 0; }
+        }
+        .print-only { display: none; }
+
+        .chart-wrapper {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+        
+        /* Custom scrollbar for tables */
+        .scroller::-webkit-scrollbar { width: 6px; height: 6px; }
+        .scroller::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+    </style>
+    <!-- Chosen Palette: Corporate Slate & Warning Orange (for critical alerts) -->
+    <!-- Application Structure Plan:
+         1. Top Bar: Project Summary & Print Button.
+         2. Tab System: 
+            - Tab A: Procedura & Dokumenty (Checklist, Time calculator, Official Links).
+            - Tab B: Kalkulator Marży (Complex inputs for worker/client rates + dynamic extra costs).
+         3. Logic:
+            - Time Calc: Backwards calculation from "Start Date" to see when to apply.
+            - Money Calc: (Client Rate - Worker Rate - Extra Costs) * Hours * Workers.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <div id="main-container" class="max-w-7xl mx-auto min-h-screen flex flex-col">
+        
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 p-6 flex justify-between items-center sticky top-0 z-50 shadow-sm no-print">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900">🇵🇱 ➡ 🇱🇺 Panel Delegowania (Agencja Pracy)</h1>
+                <p class="text-sm text-slate-500">Zarządzanie kontraktem, legalizacja i wycena (Model Niemiecki)</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition">
+                    <span>🖨️</span> Drukuj Kalkulację
+                </button>
+            </div>
+        </header>
+
+        <!-- Print Header (Only visible on print) -->
+        <div class="print-only p-8 border-b-2 border-slate-800 mb-6">
+            <h1 class="text-3xl font-bold">Raport Kalkulacji Kontraktu: Luksemburg</h1>
+            <p class="text-slate-600 mt-2">Data generowania: <span id="printDate"></span></p>
+        </div>
+
+        <!-- Navigation Tabs (No Print) -->
+        <div class="bg-white px-6 border-b border-slate-200 no-print">
+            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                <button onclick="switchTab('requirements')" id="tab-req" class="border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+                    1. Procedura i Dokumenty
+                </button>
+                <button onclick="switchTab('calculator')" id="tab-calc" class="border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+                    2. Kalkulator Oferty i Zysku
+                </button>
+            </nav>
+        </div>
+
+        <!-- CONTENT AREA -->
+        <main class="flex-grow p-6">
+
+            <!-- TAB 1: REQUIREMENTS & DOCUMENTS -->
+            <div id="view-requirements" class="space-y-6 animate-fade-in">
+                
+                <!-- Timeline Alert -->
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded shadow-sm">
+                    <div class="flex items-start">
+                        <div class="ml-3">
+                            <h3 class="text-sm font-bold text-amber-800 uppercase">Kluczowy Harmonogram (Wyprzedzenie)</h3>
+                            <p class="text-sm text-amber-700 mt-1">
+                                Ponieważ nie macie licencji, procedura zajmie <strong>minimum 6-8 tygodni</strong>. 
+                                Gwarancja bankowa (2 tyg.) -> Licencja (4 tyg.) -> A1/Zgłoszenia (1-2 tyg.).
+                            </p>
+                            <div class="mt-4 flex items-center gap-4">
+                                <label class="text-sm font-medium text-amber-900">Planowana data wejścia na budowę:</label>
+                                <input type="date" id="startDateInput" class="border-amber-300 rounded text-sm p-1 focus:ring-amber-500 bg-white" onchange="calculateDeadlines()">
+                            </div>
+                            <p id="deadlineOutput" class="mt-2 text-sm font-bold text-red-600 hidden">
+                                ⚠️ Musicie rozpocząć procedurę najpóźniej: <span id="deadlineDate">...</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Column 1: Documents & Procedure -->
+                    <div class="bg-white rounded-lg shadow border border-slate-200 overflow-hidden">
+                        <div class="bg-slate-50 px-4 py-3 border-b border-slate-200">
+                            <h3 class="font-bold text-slate-700">📂 Etap 1: Licencja i Firma (Jednorazowe)</h3>
+                        </div>
+                        <div class="p-4 space-y-4">
+                            <div class="text-sm text-slate-600 mb-4">
+                                Wniosek składa się do <strong>Ministère de l'Économie</strong>. Wymagane dokumenty muszą być przetłumaczone (FR/DE) lub wydane na drukach UE.
+                            </div>
+                            
+                            <table class="min-w-full text-sm text-left">
+                                <thead class="bg-slate-100 text-slate-500 font-medium">
+                                    <tr>
+                                        <th class="px-2 py-2">Dokument</th>
+                                        <th class="px-2 py-2">Status/Akcja</th>
+                                        <th class="px-2 py-2">Gdzie?</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <tr>
+                                        <td class="px-2 py-3 font-medium">Gwarancja Bankowa (85.000€)</td>
+                                        <td class="px-2 py-3 text-red-600">Do załatwienia w Banku</td>
+                                        <td class="px-2 py-3">Wasz Bank w PL/DE</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-2 py-3 font-medium">Zaświadczenie o niekaralności</td>
+                                        <td class="px-2 py-3 text-green-600">Do pobrania (KRK)</td>
+                                        <td class="px-2 py-3">Polska (MS) / Niemcy</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-2 py-3 font-medium">Statut Firmy / KRS</td>
+                                        <td class="px-2 py-3 text-blue-600">Do przetłumaczenia</td>
+                                        <td class="px-2 py-3">Tłumacz przysięgły</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-2 py-3 font-medium">Wniosek o Licencję</td>
+                                        <td class="px-2 py-3 text-red-600">Do wypełnienia i wysłania</td>
+                                        <td class="px-2 py-3"><a href="https://guichet.public.lu/en/entreprises/creation-developpement/autorisation-etablissement/commerce-services-artisanat/entreprise-travail-interimaire.html" target="_blank" class="text-blue-600 underline hover:text-blue-800">Guichet.lu ↗</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-2 py-3 font-medium">Opłata skarbowa (Timbre)</td>
+                                        <td class="px-2 py-3">Koszt: 24 €</td>
+                                        <td class="px-2 py-3">Administration</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Worker Specifics -->
+                    <div class="bg-white rounded-lg shadow border border-slate-200 overflow-hidden">
+                        <div class="bg-slate-50 px-4 py-3 border-b border-slate-200">
+                            <h3 class="font-bold text-slate-700">👷 Etap 2: Pracownicy (Każdy kontrakt)</h3>
+                        </div>
+                        <div class="p-4 space-y-4">
+                            <div class="text-sm text-slate-600 mb-4">
+                                Zgłoszenia muszą nastąpić <strong>przed</strong> wejściem pracownika na teren Luksemburga.
+                            </div>
+
+                            <table class="min-w-full text-sm text-left">
+                                <thead class="bg-slate-100 text-slate-500 font-medium">
+                                    <tr>
+                                        <th class="px-2 py-2">Dokument</th>
+                                        <th class="px-2 py-2">Uwagi</th>
+                                        <th class="px-2 py-2">Link</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <tr>
+                                        <td class="px-2 py-3 font-medium">Druk A1 (DE)</td>
+                                        <td class="px-2 py-3">Potwierdzenie ubezpieczenia w Niemczech</td>
+                                        <td class="px-2 py-3">Krankenkasse</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-2 py-3 font-medium">Badge Social</td>
+                                        <td class="px-2 py-3">Identyfikator na budowę (obowiązkowy)</td>
+                                        <td class="px-2 py-3"><a href="https://guichet.public.lu/en/entreprises/urbanisme-environnement/construction-amenagement-sites/construction/badge-social-identification.html" target="_blank" class="text-blue-600 underline hover:text-blue-800">Info ↗</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-2 py-3 font-medium">Zgłoszenie delegowania</td>
+                                        <td class="px-2 py-3">System <strong>e-Détachement</strong> (ITM)</td>
+                                        <td class="px-2 py-3"><a href="https://itm.public.lu/fr/conditions-travail/detachement.html" target="_blank" class="text-blue-600 underline hover:text-blue-800">ITM Portal ↗</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-2 py-3 font-medium">Umowa o pracę</td>
+                                        <td class="px-2 py-3">Musi być aneksowana o stawkę LU</td>
+                                        <td class="px-2 py-3">Wewnętrzne</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-2 py-3 font-medium">Badania lekarskie</td>
+                                        <td class="px-2 py-3">Service de Santé au Travail</td>
+                                        <td class="px-2 py-3"><a href="https://stm.lu/" target="_blank" class="text-blue-600 underline hover:text-blue-800">STM ↗</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: CALCULATOR -->
+            <div id="view-calculator" class="hidden space-y-8 animate-fade-in">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <!-- INPUT PANEL -->
+                    <div class="lg:col-span-5 space-y-6 no-print">
+                        
+                        <!-- Basic Contract Data -->
+                        <div class="bg-white p-5 rounded-lg shadow border border-slate-200">
+                            <h3 class="font-bold text-slate-800 mb-4 border-b pb-2">1. Dane Podstawowe</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-500 uppercase">Liczba Monterów</label>
+                                    <input type="number" id="calcWorkers" value="4" class="w-full border border-slate-300 rounded p-2 font-bold text-slate-900" oninput="runCalculation()">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-500 uppercase">Godziny / Tydzień</label>
+                                    <input type="number" id="calcHours" value="40" class="w-full border border-slate-300 rounded p-2 font-bold text-slate-900" oninput="runCalculation()">
+                                </div>
+                                <div class="col-span-2">
+                                    <label class="block text-xs font-medium text-slate-500 uppercase">Czas Trwania (Tygodnie)</label>
+                                    <input type="number" id="calcWeeks" value="4" class="w-full border border-slate-300 rounded p-2" oninput="runCalculation()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rates -->
+                        <div class="bg-white p-5 rounded-lg shadow border border-slate-200">
+                            <h3 class="font-bold text-slate-800 mb-4 border-b pb-2">2. Stawki (€)</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-500 uppercase mb-1">Wasz Koszt Pracownika (All-in Brutto)</label>
+                                    <div class="flex">
+                                        <span class="inline-flex items-center px-3 rounded-l border border-r-0 border-slate-300 bg-slate-50 text-slate-500">€</span>
+                                        <input type="number" id="rateCost" value="18.00" step="0.50" class="block w-full border border-slate-300 rounded-r p-2 font-medium" oninput="runCalculation()">
+                                    </div>
+                                    <p class="text-xs text-slate-400 mt-1">Min. Luksemburg dla wykwalifikowanych to ok. 18-19€, niewykwalifikowanych 15.63€.</p>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-blue-600 uppercase mb-1 font-bold">Stawka dla Klienta</label>
+                                    <div class="flex">
+                                        <span class="inline-flex items-center px-3 rounded-l border border-r-0 border-blue-300 bg-blue-50 text-blue-600">€</span>
+                                        <input type="number" id="ratePrice" value="38.00" step="0.50" class="block w-full border border-blue-300 rounded-r p-2 font-bold text-blue-900" oninput="runCalculation()">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Extra Costs -->
+                        <div class="bg-white p-5 rounded-lg shadow border border-slate-200">
+                            <div class="flex justify-between items-center mb-4 border-b pb-2">
+                                <h3 class="font-bold text-slate-800">3. Koszty Dodatkowe</h3>
+                                <button onclick="addCostRow()" class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded hover:bg-green-200">+ Dodaj</button>
+                            </div>
+                            <div id="extraCostsContainer" class="space-y-3 max-h-60 overflow-y-auto scroller p-1">
+                                <!-- Dynamic Rows Go Here -->
+                                <div class="grid grid-cols-12 gap-2 items-center cost-row">
+                                    <input type="text" value="Zakwaterowanie" class="col-span-5 text-sm border border-slate-300 rounded p-1" placeholder="Nazwa">
+                                    <input type="number" value="150" class="cost-val col-span-3 text-sm border border-slate-300 rounded p-1" oninput="runCalculation()">
+                                    <select class="cost-freq col-span-3 text-xs border border-slate-300 rounded p-1" onchange="runCalculation()">
+                                        <option value="week">/Tydz</option>
+                                        <option value="day">/Dzień</option>
+                                        <option value="month">/Msc</option>
+                                        <option value="once">Raz</option>
+                                    </select>
+                                    <button onclick="this.parentElement.remove(); runCalculation()" class="col-span-1 text-red-400 hover:text-red-600">×</button>
+                                </div>
+                                <div class="grid grid-cols-12 gap-2 items-center cost-row">
+                                    <input type="text" value="Transport (Paliwo)" class="col-span-5 text-sm border border-slate-300 rounded p-1" placeholder="Nazwa">
+                                    <input type="number" value="200" class="cost-val col-span-3 text-sm border border-slate-300 rounded p-1" oninput="runCalculation()">
+                                    <select class="cost-freq col-span-3 text-xs border border-slate-300 rounded p-1" onchange="runCalculation()">
+                                        <option value="once">Raz</option>
+                                        <option value="week">/Tydz</option>
+                                        <option value="day">/Dzień</option>
+                                        <option value="month">/Msc</option>
+                                    </select>
+                                    <button onclick="this.parentElement.remove(); runCalculation()" class="col-span-1 text-red-400 hover:text-red-600">×</button>
+                                </div>
+                            </div>
+                            <div class="mt-3 text-xs text-slate-500 text-right">
+                                Koszty liczone są globalnie (dla całej grupy) lub per pracownik (jeśli dodasz do stawki godzinowej). Tutaj zakładamy koszty globalne projektu.
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- RESULTS PANEL (Visible in Print) -->
+                    <div class="lg:col-span-7 space-y-6">
+                        
+                        <!-- Summary Card -->
+                        <div class="bg-slate-800 text-white rounded-lg shadow-lg p-6">
+                            <h3 class="text-sm font-medium text-slate-400 uppercase tracking-wider">Wynik Finansowy (Cały Kontrakt)</h3>
+                            <div class="mt-4 grid grid-cols-2 gap-8">
+                                <div>
+                                    <span class="block text-3xl font-bold" id="resProfit">0 €</span>
+                                    <span class="text-sm text-slate-400">Przewidywany Zysk</span>
+                                </div>
+                                <div>
+                                    <span class="block text-3xl font-bold text-green-400" id="resMargin">0%</span>
+                                    <span class="text-sm text-slate-400">Marża</span>
+                                </div>
+                            </div>
+                            <div class="mt-6 pt-6 border-t border-slate-700 grid grid-cols-3 gap-4 text-center">
+                                <div>
+                                    <span class="block text-lg font-semibold" id="resRevenue">0 €</span>
+                                    <span class="text-xs text-slate-500">Przychód (Faktura)</span>
+                                </div>
+                                <div>
+                                    <span class="block text-lg font-semibold" id="resLaborCost">0 €</span>
+                                    <span class="text-xs text-slate-500">Koszt Pracy</span>
+                                </div>
+                                <div>
+                                    <span class="block text-lg font-semibold text-amber-400" id="resExtraCost">0 €</span>
+                                    <span class="text-xs text-slate-500">Koszty Dodatkowe</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Printable Table Breakdown -->
+                        <div class="bg-white rounded-lg shadow border border-slate-200 overflow-hidden">
+                            <div class="bg-slate-50 px-4 py-2 border-b border-slate-200">
+                                <h3 class="font-bold text-slate-700">Szczegóły Kalkulacji</h3>
+                            </div>
+                            <table class="min-w-full text-sm text-left">
+                                <tbody class="divide-y divide-slate-100">
+                                    <tr>
+                                        <td class="px-4 py-2 text-slate-500">Stawka Klienta</td>
+                                        <td class="px-4 py-2 font-medium text-right" id="tabRatePrice">0 €</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 text-slate-500">Stawka Pracownika (Koszt)</td>
+                                        <td class="px-4 py-2 font-medium text-right text-red-500" id="tabRateCost">0 €</td>
+                                    </tr>
+                                    <tr class="bg-slate-50">
+                                        <td class="px-4 py-2 font-bold text-slate-700">Zysk brutto na godzinie (1 pracownik)</td>
+                                        <td class="px-4 py-2 font-bold text-right text-slate-800" id="tabHourlyMargin">0 €</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 text-slate-500">Suma Godzin (Wszyscy)</td>
+                                        <td class="px-4 py-2 text-right" id="tabTotalHours">0 h</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 text-slate-500">Suma Kosztów Dodatkowych</td>
+                                        <td class="px-4 py-2 text-right text-red-500" id="tabTotalExtra">0 €</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Chart Container -->
+                        <div class="bg-white p-4 rounded-lg shadow border border-slate-200 page-break">
+                            <h4 class="text-sm font-bold text-slate-500 mb-4 text-center">Struktura Przychodu</h4>
+                            <div class="chart-wrapper">
+                                <canvas id="profitChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Terms text for print -->
+                        <div class="print-only mt-6 text-xs text-slate-500 text-justify">
+                            <p><strong>Zastrzeżenie:</strong> Niniejsza kalkulacja jest szacunkiem wewnętrznym. Koszty pracy w Luksemburgu mogą ulec zmianie w zależności od indeksacji płac oraz kwalifikacji pracowników. Należy pamiętać o zablokowaniu kwoty 85.000 EUR tytułem gwarancji bankowej, która nie jest uwzględniona w kosztach operacyjnych (jest to zablokowany kapitał, a nie koszt utracony, chyba że wliczamy koszt kapitału).</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // --- LOGIC ---
+
+        // State & Chart
+        let myChart = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            runCalculation();
+            // Set today's date for print
+            document.getElementById('printDate').innerText = new Date().toLocaleDateString('pl-PL');
+        });
+
+        function switchTab(tabName) {
+            // UI Toggle
+            document.getElementById('view-requirements').classList.add('hidden');
+            document.getElementById('view-calculator').classList.add('hidden');
+            
+            document.getElementById('tab-req').classList.replace('border-blue-500', 'border-transparent');
+            document.getElementById('tab-req').classList.replace('text-blue-600', 'text-slate-500');
+            document.getElementById('tab-calc').classList.replace('border-blue-500', 'border-transparent');
+            document.getElementById('tab-calc').classList.replace('text-blue-600', 'text-slate-500');
+
+            if(tabName === 'requirements') {
+                document.getElementById('view-requirements').classList.remove('hidden');
+                document.getElementById('tab-req').classList.replace('border-transparent', 'border-blue-500');
+                document.getElementById('tab-req').classList.replace('text-slate-500', 'text-blue-600');
+            } else {
+                document.getElementById('view-calculator').classList.remove('hidden');
+                document.getElementById('tab-calc').classList.replace('border-transparent', 'border-blue-500');
+                document.getElementById('tab-calc').classList.replace('text-slate-500', 'text-blue-600');
+                runCalculation(); // Refresh chart
+            }
+        }
+
+        // --- Requirements Logic ---
+        function calculateDeadlines() {
+            const inputDate = document.getElementById('startDateInput').value;
+            const output = document.getElementById('deadlineOutput');
+            const dateSpan = document.getElementById('deadlineDate');
+            
+            if (!inputDate) return;
+
+            const start = new Date(inputDate);
+            // Subtract 8 weeks (56 days)
+            const deadline = new Date(start);
+            deadline.setDate(start.getDate() - 56);
+
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            dateSpan.innerText = deadline.toLocaleDateString('pl-PL', options);
+            output.classList.remove('hidden');
+        }
+
+        // --- Calculator Logic ---
+
+        function addCostRow() {
+            const container = document.getElementById('extraCostsContainer');
+            const div = document.createElement('div');
+            div.className = 'grid grid-cols-12 gap-2 items-center cost-row';
+            div.innerHTML = `
+                <input type="text" class="col-span-5 text-sm border border-slate-300 rounded p-1" placeholder="Opis">
+                <input type="number" value="0" class="cost-val col-span-3 text-sm border border-slate-300 rounded p-1" oninput="runCalculation()">
+                <select class="cost-freq col-span-3 text-xs border border-slate-300 rounded p-1" onchange="runCalculation()">
+                    <option value="week">/Tydz</option>
+                    <option value="day">/Dzień</option>
+                    <option value="month">/Msc</option>
+                    <option value="once">Raz</option>
+                </select>
+                <button onclick="this.parentElement.remove(); runCalculation()" class="col-span-1 text-red-400 hover:text-red-600">×</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function runCalculation() {
+            // Get Basic Inputs
+            const workers = parseFloat(document.getElementById('calcWorkers').value) || 0;
+            const hoursPerWeek = parseFloat(document.getElementById('calcHours').value) || 0;
+            const durationWeeks = parseFloat(document.getElementById('calcWeeks').value) || 0;
+            const rateCost = parseFloat(document.getElementById('rateCost').value) || 0;
+            const ratePrice = parseFloat(document.getElementById('ratePrice').value) || 0;
+
+            // Derived Time Units
+            const totalHoursPerWorker = hoursPerWeek * durationWeeks;
+            const totalHoursAll = totalHoursPerWorker * workers;
+            const totalDays = durationWeeks * 5; // approx 5 work days/week
+            const totalMonths = durationWeeks / 4.3; // approx
+
+            // 1. Calculate Labor Revenue & Cost
+            const totalRevenue = totalHoursAll * ratePrice;
+            const totalLaborCost = totalHoursAll * rateCost;
+
+            // 2. Calculate Extra Costs
+            let totalExtraCost = 0;
+            const rows = document.querySelectorAll('.cost-row');
+            
+            rows.forEach(row => {
+                const val = parseFloat(row.querySelector('.cost-val').value) || 0;
+                const freq = row.querySelector('.cost-freq').value;
+
+                if (freq === 'day') {
+                    totalExtraCost += val * totalDays; // Assuming cost is for the WHOLE group per day based on input style
+                } else if (freq === 'week') {
+                    totalExtraCost += val * durationWeeks;
+                } else if (freq === 'month') {
+                    totalExtraCost += val * totalMonths;
+                } else if (freq === 'once') {
+                    totalExtraCost += val;
+                }
+            });
+
+            // 3. Totals
+            const totalCosts = totalLaborCost + totalExtraCost;
+            const profit = totalRevenue - totalCosts;
+            const marginPercent = totalRevenue > 0 ? (profit / totalRevenue) * 100 : 0;
+            const hourlyMargin = ratePrice - rateCost;
+
+            // Update DOM Results
+            document.getElementById('resProfit').innerText = formatCurrency(profit);
+            document.getElementById('resMargin').innerText = marginPercent.toFixed(1) + '%';
+            document.getElementById('resRevenue').innerText = formatCurrency(totalRevenue);
+            document.getElementById('resLaborCost').innerText = formatCurrency(totalLaborCost);
+            document.getElementById('resExtraCost').innerText = formatCurrency(totalExtraCost);
+
+            // Update Table Details
+            document.getElementById('tabRatePrice').innerText = formatCurrency(ratePrice);
+            document.getElementById('tabRateCost').innerText = formatCurrency(rateCost);
+            document.getElementById('tabHourlyMargin').innerText = formatCurrency(hourlyMargin);
+            document.getElementById('tabTotalHours').innerText = totalHoursAll.toFixed(0) + ' h';
+            document.getElementById('tabTotalExtra').innerText = formatCurrency(totalExtraCost);
+
+            // Update Chart
+            updateChart(profit, totalLaborCost, totalExtraCost);
+        }
+
+        function formatCurrency(val) {
+            return val.toLocaleString('pl-PL', { style: 'currency', currency: 'EUR' });
+        }
+
+        // --- Chart.js ---
+        function initChart() {
+            const ctx = document.getElementById('profitChart').getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Koszt Pracy (Płace)', 'Koszty Dodatkowe', 'Czysty Zysk'],
+                    datasets: [{
+                        data: [10, 10, 10], // Dummy init
+                        backgroundColor: [
+                            '#ef4444', // Red (Labor)
+                            '#f59e0b', // Amber (Extra)
+                            '#10b981'  // Green (Profit)
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed !== null) {
+                                        label += new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'EUR' }).format(context.parsed);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart(profit, labor, extra) {
+            if(!myChart) return;
+            // Prevent negative chart segments
+            const safeProfit = profit < 0 ? 0 : profit;
+            
+            myChart.data.datasets[0].data = [labor, extra, safeProfit];
+            myChart.update();
+        }
+
+    </script>
+</body>
+</html>
