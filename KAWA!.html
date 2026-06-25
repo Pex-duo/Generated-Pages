@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -102,10 +103,10 @@
     <main class="w-full max-w-5xl mx-auto px-4">
         <div class="flex justify-center mb-10 print:hidden">
             <div class="bg-white p-1.5 rounded-full border border-gray-200 shadow-sm inline-flex relative z-20 flex-wrap justify-center gap-2">
-                <button onclick="switchTab('neuro')" id="btn-neuro" class="tab-btn active px-6 py-2.5 rounded-full text-sm md:text-base font-medium transition-all duration-300">
+                <button onclick="switchTab('neuro')" id="btn-neuro" class="tab-btn px-6 py-2.5 rounded-full text-sm md:text-base font-medium transition-all duration-300 text-gray-500 hover:text-gray-900">
                     🍄 Kawa Neurogenna
                 </button>
-                <button onclick="switchTab('elixir')" id="btn-elixir" class="tab-btn px-6 py-2.5 rounded-full text-sm md:text-base font-medium transition-all duration-300 text-gray-500 hover:text-gray-900">
+                <button onclick="switchTab('elixir')" id="btn-elixir" class="tab-btn active px-6 py-2.5 rounded-full text-sm md:text-base font-medium transition-all duration-300">
                     🌟 Złoty Eliksir
                 </button>
                 <button onclick="switchTab('classic')" id="btn-classic" class="tab-btn px-6 py-2.5 rounded-full text-sm md:text-base font-medium transition-all duration-300 text-gray-500 hover:text-gray-900">
@@ -192,7 +193,7 @@
             </div>
         </div>
 
-        <div id="recipe-elixir" class="hidden fade-in">
+        <div id="recipe-elixir" class="fade-in">
             <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-64 h-64 bg-[#D97706] opacity-10 rounded-full blur-3xl -mr-20 -mt-20"></div>
                 
@@ -279,7 +280,7 @@
             </div>
         </div>
 
-        <div id="recipe-neuro" class="fade-in">
+        <div id="recipe-neuro" class="hidden fade-in">
             <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-64 h-64 bg-[#4F46E5] opacity-10 rounded-full blur-3xl -mr-20 -mt-20"></div>
                 
@@ -410,3 +411,5 @@
     </script>
 </body>
 </html>
+
+```
