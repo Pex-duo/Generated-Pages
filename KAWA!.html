@@ -101,8 +101,11 @@
 
     <main class="w-full max-w-5xl mx-auto px-4">
         <div class="flex justify-center mb-10 print:hidden">
-            <div class="bg-white p-1.5 rounded-full border border-gray-200 shadow-sm inline-flex relative z-20">
-                <button onclick="switchTab('elixir')" id="btn-elixir" class="tab-btn active px-6 py-2.5 rounded-full text-sm md:text-base font-medium transition-all duration-300">
+            <div class="bg-white p-1.5 rounded-full border border-gray-200 shadow-sm inline-flex relative z-20 flex-wrap justify-center gap-2">
+                <button onclick="switchTab('neuro')" id="btn-neuro" class="tab-btn active px-6 py-2.5 rounded-full text-sm md:text-base font-medium transition-all duration-300">
+                    🍄 Kawa Neurogenna
+                </button>
+                <button onclick="switchTab('elixir')" id="btn-elixir" class="tab-btn px-6 py-2.5 rounded-full text-sm md:text-base font-medium transition-all duration-300 text-gray-500 hover:text-gray-900">
                     🌟 Złoty Eliksir
                 </button>
                 <button onclick="switchTab('classic')" id="btn-classic" class="tab-btn px-6 py-2.5 rounded-full text-sm md:text-base font-medium transition-all duration-300 text-gray-500 hover:text-gray-900">
@@ -189,7 +192,7 @@
             </div>
         </div>
 
-        <div id="recipe-elixir" class="fade-in">
+        <div id="recipe-elixir" class="hidden fade-in">
             <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-64 h-64 bg-[#D97706] opacity-10 rounded-full blur-3xl -mr-20 -mt-20"></div>
                 
@@ -276,41 +279,133 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+        <div id="recipe-neuro" class="fade-in">
+            <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-[#4F46E5] opacity-10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <h2 class="text-3xl font-serif font-bold">Kawa Neurogenna</h2>
+                            <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded">BIOHACKING</span>
+                        </div>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            Maksymalizacja neuroplastyczności i precyzyjna kontrola bariery krew-mózg. Wykorzystuje grzyby lecznicze (Lion's Mane, Reishi), wektorowane przez tłuszcze (Ghee/MCT) i piperynę. Eliminuje odpowiedź kortyzolową i drżenie po kofeinie, zapewniając kilkugodzinne, stabilne skupienie.
+                        </p>
+                        
+                        <h3 class="text-xl font-serif font-semibold mb-4 text-indigo-600">Składniki i Żywioły</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-fire">🔥</div>
+                                <div><span class="font-semibold text-gray-800">Ogień:</span> 250 ml wrzątku, 2 łyżeczki kawy, 1/2 łyżeczki kurkumy, 1g ekstraktu z Reishi</div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-earth">🌍</div>
+                                <div><span class="font-semibold text-gray-800">Ziemia:</span> 1g ekstraktu z Lion's Mane, 1/2 łyżeczki cynamonu, 1 łyżeczka Ghee/MCT</div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-metal">⚔️</div>
+                                <div><span class="font-semibold text-gray-800">Metal:</span> Szczypta czarnego pieprzu, 1/3 łyżeczki kardamonu, 1/3 łyżeczki imbiru</div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-water">💧</div>
+                                <div><span class="font-semibold text-gray-800">Woda:</span> Szczypta soli, 1 łyżka zimnej wody</div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-wood">🌳</div>
+                                <div><span class="font-semibold text-gray-800">Drzewo:</span> 2-3 krople soku z cytryny</div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-fire">🔥</div>
+                                <div><span class="font-semibold text-gray-800">Ogień:</span> Szczypta surowego kakao</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-2xl p-6 md:p-8 border border-indigo-100">
+                        <h3 class="text-xl font-serif font-semibold mb-6 flex items-center gap-2">
+                            Mechanika Procesu <span class="text-indigo-500">🧠</span>
+                        </h3>
+                        <div class="relative">
+                            <div class="step-item relative pb-6 z-10 flex gap-4">
+                                <div class="step-line"></div>
+                                <div class="w-10 h-10 rounded-full border-2 border-indigo-300 bg-indigo-50 flex items-center justify-center font-bold text-indigo-700 z-10 shrink-0">1</div>
+                                <div class="pt-2">Do wrzątku dodaj kawę, kurkumę i Reishi (adaptogen, tonizacja). Gotuj kilkadziesiąt sekund. <span class="text-xs font-bold text-gray-400 block uppercase mt-1">🔥 Ogień</span></div>
+                            </div>
+                            <div class="step-item relative pb-6 z-10 flex gap-4">
+                                <div class="step-line"></div>
+                                <div class="w-10 h-10 rounded-full border-2 border-indigo-300 bg-indigo-50 flex items-center justify-center font-bold text-indigo-700 z-10 shrink-0">2</div>
+                                <div class="pt-2">Dodaj Lion's Mane, cynamon i tłuszcz (Ghee/MCT buforuje kofeinę i zwiększa absorpcję). <span class="text-xs font-bold text-gray-400 block uppercase mt-1">🌍 Ziemia</span></div>
+                            </div>
+                            <div class="step-item relative pb-6 z-10 flex gap-4">
+                                <div class="step-line"></div>
+                                <div class="w-10 h-10 rounded-full border-2 border-indigo-300 bg-indigo-50 flex items-center justify-center font-bold text-indigo-700 z-10 shrink-0">3</div>
+                                <div class="pt-2">Wsyp pieprz (piperyna), kardamon i imbir (termogeneza i motoryka). <span class="text-xs font-bold text-gray-400 block uppercase mt-1">⚔️ Metal</span></div>
+                            </div>
+                            <div class="step-item relative pb-6 z-10 flex gap-4">
+                                <div class="step-line"></div>
+                                <div class="w-10 h-10 rounded-full border-2 border-indigo-300 bg-indigo-50 flex items-center justify-center font-bold text-indigo-700 z-10 shrink-0">4</div>
+                                <div class="pt-2">Sól (redukcja odpowiedzi kortyzolowej) + 1 łyżka zimnej wody (szok zbijający temperaturę wrzenia). <span class="text-xs font-bold text-gray-400 block uppercase mt-1">💧 Woda</span></div>
+                            </div>
+                            <div class="step-item relative pb-6 z-10 flex gap-4">
+                                <div class="step-line"></div>
+                                <div class="w-10 h-10 rounded-full border-2 border-indigo-300 bg-indigo-50 flex items-center justify-center font-bold text-indigo-700 z-10 shrink-0">5</div>
+                                <div class="pt-2">Cytryna (zamknięcie cyklu i bioprzyswajalność beta-glukanów). <span class="text-xs font-bold text-gray-400 block uppercase mt-1">🌳 Drzewo</span></div>
+                            </div>
+                            <div class="step-item relative z-10 flex gap-4">
+                                <div class="w-10 h-10 rounded-full border-2 border-indigo-300 bg-indigo-50 flex items-center justify-center font-bold text-indigo-700 z-10 shrink-0">6</div>
+                                <div class="pt-2">Domknij surowym kakao. Odstaw na 2 minuty i przelej do kubka. <span class="text-xs font-bold text-gray-400 block uppercase mt-1">🔥 Ogień</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <div class="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center text-2xl mb-4">🛡️</div>
                 <h4 class="font-serif font-bold text-lg mb-2">Tarcza Przeciwzapalna</h4>
-                <p class="text-sm text-gray-600">Połączenie kurkumy, imbiru i pieprzu działa jak miotła na wolne rodniki, niwelując mikrostany zapalne w organizmie.</p>
+                <p class="text-sm text-gray-600">Kurkuma, imbir i pieprz (piperyna podnosząca przyswajalność o 2000%) neutralizują wolne rodniki organizmu.</p>
             </div>
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-4">🧠</div>
-                <h4 class="font-serif font-bold text-lg mb-2">Balans Układu Nerwowego</h4>
-                <p class="text-sm text-gray-600">Maca i zdrowe tłuszcze (Ghee/MCT) zapobiegają nagłym wyrzutom insuliny i drżeniu rąk po kawie. Energia uwalnia się płynnie.</p>
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-4">⚡</div>
+                <h4 class="font-serif font-bold text-lg mb-2">Balans i Energia</h4>
+                <p class="text-sm text-gray-600">Zdrowe tłuszcze i odpowiednia dawka soli redukują odpowiedź kortyzolową i zapobiegają drżeniom kofeinowym.</p>
             </div>
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <div class="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center text-2xl mb-4">🌿</div>
                 <h4 class="font-serif font-bold text-lg mb-2">Wsparcie Żołądka</h4>
-                <p class="text-sm text-gray-600">Odpowiednio długie gotowanie połączone z cynamonem i kardamonem sprawia, że kawa staje się łagodna dla błony śluzowej.</p>
+                <p class="text-sm text-gray-600">Długie gotowanie oraz obecność kardamonu stymulują motorykę, chroniąc błonę śluzową układu pokarmowego.</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-2xl mb-4">🍄</div>
+                <h4 class="font-serif font-bold text-lg mb-2">Neuroplastyczność</h4>
+                <p class="text-sm text-gray-600">Reishi i Lion's Mane wektorowane lipidowo przekraczają barierę krew-mózg, stymulując białka NGF i koncentrację.</p>
             </div>
         </div>
     </main>
 
     <script>
         function switchTab(tabId) {
-            // Hide all recipes
-            document.getElementById('recipe-classic').classList.add('hidden');
-            document.getElementById('recipe-elixir').classList.add('hidden');
+            const tabs = ['classic', 'elixir', 'neuro'];
             
-            // Remove active classes from buttons
-            document.getElementById('btn-classic').classList.remove('active');
-            document.getElementById('btn-classic').classList.add('text-gray-500');
-            document.getElementById('btn-elixir').classList.remove('active');
-            document.getElementById('btn-elixir').classList.add('text-gray-500');
+            tabs.forEach(id => {
+                const recipeEl = document.getElementById('recipe-' + id);
+                if(recipeEl) recipeEl.classList.add('hidden');
+                
+                const btnEl = document.getElementById('btn-' + id);
+                if(btnEl) {
+                    btnEl.classList.remove('active');
+                    btnEl.classList.remove('text-gray-900');
+                    btnEl.classList.add('text-gray-500');
+                }
+            });
             
-            // Show selected recipe and activate button
             document.getElementById('recipe-' + tabId).classList.remove('hidden');
-            document.getElementById('btn-' + tabId).classList.add('active');
-            document.getElementById('btn-' + tabId).classList.remove('text-gray-500');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('text-gray-500');
         }
     </script>
 </body>
