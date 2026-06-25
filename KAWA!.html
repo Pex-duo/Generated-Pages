@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kawa Pięciu Przemian - Kompendium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF7;
+            color: #2D2723;
+        }
+        h1, h2, h3, h4, .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        .element-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 9999px;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .bg-fire { background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%); color: white; }
+        .bg-earth { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: white; }
+        .bg-metal { background: linear-gradient(135deg, #9CA3AF 0%, #4B5563 100%); color: white; }
+        .bg-water { background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%); color: white; }
+        .bg-wood { background: linear-gradient(135deg, #10B981 0%, #047857 100%); color: white; }
+
+        .recipe-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .recipe-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .tab-btn {
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            background-color: #2D2723;
+            color: #FDFBF7;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-line {
+            position: absolute;
+            left: 1.25rem;
+            top: 2.5rem;
+            bottom: -0.5rem;
+            width: 2px;
+            background-color: #E5E7EB;
+            z-index: 0;
+        }
+        .step-item:last-child .step-line {
+            display: none;
+        }
+        
+        /* Pattern background */
+        .bg-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4c5b9' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-pattern min-h-screen antialiased flex flex-col items-center pb-20">
+
+    <header class="w-full max-w-5xl mx-auto pt-16 pb-12 px-6 text-center">
+        <div class="inline-block mb-4 px-4 py-1 rounded-full border border-[#D97706] text-[#D97706] text-sm font-medium tracking-wide uppercase">
+            Sztuka Parzenia
+        </div>
+        <h1 class="text-4xl md:text-6xl font-bold mb-6 text-[#2D2723] leading-tight">
+            Kawa Pięciu Przemian
+        </h1>
+        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto font-light leading-relaxed">
+            Starożytna mądrość harmonii żywiołów połączona z nowoczesnym zrozumieniem fizjologii. Wybierz swój rytuał: łagodną równowagę lub maksymalizację zdrowia.
+        </p>
+    </header>
+
+    <main class="w-full max-w-5xl mx-auto px-4">
+        <div class="flex flex-col sm:flex-row justify-center gap-4 mb-12">
+            <button onclick="switchTab('classic')" id="btn-classic" class="tab-btn px-8 py-4 rounded-xl border border-gray-200 font-medium text-lg w-full sm:w-auto">
+                ☕ Klasyczna Harmonia
+                <span class="block text-sm font-light opacity-80 mt-1">Inspiracja Tadar (Lekka, Owocowa)</span>
+            </button>
+            <button onclick="switchTab('elixir')" id="btn-elixir" class="tab-btn active px-8 py-4 rounded-xl border border-gray-200 font-medium text-lg w-full sm:w-auto">
+                🌟 Złoty Eliksir
+                <span class="block text-sm font-light opacity-80 mt-1">Nasz Biohacking (Przeciwzapalna)</span>
+            </button>
+        </div>
+
+        <div id="recipe-classic" class="hidden fade-in">
+            <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-[#F59E0B] opacity-5 rounded-full blur-3xl -mr-20 -mt-20"></div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
+                    <div>
+                        <h2 class="text-3xl font-serif font-bold mb-4">Klasyczna Harmonia</h2>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            Baza oparta na popularnym, klasycznym przepisie (m m.in. polecanym przez Tadar), ale <strong>udoskonalona do wariantu w 100% naturalnego</strong>. Zastąpiliśmy sztuczne ekstrakty prawdziwą laską wanilii. Idealna na spokojne popołudnie — delikatna w smaku, cytrusowa z nutą korzennego kardamonu. Balansuje układ trawienny.
+                        </p>
+                        
+                        <h3 class="text-xl font-serif font-semibold mb-4 text-[#D97706]">Składniki i Żywioły</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-fire">🔥</div>
+                                <div><span class="font-semibold text-gray-800">Ogień:</span> 250 ml wrzątku</div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-earth">🌍</div>
+                                <div><span class="font-semibold text-gray-800">Ziemia:</span> Ziarenka z 1/4 laski prawdziwej wanilii</div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-metal">⚔️</div>
+                                <div><span class="font-semibold text-gray-800">Metal:</span> 1/4 łyżeczki świeżo mielonego kardamonu</div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-water">💧</div>
+                                <div><span class="font-semibold text-gray-800">Woda:</span> Szczypta naturalnej soli (kłodawska)</div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-wood">🌳</div>
+                                <div><span class="font-semibold text-gray-800">Drzewo:</span> 1/2 łyżeczki soku ze świeżej pomarańczy</div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-fire">🔥</div>
+                                <div><span class="font-semibold text-gray-800">Ogień:</span> 1 czubata łyżka dobrej jakości kawy</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-2xl p-6 md:p-8">
+                        <h3 class="text-xl font-serif font-semibold mb-6">Rytuał Przygotowania</h3>
+                        <div class="relative">
+                            <div class="step-item relative pb-6 z-10 flex gap-4">
+                                <div class="step-line"></div>
+                                <div class="w-10 h-10 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center font-bold text-gray-500 z-10 bg-white">1</div>
+                                <div class="pt-2">Do rondelka wlej wrzątek i utrzymuj na małym ogniu. (Ogień)</div>
+                            </div>
+                            <div class="step-item relative pb-6 z-10 flex gap-4">
+                                <div class="step-line"></div>
+                                <div class="w-10 h-10 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center font-bold text-gray-500 z-10 bg-white">2</div>
+                                <div class="pt-2">Dodaj ziarenka wanilii. Zamieszaj. (Ziemia)</div>
+                            </div>
+                            <div class="step-item relative pb-6 z-10 flex gap-4">
+                                <div class="step-line"></div>
+                                <div class="w-10 h-10 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center font-bold text-gray-500 z-10 bg-white">3</div>
+                                <div class="pt-2">Wsyp kardamon. Gotuj na bardzo małym ogniu ok. 1 minutę. (Metal)</div>
+                            </div>
+                            <div class="step-item relative pb-6 z-10 flex gap-4">
+                                <div class="step-line"></div>
+                                <div class="w-10 h-10 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center font-bold text-gray-500 z-10 bg-white">4</div>
+                                <div class="pt-2">Dodaj szczyptę soli morskiej lub kłodawskiej. Zamieszaj. (Woda)</div>
+                            </div>
+                            <div class="step-item relative pb-6 z-10 flex gap-4">
+                                <div class="step-line"></div>
+                                <div class="w-10 h-10 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center font-bold text-gray-500 z-10 bg-white">5</div>
+                                <div class="pt-2">Wkropl świeży sok z pomarańczy. Zamieszaj. (Drzewo)</div>
+                            </div>
+                            <div class="step-item relative z-10 flex gap-4">
+                                <div class="w-10 h-10 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center font-bold text-gray-500 z-10 bg-white">6</div>
+                                <div class="pt-2">Wsyp zmieloną kawę. Gotuj na wolnym ogniu przez 3-5 minut. Następnie odstaw, by fusy opadły. (Ogień)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="recipe-elixir" class="fade-in">
+            <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-[#D97706] opacity-10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <h2 class="text-3xl font-serif font-bold">Złoty Eliksir</h2>
+                            <span class="bg-[#FEF3C7] text-[#D97706] text-xs font-bold px-2 py-1 rounded">PRO</span>
+                        </div>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            Rewolucyjne podejście do tradycji. Maksymalizacja potencjału zdrowotnego bez kompromisów smaku. Używamy tu adaptogenów (Maca) chroniących przed stresem, kurkumy z pieprzem jako <strong>tarczy przeciwzapalnej</strong> oraz zdrowych tłuszczów na końcu, które uwalniają kofeinę miarowo i odżywiają mózg.
+                        </p>
+                        
+                        <h3 class="text-xl font-serif font-semibold mb-4 text-[#D97706]">Składniki i Żywioły</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-fire">🔥</div>
+                                <div><span class="font-semibold text-gray-800">Ogień:</span> 300 ml wrzątku</div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-earth">🌍</div>
+                                <div><span class="font-semibold text-gray-800">Ziemia:</span> 1/2 łyżeczki cynamonu cejlońskiego, 1/2 łyżeczki korzenia Maca</div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-metal">⚔️</div>
+                                <div><span class="font-semibold text-gray-800">Metal:</span> 2 plastry imbiru, szczypta kardamonu, szczypta <strong>czarnego pieprzu</strong></div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-water">💧</div>
+                                <div><span class="font-semibold text-gray-800">Woda:</span> Minimalna szczypta soli kłodawskiej</div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-wood">🌳</div>
+                                <div><span class="font-semibold text-gray-800">Drzewo:</span> 3-4 krople soku z cytryny</div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-fire">🔥</div>
+                                <div><span class="font-semibold text-gray-800">Ogień:</span> Kawa (2-3 łyżeczki), 1/2 łyżeczki surowego kakao, 1/4 łyżeczki <strong>kurkumy</strong></div>
+                            </li>
+                            <li class="flex items-center gap-4">
+                                <div class="element-icon bg-earth">🌍</div>
+                                <div><span class="font-semibold text-gray-800">Ziemia:</span> 1 łyżeczka Masła Ghee lub Oleju MCT (na sam koniec)</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-2xl p-6 md:p-8 border border-amber-100">
+                        <h3 class="text-xl font-serif font-semibold mb-6 flex items-center gap-2">
+                            Rytuał Przygotowania <span class="text-amber-500">✨</span>
+                        </h3>
+                        <div class="relative">
+                            <div class="step-item relative pb-6 z-10 flex gap-4">
+                                <div class="step-line"></div>
+                                <div class="w-10 h-10 rounded-full border-2 border-amber-300 bg-amber-50 flex items-center justify-center font-bold text-amber-700 z-10">1</div>
+                                <div class="pt-2">Do wrzątku dodaj cynamon cejloński i Macę. Gotuj minutę. <span class="text-xs font-bold text-gray-400 block uppercase mt-1">🌍 Ziemia</span></div>
+                            </div>
+                            <div class="step-item relative pb-6 z-10 flex gap-4">
+                                <div class="step-line"></div>
+                                <div class="w-10 h-10 rounded-full border-2 border-amber-300 bg-amber-50 flex items-center justify-center font-bold text-amber-700 z-10">2</div>
+                                <div class="pt-2">Dorzuć imbir, kardamon i pieprz (aktywuje kurkuminę). Wymieszaj. <span class="text-xs font-bold text-gray-400 block uppercase mt-1">⚔️ Metal</span></div>
+                            </div>
+                            <div class="step-item relative pb-6 z-10 flex gap-4">
+                                <div class="step-line"></div>
+                                <div class="w-10 h-10 rounded-full border-2 border-amber-300 bg-amber-50 flex items-center justify-center font-bold text-amber-700 z-10">3</div>
+                                <div class="pt-2">Wsyp szczyptę soli kłodawskiej dla elektrolitów. <span class="text-xs font-bold text-gray-400 block uppercase mt-1">💧 Woda</span></div>
+                            </div>
+                            <div class="step-item relative pb-6 z-10 flex gap-4">
+                                <div class="step-line"></div>
+                                <div class="w-10 h-10 rounded-full border-2 border-amber-300 bg-amber-50 flex items-center justify-center font-bold text-amber-700 z-10">4</div>
+                                <div class="pt-2">Wkropl świeży sok z cytryny (oczyszczanie wątroby). <span class="text-xs font-bold text-gray-400 block uppercase mt-1">🌳 Drzewo</span></div>
+                            </div>
+                            <div class="step-item relative pb-6 z-10 flex gap-4">
+                                <div class="step-line"></div>
+                                <div class="w-10 h-10 rounded-full border-2 border-amber-300 bg-amber-50 flex items-center justify-center font-bold text-amber-700 z-10">5</div>
+                                <div class="pt-2">Wsyp kawę, kurkumę i surowe kakao. Lekko "mrugaj" naparem 2-3 minuty. <span class="text-xs font-bold text-gray-400 block uppercase mt-1">🔥 Ogień</span></div>
+                            </div>
+                            <div class="step-item relative z-10 flex gap-4">
+                                <div class="w-10 h-10 rounded-full border-2 border-amber-300 bg-amber-50 flex items-center justify-center font-bold text-amber-700 z-10">6</div>
+                                <div class="pt-2">Zdejmij z ognia. Dodaj masło Ghee/MCT, zamieszaj i odczekaj aż fusy opadną. Gotowe! <span class="text-xs font-bold text-gray-400 block uppercase mt-1">🌍 Ziemia (Zamknięcie)</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center text-2xl mb-4">🛡️</div>
+                <h4 class="font-serif font-bold text-lg mb-2">Tarcza Przeciwzapalna</h4>
+                <p class="text-sm text-gray-600">Połączenie kurkumy, imbiru i pieprzu działa jak miotła na wolne rodniki, niwelując mikrostany zapalne w organizmie.</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-4">🧠</div>
+                <h4 class="font-serif font-bold text-lg mb-2">Balans Układu Nerwowego</h4>
+                <p class="text-sm text-gray-600">Maca i zdrowe tłuszcze (Ghee/MCT) zapobiegają nagłym wyrzutom insuliny i drżeniu rąk po kawie. Energia uwalnia się płynnie.</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center text-2xl mb-4">🌿</div>
+                <h4 class="font-serif font-bold text-lg mb-2">Wsparcie Żołądka</h4>
+                <p class="text-sm text-gray-600">Odpowiednio długie gotowanie połączone z cynamonem i kardamonem sprawia, że kawa staje się łagodna dla błony śluzowej.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function switchTab(tabId) {
+            // Hide all recipes
+            document.getElementById('recipe-classic').classList.add('hidden');
+            document.getElementById('recipe-elixir').classList.add('hidden');
+            
+            // Remove active classes from buttons
+            document.getElementById('btn-classic').classList.remove('active');
+            document.getElementById('btn-elixir').classList.remove('active');
+            
+            // Show selected recipe and activate button
+            document.getElementById('recipe-' + tabId).classList.remove('hidden');
+            document.getElementById('btn-' + tabId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
